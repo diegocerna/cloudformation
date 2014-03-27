@@ -110,6 +110,7 @@
           "KeyName": { "Ref" : "KeyName" },
           "SubnetId" : { "Ref" : "PrivateSubnetId" },
           "SecurityGroupId" : { "Ref" : "PrivateSecurityGroup" },
+          "DeployBranch" : "master",
           "Environment": { "Ref" : "appEnvironment" }
         }
       } 
@@ -193,7 +194,7 @@
           "KeyName" : { "Ref" : "KeyName" },
           "SubnetId" : { "Ref" : "PrivateSubnetId" },
           "SecurityGroupId" : { "Ref" : "PrivateSecurityGroup" },
-          "Branch" : "master",
+          "DeployBranch" : "master",
           "Environment" : { "Ref" : "appEnvironment" }
         }
       }
