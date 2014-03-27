@@ -1,0 +1,227 @@
+{
+    "AWSTemplateFormatVersion" : "2010-09-09",
+
+    "Description" : "Payments APP Rails Aplication Instance",
+
+    "Parameters" : {
+        "SubnetId" : {
+          "Type" : "String",
+          "Description" : "Guatemala Accounts SubnetId in your Virtual Private Cloud (VPC)",
+          "Default": "subnet-d56128fd"
+        },
+
+        "KeyName" : {
+          "Type" : "String",
+          "Description" : "The SSH access key",
+          "Default" : "tpbqa"
+        },
+
+        "InstanceType" : {
+          "Description" : "WebServer EC2 instance type",
+          "Type" : "String",
+          "Default" : "m1.medium",
+          "AllowedValues" : [ "t1.micro","m1.small","m1.medium","m1.large","m1.xlarge","m2.xlarge","m2.2xlarge","m2.4xlarge","m3.xlarge","m3.2xlarge","c1.medium","c1.xlarge","cc1.4xlarge","cc2.8xlarge","cg1.4xlarge"],
+          "ConstraintDescription" : "must be a valid EC2 instance type."
+        },
+
+        "SecurityGroupId" : {
+          "Type" : "String",
+          "Description" : "Security Group of the VPC",
+          "Default" : "sg-a6c411c3"
+        },
+
+        "HostedZone" : {
+            "Type" : "String",
+            "Description" : "The DNS name of an existing Amazon Route 53 hosted zone",
+            "Default" : "bluekite.com"
+        },
+
+        "Environment" : {
+          "Type" : "String",
+          "Description" : "Environment for the accounts-gt, i.e. dev, production, etc.",
+          "Default" : "qa"
+        }
+    },
+
+    "Mappings" : {
+        "RegionMap" : {
+          "sa-east-1"      : {"AMI" : "ami-d545e5c8" },
+          "us-west-1"      : {"AMI" : "ami-82b98bc7" },
+          "ap-northeast-1" : {"AMI" : "ami-35bbd334" },
+          "ap-southeast-1" : {"AMI" : "ami-605c0a32" },
+          "ap-southeast-2" : {"AMI" : "ami-fb4bd5c1" },
+          "eu-west-1"      : {"AMI" : "ami-d03dcaa7" },
+          "us-east-1"      : {"AMI" : "ami-cdc2fda4" },
+          "us-west-2"      : {"AMI" : "ami-9a9dfdaa" }
+        },
+
+        "dot" : {
+            "test"            : { "DOT" : ".test" },
+            "dev"            : { "DOT" : ".dev" },
+            "qa"             : { "DOT" : ".qa" },
+            "sandbox"        : { "DOT" : ".sandbox" },
+            "production"     : { "DOT" : "" }
+        }
+    },
+
+    "Resources" : {
+
+        "DNSRecord" : {
+            "Type" : "AWS::Route53::RecordSet",
+            "Properties" : {
+                "HostedZoneName" : { "Fn::Join" : [ "", [{"Ref" : "HostedZone"}, "." ]]},
+                "Comment" : "DNS name for my instance.",
+                "Name" : { "Fn::Join" : [ "", ["redis", { "Fn::FindInMap" : [ "dot", { "Ref" : "Environment" }, "DOT" ]}, ".bluekite.com."]]},
+                "Type" : "A",
+                "TTL" : "900",
+                "ResourceRecords" : [ { "Fn::GetAtt" : [ "RedisInstance", "PrivateIp" ] } ]
+            },
+            "DependsOn" : "RedisInstance"
+        },
+
+        "RedisInstance" : {
+            "Type" : "AWS::EC2::Instance",
+            "Metadata" : {
+                "Comment" : "Redis Faye pub/sub Aplication Instance",
+                "AWS::CloudFormation::Init" : {
+                    "configSets" : {
+                        "default" : ["config_credentials", "config_packages"]
+                    },
+                    "config_credentials" : {
+                        "files" : {
+                            "/home/ubuntu/.ssh/id_rsa" : {
+                                "source" : "https://s3.amazonaws.com/redtail/redtail_rsa",
+                                "mode" : "600",
+                                "owner" : "ubuntu",
+                                "group" : "ubuntu"
+                            },
+                            "/home/ubuntu/.ssh/id_rsa.pub" : {
+                                "source" : "https://s3.amazonaws.com/redtail/redtail_rsa.pub",
+                                "mode" : "600",
+                                "owner" : "ubuntu",
+                                "group" : "ubuntu"
+                            },
+                            "/home/ubuntu/.ssh/config" : {
+                                "mode" : "600",
+                                "owner" : "ubuntu",
+                                "group" : "ubuntu",
+                                "content" : { "Fn::Join" : ["", [
+                                    "Host github.com\n",
+                                    "\tStrictHostKeyChecking no\n",
+                                    "\tUser git\n",
+                                    "\tPreferredAuthentications publickey\n",
+                                    "\tIdentityFile ~/.ssh/id_rsa\n"
+                                ]]}
+                            }
+                        }
+                    },
+                    "config_packages" : {
+                        "packages" : {
+                            "apt" : {
+                                "git"             : [],
+                                "curl"            : [],
+                                "tmux"            : [],
+                                "build-essential" : [],
+                                "puppet"          : [],
+                                "python-software-properties" : []
+                            }
+                        }
+                    }
+                }
+            },
+
+            "Properties" : {
+                "ImageId" : { "Fn::FindInMap" : [ "RegionMap", { "Ref" : "AWS::Region" }, "AMI" ]},
+                "SecurityGroupIds" : [ {"Ref" : "SecurityGroupId"} ],
+                "SubnetId" : { "Ref" : "SubnetId" },
+                "InstanceType" : { "Ref" : "InstanceType" },
+                "KeyName" : { "Ref" : "KeyName" },
+                "Tags" : [ {"Key" : "Application", "Value" : { "Ref" : "AWS::StackId"} },
+                           {"Key" : "Name", "Value" : { "Fn::Join" : [ "", ["redis.", {"Ref" : "Environment"} ] ] } } ],
+                "UserData"       : { "Fn::Base64" : { "Fn::Join" : ["", [
+                    "#!/bin/bash\n",
+
+                    "# Helper function to notify of failed operation\n",
+                    "function error_exit\n",
+                    "{\n",
+                    "  cfn-signal -e 1 -r \"$1\" '", { "Ref" : "WebServerWaitHandle" }, "'\n",
+                    "  exit 1\n",
+                    "}\n",
+
+                    "# Add puppet repository. Installation will be managed by cfn-init\n",
+                    "wget http://apt.puppetlabs.com/puppetlabs-release-precise.deb\n",
+                    "sudo dpkg -i puppetlabs-release-precise.deb\n",
+                    "sudo apt-get update -y\n",
+
+                    "# Install Amazon Tools\n",
+                    "apt-get -y install python-setuptools\n",
+                    "easy_install https://s3.amazonaws.com/cloudformation-examples/aws-cfn-bootstrap-latest.tar.gz\n",
+
+                    "# Run Instance default configuration via CloudFormation::Init\n",
+                    "cfn-init -v --region ", { "Ref" : "AWS::Region" },
+                    "    -s ", { "Ref" : "AWS::StackId" },
+                    " -r RedisInstance",
+                    " -c default",
+                    " || error_exit 'Failed to run cfn-init'\n",
+
+                    "# Register Github fingerprints\n",
+                    "ssh-keygen -f ~/.ssh/known_hosts -H -F github.com | grep -q found || ssh-keyscan -H github.com >> ~/.ssh/known_hosts\n",
+
+                    "# Copy credentials to root user\n",
+                    "cp /home/ubuntu/.ssh/* /root/.ssh/\n",
+
+                    "# Clone app repo to ubuntu user home\n",
+                    "git clone git@github.com:blue-kite/api.git /home/ubuntu/api > /tmp/git.log 2>&1 || error_exit 'Failed to clone repo'\n",
+                    "chown ubuntu:ubuntu -R /home/ubuntu/api\n",
+
+                    "# Extract redis_server application\n",
+                    "cp -R /home/ubuntu/api/redis_server /home/ubuntu/redis_server\n",
+                    "chown ubuntu:ubuntu -R /home/ubuntu/redis_server\n",
+
+                    "# Install application's dependencies via puppet\n",
+                    "cd /home/ubuntu/api\n",
+                    "git submodule init\n",
+                    "git submodule update\n",
+                    "cd /home/ubuntu\n",
+                    "sudo puppet apply --verbose --modulepath=./api/puppet/modules ./redis_server/puppet/manifests/aws-",{"Ref":"Environment"},".pp > /tmp/puppet.log 2>&1 || error_exit 'failed to apply puppet manifests'\n",
+
+                    "# Signal setup is complete\n",
+                    "cfn-signal -e $? -r 'Completed configuration' '",
+                    {
+                        "Ref" : "WebServerWaitHandle"
+                    },
+                    "'\n"
+                ]]}}
+            }
+        },
+
+        "WebServerWaitHandle" : {
+            "Type" : "AWS::CloudFormation::WaitConditionHandle"
+        },
+
+        "WebServerWaitCondition" : {
+            "Type" : "AWS::CloudFormation::WaitCondition",
+            "DependsOn" : "RedisInstance",
+            "Properties" : {
+                "Handle" : {"Ref" : "WebServerWaitHandle"},
+                "Timeout" : "600"
+            }
+        }
+    },
+
+    "Outputs" : {
+        "InstanceId" : {
+            "Value" : { "Ref" : "RedisInstance" },
+            "Description" : "Instance Id of newly created instance"
+        },
+
+        "IPAddress" : {
+            "Value" : { "Fn::GetAtt" : [ "RedisInstance", "PrivateIp" ] },
+            "Description" : "Public IP address of instance"
+        },
+
+        "DomainName" : {
+            "Value" : { "Ref" : "DNSRecord" }
+        }
+    }
+}

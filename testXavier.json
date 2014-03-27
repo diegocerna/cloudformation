@@ -1,0 +1,532 @@
+{
+  "AWSTemplateFormatVersion" : "2010-09-09",
+
+  "Description" : "Description of the full stack, this template create every environment based in the assinged parameters",
+
+  "Parameters" : {
+    "DeployBranch" : {
+      "Type" : "String",
+      "Default" : "master",
+      "Description" : "The branch "
+    },
+
+    "Environment" : {
+      "Type" : "String",
+      "Default" : "dev",
+      "Description" : "Determinates the typo of stack that will be created"
+    },
+
+    "KeyName" : {
+      "Type" : "String",
+      "Default" : "redtail_development",
+      "Description" : "The key use to ssh the ec2 instances"
+    },
+
+    "InstancesType" : {
+      "Description" : "WebServer EC2 instance type",
+      "Type" : "String",
+      "Default" : "m1.medium",
+      "AllowedValues" : [ "t1.micro","m1.small","m1.medium","m1.large","m1.xlarge","m2.xlarge","m2.2xlarge","m2.4xlarge","m3.xlarge","m3.2xlarge","c1.medium","c1.xlarge","cc1.4xlarge","cc2.8xlarge","cg1.4xlarge"],
+      "ConstraintDescription" : "must be a valid EC2 instance type."
+    },
+
+    "SecurityGroupId" : {
+      "Description" : "Define which security group belongs",
+      "Type" : "String"
+    },
+
+    "SubnetId" : {
+      "Description" : "Define which Subnet the stack belongs",
+      "Type" : "String"
+    },
+
+    "InstanceType" : {
+      "Type" : "String",
+      "Default" : "m1.medium"
+    }
+
+  },
+
+  "Mappings" : {
+    "NATMap" : {
+      "us-east-1"      : { "AMI" : "ami-ad227cc4" },
+      "us-west-1"      : { "AMI" : "ami-d69aad93" },
+      "us-west-2"      : { "AMI" : "ami-f032acc0" },
+      "sa-east-1"      : { "AMI" : "ami-d78325ca" }
+    },
+    "InstancesAMIS" : {
+      "us-east-1"      : { "AMI" : "ami-95ac89fc" },
+      "us-west-1"      : { "AMI" : "ami-8ca89ec9" },
+      "us-west-2"      : { "AMI" : "ami-86b328b6" },
+      "sa-east-1"      : { "AMI" : "ami-0029f01d" }
+    },
+    "EnvConf" : {
+      "dev" : {"Environment" : "development"},
+      "qa" : {"Environment" : ""}
+    }
+  },
+
+  "Resources":{
+
+    "Worker" : {
+      
+      "Type" : "AWS::EC2::Instance",
+
+      "Metadata" : {
+        "Comment" : "API Gateway NodeJs Application",
+        "AWS::CloudFormation::Init" : {
+          "configSets" : {
+            "default" : ["config_credentials", "config_packages"]
+          },
+          "config_credentials" : {
+            "files" : {
+              "/home/ubuntu/.ssh/id_rsa" : {
+                "source" : "https://s3.amazonaws.com/redtail/redtail_rsa",
+                "mode" : "600",
+                "owner" : "ubuntu",
+                "group" : "ubuntu"
+              },
+              "/home/ubuntu/.ssh/id_rsa.pub" : {
+                "source" : "https://s3.amazonaws.com/redtail/redtail_rsa.pub",
+                "mode" : "600",
+                "owner" : "ubuntu",
+                "group" : "ubuntu"
+              },
+              "/home/ubuntu/.ssh/config" : {
+                "mode" : "600",
+                "owner" : "ubuntu",
+                "group" : "ubuntu",
+                "content" : { "Fn::Join" : ["", [
+                  "Host github.com\n",
+                  "\tStrictHostKeyChecking no\n",
+                  "\tUser git\n",
+                  "\tPreferredAuthentications publickey\n",
+                  "\tIdentityFile ~/.ssh/id_rsa\n"
+                ]]}
+              }
+            }
+          },
+          "config_packages" : {
+            "packages" : {
+              "apt" : {
+                "git"             : [],
+                "curl"            : [],
+                "tmux"            : [],
+                "build-essential" : [],
+                "puppet"          : []
+              }
+            }
+          }
+        }
+      },
+
+      "Properties" : {
+        "ImageId" : { "Fn::FindInMap" : [ "InstancesAMIS", { "Ref" : "AWS::Region" }, "AMI" ]},
+        "KeyName" : "qq",
+        "InstanceType" : {"Ref" : "InstancesType"},
+        "Tags" : [ {"Key" : "Application", "Value" : { "Ref" : "AWS::StackId"} },
+        {"Key" : "Name", "Value" : {"Fn::Join" : [".", ["Worker", {"Ref" : "Environment"}]]} } ],      
+
+        "UserData"       : { "Fn::Base64" : { "Fn::Join" : ["", [
+          "#!/bin/bash\n",
+
+          "# Helper function to notify of failed operation\n",
+          "function error_exit\n",
+          "{\n",
+          "  cfn-signal -e 1 -r \"$1\" '", { "Ref" : "WorkerWaitHandler" }, "'\n",
+          "  exit 1\n",
+          "}\n",
+
+          "# Add puppet repository. Installation will be managed by cfn-init\n",
+          "wget http://apt.puppetlabs.com/puppetlabs-release-precise.deb\n",
+          "sudo dpkg -i puppetlabs-release-precise.deb\n",
+          "sudo apt-get update -y\n",
+
+          "# Install Amazon Tools\n",
+          "sudo apt-get -y install python-setuptools\n",
+          "sudo easy_install https://s3.amazonaws.com/cloudformation-examples/aws-cfn-bootstrap-latest.tar.gz\n",
+
+          "# Run Instance default configuration via CloudFormation::Init\n",
+          "cfn-init -s ", { "Ref" : "AWS::StackName" },
+          " -r Worker",
+          "--region ", { "Ref" : "AWS::Region" },
+          " || error_exit 'NPI',\n",
+
+          "# Register Github fingerprints\n",
+          "ssh-keygen -f ~/.ssh/known_hosts -H -F github.com | grep -q found || ssh-keyscan -H github.com >> ~/.ssh/known_hosts\n",
+
+          "# Copy credentials to root user\n",
+          "cp /home/ubuntu/.ssh/* /root/.ssh/\n",
+
+          "# Clone app repo to ubuntu user home\n",
+          "git clone git@github.com:blue-kite/api.git /home/ubuntu/api > /tmp/git.log 2>&1 || error_exit 'Failed to clone repo'\n",
+          "chown ubuntu:ubuntu -R /home/ubuntu/api\n",
+
+          "# Extract gateway application\n",
+          "ln -s /home/ubuntu/api/gateway /home/ubuntu/gateway\n",
+          "chown ubuntu:ubuntu -R /home/ubuntu/gateway\n",
+
+          "# Install application's dependencies via puppet\n",
+          "cd /home/ubuntu/api\n",
+          "git submodule init\n",
+          "git submodule update\n",
+          "sudo puppet apply --verbose --modulepath=./puppet/modules ./gateway/puppet/manifests/aws.pp > /tmp/puppet.log 2>&1 || error_exit 'failed to apply puppet manifests'\n",
+
+          "# Signal setup is complete\n",
+          "cfn-signal -e $? -r 'Completed configuration' '",
+          {
+              "Ref" : "WorkerWaitHandler"
+          },
+          "'\n"
+        ]]}}
+      }
+    },
+
+    "WorkerWaitHandler" : {
+      "Type" : "AWS::CloudFormation::WaitConditionHandle"
+    },
+
+    "WorkerWaitCondition" : {
+      "Type" : "AWS::CloudFormation::WaitCondition",
+      "DependsOn" : "Worker",
+      "Properties" : {
+        "Handle" : {"Ref" : "WorkerWaitHandler"},
+        "Timeout" : "1000"
+      }
+    },
+
+    "PublicApiNAT" : {
+      "Type" : "AWS::EC2::Instance",
+
+      "Properties" : {
+        "ImageId" : { "Fn::FindInMap" : [ "NATMap", { "Ref" : "AWS::Region" }, "AMI" ]},
+        "KeyName" : { "Ref" : "KeyName" },
+        "InstanceType" : "t1.micro",
+        "Tags" : [ {"Key" : "Name", "Value" : {"Fn::Join" : [".", ["PublicApiNAT", {"Ref" : "Environment"}]]} } ]
+      }
+    },
+
+    "Redis" : {
+      "Type" : "AWS::EC2::Instance",
+
+      "Properties" : {
+        "ImageId" : { "Fn::FindInMap" : [ "InstancesAMIS", { "Ref" : "AWS::Region" }, "AMI" ]},
+        "KeyName" : { "Ref" : "KeyName" },
+        "InstanceType" : {"Ref" : "InstancesType"},
+        "Tags" : [ {"Key" : "Name", "Value" : {"Fn::Join" : [".", ["Redis", {"Ref" : "Environment"}]]} } ]
+      }
+    },
+
+    "OAuth" : {
+      "Type" : "AWS::EC2::Instance",
+
+      "Properties" : {
+        "ImageId" : { "Fn::FindInMap" : [ "InstancesAMIS", { "Ref" : "AWS::Region" }, "AMI" ]},
+        "KeyName" : { "Ref" : "KeyName" },
+        "InstanceType" : {"Ref" : "InstancesType"},
+        "Tags" : [ {"Key" : "Name", "Value" : {"Fn::Join" : [".", ["OAuth", {"Ref" : "Environment"}]]} } ]
+      }
+    },
+
+    "HelloWorld" : {
+      "Type" : "AWS::EC2::Instance",
+
+      "Properties" : {
+        "ImageId" : { "Fn::FindInMap" : [ "InstancesAMIS", { "Ref" : "AWS::Region" }, "AMI" ]},
+        "KeyName" : { "Ref" : "KeyName" },
+        "InstanceType" : {"Ref" : "InstancesType"},
+        "Tags" : [ {"Key" : "Name", "Value" : {"Fn::Join" : [".", ["HelloWorld", {"Ref" : "Environment"}]]} } ]
+      }
+    },
+
+    "Monitors" : {
+      "Type" : "AWS::EC2::Instance",
+
+      "Properties" : {
+        "ImageId" : { "Fn::FindInMap" : [ "InstancesAMIS", { "Ref" : "AWS::Region" }, "AMI" ]},
+        "KeyName" : { "Ref" : "KeyName" },
+        "InstanceType" : {"Ref" : "InstancesType"},
+        "Tags" : [ {"Key" : "Name", "Value" : {"Fn::Join" : [".", ["Monitor", {"Ref" : "Environment"}]]} } ]
+      }
+    },
+
+    "Accounts" : {
+      "Type" : "AWS::EC2::Instance",
+
+      "Properties" : {
+        "ImageId" : { "Fn::FindInMap" : [ "InstancesAMIS", { "Ref" : "AWS::Region" }, "AMI" ]},
+        "KeyName" : { "Ref" : "KeyName" },
+        "InstanceType" : {"Ref" : "InstancesType"},
+        "Tags" : [ {"Key" : "Name", "Value" : {"Fn::Join" : [".", ["Accounts", {"Ref" : "Environment"}]]} } ]
+      }
+    },
+
+    "AccountsGtInstance" : {
+
+      "Type" : "AWS::EC2::Instance",
+      "Metadata" : {
+        "Comment" : "Catalog - Rails Aplication Instance"
+      },
+
+      "Properties" : {
+        "ImageId" : { "Fn::FindInMap" : [ "RegionMap", { "Ref" : "AWS::Region" }, "AMI" ]},
+        "SecurityGroupIds" : [ {"Ref" : "SecurityGroupId"} ],
+        "SubnetId" : { "Ref" : "SubnetId" },
+        "InstanceType" : { "Ref" : "InstanceType" },
+        "KeyName" : { "Ref" : "KeyName" },
+        "Tags" : [ {"Key" : "Application", "Value" : { "Ref" : "AWS::StackId"} },
+          {"Key" : "Name", "Value" : { "Fn::Join" : [ ".", ["accounts.gt", { "Ref" : "Environment"} ] ] } } ],
+        "UserData"       : { "Fn::Base64" : { "Fn::Join" : ["", [
+          "#!/bin/bash\n",
+          
+          "# Helper function to notify of failed operation\n",
+          "function error_exit\n",
+          "{\n",
+          "  cfn-signal -e 1 -r \"$1\" '", { "Ref" : "AccountsGTWaitHandle" }, "'\n",
+          "  exit 1\n",
+          "}\n",
+          
+          "# Run Instance default configuration via CloudFormation::Init\n",
+          "cfn-init -v --region ", { "Ref" : "AWS::Region" },
+          "    -s ", { "Ref" : "AWS::StackId" },
+          " -r AccountsGtInstance",
+          " -c default",
+          " || error_exit 'Failed to run cfn-init'\n",
+          
+          "# Register Github fingerprints\n",
+          "ssh-keygen -f ~/.ssh/known_hosts -H -F github.com | grep -q found || ssh-keyscan -H github.com >> ~/.ssh/known_hosts\n",
+                      "# Copy credentials to root user\n",
+          "cp /home/ubuntu/.ssh/* /root/.ssh/\n",
+          
+          "# Clone app repo to ubuntu user home\n",
+          "git clone ", {"Ref": "DeployBranch"}, " -b ", {"Ref" : "DeployBranch"}, " /home/ubuntu/accounts" , " > /tmp/git.log 2>&1 || error_exit 'Failed to clone repo'\n",
+          "chown ubuntu:ubuntu -R /home/ubuntu/accounts\n",
+          
+          "# Install application's dependencies via puppet\n",
+          "gem install puppet\n",
+          "gem install librarian-puppet\n",
+          "cd /home/ubuntu/accounts/puppet\n",
+          "export HOME=/home/ubuntu && librarian-puppet install --clean --verbose > /tmp/librarian-puppet.log 2>&1 || error_exit 'failed to install puppet submodules'\n",
+          "cd /home/ubuntu/accounts\n",
+          "sudo puppet apply --verbose --modulepath=./puppet/modules ./puppet/manifests/accounts-gt-aws-", { "Fn::FindInMap" : [ "RegionMap", {"Ref": "Environment"}, "Environment" ]}, ".pp > /tmp/puppet.log 2>&1 || error_exit 'failed to apply puppet manifests'\n",
+          
+          "# Signal setup is complete\n",
+          "cfn-signal -e $? -r 'Completed configuration' '",
+          {
+              "Ref" : "AccountsGTWaitHandle"
+          },
+          "'\n"
+        ]]}}
+      }
+    },
+
+    "AccountsGTWaitHandle" : {
+      "Type" : "AWS::CloudFormation::WaitConditionHandle"
+    },
+
+    "AccountsGTWaitCondition" : {
+      "Type" : "AWS::CloudFormation::WaitCondition",
+      "DependsOn" : "AccountsGtInstance",
+      "Properties" : {
+        "Handle" : {"Ref" : "AccountsGTWaitHandle"},
+        "Timeout" : "1200"
+      }
+    },
+
+    "DNSRecordAccountsGT" : {
+      "Type" : "AWS::Route53::RecordSet",
+      "Properties" : {
+        "HostedZoneName" : "bluekite.com.",
+        "Comment" : "DNS name for my instance.",
+        "Name" : { "Fn::Join" : [ ".", ["accounts.gt", {"Ref" : "Environment"}, "bluekite.com." ]]},
+        "Type" : "A",
+        "TTL" : "900",
+        "ResourceRecords" : [ { "Fn::GetAtt" : [ "AccountsGtInstance", "PrivateIp" ] } ]
+      },
+      "DependsOn" : "AccountsGtInstance"
+    },
+
+    "AccountsIsInstance" : {
+      "Type" : "AWS::EC2::Instance",
+      "Metadata" : {
+        "Comment" : "Catalog - Rails Aplication Instance"
+      },
+      "Properties" : {
+        "ImageId" : { "Fn::FindInMap" : [ "RegionMap", { "Ref" : "AWS::Region" }, "AMI" ]},
+        "SecurityGroupIds" : [ {"Ref" : "SecurityGroupId"} ],
+        "SubnetId" : { "Ref" : "SubnetId" },
+        "InstanceType" : { "Ref" : "InstanceType" },
+        "KeyName" : { "Ref" : "KeyName" },
+        "Tags" : [ {"Key" : "Application", "Value" : { "Ref" : "AWS::StackId"} },
+          {"Key" : "Name", "Value" : { "Fn::Join" : [ ".", ["accounts.is", {"Ref" : "Environment"} ] ] } } ],
+
+        "UserData"       : { "Fn::Base64" : { "Fn::Join" : ["", [
+          "#!/bin/bash\n",
+
+          "# Helper function to notify of failed operation\n",
+          "function error_exit\n",
+          "{\n",
+          "  cfn-signal -e 1 -r \"$1\" '", { "Ref" : "AccountsISWaitHandle" }, "'\n",
+          "  exit 1\n",
+          "}\n",
+
+          "# Run Instance default configuration via CloudFormation::Init\n",
+          "cfn-init -v --region ", { "Ref" : "AWS::Region" },
+          "    -s ", { "Ref" : "AWS::StackId" },
+          " -r AccountsIsInstance",
+          " -c default",
+          " || error_exit 'Failed to run cfn-init'\n",
+
+          "# Register Github fingerprints\n",
+          "ssh-keygen -f ~/.ssh/known_hosts -H -F github.com | grep -q found || ssh-keyscan -H github.com >> ~/.ssh/known_hosts\n",
+
+          "# Copy credentials to root user\n",
+          "cp /home/ubuntu/.ssh/* /root/.ssh/\n",
+
+          "# Clone app repo to ubuntu user home\n",
+          "git clone ", {"Ref": "DeployBranch"}, " -b ", {"Ref" : "DeployBranch"}, " /home/ubuntu/accounts" , " > /tmp/git.log 2>&1 || error_exit 'Failed to clone repo'\n",
+          "chown ubuntu:ubuntu -R /home/ubuntu/accounts\n",
+
+          "# Install application's dependencies via puppet\n",
+          "gem install puppet\n",
+          "gem install librarian-puppet\n",
+          "cd /home/ubuntu/accounts/puppet\n",
+          "export HOME=/home/ubuntu && librarian-puppet install --clean --verbose > /tmp/librarian-puppet.log 2>&1 || error_exit 'failed to install puppet submodules'\n",
+
+          "cd /home/ubuntu/accounts\n",
+          "sudo puppet apply --verbose --modulepath=./puppet/modules ./puppet/manifests/accounts-gt-aws-", {"Ref": "Environment"}, ".pp > /tmp/puppet.log 2>&1 || error_exit 'failed to apply puppet manifests'\n",
+
+          "# Signal setup is complete\n",
+          "cfn-signal -e $? -r 'Completed configuration' '",
+          {
+            "Ref" : "AccountsISWaitHandle"
+          },
+          "'\n"
+        ]]}}
+      }
+    },
+
+    "AccountsISWaitHandle" : {
+      "Type" : "AWS::CloudFormation::WaitConditionHandle"
+    },
+
+    "AccountsISWaitCondition" : {
+      "Type" : "AWS::CloudFormation::WaitCondition",
+      "DependsOn" : "AccountsGtInstance",
+      "Properties" : {
+        "Handle" : {"Ref" : "AccountsISWaitHandle"},
+        "Timeout" : "1200"
+      }
+    },
+
+    "DNSRecordAccountsGT" : {
+      "Type" : "AWS::Route53::RecordSet",
+      "Properties" : {
+        "HostedZoneName" : "bluekite.com.",
+        "Comment" : "DNS name for my instance.",
+        "Name" : { "Fn::Join" : [ ".", ["accounts.is", {"Ref" : "Environment"}, "bluekite.com." ]]},
+        "Type" : "A",
+        "TTL" : "900",
+        "ResourceRecords" : [ { "Fn::GetAtt" : [ "AccountsIsInstance", "PrivateIp" ] } ]
+      },
+      "DependsOn" : "AccountsIsInstance"
+    },
+
+    "CatalogInstance" : {
+      "Type" : "AWS::EC2::Instance",
+      "Metadata" : {
+        "Comment" : "Catalog - Rails Aplication Instance"
+      },
+      "Properties" : {
+        "ImageId" : { "Fn::FindInMap" : [ "RegionMap", { "Ref" : "AWS::Region" }, "AMI" ]},
+        "SecurityGroupIds" : [ {"Ref" : "SecurityGroupId"} ],
+        "SubnetId" : { "Ref" : "SubnetId" },
+        "InstanceType" : { "Ref" : "InstanceType" },
+        "KeyName" : { "Ref" : "KeyName" },
+        "Tags" : [ {"Key" : "Application", "Value" : { "Ref" : "AWS::StackId"} },
+          {"Key" : "Name", "Value" : { "Fn::Join" : [ ".", ["accounts", ".", {"Ref" : "Environment"} ] ] } } ],
+        "UserData"       : { "Fn::Base64" : { "Fn::Join" : ["", [
+          "#!/bin/bash\n",
+
+          "# Helper function to notify of failed operation\n",
+          "function error_exit\n",
+          "{\n",
+          "  cfn-signal -e 1 -r \"$1\" '", { "Ref" : "CatalogWaitHandle" }, "'\n",
+          "  exit 1\n",
+          "}\n",
+
+          "# Run Instance default configuration via CloudFormation::Init\n",
+          "cfn-init -v --region ", { "Ref" : "AWS::Region" },
+          "    -s ", { "Ref" : "AWS::StackId" },
+          " -r CatalogInstance",
+          " -c default",
+          " || error_exit 'Failed to run cfn-init'\n",
+
+          "# Register Github fingerprints\n",
+          "ssh-keygen -f ~/.ssh/known_hosts -H -F github.com | grep -q found || ssh-keyscan -H github.com >> ~/.ssh/known_hosts\n",
+
+          "# Copy credentials to root user\n",
+          "cp /home/ubuntu/.ssh/* /root/.ssh/\n",
+
+          "# Clone app repo to ubuntu user home\n",
+          "git clone ", {"Ref": "DeployBranch"}, " -b ", {"Ref" : "DeployBranch"}, " /home/ubuntu/accounts" , " > /tmp/git.log 2>&1 || error_exit 'Failed to clone repo'\n",
+          "chown ubuntu:ubuntu -R /home/ubuntu/accounts\n",
+          
+          "# Install application's dependencies via puppet\n",
+          "gem install puppet\n",
+          "gem install librarian-puppet\n",
+          "cd /home/ubuntu/accounts/puppet\n",
+          "export HOME=/home/ubuntu && librarian-puppet install --clean --verbose > /tmp/librarian-puppet.log 2>&1 || error_exit 'failed to install puppet submodules'\n",
+          "cd /home/ubuntu/accounts\n",
+          "sudo puppet apply --verbose --modulepath=./puppet/modules ./puppet/manifests/aws-", {"Ref": "Environment"}, ".pp > /tmp/puppet.log 2>&1 || error_exit 'failed to apply puppet manifests'\n",
+          
+          "# Signal setup is complete\n",
+          "cfn-signal -e $? -r 'Completed configuration' '",
+          {
+            "Ref" : "CatalogWaitHandle"
+          },
+          "'\n"
+        ]]}}
+      }
+    },
+
+    "CatalogWaitHandle" : {
+      "Type" : "AWS::CloudFormation::WaitConditionHandle"
+    },
+
+    "CatalogISWaitCondition" : {
+      "Type" : "AWS::CloudFormation::WaitCondition",
+      "DependsOn" : "AccountsGtInstance",
+      "Properties" : {
+        "Handle" : {"Ref" : "CatalogWaitHandle"},
+        "Timeout" : "1200"
+      }
+    },
+
+    "DNSRecordAccountsGT" : {
+      "Type" : "AWS::Route53::RecordSet",
+      "Properties" : {
+        "HostedZoneName" : "bluekite.com.",
+        "Comment" : "DNS name for my instance.",
+        "Name" : { "Fn::Join" : [ ".", ["catalog", {"Ref" : "Environment"}, "bluekite.com." ]]},
+        "Type" : "A",
+        "TTL" : "900",
+        "ResourceRecords" : [ { "Fn::GetAtt" : [ "AccountsIsInstance", "PrivateIp" ] } ]
+      },
+      "DependsOn" : "CatalogInstance"
+    },
+
+
+    "API" : {
+      "Type" : "AWS::EC2::Instance",
+
+      "Properties" : {
+        "ImageId" : { "Fn::FindInMap" : [ "InstancesAMIS", { "Ref" : "AWS::Region" }, "AMI" ]},
+        "KeyName" : { "Ref" : "KeyName" },
+        "InstanceType" : {"Ref" : "InstancesType"},
+        "Tags" : [ {"Key" : "Name", "Value" : {"Fn::Join" : [".", ["API", {"Ref" : "Environment"}]]} } ]
+      }
+    }
+
+  }
+}

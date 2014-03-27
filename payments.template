@@ -1,0 +1,161 @@
+{
+  "AWSTemplateFormatVersion" : "2010-09-09",
+
+  "Description" : "This stack generates the Payments IS instance",
+
+ "Mappings" : {
+    "RegionMap" : {
+      "sa-east-1"      : {"AMI" : "ami-d545e5c8" },
+      "us-west-1"      : {"AMI" : "ami-82b98bc7" },
+      "ap-northeast-1" : {"AMI" : "ami-35bbd334" },
+      "ap-southeast-1" : {"AMI" : "ami-605c0a32" },
+      "ap-southeast-2" : {"AMI" : "ami-fb4bd5c1" },
+      "eu-west-1"      : {"AMI" : "ami-d03dcaa7" },
+      "us-east-1"      : {"AMI" : "ami-cdc2fda4" },
+      "us-west-2"      : {"AMI" : "ami-9a9dfdaa" }
+    },
+
+    "dot" : {
+      "test"           : { "DOT" : ".test" },
+      "dev"            : { "DOT" : ".dev" },
+      "qa"             : { "DOT" : ".qa" },
+      "sandbox"        : { "DOT" : ".sandbox" },
+      "production"     : { "DOT" : "" }
+    }
+  },
+
+  "Parameters" : {
+    "Environment" : {
+      "Type" : "String",
+      "Description" : "Environment for the payments, i.e. dev, production, etc.",
+      "Default" : "qa"
+    },
+
+    "DeployBranch" : {
+      "Type" : "String",
+      "Description" : "Git branch where to deploy the code from.",
+      "Default" : "master"
+    },
+
+    "KeyName" : {
+      "Type" : "String",
+      "Description" : "The SSH access key",
+      "Default" : "tpbqa"
+    },
+
+    "InstanceType" : {
+      "Description" : "WebServer EC2 instance type",
+      "Type" : "String",
+      "Default" : "m1.medium",
+      "AllowedValues" : [ "t1.micro","m1.small","m1.medium","m1.large","m1.xlarge","m2.xlarge","m2.2xlarge","m2.4xlarge","m3.xlarge","m3.2xlarge","c1.medium","c1.xlarge","cc1.4xlarge","cc2.8xlarge","cg1.4xlarge"],
+      "ConstraintDescription" : "must be a valid EC2 instance type."
+    },
+
+    "SubnetId" : {
+      "Type" : "String",
+      "Description" : "Guatemala Payments SubnetId in your Virtual Private Cloud (VPC)",
+      "Default": "subnet-d46128fc"      
+    },
+
+    "SecurityGroupId" : {
+      "Type" : "String",
+      "Description" : "Security Group of the VPC",
+      "Default" : "sg-a6c411c3"
+    }
+  },
+
+  "Resources" : {
+
+   "PaymentsInstance" : {
+
+      "Type" : "AWS::EC2::Instance",
+      "Metadata" : {
+        "Comment" : "Catalog - Rails Aplication Instance"
+      },
+
+      "Properties" : {
+        "ImageId" : { "Fn::FindInMap" : [ "RegionMap", { "Ref" : "AWS::Region" }, "AMI" ]},
+        "SecurityGroupIds" : [ {"Ref" : "SecurityGroupId"} ],
+        "SubnetId" : { "Ref" : "SubnetId" },
+        "InstanceType" : { "Ref" : "InstanceType" },
+        "KeyName" : { "Ref" : "KeyName" },
+        "Tags" : [ {"Key" : "Application", "Value" : { "Ref" : "AWS::StackId"} },
+          {"Key" : "Name", "Value" : { "Fn::Join" : [ ".", ["payments", { "Ref" : "Environment"} ] ] } } ],
+        "UserData"       : { "Fn::Base64" : { "Fn::Join" : ["", [
+          "#!/bin/bash\n",
+          
+          "# Helper function to notify of failed operation\n",
+          "function error_exit\n",
+          "{\n",
+          "  cfn-signal -e 1 -r \"$1\" '", { "Ref" : "PaymentsWaitHandle" }, "'\n",
+          "  exit 1\n",
+          "}\n",
+          
+          "# Run Instance default configuration via CloudFormation::Init\n",
+          "cfn-init -v --region ", { "Ref" : "AWS::Region" },
+          "    -s ", { "Ref" : "AWS::StackId" },
+          " -r PaymentsInstance",
+          " -c default",
+          " || error_exit 'Failed to run cfn-init'\n",
+          
+          "# Register Github fingerprints\n",
+          "ssh-keygen -f ~/.ssh/known_hosts -H -F github.com | grep -q found || ssh-keyscan -H github.com >> ~/.ssh/known_hosts\n",
+                      "# Copy credentials to root user\n",
+          "cp /home/ubuntu/.ssh/* /root/.ssh/\n",
+          
+          "# Clone app repo to ubuntu user home\n",
+          "git clone git@github.com:blue-kite/payments.git -b ", {"Ref" : "DeployBranch"}, " /home/ubuntu/payments > /tmp/git.log 2>&1 || error_exit 'Failed to clone repo'\n",
+          "chown ubuntu:ubuntu -R /home/ubuntu/payments\n",
+          
+          "# Install application's dependencies via puppet\n",
+          "gem install puppet\n",
+          "gem install librarian-puppet\n",
+          "cd /home/ubuntu/payments/puppet\n",
+          "export HOME=/home/ubuntu && librarian-puppet install --clean --verbose > /tmp/librarian-puppet.log 2>&1 || error_exit 'failed to install puppet submodules'\n",
+          "cd /home/ubuntu/payments\n",
+          "sudo puppet apply --verbose --modulepath=./puppet/modules ./puppet/manifests/aws-",{"Ref" : "Environment"},".pp > /tmp/puppet.log 2>&1 || error_exit 'failed to apply puppet manifests'\n",
+          
+          "# Signal setup is complete\n",
+          "cfn-signal -e $? -r 'Completed configuration' '",
+          {
+              "Ref" : "PaymentsWaitHandle"
+          },
+          "'\n"
+        ]]}}
+      }
+    },
+
+    "PaymentsWaitHandle" : {
+      "Type" : "AWS::CloudFormation::WaitConditionHandle"
+    },
+
+    "PaymentsWaitCondition" : {
+      "Type" : "AWS::CloudFormation::WaitCondition",
+      "DependsOn" : "PaymentsInstance",
+      "Properties" : {
+        "Handle" : {"Ref" : "PaymentsWaitHandle"},
+        "Timeout" : "2000"
+      }
+    },
+
+    "DNSRecordPayments" : {
+      "Type" : "AWS::Route53::RecordSet",
+      "Properties" : {
+        "HostedZoneName" : "bluekite.com.",
+        "Comment" : "DNS name for my instance.",
+        "Name" : { "Fn::Join" : [ "", ["payments", { "Fn::FindInMap" : [ "dot", { "Ref" : "Environment" }, "DOT" ]}, ".bluekite.com." ]]},
+        "Type" : "A",
+        "TTL" : "900",
+        "ResourceRecords" : [ { "Fn::GetAtt" : [ "PaymentsInstance", "PrivateIp" ] } ]
+      },
+      "DependsOn" : "PaymentsInstance"
+    }
+  },
+
+  "Outputs" : {
+    "PaymentsInstanceId" : {
+      "Value" : { "Ref" : "PaymentsInstance" },
+      "Description" : "Instance Id of newly created instance"
+    }
+  }
+}

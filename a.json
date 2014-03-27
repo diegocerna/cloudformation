@@ -1,0 +1,29 @@
+{
+  "AWSTemplateFormatVersion" : "2010-09-09",
+
+  "Description" : "Instance A",
+
+  "Parameters": {
+    "Environment" : {
+      "Type" : "String"
+    },
+
+    "KeyName" : {
+      "Type":"String"
+    }
+  },
+  
+  "Resources" : {
+
+    "InstanciaA" : {
+      "Type" : "AWS::EC2::Instance",
+
+      "Properties" : {
+        "ImageId" : "ami-d545e5c8",
+        "KeyName" : {"Ref": "KeyName"},
+        "InstanceType" : "t1.micro",
+        "Tags" : [ {"Key" : "Name", "Value" : {"Fn::Join" : [".", ["chulis", {"Ref" : "Environment"}]]} } ]
+      }
+    }
+  }
+}

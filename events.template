@@ -1,0 +1,205 @@
+{
+  "AWSTemplateFormatVersion" : "2010-09-09",
+
+  "Description" : "Description of the full stack, this template create every environment based in the assinged parameters",
+
+  "Parameters" : {
+    
+    "Environment" : {
+      "Type" : "String"
+    },
+    
+    "KeyName" : {
+      "Type" : "String",
+      "Default" : "redtail_development"
+    },
+    
+    "InstancesType" : {
+      "Description" : "WebServer EC2 instance type",
+      "Type" : "String",
+      "Default" : "m1.medium",
+      "AllowedValues" : [ "t1.micro","m1.small","m1.medium","m1.large","m1.xlarge","m2.xlarge","m2.2xlarge","m2.4xlarge","m3.xlarge","m3.2xlarge","c1.medium","c1.xlarge","cc1.4xlarge","cc2.8xlarge","cg1.4xlarge"],
+      "ConstraintDescription" : "must be a valid EC2 instance type."
+    },
+
+    "DeployBranch" : {
+      "Type" : "String",
+      "Description" : "Wich branch you want to use as source"
+    },
+
+    "SG" : {
+      "Type" : "String",
+      "Default" : "sg-1cd6c07e",
+      "Description" : "Security Group (default = 'dev')"
+    },
+
+    "SubnetId" : {
+      "Type" : "String",
+      "Default" : "subnet-88aba1ea",
+      "Description" : "default is for dev"
+    }
+
+  },
+
+"Mappings" : {
+    "InstancesAMIS" : {
+      "us-east-1"      : { "AMI" : "ami-cdc2fda4" },
+      "us-west-1"      : { "AMI" : "ami-82b98bc7" },
+      "us-west-2"      : { "AMI" : "ami-9a9dfdaa" },
+      "sa-east-1"      : { "AMI" : "ami-d545e5c8" },  
+      "ap-northeast-1" : { "AMI" : "ami-35bbd334" },
+      "ap-southeast-1" : { "AMI" : "ami-605c0a32" },
+      "ap-southeast-2" : { "AMI" : "ami-fb4bd5c1" },
+      "eu-west-1"      : { "AMI" : "ami-d03dcaa7" }  
+    },
+
+    "dot" : {
+      "test"           : { "DOT" : ".test" },
+      "dev"            : { "DOT" : ".dev" },
+      "qa"             : { "DOT" : ".qa" },
+      "sandbox"        : { "DOT" : ".sandbox" },
+      "production"     : { "DOT" : "" }
+    }
+
+  },
+  "Resources":{
+
+    "myDNSRecord2" : {
+      "Type" : "AWS::Route53::RecordSet",
+      "Properties" : {
+        "HostedZoneName" : "bluekite.com.",
+        "Comment" : "Endponit of events.",
+        "Name" : {"Fn::Join" : ["", ["events", { "Fn::FindInMap" : [ "dot", { "Ref" : "Environment" }, "DOT" ]},".bluekite.com."]]},
+        "Type" : "A",
+        "TTL" : "300",
+        "ResourceRecords" : [
+          {"Fn::GetAtt" : ["Events", "PrivateIp"]}
+        ]
+      },
+      "DependsOn" : "Events"
+    },
+
+    "Events" : {
+      "Type" : "AWS::EC2::Instance",
+      "Properties" : {
+        "ImageId" : { "Fn::FindInMap" : [ "InstancesAMIS", { "Ref" : "AWS::Region" }, "AMI" ]},
+        "KeyName" : {"Ref" : "KeyName"},
+        "InstanceType" : {"Ref" : "InstancesType"},
+        "SecurityGroupIds" : [{"Ref" : "SG"}],
+        "SubnetId" : {"Ref" : "SubnetId"},
+        "Tags" : [ {"Key" : "Name", "Value" : {"Fn::Join" : [".", ["Events", {"Ref" : "Environment"}]]} } ],      
+        "UserData"       : { "Fn::Base64" : { "Fn::Join" : ["", [
+          "#!/bin/bash\n",
+
+          "# Helper function to notify of failed operation\n",
+          "function error_exit\n",
+          "{\n",
+          "  cfn-signal -e 1 -r \"$1\" '", { "Ref" : "EventWaitHandler" }, "'\n",
+          "  exit 1\n",
+          "}\n",
+
+          "# Run Instance default configuration via CloudFormation::Init\n",
+          "cfn-init -v --region ", { "Ref" : "AWS::Region" },
+          "    -s ", { "Ref" : "AWS::StackId" },
+          " -r Events",
+          " -c default",
+          " || error_exit 'Failed to run cfn-init'\n",
+
+          "# Install puppet via gems\n",
+          "sudo gem install puppet --no-rdoc --no-ri > /tmp/gem-puppet.log 2>&1 || error_exit 'Failed install puppet gem'\n",
+
+          "# Register Github fingerprints\n",
+          "ssh-keygen -f ~/.ssh/known_hosts -H -F github.com | grep -q found || ssh-keyscan -H github.com >> ~/.ssh/known_hosts\n",
+
+          "# Copy credentials to root user\n",
+          "cp /home/ubuntu/.ssh/* /root/.ssh/\n",
+
+          "# Install Librarian Ruby\n",
+          "sudo gem install puppet --no-rdoc --no-ri > /tmp/gem-puppet.log 2>&1 || error_exit 'Failed install puppet gem'\n",
+
+          "# Clone app repo to ubuntu user home\n",
+          "git clone git@github.com:blue-kite/events.git -b ", {"Ref" : "DeployBranch"}, " /home/ubuntu/events > /tmp/git.log 2>&1 || error_exit 'Failed to clone repo events'\n",
+          "chown ubuntu:ubuntu -R /home/ubuntu/events\n",
+
+          "# Install application's dependencies via puppet\n",
+          "sudo gem install librarian-puppet\n",
+          "cd /home/ubuntu/events/puppet\n",
+          "export HOME=/home/ubuntu && librarian-puppet install --clean --verbose > /tmp/librarian-puppet.log 2>&1 || error_exit 'failed to install puppet submodules'\n",
+
+          "cd /home/ubuntu/events\n",
+          "sudo puppet apply --verbose --modulepath=puppet/modules puppet/manifests/aws-", {"Ref": "Environment"}, ".pp > /tmp/puppet.log 2>&1 || error_exit 'failed to apply puppet manifests'\n",
+
+          "# Signal setup is complete\n",
+          "cfn-signal -e $? -r 'Completed configuration' '",
+          {
+            "Ref" : "EventWaitHandler"
+          },
+          "'\n"
+
+        ]]}}
+      },
+
+      "Metadata" : {
+        "Comment" : "API Events NodeJs Application and Cassandra",
+        "AWS::CloudFormation::Init" : {
+          "configSets" : {
+            "default" : ["config_credentials", "config_packages"]
+          },
+          "config_credentials" : {
+            "files" : {
+              "/home/ubuntu/.ssh/id_rsa" : {
+                "source" : "https://s3.amazonaws.com/redtail/redtail_rsa",
+                "mode" : "600",
+                "owner" : "ubuntu",
+                "group" : "ubuntu"
+              },
+              "/home/ubuntu/.ssh/id_rsa.pub" : {
+                "source" : "https://s3.amazonaws.com/redtail/redtail_rsa.pub",
+                "mode" : "600",
+                "owner" : "ubuntu",
+                "group" : "ubuntu"
+              },
+              "/home/ubuntu/.ssh/config" : {
+                "mode" : "600",
+                "owner" : "ubuntu",
+                "group" : "ubuntu",
+                "content" : { "Fn::Join" : ["", [
+                  "Host github.com\n",
+                  "\tStrictHostKeyChecking no\n",
+                  "\tUser git\n",
+                  "\tPreferredAuthentications publickey\n",
+                  "\tIdentityFile ~/.ssh/id_rsa\n"
+                ]]}
+              }
+            }
+          },
+          "config_packages" : {
+            "packages" : {
+              "apt" : {
+                "git"                        : [],
+                "curl"                       : [],
+                "tmux"                       : [],
+                "build-essential"            : [],
+                "python-software-properties" : [],
+                "rubygems"                   : []
+              }
+            }
+          }
+        }
+      }
+    },
+
+    "EventWaitHandler" : {
+      "Type" : "AWS::CloudFormation::WaitConditionHandle"
+    },
+
+    "EventWaitCondition" : {
+      "Type" : "AWS::CloudFormation::WaitCondition",
+      "DependsOn" : "Events",
+      "Properties" : {
+        "Handle" : {"Ref" : "EventWaitHandler"},
+        "Timeout" : "1000"
+      }
+    }
+  }
+}
