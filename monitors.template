@@ -1,7 +1,7 @@
 {
   "AWSTemplateFormatVersion" : "2010-09-09",
 
-  "Description" : "Monitors Faye pub/sub Aplication Instance",
+  "Description" : "Monitors - Rails Aplication Instance",
 
   "Parameters" : {
     "KeyName": {
@@ -11,13 +11,7 @@
       "MaxLength": "255",
       "AllowedPattern" : "[\\x20-\\x7E]*",
       "ConstraintDescription" : "can contain only ASCII characters.",
-      "Default": "tpbqa"
-    },
-
-    "Branch" : {
-      "Description" : "Deploying branch",
-      "Type" : "String",
-      "Default" : "master"
+      "Default": "tbp_"
     },
 
     "InstanceType" : {
@@ -31,37 +25,46 @@
     "SubnetId" : {
       "Type" : "String",
       "Description" : "SubnetId of an existing subnet in your Virtual Private Cloud (VPC)",
-      "Default": "subnet-d46128fc"
-    },
-
-    "Branch" : {
-      "Type" : "String",
-      "Description" : "Branch who provides the code",
-      "Default": "master"
+      "Default": "subnet-"
     },
 
     "SecurityGroupId" : {
       "Type" : "String",
       "Description" : "SecurityGroupId of an existing subnet in your Virtual Private Cloud (VPC)",
-      "Default": "sg-a6c411c3"
+      "Default": "sg-"
     },
 
-    "Environment": {
-      "Description" : "Environment for the EC2 instance",
-      "Type": "String",
-      "Default" : "qa"
+    "DeployBranch" : {
+      "Type" : "String",
+      "Description" : "Git branch where to deploy the code from.",
+      "Default" : ""
+    },
+
+    "Environment" : {
+      "Type" : "String",
+      "Description" : "Application's environment.",
+      "Default" : ""
+    },
+
+    "Repository" : {
+      "Type" : "String",
+      "Description" : "Application's GitHub Repository.",
+      "Default" : "git@github.com:blue-kite/monitors.git"
     }
+
   },
 
   "Mappings" : {
     "RegionMap" : {
-      "us-east-1"      : { "AMI" : "ami-cdc2fda4" },
-      "us-west-1"      : { "AMI" : "ami-82b98bc7" },
-      "us-west-2"      : { "AMI" : "ami-9a9dfdaa" },
-      "sa-east-1"      : { "AMI" : "ami-d545e5c8" },
-      "eu-west-1"      : { "AMI" : "ami-d03dcaa7"}
+      "sa-east-1"      : {"AMI" : "ami-d545e5c8" },
+      "us-west-1"      : {"AMI" : "ami-82b98bc7" },
+      "ap-northeast-1" : {"AMI" : "ami-35bbd334" },
+      "ap-southeast-1" : {"AMI" : "ami-605c0a32" },
+      "ap-southeast-2" : {"AMI" : "ami-fb4bd5c1" },
+      "eu-west-1"      : {"AMI" : "ami-d03dcaa7" },
+      "us-east-1"      : {"AMI" : "ami-cdc2fda4" },
+      "us-west-2"      : {"AMI" : "ami-9a9dfdaa" }
     },
-
     "dot" : {
       "test"            : { "DOT" : ".test" },
       "dev"            : { "DOT" : ".dev" },
@@ -73,71 +76,25 @@
 
   "Resources" : {
 
+
     "DNSRecord" : {
       "Type" : "AWS::Route53::RecordSet",
       "Properties" : {
         "HostedZoneName" : "bluekite.com.",
         "Comment" : "DNS name for my instance.",
-        "Name" : { "Fn::Join" : [ "", ["monitors", { "Fn::FindInMap" : [ "dot", { "Ref" : "Environment" }, "DOT" ]}, ".bluekite.com."]]},
+        "Name" : {"Fn::Join" : ["", ["monitors",{ "Fn::FindInMap" : [ "dot", { "Ref" : "Environment" }, "DOT" ]},".bluekite.com."]]},
         "Type" : "A",
         "TTL" : "900",
-        "ResourceRecords" : [ { "Fn::GetAtt" : [ "Monitors", "PrivateIp" ] } ]
+        "ResourceRecords" : [ { "Fn::GetAtt" : [ "MonitorsInstance", "PrivateIp" ] } ]
       },
-      "DependsOn" : "Monitors"
+      "DependsOn" : "MonitorsInstance"
     },
 
-    "Monitors" : {
+    "MonitorsInstance" : {
       "Type" : "AWS::EC2::Instance",
       "Metadata" : {
-        "Comment" : "Monitors",
-        "AWS::CloudFormation::Init" : {
-          "configSets" : {
-            "default" : ["config_credentials", "config_packages"]
-          },
-          "config_credentials" : {
-            "files" : {
-              "/home/ubuntu/.ssh/id_rsa" : {
-                "source" : "https://s3.amazonaws.com/redtail/redtail_rsa",
-                "mode" : "600",
-                "owner" : "ubuntu",
-                "group" : "ubuntu"
-              },
-              "/home/ubuntu/.ssh/id_rsa.pub" : {
-                "source" : "https://s3.amazonaws.com/redtail/redtail_rsa.pub",
-                "mode" : "600",
-                "owner" : "ubuntu",
-                "group" : "ubuntu"
-              },
-              "/home/ubuntu/.ssh/config" : {
-                "mode" : "600",
-                "owner" : "ubuntu",
-                "group" : "ubuntu",
-                "content" : { "Fn::Join" : ["", [
-                  "Host github.com\n",
-                  "\tStrictHostKeyChecking no\n",
-                  "\tUser git\n",
-                  "\tPreferredAuthentications publickey\n",
-                  "\tIdentityFile ~/.ssh/id_rsa\n"
-                ]]}
-              }
-            }
-          },
-          
-          "config_packages" : {
-            "packages" : {
-              "apt" : {
-                "git"                        : [],
-                "curl"                       : [],
-                "tmux"                       : [],
-                "build-essential"            : [],
-                "python-software-properties" : [],
-                "rubygems"                   : []
-              }
-            }
-          }
-        }
+        "Comment" : "Monitors - Rails Aplication Instance"
       },
-
       "Properties" : {
         "ImageId" : { "Fn::FindInMap" : [ "RegionMap", { "Ref" : "AWS::Region" }, "AMI" ]},
         "SecurityGroupIds" : [ {"Ref" : "SecurityGroupId"} ],
@@ -145,7 +102,7 @@
         "InstanceType" : { "Ref" : "InstanceType" },
         "KeyName" : { "Ref" : "KeyName" },
         "Tags" : [ {"Key" : "Application", "Value" : { "Ref" : "AWS::StackId"} },
-                  {"Key" : "Name", "Value" : { "Fn::Join" : [ ".", ["monitors", {"Ref" : "Environment"} ]]}}],
+                {"Key" : "Name", "Value" : { "Fn::Join" : [ ".", ["Monitors", {"Ref" : "Environment"} ] ] } } ],
         "UserData"       : { "Fn::Base64" : { "Fn::Join" : ["", [
           "#!/bin/bash\n",
 
@@ -159,12 +116,9 @@
           "# Run Instance default configuration via CloudFormation::Init\n",
           "cfn-init -v --region ", { "Ref" : "AWS::Region" },
           "    -s ", { "Ref" : "AWS::StackId" },
-          " -r Monitors",
+          " -r MonitorsInstance",
           " -c default",
-          " || error_exit 'Failed to run cfn-init on stack Monitors'\n",
-
-          "# Install puppet via gems\n",
-          "sudo gem install puppet --no-rdoc --no-ri > /tmp/gem-puppet.log 2>&1 || error_exit 'Failed install puppet gem'\n",
+          " || error_exit 'Failed to run cfn-init'\n",
 
           "# Register Github fingerprints\n",
           "ssh-keygen -f ~/.ssh/known_hosts -H -F github.com | grep -q found || ssh-keyscan -H github.com >> ~/.ssh/known_hosts\n",
@@ -173,19 +127,18 @@
           "cp /home/ubuntu/.ssh/* /root/.ssh/\n",
 
           "# Clone app repo to ubuntu user home\n",
-          "git clone git@github.com:blue-kite/monitors.git -b ", { "Ref" : "Branch" } ," /home/ubuntu/api > /tmp/git.log 2>&1 || error_exit 'Failed to clone repo'\n",
-          "chown ubuntu:ubuntu -R /home/ubuntu/api\n",
-
-          "# Extract monitors application\n",
-          "ln -s /home/ubuntu/api/monitors /home/ubuntu/monitors\n",
+          "git clone ", {"Ref": "Repository"}, " -b ", {"Ref" : "DeployBranch"}, " /home/ubuntu/monitors > /tmp/git.log 2>&1 || error_exit 'Failed to clone repo'\n",
           "chown ubuntu:ubuntu -R /home/ubuntu/monitors\n",
 
           "# Install application's dependencies via puppet\n",
-          "cd /home/ubuntu/api\n",
-          "git submodule init\n",
-          "git submodule update\n",
-          "cd /home/ubuntu\n",
-          "sudo puppet apply --verbose --modulepath=./api/puppet/modules ./api/puppet/manifests/aws-",{"Ref" : "Environment"},".pp > /tmp/puppet.log 2>&1 || error_exit 'failed to apply puppet manifests'\n",
+          "sudo apt-get update\n",
+          "sudo gem install puppet\n",
+          "sudo gem install librarian-puppet\n",
+          "cd /home/ubuntu/monitors/puppet\n",
+          "export HOME=/home/ubuntu && librarian-puppet install --clean --verbose > /tmp/librarian-puppet.log 2>&1 || error_exit 'failed to install puppet submodules'\n",
+
+          "cd /home/ubuntu/monitors\n",
+          "sudo puppet apply --verbose --modulepath=./puppet/modules ./puppet/manifests/aws-",{"Ref":"Environment"},".pp  > /tmp/puppet.log 2>&1 || error_exit 'failed to apply puppet manifests'\n",
 
           "# Signal setup is complete\n",
           "cfn-signal -e $? -r 'Completed configuration' '",
@@ -203,19 +156,27 @@
 
     "MonitorsWaitCondition" : {
       "Type" : "AWS::CloudFormation::WaitCondition",
-      "DependsOn" : "Monitors",
-        "Properties" : {
-          "Handle" : {"Ref" : "MonitorsWaitHandle"},
-          "Timeout" : "900"
+      "DependsOn" : "MonitorsInstance",
+      "Properties" : {
+        "Handle" : {"Ref" : "MonitorsWaitHandle"},
+        "Timeout" : "2000"
       }
     }
   },
 
   "Outputs" : {
     "InstanceId" : {
-      "Value" : { "Ref" : "Monitors" },
+      "Value" : { "Ref" : "MonitorsInstance" },
       "Description" : "Instance Id of newly created instance"
+    },
+
+    "IPAddress" : {
+      "Value" : { "Fn::GetAtt" : [ "MonitorsInstance", "PrivateIp" ] },
+      "Description" : "Private IP address of instance"
+    },
+
+    "DomainName" : {
+      "Value" : { "Ref" : "DNSRecord" }
     }
   }
-
 }
