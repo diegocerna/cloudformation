@@ -513,7 +513,7 @@
             "IpProtocol": "tcp",
             "FromPort": "6379",
             "ToPort": "6379",
-            "CidrIp": "192.168.0.0/16"
+            "CidrIp": "192.168.0.0/24"
           },
           {
             "IpProtocol": "tcp",
@@ -1118,7 +1118,7 @@
             "IpProtocol": "tcp",
             "FromPort": "22",
             "ToPort": "22",
-            "CidrIp": "192.168.0.0/16"
+            "CidrIp": "192.168.0.0/24"
           },
           {
             "IpProtocol": "tcp",
