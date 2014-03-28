@@ -104,11 +104,11 @@
             "AvailabilityZones" : { "Fn::GetAZs" : "" },
             "Listeners" : [ {
               "LoadBalancerPort" : "80",
-              "InstancePort" : { "Ref" : "WebServerPort" },
+              "InstancePort" : "80",
               "Protocol" : "HTTP"
             } ],
             "HealthCheck" : {
-              "Target" : {"HTTP:80/"},
+              "Target" : "HTTP:80/",
               "HealthyThreshold" : "3",
               "UnhealthyThreshold" : "5",
               "Interval" : "30",
@@ -116,7 +116,7 @@
             },
             "Scheme" : "internal"
           }
-        }
+        },
 
         "WebServerGroup" : {
            "Type" : "AWS::AutoScaling::AutoScalingGroup",
@@ -125,13 +125,13 @@
               "Cooldown" : 120,
               "HealthCheckGracePeriod" : 300,
               "HealthCheckType" : "ELB",
-              "InstanceId" : { "Ref" : "HelloWorldInstance" }
+              "InstanceId" : { "Ref" : "HelloWorldInstance" },
               "MinSize" : "2",
               "MaxSize" : "5",
               "LoadBalancerNames" : [ { "Ref" : "ElasticLoadBalancer" } ]
            },
             "DependsOn" : "HelloWorldInstance"
-        }  
+        },
 
         "HelloWorldInstance" : {
             "Type" : "AWS::EC2::Instance",
@@ -151,7 +151,7 @@
                     }
                 }
             },
-            "DependsOn" : "ElasticLoadBalancer"
+            "DependsOn" : "ElasticLoadBalancer",
             "Properties" : {
                 "ImageId" : { "Fn::FindInMap" : [ "RegionMap", { "Ref" : "AWS::Region" }, "AMI" ]},
                 "SecurityGroupIds" : [ {"Ref" : "SecurityGroupId"} ],
