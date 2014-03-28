@@ -30,7 +30,7 @@
           "dev"            : { "keypair" : "tbp_dev"},
           "qa"             : { "keypair" : "tbp_qa" },
           "sandbox"        : { "keypair" : "tbp_sandbox"},
-          "production"     : { "keypair" : "tbp_production"}
+          "production"     : { "keypair" : "tbp_prod"}
     },
 
     "subnets" : {
