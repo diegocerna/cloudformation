@@ -102,9 +102,6 @@
           "Type" : "AWS::ElasticLoadBalancing::LoadBalancer",
           "Properties" : {
             "AvailabilityZones" : { "Fn::GetAZs" : "" },
-
-            "Instances" : [ { "Ref" : "HelloWorldInstance" } ], //probablemente se quite
-
             "Listeners" : [ {
               "LoadBalancerPort" : "80",
               "InstancePort" : { "Ref" : "WebServerPort" },
