@@ -476,14 +476,14 @@
       "Properties": {
         "GroupDescription": "Redis Monitor Service",
         "VpcId": {
-          "Ref": "vpc",
+          "Ref": "vpc"
+          },
           "Tags":[
             {
             "Key": "Name",
             "Value": "Monitors Security Groups"
             }
-          ]
-        },
+          ],
 
         "SecurityGroupIngress": [
           {
@@ -556,15 +556,16 @@
       "Properties": {
         "GroupDescription": "Private APIs",
         "VpcId": {
-          "Ref": "vpc",
+          "Ref": "vpc"
+          },
+
           "Tags":[
             {
             "Key": "Name",
             "Value": "Private Apis Security Groups"
             }
-          ]
-        },
-        
+          ],
+              
         "SecurityGroupIngress": [
           {
             "IpProtocol": "icmp",
@@ -660,15 +661,16 @@
       "Properties": {
         "GroupDescription": "Private APIs",
         "VpcId": {
-          "Ref": "vpc",
+          "Ref": "vpc"
+          },
+
           "Tags":[
             {
             "Key": "Name",
             "Value": "Logstash Security Groups"
             }
-          ]
-        },
-        
+          ],
+                
         "SecurityGroupIngress": [
           {
             "IpProtocol": "icmp",
@@ -769,15 +771,16 @@
       "Properties": {
         "GroupDescription": "SHH Connections",
         "VpcId": {
-          "Ref": "vpc",
+          "Ref": "vpc"
+          },
+
           "Tags":[
             {
             "Key": "Name",
             "Value": "Bastion Security Groups"
             }
-          ]
-        },
-        
+          ],
+                
         "SecurityGroupIngress": [
           {
             "IpProtocol": "tcp",
@@ -802,15 +805,16 @@
       "Properties": {
         "GroupDescription": "SHH Connections",
         "VpcId": {
-          "Ref": "vpc",
+          "Ref": "vpc"
+          },
+
           "Tags":[
             {
             "Key": "Name",
             "Value": "VPN OpenSwan Security Groups"
             }
-          ]
-        },
-        
+          ],
+                
         "SecurityGroupIngress": [
           {
             "IpProtocol": "icmp",
@@ -851,15 +855,16 @@
       "Properties": {
         "GroupDescription": "Public API NAT",
         "VpcId": {
-          "Ref": "vpc",
+          "Ref": "vpc"
+          },
+
           "Tags":[
             {
             "Key": "Name",
             "Value": "Nat Security Groups"
             }
-          ]
-        },
-        
+          ],
+                
         "SecurityGroupIngress": [
           {
             "IpProtocol": "icmp",
@@ -990,15 +995,16 @@
       "Properties": {
         "GroupDescription": "Guatemala accounts applications",
         "VpcId": {
-          "Ref": "vpc",
+          "Ref": "vpc"
+          },
+
           "Tags":[
             {
             "Key": "Name",
             "Value": "Guatemala Accounts Application Security Groups"
             }
-          ]
-        },
-        
+          ],
+                
          "SecurityGroupIngress": [   
           {
             "IpProtocol": "icmp",
@@ -1076,15 +1082,16 @@
       "Properties": {
         "GroupDescription": "Island accounts applications",
         "VpcId": {
-          "Ref": "vpc",
+          "Ref": "vpc"
+          },
+
           "Tags":[
             {
             "Key": "Name",
             "Value": "Island Accounts Application Security Groups"
             }
-          ]
-        },
-        
+          ],
+                
         "SecurityGroupIngress": [
           {
             "IpProtocol": "icmp",
@@ -1161,15 +1168,16 @@
       "Properties": {
         "GroupDescription": "Public facing services",
         "VpcId": {
-          "Ref": "vpc",
+          "Ref": "vpc"
+          },
+
           "Tags":[
             {
             "Key": "Name",
             "Value": "Public Apis Security Groups"
             }
-          ]
-        },
-        
+          ],
+                
         "SecurityGroupIngress": [
           {
             "IpProtocol": "icmp",
