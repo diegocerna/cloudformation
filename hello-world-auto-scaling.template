@@ -1,0 +1,240 @@
+{
+    "AWSTemplateFormatVersion" : "2010-09-09",
+
+    "Description" : "Hello World Grape Application Instance",
+
+    "Parameters" : {
+        "KeyName": {
+            "Description" : "Name of an existing EC2 KeyPair to enable SSH access to the instance",
+            "Type": "String",
+            "MinLength": "1",
+            "MaxLength": "255",
+            "AllowedPattern" : "[\\x20-\\x7E]*",
+            "ConstraintDescription" : "can contain only ASCII characters.",
+            "Default": "tpbqa"
+        },
+
+        "InstanceType" : {
+            "Description" : "WebServer EC2 instance type",
+            "Type" : "String",
+            "Default" : "t1.micro",
+            "AllowedValues" : [ "t1.micro","m1.small","m1.medium","m1.large","m1.xlarge","m2.xlarge","m2.2xlarge","m2.4xlarge","m3.xlarge","m3.2xlarge","c1.medium","c1.xlarge","cc1.4xlarge","cc2.8xlarge","cg1.4xlarge"],
+            "ConstraintDescription" : "must be a valid EC2 instance type."
+        },
+
+
+        "SubnetId" : {
+            "Type" : "String",
+            "Description" : "Private API's SubnetId in your Virtual Private Cloud (VPC)",
+            "Default": "subnet-d46128fc"
+        },
+
+        "SecurityGroupId" : {
+            "Type" : "String",
+            "Description" : "Private API's SecurityGroupId your Virtual Private Cloud (VPC)",
+            "Default": "sg-a6c411c3"
+        },
+
+        "HostedZone" : {
+            "Type" : "String",
+            "Description" : "The DNS name of an existing Amazon Route 53 hosted zone",
+            "Default" : "bluekite.com"
+        },
+
+        "DeployBranch" : {
+            "Type" : "String",
+            "Description" : "Git branch where to deploy the code from.",
+            "Default" : "master"
+        },
+
+        "Environment" : {
+            "Type" : "String",
+            "Description" : "Application's environment.",
+            "Default" : "qa"
+        },
+
+        "WorkingDirectory" : {
+            "Type" : "String",
+            "Description" : "Application's Working Directory.",
+            "Default" : "hello-world"
+        }
+
+    },
+
+    "Mappings" : {
+        "RegionMap" : {
+            "sa-east-1"      : {"AMI" : "ami-d545e5c8" },
+            "us-west-1"      : {"AMI" : "ami-82b98bc7" },
+            "ap-northeast-1" : {"AMI" : "ami-35bbd334" },
+            "ap-southeast-1" : {"AMI" : "ami-605c0a32" },
+            "ap-southeast-2" : {"AMI" : "ami-fb4bd5c1" },
+            "eu-west-1"      : {"AMI" : "ami-d03dcaa7" },
+            "us-east-1"      : {"AMI" : "ami-cdc2fda4" },
+            "us-west-2"      : {"AMI" : "ami-9a9dfdaa" }
+        },
+
+        "dot" : {
+          "test"            : { "DOT" : ".test" },
+          "dev"            : { "DOT" : ".dev" },
+          "qa"             : { "DOT" : ".qa" },
+          "sandbox"        : { "DOT" : ".sandbox" },
+          "production"     : { "DOT" : "" }
+        }
+    },
+
+    "Resources" : {
+
+
+        "DNSRecord" : {
+            "Type" : "AWS::Route53::RecordSet",
+            "Properties" : {
+                "HostedZoneName" : { "Fn::Join" : [ "", [{"Ref" : "HostedZone"}, "." ]]},
+                "Comment" : "DNS name for my instance.",
+                "Name" : { "Fn::Join" : [ "", ["hello-world.scaling.", { "Fn::FindInMap" : [ "dot", { "Ref" : "Environment" }, "DOT" ]}, ".bluekite.com." ]]},
+                "Type" : "A",
+                "TTL" : "300",
+                "ResourceRecords" : [ { "Ref" : "ElasticLoadBalancer" } ]
+            },
+            "DependsOn" : "ElasticLoadBalancer"
+        },
+
+        "ElasticLoadBalancer" : {
+          "Type" : "AWS::ElasticLoadBalancing::LoadBalancer",
+          "Properties" : {
+            "AvailabilityZones" : { "Fn::GetAZs" : "" },
+
+            "Instances" : [ { "Ref" : "HelloWorldInstance" } ], //probablemente se quite
+
+            "Listeners" : [ {
+              "LoadBalancerPort" : "80",
+              "InstancePort" : { "Ref" : "WebServerPort" },
+              "Protocol" : "HTTP"
+            } ],
+            "HealthCheck" : {
+              "Target" : {"HTTP:80/"},
+              "HealthyThreshold" : "3",
+              "UnhealthyThreshold" : "5",
+              "Interval" : "30",
+              "Timeout" : "5"
+            },
+            "Scheme" : "internal"
+          }
+        }
+
+        "WebServerGroup" : {
+           "Type" : "AWS::AutoScaling::AutoScalingGroup",
+           "Properties" : {
+              "AvailabilityZones" : { "Fn::GetAZs" : "" },
+              "Cooldown" : 120,
+              "HealthCheckGracePeriod" : 300,
+              "HealthCheckType" : "ELB",
+              "InstanceId" : { "Ref" : "HelloWorldInstance" }
+              "MinSize" : "2",
+              "MaxSize" : "5",
+              "LoadBalancerNames" : [ { "Ref" : "ElasticLoadBalancer" } ]
+           },
+            "DependsOn" : "HelloWorldInstance"
+        }  
+
+        "HelloWorldInstance" : {
+            "Type" : "AWS::EC2::Instance",
+            "Metadata" : {
+                "Comment" : "Hello World Grape Application Instance",
+                "AWS::CloudFormation::Init" : {
+                 "configSets" : {
+                        "default" : ["config_packages"]
+                    },
+                        "config_packages" : {
+                        "packages" : {
+                            "rubygems" : {
+                                "puppet"             : [],
+                                "librarian-puppet"   : []
+                            }
+                        }
+                    }
+                }
+            },
+            "DependsOn" : "ElasticLoadBalancer"
+            "Properties" : {
+                "ImageId" : { "Fn::FindInMap" : [ "RegionMap", { "Ref" : "AWS::Region" }, "AMI" ]},
+                "SecurityGroupIds" : [ {"Ref" : "SecurityGroupId"} ],
+                "SubnetId" : { "Ref" : "SubnetId" },
+                "InstanceType" : { "Ref" : "InstanceType" },
+                "KeyName" : { "Ref" : "KeyName" },
+                "Tags" : [ {"Key" : "Application", "Value" : { "Ref" : "AWS::StackId"} },
+                           {"Key" : "Name", "Value" : { "Fn::Join" : [ ".", ["hello-world", { "Ref" : "Environment"},"first" ] ] } } ],
+                "UserData"       : { "Fn::Base64" : { "Fn::Join" : ["", [
+                    "#!/bin/bash\n",
+
+                    "# Helper function to notify of failed operation\n",
+                    "function error_exit\n",
+                    "{\n",
+                    "  cfn-signal -e 1 -r \"$1\" '", { "Ref" : "WebServerWaitHandle" }, "'\n",
+                    "  exit 1\n",
+                    "}\n",
+
+                    "# Run Instance default configuration via CloudFormation::Init\n",
+                    "cfn-init -v --region ", { "Ref" : "AWS::Region" },
+                    "    -s ", { "Ref" : "AWS::StackId" },
+                    " -r HelloWorldInstance",
+                    " -c default",
+                    " || error_exit 'Failed to run cfn-init'\n",
+
+                    "# Register Github fingerprints\n",
+                    "ssh-keygen -f ~/.ssh/known_hosts -H -F github.com | grep -q found || ssh-keyscan -H github.com >> ~/.ssh/known_hosts\n",
+
+                    "# Copy credentials to root user\n",
+                    "cp /home/ubuntu/.ssh/* /root/.ssh/\n",
+
+                    "# Clone app repo to ubuntu user home\n",
+                    "git clone git@github.com:blue-kite/hello-world.git -b ", {"Ref" : "DeployBranch"}, " /home/ubuntu/", {"Ref" : "WorkingDirectory"} , " > /tmp/git.log 2>&1 || error_exit 'Failed to clone repo'\n",
+                    "chown ubuntu:ubuntu -R /home/ubuntu/", {"Ref" : "WorkingDirectory"}, "\n",
+                    "sudo apt-get update\n",
+                    "sudo apt-get upgrade\n",
+                    "# Install application's dependencies via puppet\n",
+                    "cd /home/ubuntu/", {"Ref" : "WorkingDirectory"}, "/puppet\n",
+                    "export HOME=/home/ubuntu && librarian-puppet install --clean --verbose > /tmp/librarian-puppet.log 2>&1 || error_exit 'failed to install puppet submodules'\n",
+
+                    "cd /home/ubuntu/", {"Ref" : "WorkingDirectory"}, "\n",
+                    "sudo puppet apply --verbose --modulepath=puppet/modules puppet/manifests/aws.pp > /tmp/puppet.log 2>&1 || error_exit 'failed to apply puppet manifests'\n",
+                    
+                    "# Signal setup is complete\n",
+                    "cfn-signal -e $? -r 'Completed configuration' '",
+                    {
+                        "Ref" : "WebServerWaitHandle"
+                    },
+                    "'\n"
+                ]]}}
+            }
+        },
+
+        "WebServerWaitHandle" : {
+            "Type" : "AWS::CloudFormation::WaitConditionHandle"
+        },
+
+        "WebServerWaitCondition" : {
+            "Type" : "AWS::CloudFormation::WaitCondition",
+            "DependsOn" : "HelloWorldInstance",
+            "Properties" : {
+                "Handle" : {"Ref" : "WebServerWaitHandle"},
+                "Timeout" : "1200"
+            }
+        }
+    },
+
+    "Outputs" : {
+        "InstanceId" : {
+            "Value" : { "Ref" : "HelloWorldInstance" },
+            "Description" : "Instance Id of newly created instance"
+        },
+
+        "IPAddress" : {
+            "Value" : { "Fn::GetAtt" : [ "HelloWorldInstance", "PrivateIp" ] },
+            "Description" : "Private IP address of instance"
+        },
+
+        "DomainName" : {
+            "Value" : { "Ref" : "DNSRecord" }
+        }
+    }
+}
