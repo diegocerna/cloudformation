@@ -1,7 +1,7 @@
 {
   "AWSTemplateFormatVersion" : "2010-09-09",
 
-  "Description" : "Master template for creation of QA",
+  "Description" : "Master template for creation of SandBox",
 
   "Parameters" : {
     "appEnvironment" : {
@@ -27,60 +27,60 @@
     "ApiSecurityGroup" : {
       "Type" : "String",
       "Description" : "Security Group ID for api",
-      "Default" : "sg-d06973b2"
+      "Default" : "sg-"
     },
 
     "PrivateSecurityGroup" : {
       "Type" : "String",
       "Description" : "Security Group ID for Private network",
-      "Default" : "sg-d16973b3"
+      "Default" : "sg-"
     },
 
     "MonitorsSecurityGroup" : {
       "Type" : "String",
       "Description" : "Security Group ID for Monitors",
-      "Default" : "sg-d36973b1"
+      "Default" : "sg-"
     },
 
     "LogstashSecurityGroup" : {
       "Type" : "String",
       "Description" : "Security Group ID for Logstash",
-      "Default" : "sg-d66973b4"
+      "Default" : "sg-"
     },
 
     "AccountsISSecurityGroup" : {
       "Type" : "String",
       "Description" : "Security Group ID for Accounts Iceland",
-      "Default" : "sg-cd6973af"
+      "Default" : "sg-"
     },
 
     "AccountsGTSecurityGroup" : {
       "Type" : "String",
       "Description" : "Security Group ID for Accounts Guatemala",
-      "Default" : "sg-d26973b0"
+      "Default" : "sg-"
     },
 
     "PublicSubnetId" : {
       "Type" : "String",
       "Description" : "Subnet id that the api belongs",
-      "Default" : "subnet-d5918ab7"
+      "Default" : "subnet-"
     },
 
     "PrivateSubnetId" : {
       "Type" : "String",
       "Description" : "Subnet id that the api belongs",
-      "Default" : "subnet-d7918ab5"
+      "Default" : "subnet-"
     },
 
     "gtSubetID" : {
       "Type" : "String",
-      "Default" : "subnet-d6918ab4",
+      "Default" : "subnet-",
       "Description" : "Subnet ID for GT worker"
     },
 
     "isSubetID" : {
       "Type" : "String",
-      "Default" : "subnet-d4918ab6",
+      "Default" : "subnet-",
       "Description" : "Subnet ID for IS worker"
     }
   },
