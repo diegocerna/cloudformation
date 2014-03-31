@@ -176,7 +176,7 @@
                     "cd /home/ubuntu/oauth\n",
                     "git submodule init\n",
                     "git submodule update\n",
-                    "sudo puppet apply --verbose --modulepath=./puppet/modules ./puppet/manifests/aws-production.pp > /tmp/puppet.log 2>&1 || error_exit 'failed to apply puppet manifests'\n",
+                    "sudo puppet apply --verbose --modulepath=./puppet/modules ./puppet/manifests/aws-",{"Ref":"Environment"},".pp > /tmp/puppet.log 2>&1 || error_exit 'failed to apply puppet manifests'\n",
 
                     "# Signal setup is complete\n",
                     "cfn-signal -e $? -r 'Completed configuration' '",
