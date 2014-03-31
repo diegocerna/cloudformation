@@ -46,7 +46,7 @@
     "IPAddress" : {
       "Type" : "AWS::EC2::EIP",
       "Properties" : {
-        "InstanceId" : { "Ref" : "Test_Machine" }
+        "InstanceId" : { "Ref" : "TestMachine" }
       }
     },
 
@@ -55,15 +55,15 @@
       "Properties" : {
         "HostedZoneName" : "bluekite.com.",
         "Comment" : "DNS name for my instance.",
-        "Name" : { "Fn::Join" : [ "", ["test", { "Fn::FindInMap" : [ "dot", { "Ref" : "Environment" }, "DOT" ]},".bluekite.com"]]},
+        "Name" : { "Fn::Join" : [ "", ["api_test", { "Fn::FindInMap" : [ "dot", { "Ref" : "Environment" }, "DOT" ]},".bluekite.com"]]},
         "Type" : "CNAME",
         "TTL" : "300",
-        "ResourceRecords" : [ { "Fn::GetAtt" : [ "Test_Machine", "PublicDnsName" ] } ]
+        "ResourceRecords" : [ { "Fn::GetAtt" : [ "TestMachine", "PublicDnsName" ] } ]
       },
       "DependsOn" : "IPAddress"
     },
 
-    "Test_Machine" : {
+    "TestMachine" : {
       "Type" : "AWS::EC2::Instance",
 
       "Properties" : {
@@ -86,7 +86,7 @@
           "# Run Instance default configuration via CloudFormation::Init\n",
           "cfn-init -v --region ", { "Ref" : "AWS::Region" },
           "    -s ", { "Ref" : "AWS::StackId" },
-          " -r API",
+          " -r TestMachine",
           " -c default",
           " || error_exit 'Failed to run cfn-init'\n",
 
@@ -102,7 +102,7 @@
           "cd /home/ubuntu/specs/puppet\n",
           "export HOME=/home/ubuntu && librarian-puppet install --clean --verbose > /tmp/librarian-puppet.log 2>&1 || error_exit 'failed to install puppet submodules'\n",
 
-          "# Install app"
+          "# Install app",
           "cd /home/ubuntu/specs\n",
           "sudo puppet apply --verbose --modulepath=puppet/modules puppet/manifests/aws-", {"Ref": "Environment"}, ".pp > /tmp/puppet.log 2>&1 || error_exit 'failed to apply puppet manifests'\n",
 
@@ -113,7 +113,7 @@
           },
           "'\n"
         ]]}
-        },
+        }
       }
     },
 
@@ -123,7 +123,7 @@
 
     "APIWaitCondition" : {
       "Type" : "AWS::CloudFormation::WaitCondition",
-      "DependsOn" : "API",
+      "DependsOn" : "TestMachine",
       "Properties" : {
         "Handle" : {"Ref" : "APIWaitHandle"},
         "Timeout" : "1200"
