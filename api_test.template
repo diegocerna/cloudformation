@@ -47,9 +47,6 @@
       "Type": "AWS::EC2::SecurityGroup",
       "Properties": {
         "GroupDescription": "Public facing services",
-        "VpcId": {
-          "Ref": "vpc"
-          },
 
           "Tags":[
             {
