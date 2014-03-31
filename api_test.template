@@ -1,22 +1,31 @@
 {
   "AWSTemplateFormatVersion" : "2010-09-09",
 
-  "Description" : "Test the functions of API v1",
+  "Description" : "Configure API Gateway NodeJs Instance",
 
-  "Parameters": {
-    "Environment" : {
-      "Type" : "String",
-      "Description": "usr this environments: dev, production, qa, sandbox"
+  "Parameters" : {
+    "KeyName": {
+      "Description" : "Name of an existing EC2 KeyPair to enable SSH access to the instance",
+      "Type": "String",
+      "MinLength": "1",
+      "MaxLength": "255",
+      "AllowedPattern" : "[\\x20-\\x7E]*",
+      "ConstraintDescription" : "can contain only ASCII characters.",
+      "Default": "tpbqa"
     },
 
-    "KeyName" : {
-      "Type":"String"
+    "InstanceType" : {
+      "Description" : "Instance type for API",
+      "Type" : "String",
+      "Default" : "m1.medium",
+      "AllowedValues" : [ "t1.micro","m1.small","m1.medium","m1.large","m1.xlarge","m2.xlarge","m2.2xlarge","m2.4xlarge","m3.xlarge","m3.2xlarge","c1.medium","c1.xlarge","cc1.4xlarge","cc2.8xlarge","cg1.4xlarge"],
+      "ConstraintDescription" : "must be a valid EC2 instance type."
     },
 
-    "DeployBranch" : {
+    "SubnetId" : {
       "Type" : "String",
-      "Description" : "Git branch where to deploy the code from.",
-      "Default" : "master"
+      "Description" : "SubnetId of an existing subnet in your Virtual Private Cloud (VPC)",
+      "Default": "subnet-9eb643fb"
     },
 
     "SecurityGroupId" : {
@@ -25,34 +34,36 @@
       "Default": "sg-11ca0d74"
     },
 
-    "SubnetId" : {
+    "Environment": {
+      "Description" : "Subdomain to access EC2 Intance",
+      "Type": "String",
+      "Default": "qa"
+    },
+
+    "DeployBranch" : {
       "Type" : "String",
-      "Description" : "Subnet in your Virtual Private Cloud (VPC)",
-      "Default": "sg-9eb643fb"
+      "Description" : "Git branch where to deploy the code from.",
+      "Default" : "master"
     }
   },
 
   "Mappings" : {
     "RegionMap" : {
-      "sa-east-1"      : {"AMI" : "ami-d545e5c8" },
-      "us-west-1"      : {"AMI" : "ami-82b98bc7" },
-      "ap-northeast-1" : {"AMI" : "ami-35bbd334" },
-      "ap-southeast-1" : {"AMI" : "ami-605c0a32" },
-      "ap-southeast-2" : {"AMI" : "ami-fb4bd5c1" },
-      "eu-west-1"      : {"AMI" : "ami-d03dcaa7" },
-      "us-east-1"      : {"AMI" : "ami-cdc2fda4" },
-      "us-west-2"      : {"AMI" : "ami-9a9dfdaa" }
+      "us-east-1"      : { "AMI" : "ami-cdc2fda4" },
+      "us-west-1"      : { "AMI" : "ami-82b98bc7" },
+      "us-west-2"      : { "AMI" : "ami-9a9dfdaa" },
+      "sa-east-1"      : { "AMI" : "ami-d545e5c8" },
+      "eu-west-1"      : { "AMI" : "ami-d03dcaa7" }
     },
-
     "dot" : {
-      "test"           : { "DOT" : ".test" },
+      "test"            : { "DOT" : ".test" },
       "dev"            : { "DOT" : ".dev" },
       "qa"             : { "DOT" : ".qa" },
       "sandbox"        : { "DOT" : ".sandbox" },
       "production"     : { "DOT" : "" }
     }
   },
-  
+
   "Resources" : {
 
     "IPAddress" : {
@@ -68,30 +79,32 @@
       "Properties" : {
         "HostedZoneName" : "bluekite.com.",
         "Comment" : "DNS name for my instance.",
-        "Name" : { "Fn::Join" : [ "", ["api", { "Fn::FindInMap" : [ "dot", { "Ref" : "Environment" }, "DOT" ]},".bluekite.com"]]},
+        "Name" : { "Fn::Join" : [ "", ["test_api", { "Fn::FindInMap" : [ "dot", { "Ref" : "Environment" }, "DOT" ]},".bluekite.com"]]},
         "Type" : "CNAME",
         "TTL" : "300",
-        "ResourceRecords" : [ { "Fn::GetAtt" : [ "API", "PublicDnsName" ] } ]
+        "ResourceRecords" : [ { "Fn::GetAtt" : [ "TestMachine", "PublicDnsName" ] } ]
       },
       "DependsOn" : "IPAddress"
     },
 
-
     "TestMachine" : {
       "Type" : "AWS::EC2::Instance",
+      "Metadata" : {
+        "Comment" : "Server that test the api"
+      },
 
       "Properties" : {
         "ImageId" : { "Fn::FindInMap" : [ "RegionMap", { "Ref" : "AWS::Region" }, "AMI" ]},
-        "KeyName" : {"Ref": "KeyName"},
         "SecurityGroupIds" : [ {"Ref" : "SecurityGroupId"} ],
         "SubnetId" : { "Ref" : "SubnetId" },
-        "InstanceType" : "t1.micro",
+        "InstanceType" : { "Ref" : "InstanceType" },
+        "KeyName" : { "Ref" : "KeyName" },
         "Tags" : [ {"Key" : "Application", "Value" : { "Ref" : "AWS::StackId"} },
-                    {"Key" : "Name", "Value" : {"Fn::Join" : [ "", ["test.", {"Ref" : "Environment"} ]]}}
+                    {"Key" : "Name", "Value" : {"Fn::Join" : [ "", ["api.", {"Ref" : "Environment"} ]]}}
                   ],
         "UserData"       : { "Fn::Base64" : { "Fn::Join" : ["", [
           "#!/bin/bash\n",
-          
+
           "# Helper function to notify of failed operation\n",
           "function error_exit\n",
           "{\n",
@@ -102,13 +115,16 @@
           "# Run Instance default configuration via CloudFormation::Init\n",
           "cfn-init -v --region ", { "Ref" : "AWS::Region" },
           "    -s ", { "Ref" : "AWS::StackId" },
-          " -r TestMachine",
+          " -r API",
           " -c default",
           " || error_exit 'Failed to run cfn-init'\n",
 
-          "# Install puppet & librarian-puppet via gems\n",
-          "sudo gem install puppet --no-rdoc --no-ri > /tmp/gem-puppet.log 2>&1 || error_exit 'Failed install puppet gem'\n",
-          "sudo gem install librarian-puppet --no-rdoc --no-ri > /tmp/gem-librarian-puppet.log 2>&1 ||error_exit 'Failed install librarian-puppet gem'\n",
+          "# Install puppet via gems\n",
+          "sudo gem install puppet  || error_exit 'Failed install puppet gem'\n",
+
+          "# Install application's dependencies via puppet\n",
+          "sudo gem install puppet --no-rdoc --no-ri > /tmp/gem-puppet.log 2>&1 || error_exit 'Failed to install gem puppet'\n",
+          "sudo gem install librarian-puppet --no-rdoc --no-ri > /tmp/gem-librarian-puppet.log 2>&1\n",
 
           "# Clone app repo to ubuntu user home\n",
           "git clone git@github.com:blue-kite/api-specs.git -b ", {"Ref" : "DeployBranch"}, "  /home/ubuntu/specs > /tmp/git.log 2>&1 || error_exit 'Failed to clone repo'\n",
@@ -144,6 +160,22 @@
         "Handle" : {"Ref" : "APIWaitHandle"},
         "Timeout" : "1200"
       }
+    }
+  },
+
+  "Outputs" : {
+    "ApiInstanceId" : {
+      "Value" : { "Ref" : "TestMachine" },
+      "Description" : "Instance Id of newly created instance"
+    },
+
+    "ApiIPAddress" : {
+      "Value" : { "Ref" : "IPAddress" },
+      "Description" : "Public IP address of instance"
+    },
+
+    "DomainName" : {
+      "Value" : { "Ref" : "DNSRecord" }
     }
   }
 }
