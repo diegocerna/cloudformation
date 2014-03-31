@@ -22,7 +22,13 @@
     "SecurityGroupId" : {
       "Type" : "String",
       "Description" : "SecurityGroupId of an existing subnet in your Virtual Private Cloud (VPC)",
-      "Default": "sg-f67b66c6"
+      "Default": "sg-11ca0d74"
+    },
+
+    "SubnetId" : {
+      "Type" : "String",
+      "Description" : "Subnet in your Virtual Private Cloud (VPC)",
+      "Default": "sg-9eb643fb"
     }
   },
 
@@ -52,6 +58,7 @@
     "IPAddress" : {
       "Type" : "AWS::EC2::EIP",
       "Properties" : {
+        "Domain" : "vpc",
         "InstanceId" : { "Ref" : "TestMachine" }
       }
     },
@@ -61,22 +68,23 @@
       "Properties" : {
         "HostedZoneName" : "bluekite.com.",
         "Comment" : "DNS name for my instance.",
-        "Name" : { "Fn::Join" : [ "", ["api_test", { "Fn::FindInMap" : [ "dot", { "Ref" : "Environment" }, "DOT" ]},".bluekite.com"]]},
+        "Name" : { "Fn::Join" : [ "", ["api", { "Fn::FindInMap" : [ "dot", { "Ref" : "Environment" }, "DOT" ]},".bluekite.com"]]},
         "Type" : "CNAME",
-        "SecurityGroupIds" : [ {"Ref" : "SecurityGroupId"} ],
         "TTL" : "300",
-        "ResourceRecords" : [ { "Fn::GetAtt" : [ "TestMachine", "PublicDnsName" ] } ]
+        "ResourceRecords" : [ { "Fn::GetAtt" : [ "API", "PublicDnsName" ] } ]
       },
-      "DependsOn" : "TestMachine"
+      "DependsOn" : "IPAddress"
     },
+
 
     "TestMachine" : {
       "Type" : "AWS::EC2::Instance",
-      "DependsOn" : "IPAddress",
 
       "Properties" : {
         "ImageId" : { "Fn::FindInMap" : [ "RegionMap", { "Ref" : "AWS::Region" }, "AMI" ]},
         "KeyName" : {"Ref": "KeyName"},
+        "SecurityGroupIds" : [ {"Ref" : "SecurityGroupId"} ],
+        "SubnetId" : { "Ref" : "SubnetId" },
         "InstanceType" : "t1.micro",
         "Tags" : [ {"Key" : "Application", "Value" : { "Ref" : "AWS::StackId"} },
                     {"Key" : "Name", "Value" : {"Fn::Join" : [ "", ["test.", {"Ref" : "Environment"} ]]}}
