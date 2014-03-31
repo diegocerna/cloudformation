@@ -619,7 +619,7 @@
             "IpProtocol": "tcp",
             "FromPort": "22",
             "ToPort": "22",
-            "CidrIp": "186.151.60.250/32"
+            "CidrIp": "192.168.0.0/24"
           },
           {
             "IpProtocol": "tcp",
