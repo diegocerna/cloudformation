@@ -67,7 +67,7 @@
         "TTL" : "300",
         "ResourceRecords" : [ { "Fn::GetAtt" : [ "TestMachine", "PublicDnsName" ] } ]
       },
-      "DependsOn" : "IPAddress"
+      "DependsOn" : "TestMachine"
     },
 
     "TestMachine" : {
