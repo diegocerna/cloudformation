@@ -44,14 +44,7 @@
       "Type" : "String",
       "Description" : "Application's environment.",
       "Default" : "sandbox"
-    },
-
-    "Repository" : {
-      "Type" : "String",
-      "Description" : "Application's GitHub Repository.",
-      "Default" : "git@github.com:blue-kite/api-specs.git"
     }
-
   },
 
   "Mappings" : {
@@ -94,16 +87,13 @@
         "Name" : {"Fn::Join" : ["", ["test_api",{ "Fn::FindInMap" : [ "dot", { "Ref" : "Environment" }, "DOT" ]},".bluekite.com."]]},
         "Type" : "A",
         "TTL" : "300",
-        "ResourceRecords" : [ { "Fn::GetAtt" : [ "TestInstance", "PublicDnsName" ] } ]
+        "ResourceRecords" : [ { "Fn::GetAtt" : [ "TestInstance", "PublicIp" ] } ]
       },
       "DependsOn" : "IPAddress"
     },
 
     "TestInstance" : {
       "Type" : "AWS::EC2::Instance",
-      "Metadata" : {
-        "Comment" : "Monitors - Rails Aplication Instance"
-      },
       "Properties" : {
         "ImageId" : { "Fn::FindInMap" : [ "RegionMap", { "Ref" : "AWS::Region" }, "AMI" ]},
         "SecurityGroupIds" : [ {"Ref" : "SecurityGroupId"} ],
@@ -183,7 +173,7 @@
     },
 
     "IPAddress" : {
-      "Value" : { "Fn::GetAtt" : [ "TestInstance", "PublicDNS" ] },
+      "Value" : { "Ref" : "IPAddress" },
       "Description" : "Private IP address of instance"
     },
 
