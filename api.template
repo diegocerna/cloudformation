@@ -82,7 +82,7 @@
         "Name" : { "Fn::Join" : [ "", ["api", { "Fn::FindInMap" : [ "dot", { "Ref" : "Environment" }, "DOT" ]},".bluekite.com"]]},
         "Type" : "CNAME",
         "TTL" : "300",
-        "ResourceRecords" : [ { "Fn::GetAtt" : [ "API", "PublicDnsName" ] } ]
+        "ResourceRecords" : [ { "Fn::GetAtt" : [ "API", "PublicIp" ] } ]
       },
       "DependsOn" : "IPAddress"
     },
