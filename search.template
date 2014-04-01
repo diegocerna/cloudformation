@@ -28,12 +28,6 @@
             "Default" : "dev"
         },
 
-        "VpcId" : {
-            "Type" : "String",
-            "Description" : "VpcId of your existing Virtual Private Cloud (VPC)",
-            "Default": "vpc-c1bdb7a3"
-        },
-
         "SubnetId" : {
             "Type" : "String",
             "Description" : "SubnetId of an existing subnet in your Virtual Private Cloud (VPC)",
@@ -44,18 +38,6 @@
             "Type" : "String",
             "Description" : "SecurityGroupId of an existing subnet in your Virtual Private Cloud (VPC)",
             "Default": "sg-1cd6c07e"
-        },
-
-        "HostedZone" : {
-            "Type" : "String",
-            "Description" : "The DNS name of an existing Amazon Route 53 hosted zone",
-            "Default" : "bluekite.com"
-        },
-
-        "Subdomain": {
-            "Description" : "Subdomain to access EC2 Instance",
-            "Type": "String",
-            "Default": "dev"
         },
 
         "DeployBranch" : {
@@ -73,6 +55,14 @@
             "eu-west-1"      : {"AMI" : "ami-d03dcaa7" },
             "eu-west-1"      : { "AMI" : "ami-d03dcaa7"}
         }
+
+        "dot" : {
+            "test"           : { "DOT" : ".test" },
+            "dev"            : { "DOT" : ".dev" },
+            "qa"             : { "DOT" : ".qa" },
+            "sandbox"        : { "DOT" : ".sandbox" },
+            "production"     : { "DOT" : "" }
+        }
     },
 
     "Resources" : {
@@ -83,7 +73,7 @@
             "Properties" : {
                 "HostedZoneName" : { "Fn::Join" : [ "", [{"Ref" : "HostedZone"}, "." ]]},
                 "Comment" : "DNS name for my instance.",
-                "Name" : { "Fn::Join" : [ "", ["search.", {"Ref" : "Subdomain"}, ".", {"Ref" : "HostedZone"} ,"."]]},
+                "Name" : { "Fn::Join" : [ "", ["accounts.gt", { "Fn::FindInMap" : [ "dot", { "Ref" : "Environment" }, "DOT" ]}, ".bluekite.com." ]]},
                 "Type" : "A",
                 "TTL" : "900",
                 "ResourceRecords" : [ { "Fn::GetAtt" : [ "ElasticSearchInstance", "PrivateIp" ] } ]
@@ -149,7 +139,7 @@
                 "InstanceType" : { "Ref" : "InstanceType" },
                 "KeyName" : { "Ref" : "KeyName" },
                 "Tags" : [ {"Key" : "Application", "Value" : { "Ref" : "AWS::StackId"} },
-                           {"Key" : "Name", "Value" : { "Fn::Join" : [ "", ["search.", {"Ref" : "Subdomain"} ] ] } } ],
+                           {"Key" : "Name", "Value" : { "Fn::Join" : [ "", ["search.", {"Ref" : "Environment"} ] ] } } ],
                 "UserData"       : { "Fn::Base64" : { "Fn::Join" : ["", [
                     "#!/bin/bash\n",
 
@@ -186,7 +176,7 @@
                     "export HOME=/home/ubuntu && librarian-puppet install --clean --verbose > /tmp/librarian-puppet.log 2>&1 || error_exit 'failed to install puppet submodules'\n",
 
                     "cd /home/ubuntu/elastickite\n",
-                    "sudo puppet apply --verbose --modulepath=./puppet/modules ./puppet/manifests/aws-", {"Ref": "Subdomain"}, ".pp > /tmp/puppet.log 2>&1 || error_exit 'failed to apply puppet manifests'\n",
+                    "sudo puppet apply --verbose --modulepath=./puppet/modules ./puppet/manifests/aws-", {"Ref": "Environment"}, ".pp > /tmp/puppet.log 2>&1 || error_exit 'failed to apply puppet manifests'\n",
 
                     "# Signal setup is complete\n",
                     "cfn-signal -e $? -r 'Completed configuration' '",
