@@ -54,7 +54,7 @@
             "us-west-2"      : { "AMI" : "ami-9a9dfdaa" },
             "eu-west-1"      : {"AMI" : "ami-d03dcaa7" },
             "eu-west-1"      : { "AMI" : "ami-d03dcaa7"}
-        }
+        },
 
         "dot" : {
             "test"           : { "DOT" : ".test" },
@@ -71,7 +71,7 @@
         "DNSRecord" : {
             "Type" : "AWS::Route53::RecordSet",
             "Properties" : {
-                "HostedZoneName" : { "Fn::Join" : [ "", [{"Ref" : "HostedZone"}, "." ]]},
+                "HostedZoneName" : "bluekite.com.",
                 "Comment" : "DNS name for my instance.",
                 "Name" : { "Fn::Join" : [ "", ["accounts.gt", { "Fn::FindInMap" : [ "dot", { "Ref" : "Environment" }, "DOT" ]}, ".bluekite.com." ]]},
                 "Type" : "A",
