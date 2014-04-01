@@ -185,7 +185,7 @@
           "export HOME=/home/ubuntu && librarian-puppet install --clean --verbose > /tmp/librarian-puppet.log 2>&1 || error_exit 'failed to install puppet submodules'\n",
 
           "# Install app",
-          "cd /home/ubuntu/api-specs && sudo puppet apply --verbose --modulepath=puppet/modules puppet/manifests/aws-", {"Ref": "Environment"}, ".pp > /tmp/puppet.log 2>&1 || error_exit 'failed to apply puppet manifests'\n",
+          "cd /home/ubuntu/api-specs/puppet && sudo puppet apply --verbose --modulepath=modules manifests/aws-", {"Ref": "Environment"}, ".pp > /tmp/puppet.log 2>&1 || error_exit 'failed to apply puppet manifests'\n",
 
           "# Signal setup is complete\n",
           "cfn-signal -e $? -r 'Completed configuration' '",
