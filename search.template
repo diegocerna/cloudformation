@@ -73,7 +73,7 @@
             "Properties" : {
                 "HostedZoneName" : "bluekite.com.",
                 "Comment" : "DNS name for my instance.",
-                "Name" : { "Fn::Join" : [ "", ["accounts.gt", { "Fn::FindInMap" : [ "dot", { "Ref" : "Environment" }, "DOT" ]}, ".bluekite.com." ]]},
+                "Name" : { "Fn::Join" : [ "", ["search", { "Fn::FindInMap" : [ "dot", { "Ref" : "Environment" }, "DOT" ]}, ".bluekite.com." ]]},
                 "Type" : "A",
                 "TTL" : "900",
                 "ResourceRecords" : [ { "Fn::GetAtt" : [ "ElasticSearchInstance", "PrivateIp" ] } ]
