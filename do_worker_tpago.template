@@ -49,7 +49,7 @@
     "Repository" : {
       "Type" : "String",
       "Description" : "Application's GitHub Repository.",
-      "Default" : "git@github.com:blue-kite/worker_tpago.git"
+      "Default" : "git@github.com:blue-kite/do_worker_tpago.git"
     }
   },
 
