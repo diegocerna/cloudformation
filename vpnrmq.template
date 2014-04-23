@@ -1,7 +1,7 @@
 {
   "AWSTemplateFormatVersion" : "2010-09-09",
 
-  "Description" : "Configure VPN Rabbit MQ Instance",
+  "Description" : "Configure VPN to partners Insntance",
 
   "Parameters" : {
     "KeyName": {
@@ -11,11 +11,11 @@
       "MaxLength": "255",
       "AllowedPattern" : "[\\x20-\\x7E]*",
       "ConstraintDescription" : "can contain only ASCII characters.",
-      "Default": "redtail_development"
+      "Default": "tbp_qa"
     },
 
     "InstanceType" : {
-      "Description" : "Instance type for VPNRMQ",
+      "Description" : "Instance type for VPN",
       "Type" : "String",
       "Default" : "m1.medium",
       "AllowedValues" : [ "t1.micro","m1.small","m1.medium","m1.large","m1.xlarge","m2.xlarge","m2.2xlarge","m2.4xlarge","m3.xlarge","m3.2xlarge","c1.medium","c1.xlarge","cc1.4xlarge","cc2.8xlarge","cg1.4xlarge"],
@@ -37,7 +37,7 @@
     "Environment": {
       "Description" : "Subdomain to access EC2 Intance",
       "Type": "String",
-      "Default": "dev"
+      "Default": "qa"
     },
 
     "DeployBranch" : {

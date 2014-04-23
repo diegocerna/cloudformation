@@ -60,6 +60,12 @@
       "Default" : "sg-"
     },
 
+    "AccountsDOSecurityGroup" : {
+      "Type" : "String",
+      "Description" : "Security Group ID for Accounts Dominican Republic",
+      "Default" : "sg-"
+    },
+
     "PublicSubnetId" : {
       "Type" : "String",
       "Description" : "Subnet id that the api belongs",
@@ -76,6 +82,12 @@
       "Type" : "String",
       "Default" : "subnet-",
       "Description" : "Subnet ID for GT worker"
+    },
+
+    "doSubetID" : {
+      "Type" : "String",
+      "Default" : "subnet-",
+      "Description" : "Subnet ID for DO worker"
     },
 
     "isSubetID" : {
@@ -95,7 +107,7 @@
           "KeyName": {"Ref":"KeyName"},
           "SubnetId" : { "Ref" : "PublicSubnetId"},
           "SecurityGroupId" : { "Ref" : "ApiSecurityGroup"},
-          "DeployBranch" : "master",
+          "DeployBranch" : "release/0.2.0",
           "InstanceType" : { "Ref" : "InstanceType"},
           "Environment" : {"Ref" : "appEnvironment"}
         }
@@ -152,7 +164,7 @@
           "KeyName" : { "Ref" : "KeyName" },
           "SubnetId" : { "Ref" : "PrivateSubnetId" },
           "SecurityGroupId" : { "Ref" : "PrivateSecurityGroup" },
-          "DeployBranch" : "master",
+          "DeployBranch" : "release/0.2.0",
           "Environment" : { "Ref" : "appEnvironment" }
         }
       }
@@ -166,7 +178,7 @@
           "KeyName" : { "Ref" : "KeyName" },
           "SubnetId" : { "Ref" : "isSubetID" },
           "SecurityGroupId" : { "Ref" : "AccountsISSecurityGroup" },
-          "DeployBranch" : "master",
+          "DeployBranch" : "release/0.2.0",
           "Environment" : { "Ref" : "appEnvironment" }
         }
       }
@@ -180,7 +192,21 @@
           "KeyName" : { "Ref" : "KeyName" },
           "SubnetId" : { "Ref" : "gtSubetID" },
           "SecurityGroupId" : { "Ref" : "AccountsGTSecurityGroup" },
-          "DeployBranch" : "master",
+          "DeployBranch" : "release/0.2.0",
+          "Environment" : { "Ref" : "appEnvironment" }
+        }
+      }
+    },
+
+    "accountsDo" : {
+      "Type" : "AWS::CloudFormation::Stack",
+      "Properties" : {
+        "TemplateURL" : "https://s3-us-west-2.amazonaws.com/pruebastack/accounts.do.template",
+        "Parameters" : {
+          "KeyName" : { "Ref" : "KeyName" },
+          "SubnetId" : { "Ref" : "doSubetID" },
+          "SecurityGroupId" : { "Ref" : "AccountsDOSecurityGroup" },
+          "DeployBranch" : "release/0.2.0",
           "Environment" : { "Ref" : "appEnvironment" }
         }
       }
@@ -194,7 +220,7 @@
           "KeyName" : { "Ref" : "KeyName" },
           "SubnetId" : { "Ref" : "PrivateSubnetId" },
           "SecurityGroupId" : { "Ref" : "PrivateSecurityGroup" },
-          "DeployBranch" : "master",
+          "DeployBranch" : "release/0.2.0",
           "Environment" : { "Ref" : "appEnvironment" }
         }
       }
@@ -208,7 +234,7 @@
           "KeyName" : { "Ref" : "KeyName" },
           "SubnetId" : { "Ref" : "PrivateSubnetId" },
           "SecurityGroupId" : { "Ref" : "PrivateSecurityGroup" },
-          "DeployBranch" : "master",
+          "DeployBranch" : "release/0.2.0",
           "Environment" : { "Ref" : "appEnvironment" }
         }
       }
@@ -236,7 +262,21 @@
           "KeyName" : { "Ref" : "KeyName" },
           "SubnetId" : { "Ref" : "gtSubetID" },
           "SecurityGroupId" : { "Ref" : "AccountsGTSecurityGroup" },
-          "DeployBranch" : "master",
+          "DeployBranch" : "release/0.2.0",
+          "Environment" : { "Ref" : "appEnvironment" }
+        }
+      }
+    },
+
+    "DOWorkerTpago" : {
+      "Type" : "AWS::CloudFormation::Stack",
+      "Properties" : {
+        "TemplateURL" : "https://s3-us-west-2.amazonaws.com/pruebastack/do_worker_tpago.template",
+        "Parameters" : {
+          "KeyName" : { "Ref" : "KeyName" },
+          "SubnetId" : { "Ref" : "doSubetID" },
+          "SecurityGroupId" : { "Ref" : "AccountsDOSecurityGroup" },
+          "DeployBranch" : "release/0.2.0",
           "Environment" : { "Ref" : "appEnvironment" }
         }
       }
@@ -250,7 +290,7 @@
           "KeyName" : { "Ref" : "KeyName" },
           "SubnetId" : { "Ref" : "PrivateSubnetId" },
           "SecurityGroupId" : { "Ref" : "PrivateSecurityGroup" },
-          "DeployBranch" : "master",
+          "DeployBranch" : "release/0.2.0",
           "Environment" : { "Ref" : "appEnvironment" }
         }
       }

@@ -199,6 +199,20 @@
       }
     },
 
+    "accountsDo" : {
+      "Type" : "AWS::CloudFormation::Stack",
+      "Properties" : {
+        "TemplateURL" : "https://s3-us-west-2.amazonaws.com/pruebastack/accounts.do.template",
+        "Parameters" : {
+          "KeyName" : { "Ref" : "KeyName" },
+          "SubnetId" : { "Ref" : "PrivateSubnetId" },
+          "SecurityGroupId" : { "Ref" : "PrivateSecurityGroup" },
+          "DeployBranch" : "release/0.1.0",
+          "Environment" : { "Ref" : "appEnvironment" }
+        }
+      }
+    },
+
     "monitors" : {
       "Type" : "AWS::CloudFormation::Stack",
       "Properties" : {
