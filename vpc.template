@@ -29,6 +29,7 @@
     "keys" : {
           "dev"            : { "keypair" : "tbp_dev"},
           "qa"             : { "keypair" : "tbp_qa" },
+          "test"             : { "keypair" : "tbp_test" },
           "sandbox"        : { "keypair" : "tbp_sandbox"},
           "production"     : { "keypair" : "tbp_prod"}
     },
