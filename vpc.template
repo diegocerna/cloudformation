@@ -452,6 +452,7 @@
         "ImageId": { "Fn::FindInMap" : [ "NATMap", { "Ref" : "AWS::Region" }, "AMI" ]},
         "InstanceType": "t1.micro",
         "SecurityGroupIds" : [ {"Ref" : "sgNat"} ],
+        "SubnetId" : { "Ref" : "subnetPublicApis" },
         "KernelId": { "Fn::FindInMap" : [ "KernelId", { "Ref" : "AWS::Region" }, "AKI" ]},
         "KeyName": { "Fn::FindInMap" : [ "keys", { "Ref" : "Environment" }, "keypair" ]},
         "SourceDestCheck" : "false",
