@@ -30,6 +30,7 @@
           "dev"            : { "keypair" : "tbp_dev"},
           "qa"             : { "keypair" : "tbp_qa" },
           "sandbox"        : { "keypair" : "tbp_sandbox"},
+          "test"           : { "keypair" : "tbp_test"},
           "production"     : { "keypair" : "tbp_prod"}
     },
 
