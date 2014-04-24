@@ -437,12 +437,21 @@
       }
     },
 
+    "NatNetworkInterface": {
+      "Type" : "AWS::EC2::NetworkInterface",
+      "Properties" : {
+        "SourceDestCheck" : true,
+        "SubnetId" : {"Ref" : "subnetPublicApis"}
+      }
+    },
+
     "instanceNAT": {
       "Type": "AWS::EC2::Instance",
       "Properties": {
         "DisableApiTermination": "FALSE",
         "ImageId": { "Fn::FindInMap" : [ "NATMap", { "Ref" : "AWS::Region" }, "AMI" ]},
         "InstanceType": "t1.micro",
+        "SecurityGroupIds" : [ {"Ref" : "sgNat"} ],
         "KernelId": { "Fn::FindInMap" : [ "KernelId", { "Ref" : "AWS::Region" }, "AKI" ]},
         "KeyName": { "Fn::FindInMap" : [ "keys", { "Ref" : "Environment" }, "keypair" ]},
         "SourceDestCheck" : "false",
@@ -460,21 +469,15 @@
             "Key": "Name",
             "Value": { "Fn::Join" : [ ".", ["nat", { "Ref" : "Environment"} ] ] }
           }
-        ],
-        "NetworkInterfaces": [
-          {
-            "DeleteOnTermination": "true",
-            "Description": "Primary network interface",
-            "DeviceIndex": 0,
-            "SubnetId": { "Ref": "subnetPublicApis"},
-            "GroupSet": [
-              {
-                "Ref": "sgNat"
-              }
-            ],
-            "AssociatePublicIpAddress": "true"
-          }
         ]
+      }
+    },
+
+    "NatIPAddress" : {
+      "Type" : "AWS::EC2::EIP",
+      "Properties" : {
+        "Domain" : "vpc",
+        "InstanceId" : { "Ref" : "instanceNAT" }
       }
     },
 
@@ -488,19 +491,18 @@
 
     "Bastion" : {
       "Type" : "AWS::EC2::Instance",
-
       "Properties" : {
+        "DisableApiTermination": "FALSE",
         "ImageId" : { "Fn::FindInMap" : [ "NATMap", { "Ref" : "AWS::Region" }, "AMI" ]},
         "KeyName" : { "Fn::FindInMap" : [ "keys", { "Ref" : "Environment" }, "keypair" ]},
         "InstanceType" : "t1.micro",
-
         "SecurityGroupIds" : [ {"Ref" : "sgBastion"} ],
         "SubnetId" : { "Ref" : "subnetPublicApis" },
         "Tags" : [ {"Key" : "Name", "Value" : { "Fn::Join" : [ ".", ["bastion", { "Ref" : "Environment"} ] ] } } ]
       }
     },
 
-    "IPAddress" : {
+    "BastionIPAddress" : {
       "Type" : "AWS::EC2::EIP",
       "Properties" : {
         "Domain" : "vpc",
@@ -518,7 +520,7 @@
         "TTL" : "300",
         "ResourceRecords" : [ { "Fn::GetAtt" : [ "Bastion", "PublicDnsName" ] } ]
       },
-      "DependsOn" : "IPAddress"
+      "DependsOn" : "BastionIPAddress"
     },
 
     "sgMonitors": {
