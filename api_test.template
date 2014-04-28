@@ -79,7 +79,7 @@
       "Properties" : {
         "HostedZoneName" : "bluekite.com.",
         "Comment" : "DNS name for my instance.",
-        "Name" : { "Fn::Join" : [ "", ["test.api", { "Fn::FindInMap" : [ "dot", { "Ref" : "Environment" }, "DOT" ]},".bluekite.com"]]},
+        "Name" : { "Fn::Join" : [ "", ["test.harness", { "Fn::FindInMap" : [ "dot", { "Ref" : "Environment" }, "DOT" ]},".bluekite.com"]]},
         "Type" : "CNAME",
         "TTL" : "300",
         "ResourceRecords" : [ { "Fn::GetAtt" : [ "Test", "PublicIp" ] } ]
@@ -146,7 +146,7 @@
         "InstanceType" : { "Ref" : "InstanceType" },
         "KeyName" : { "Ref" : "KeyName" },
         "Tags" : [ {"Key" : "Application", "Value" : { "Ref" : "AWS::StackId"} },
-                    {"Key" : "Name", "Value" : {"Fn::Join" : [ "", ["test.", {"Ref" : "Environment"} ]]}}
+                    {"Key" : "Name", "Value" : {"Fn::Join" : [ "", ["test.harness.", {"Ref" : "Environment"} ]]}}
                   ],
         "UserData"       : { "Fn::Base64" : { "Fn::Join" : ["", [
           "#!/bin/bash\n",
