@@ -65,12 +65,20 @@
             "us-west-2"      : {"AMI" : "ami-9a9dfdaa" }
         },
 
+        "DOWIP" : {
+            "test"           : { "WIP" : "10.250.12.133" },
+            "dev"            : { "WIP" : "10.4.12.133" },
+            "qa"             : { "WIP" : "10.3.12.133" },
+            "sandbox"        : { "WIP" : "10.2.12.133" },
+            "production"     : { "WIP" : "10.1.12.133" }
+        },
+
         "dot" : {
-          "test"           : { "DOT" : ".test" },
-          "dev"            : { "DOT" : ".dev" },
-          "qa"             : { "DOT" : ".qa" },
-          "sandbox"        : { "DOT" : ".sandbox" },
-          "production"     : { "DOT" : "" }
+          "test"             : { "DOT" : ".test" },
+          "dev"              : { "DOT" : ".dev" },
+          "qa"               : { "DOT" : ".qa" },
+          "sandbox"          : { "DOT" : ".sandbox" },
+          "production"       : { "DOT" : "" }
         }
     },
 
@@ -214,7 +222,7 @@
        "Type" : "AWS::EC2::NetworkInterface",
        "Properties" : {
           "Description" : "private ip allowed for tpago",
-          "PrivateIpAddress" : "10.3.12.133",
+          "PrivateIpAddress" : { "Fn::FindInMap" : [ "DOWIP", { "Ref" : "Environment" }, "WIP" ]},
           "GroupSet" : [ {"Ref" : "SecurityGroupId"} ],
          "SubnetId" : {"Ref": "SubnetId"}
       }
