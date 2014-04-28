@@ -80,7 +80,7 @@
         "HostedZoneName" : "bluekite.com.",
         "Comment" : "DNS name for my instance.",
         "Name" : { "Fn::Join" : [ "", ["test.harness", { "Fn::FindInMap" : [ "dot", { "Ref" : "Environment" }, "DOT" ]},".bluekite.com"]]},
-        "Type" : "CNAME",
+        "Type" : "A",
         "TTL" : "300",
         "ResourceRecords" : [ { "Fn::GetAtt" : [ "Test", "PublicIp" ] } ]
       },
@@ -202,7 +202,7 @@
       "Type" : "AWS::CloudFormation::WaitConditionHandle"
     },
 
-    "TestWaitCondition" : {
+    "TestWaitConfdition" : {
       "Type" : "AWS::CloudFormation::WaitCondition",
       "DependsOn" : "Test",
       "Properties" : {
