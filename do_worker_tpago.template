@@ -74,11 +74,11 @@
         },
 
         "dot" : {
-          "test"           : { "DOT" : ".test" },
-          "dev"            : { "DOT" : ".dev" },
-          "qa"             : { "DOT" : ".qa" },
-          "sandbox"        : { "DOT" : ".sandbox" },
-          "production"     : { "DOT" : "" }
+          "test"             : { "DOT" : ".test" },
+          "dev"              : { "DOT" : ".dev" },
+          "qa"               : { "DOT" : ".qa" },
+          "sandbox"          : { "DOT" : ".sandbox" },
+          "production"       : { "DOT" : "" }
         }
     },
 
