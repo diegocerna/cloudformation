@@ -33,10 +33,10 @@
         },
 
         "InstanceType" : {
-            "Description" : "WebServer EC2 instance type",
+            "Description" : "XPA EC2 instance type",
             "Type" : "String",
-            "Default" : "m1.medium",
-            "AllowedValues" : [ "t1.micro","m1.small","m1.medium","m1.large","m1.xlarge","m2.xlarge","m2.2xlarge","m2.4xlarge","m3.xlarge","m3.2xlarge","c1.medium","c1.xlarge","cc1.4xlarge","cc2.8xlarge","cg1.4xlarge"],
+            "Default" : "m3.medium",
+            "AllowedValues" : [ "t1.micro","m1.small","m3.medium","m1.large","m1.xlarge","m2.xlarge","m2.2xlarge","m2.4xlarge","m3.xlarge","m3.2xlarge","c1.medium","c1.xlarge","cc1.4xlarge","cc2.8xlarge","cg1.4xlarge"],
             "ConstraintDescription" : "must be a valid EC2 instance type."
         },
 
@@ -74,7 +74,7 @@
             "Type" : "AWS::EC2::EIP",
             "Properties" : {
             "Domain" : "vpc",
-            "InstanceId" : { "Ref" : "WebServerInstance" }
+            "InstanceId" : { "Ref" : "XPAInstance" }
             }
         },
 
@@ -84,14 +84,14 @@
                 "HostedZoneName" : "bluekite.com.",
                 "Comment" : "DNS name for my instance.",
                 "Name" : { "Fn::Join" : [ "", ["xpa", { "Fn::FindInMap" : [ "dot", { "Ref" : "Environment" }, "DOT" ]},".bluekite.com"]]},
-                "Type" : "CNAME",
+                "Type" : "A",
                 "TTL" : "300",
-                "ResourceRecords" : [ { "Fn::GetAtt" : [ "WebServerInstance", "PublicIp" ] } ]
+                "ResourceRecords" : [ { "Fn::GetAtt" : [ "XPAInstance", "PublicIp" ] } ]
                 },
             "DependsOn" : "IPAddress"
         },
 
-        "WebServerInstance" : {
+        "XPAInstance" : {
             "Type" : "AWS::EC2::Instance",
 
             "Metadata" : {
@@ -156,14 +156,14 @@
                     "# Helper function to notify of failed operation\n",
                     "function error_exit\n",
                     "{\n",
-                    "  cfn-signal -e 1 -r \"$1\" '", { "Ref" : "WebServerWaitHandle" }, "'\n",
+                    "  cfn-signal -e 1 -r \"$1\" '", { "Ref" : "XPAWaitHandle" }, "'\n",
                     "  exit 1\n",
                     "}\n",
           
                     "# Run Instance default configuration via CloudFormation::Init\n",
                     "cfn-init -v --region ", { "Ref" : "AWS::Region" },
                     "    -s ", { "Ref" : "AWS::StackId" },
-                    " -r WebServerInstance",
+                    " -r XPAInstance",
                     " -c default",
                     " || error_exit 'Failed to run cfn-init'\n",
           
@@ -176,6 +176,7 @@
           
                     "# Clone app repo to ubuntu user home\n",
                     "git clone git@github.com:blue-kite/jruby_vagrant.git -b ", {"Ref" : "DeployBranch"}, " /home/ubuntu/jruby_vagrant > /tmp/git.log 2>&1 || error_exit 'Failed to clone repo'\n",
+                    "git clone git@github.com:blue-kite/xpa.git -b ", {"Ref" : "DeployBranch"}, " /home/ubuntu/jruby_vagrant/xpa > /tmp/git_xpa.log 2>&1 || error_exit 'Failed to clone XPA repo'\n",
                     "chown ubuntu:ubuntu -R /home/ubuntu/\n",
           
           
@@ -190,12 +191,10 @@
                     "cd /home/ubuntu/jruby_vagrant\n",
                     "sudo puppet apply --verbose --modulepath=puppet/modules puppet/manifests/aws-", {"Ref": "Environment"}, ".pp > /tmp/puppet.log 2>&1 || error_exit 'failed to apply puppet manifests'\n",
 
-                    "git clone git@github.com:blue-kite/xpa.git -b ", {"Ref" : "DeployBranch"}, " /home/ubuntu/jruby_vagrant/xpa > /tmp/git_xpa.log 2>&1 || error_exit 'Failed to clone XPA repo'\n",
-
                     "# Signal setup is complete\n",
                     "cfn-signal -e $? -r 'Completed configuration' '",
                     {
-                        "Ref" : "WebServerWaitHandle"
+                        "Ref" : "XPAWaitHandle"
                     },
                     "'\n"
                  ]]}
@@ -203,15 +202,15 @@
             }
         },
 
-        "WebServerWaitHandle" : {
+        "XPAWaitHandle" : {
             "Type" : "AWS::CloudFormation::WaitConditionHandle"
         },
 
-        "WebServerWaitCondition" : {
+        "XPAWaitCondition" : {
             "Type" : "AWS::CloudFormation::WaitCondition",
-            "DependsOn" : "WebServerInstance",
+            "DependsOn" : "XPAInstance",
             "Properties" : {
-                "Handle" : {"Ref" : "WebServerWaitHandle"},
+                "Handle" : {"Ref" : "XPAWaitHandle"},
                 "Timeout" : "1500"
             }
         }
@@ -219,7 +218,7 @@
 
     "Outputs" : {
         "InstanceId" : {
-            "Value" : { "Ref" : "WebServerInstance" },
+            "Value" : { "Ref" : "XPAInstance" },
             "Description" : "Instance Id of newly created instance"
         },
 

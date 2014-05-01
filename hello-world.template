@@ -18,7 +18,7 @@
             "Description" : "WebServer EC2 instance type",
             "Type" : "String",
             "Default" : "t1.micro",
-            "AllowedValues" : [ "t1.micro","m1.small","m1.medium","m1.large","m1.xlarge","m2.xlarge","m2.2xlarge","m2.4xlarge","m3.xlarge","m3.2xlarge","c1.medium","c1.xlarge","cc1.4xlarge","cc2.8xlarge","cg1.4xlarge"],
+            "AllowedValues" : [ "t1.micro","m1.small","m3.medium","m1.large","m1.xlarge","m2.xlarge","m2.2xlarge","m2.4xlarge","m3.xlarge","m3.2xlarge","c1.medium","c1.xlarge","cc1.4xlarge","cc2.8xlarge","cg1.4xlarge"],
             "ConstraintDescription" : "must be a valid EC2 instance type."
         },
 
@@ -26,13 +26,13 @@
         "SubnetId" : {
             "Type" : "String",
             "Description" : "Private API's SubnetId in your Virtual Private Cloud (VPC)",
-            "Default": "subnet-d46128fc"
+            "Default": "subnet-"
         },
 
         "SecurityGroupId" : {
             "Type" : "String",
             "Description" : "Private API's SecurityGroupId your Virtual Private Cloud (VPC)",
-            "Default": "sg-a6c411c3"
+            "Default": "sg-"
         },
 
         "HostedZone" : {
@@ -45,6 +45,12 @@
             "Type" : "String",
             "Description" : "Git branch where to deploy the code from.",
             "Default" : "master"
+        },
+
+        "StackID" : {
+            "Type" : "String",
+            "Description" : "Value to create some stacks into same enviroment",
+            "Default" : "01"
         },
 
         "Environment" : {
@@ -74,29 +80,16 @@
         },
 
         "dot" : {
-          "test"            : { "DOT" : ".test" },
-          "dev"            : { "DOT" : ".dev" },
-          "qa"             : { "DOT" : ".qa" },
-          "sandbox"        : { "DOT" : ".sandbox" },
-          "production"     : { "DOT" : "" }
+          "test"             : { "DOT" : ".test" },
+          "dev"              : { "DOT" : ".dev" },
+          "qa"               : { "DOT" : ".qa" },
+          "sandbox"          : { "DOT" : ".sandbox" },
+          "production"       : { "DOT" : "" }
         }
     },
 
     "Resources" : {
 
-
-        "DNSRecord" : {
-            "Type" : "AWS::Route53::RecordSet",
-            "Properties" : {
-                "HostedZoneName" : { "Fn::Join" : [ "", [{"Ref" : "HostedZone"}, "." ]]},
-                "Comment" : "DNS name for my instance.",
-                "Name" : { "Fn::Join" : [ "", ["hello-world", { "Fn::FindInMap" : [ "dot", { "Ref" : "Environment" }, "DOT" ]}, ".bluekite.com." ]]},
-                "Type" : "A",
-                "TTL" : "300",
-                "ResourceRecords" : [ { "Fn::GetAtt" : [ "HelloWorldInstance", "PrivateIp" ] } ]
-            },
-            "DependsOn" : "HelloWorldInstance"
-        },
 
         "HelloWorldInstance" : {
             "Type" : "AWS::EC2::Instance",
@@ -118,12 +111,12 @@
             },
             "Properties" : {
                 "ImageId" : { "Fn::FindInMap" : [ "RegionMap", { "Ref" : "AWS::Region" }, "AMI" ]},
-                "SecurityGroupIds" : [ {"Ref" : "SecurityGroupId"} ],
-                "SubnetId" : { "Ref" : "SubnetId" },
+                "NetworkInterfaces" :  [ { 
+                "NetworkInterfaceId" : { "Ref" : "HelloWorldPrivateIP"}, "DeviceIndex" : "0" } ],
                 "InstanceType" : { "Ref" : "InstanceType" },
                 "KeyName" : { "Ref" : "KeyName" },
                 "Tags" : [ {"Key" : "Application", "Value" : { "Ref" : "AWS::StackId"} },
-                           {"Key" : "Name", "Value" : { "Fn::Join" : [ ".", ["hello-world", { "Ref" : "Environment"} ] ] } } ],
+                           {"Key" : "Name", "Value" : { "Fn::Join" : [ ".", ["hello-world.test", { "Ref" : "Environment"} ] ] } } ],
                 "UserData"       : { "Fn::Base64" : { "Fn::Join" : ["", [
                     "#!/bin/bash\n",
 
@@ -146,6 +139,8 @@
 
                     "# Copy credentials to root user\n",
                     "cp /home/ubuntu/.ssh/* /root/.ssh/\n",
+                    
+                    "echo ", { "Fn::Join" : [ "" , ["FQDN=hello-world-", { "Ref" : "StackID" }, ".", { "Ref" : "Environment" }, ".bluekite.com" ]]}, ">> /etc/environment\n",
 
                     "# Clone app repo to ubuntu user home\n",
                     "git clone git@github.com:blue-kite/hello-world.git -b ", {"Ref" : "DeployBranch"}, " /home/ubuntu/", {"Ref" : "WorkingDirectory"} , " > /tmp/git.log 2>&1 || error_exit 'Failed to clone repo'\n",
@@ -157,7 +152,7 @@
                     "export HOME=/home/ubuntu && librarian-puppet install --clean --verbose > /tmp/librarian-puppet.log 2>&1 || error_exit 'failed to install puppet submodules'\n",
 
                     "cd /home/ubuntu/", {"Ref" : "WorkingDirectory"}, "\n",
-                    "sudo puppet apply --verbose --modulepath=puppet/modules puppet/manifests/aws.pp > /tmp/puppet.log 2>&1 || error_exit 'failed to apply puppet manifests'\n",
+                    "sudo puppet apply --verbose --modulepath=./puppet/modules ./puppet/manifests/aws-",{"Ref" : "Environment"},".pp > /tmp/puppet.log 2>&1 || error_exit 'failed to apply puppet manifests'\n",
                     
                     "# Signal setup is complete\n",
                     "cfn-signal -e $? -r 'Completed configuration' '",
@@ -180,6 +175,16 @@
                 "Handle" : {"Ref" : "WebServerWaitHandle"},
                 "Timeout" : "1200"
             }
+        },
+
+        "HelloWorldPrivateIP" : {
+            "Type" : "AWS::EC2::NetworkInterface",
+            "Properties" : {
+                "Description" : "static IP",
+                "PrivateIpAddress" : "10.1.1.11",
+                "GroupSet" : [ {"Ref" : "SecurityGroupId"} ],
+                "SubnetId" : {"Ref": "SubnetId"}
+            }
         }
     },
 
@@ -192,10 +197,6 @@
         "IPAddress" : {
             "Value" : { "Fn::GetAtt" : [ "HelloWorldInstance", "PrivateIp" ] },
             "Description" : "Private IP address of instance"
-        },
-
-        "DomainName" : {
-            "Value" : { "Ref" : "DNSRecord" }
         }
     }
 }

@@ -18,7 +18,7 @@
     },
     "InstancesType" : {
       "Type" : "String",
-      "Default" : "m1.medium"
+      "Default" : "m3.medium"
     }
   },
 
