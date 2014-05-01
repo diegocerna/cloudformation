@@ -19,8 +19,8 @@
     "InstanceType" : {
       "Description" : "Instance type for API",
       "Type" : "String",
-      "Default" : "m3.medium",
-      "AllowedValues" : [ "t1.micro","m1.small","m3.medium","m1.large","m1.xlarge","m2.xlarge","m2.2xlarge","m2.4xlarge","m3.xlarge","m3.2xlarge","c1.medium","c1.xlarge","cc1.4xlarge","cc2.8xlarge","cg1.4xlarge"],
+      "Default" : "m1.medium",
+      "AllowedValues" : [ "t1.micro","m1.small","m1.medium","m1.large","m1.xlarge","m2.xlarge","m2.2xlarge","m2.4xlarge","m3.xlarge","m3.2xlarge","c1.medium","c1.xlarge","cc1.4xlarge","cc2.8xlarge","cg1.4xlarge"],
       "ConstraintDescription" : "must be a valid EC2 instance type."
     },
 
@@ -197,7 +197,7 @@
       "Properties" : {
         "Environment" : { "Ref" : "appEnvironment" },
         "KeyName" : { "Ref" : "KeyName" },
-        "InstancesType" : "m3.medium",
+        "InstancesType" : "m1.medium",
         "DeployBranch" : "master",
         "SG" : { "Ref" : "PrivateSecurityGroup" },
         "SubnetId" : { "Ref" : "PrivateSubnetId" }
@@ -208,7 +208,7 @@
       "Type" : "AWS::CloudFormation::Stack",
       "Properties" : {
         "KeyName": { "Ref" : "KeyName" },
-        "InstanceType" : "m3.medium",
+        "InstanceType" : "m1.medium",
         "SubnetId" : { "Ref" : "PrivateSubnetId" },
         "SecurityGroupId" : { "Ref" : "PrivateSecurityGroup" },
         "Environment": "qa",
@@ -222,7 +222,7 @@
         "Environment" : "qa",
         "DeployBranch" : "master",
         "KeyName" : { "Ref" : "KeyName" },
-        "InstanceType" : "m3.medium",
+        "InstanceType" : "m1.medium",
         "SubnetId" : { "Ref" : "PrivateSubnetId" },
         "SecurityGroupId" : { "Ref" : "PrivateSecurityGroup" }
       }
