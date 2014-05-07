@@ -195,6 +195,12 @@
                     "cd /home/ubuntu/worker\n",
                     "sudo puppet apply --verbose --modulepath=puppet/modules puppet/manifests/aws-", {"Ref": "Environment"}, ".pp > /tmp/puppet.log 2>&1 || error_exit 'failed to apply puppet manifests'\n",
 
+                    "# SET TIMEZONE to DO\n",
+                    "aptitude -y install ntp\n",
+                    "service ntp restart\n",
+                    "echo \"America/Santo_Domingo\" > /etc/timezone\n",
+                    "dpkg-reconfigure -f noninteractive tzdata\n",
+
                     "# Signal setup is complete\n",
                     "cfn-signal -e $? -r 'Completed configuration' '",
                     {
