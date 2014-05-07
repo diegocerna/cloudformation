@@ -1,0 +1,103 @@
+{
+  "AWSTemplateFormatVersion": "2010-09-09",
+  "Resources": {
+    "rdsbreerds": {
+      "Type": "AWS::RDS::DBInstance",
+      "Properties": {
+        "AutoMinorVersionUpgrade": "true",
+        "DBInstanceClass": "db.m1.small",
+        "Port": "5432",
+        "AllocatedStorage": "5",
+        "BackupRetentionPeriod": "1",
+        "DBName": "MyDatabase",
+        "Engine": "postgres",
+        "EngineVersion": "9.3.3",
+        "LicenseModel": "postgresql-license",
+        "MasterUsername": "postgres",
+        "MasterUserPassword": "MyPassword",
+        "PreferredBackupWindow": "07:01-07:31",
+        "PreferredMaintenanceWindow": "fri:04:10-fri:04:40",
+        "MultiAZ": "true",
+        "DBSecurityGroups": [
+          {
+            "Ref": "dbsgdefault"
+          }
+        ],
+        "Tags": [
+          {
+            "Key": "workload-type",
+            "Value": "production"
+          }
+        ]
+      }
+    },
+    "rdspaymentsinstance": {
+      "Type": "AWS::RDS::DBInstance",
+      "Properties": {
+        "AutoMinorVersionUpgrade": "true",
+        "DBInstanceClass": "db.t1.micro",
+        "Port": "5432",
+        "AllocatedStorage": "5",
+        "BackupRetentionPeriod": "2",
+        "DBName": "MyDatabase",
+        "Engine": "postgres",
+        "EngineVersion": "9.3.3",
+        "LicenseModel": "postgresql-license",
+        "MasterUsername": "ubuntu",
+        "MasterUserPassword": "MyPassword",
+        "PreferredBackupWindow": "00:00-00:30",
+        "PreferredMaintenanceWindow": "sun:02:00-sun:02:30",
+        "MultiAZ": "true",
+        "DBSecurityGroups": [
+          {
+            "Ref": "dbsgpaymentssg"
+          }
+        ],
+        "Tags": [
+          {
+            "Key": "workload-type",
+            "Value": "production"
+          }
+        ]
+      }
+    },
+    "dbsgdefault": {
+      "Type": "AWS::RDS::DBSecurityGroup",
+      "Properties": {
+        "GroupDescription": "default",
+        "DBSecurityGroupIngress": [
+          {
+            "CIDRIP": "10.4.0.208/32"
+          },
+          {
+            "CIDRIP": "54.193.72.14/32"
+          },
+          {
+            "CIDRIP": "65.160.18.102/32"
+          },
+          {
+            "CIDRIP": "186.151.60.250/32"
+          },
+          {
+            "CIDRIP": "190.90.116.194/32"
+          },
+          {
+            "CIDRIP": "186.64.109.138/32"
+          }
+        ]
+      }
+    },
+    "dbsgpaymentssg": {
+      "Type": "AWS::RDS::DBSecurityGroup",
+      "Properties": {
+        "GroupDescription": "Payments Security Group",
+        "DBSecurityGroupIngress": [
+          {
+            "CIDRIP": "54.209.67.122/32"
+          }
+        ]
+      }
+    }
+  },
+  "Description": "rds_db_template"
+}
