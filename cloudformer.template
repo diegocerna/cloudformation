@@ -2421,7 +2421,7 @@
       "Properties": {
         "DisableApiTermination": "FALSE",
         "ImageId": "ami-d0f89fb9",
-        "InstanceType": "m1.medium",
+        "InstanceType": "m3.medium",
         "KernelId": "aki-88aa75e1",
         "KeyName": "frontend-staging",
         "Monitoring": "false",
@@ -2463,7 +2463,7 @@
       "Properties": {
         "DisableApiTermination": "FALSE",
         "ImageId": "ami-3d4ff254",
-        "InstanceType": "m1.medium",
+        "InstanceType": "m3.medium",
         "KernelId": "aki-825ea7eb",
         "KeyName": "bluekite-vpc",
         "Monitoring": "false",
@@ -2547,7 +2547,7 @@
       "Properties": {
         "DisableApiTermination": "FALSE",
         "ImageId": "ami-d0f89fb9",
-        "InstanceType": "m1.medium",
+        "InstanceType": "m3.medium",
         "KernelId": "aki-88aa75e1",
         "KeyName": "xyz-app",
         "Monitoring": "false",
@@ -2631,7 +2631,7 @@
       "Properties": {
         "DisableApiTermination": "FALSE",
         "ImageId": "ami-d0f89fb9",
-        "InstanceType": "m1.medium",
+        "InstanceType": "m3.medium",
         "KernelId": "aki-88aa75e1",
         "KeyName": "xyz-app",
         "Monitoring": "false",
@@ -2673,7 +2673,7 @@
       "Properties": {
         "DisableApiTermination": "FALSE",
         "ImageId": "ami-d0f89fb9",
-        "InstanceType": "m1.medium",
+        "InstanceType": "m3.medium",
         "KernelId": "aki-88aa75e1",
         "KeyName": "logstash.staging",
         "Monitoring": "false",
@@ -2715,7 +2715,7 @@
       "Properties": {
         "DisableApiTermination": "FALSE",
         "ImageId": "ami-d0f89fb9",
-        "InstanceType": "m1.medium",
+        "InstanceType": "m3.medium",
         "KernelId": "aki-88aa75e1",
         "KeyName": "bluekite-vpc",
         "Monitoring": "false",
@@ -2753,7 +2753,7 @@
       "Properties": {
         "DisableApiTermination": "FALSE",
         "ImageId": "ami-90235cf9",
-        "InstanceType": "m1.medium",
+        "InstanceType": "m3.medium",
         "KernelId": "aki-88aa75e1",
         "KeyName": "frontend-staging",
         "Monitoring": "false",
@@ -2795,7 +2795,7 @@
       "Properties": {
         "DisableApiTermination": "FALSE",
         "ImageId": "ami-3d4ff254",
-        "InstanceType": "m1.medium",
+        "InstanceType": "m3.medium",
         "KernelId": "aki-825ea7eb",
         "KeyName": "bluekite-vpc",
         "Monitoring": "false",
@@ -3039,7 +3039,7 @@
       "Properties": {
         "DisableApiTermination": "FALSE",
         "ImageId": "ami-d0f89fb9",
-        "InstanceType": "m1.medium",
+        "InstanceType": "m3.medium",
         "KernelId": "aki-88aa75e1",
         "KeyName": "bluekite-vpc",
         "Monitoring": "false",
@@ -3165,7 +3165,7 @@
       "Properties": {
         "DisableApiTermination": "FALSE",
         "ImageId": "ami-d0f89fb9",
-        "InstanceType": "m1.medium",
+        "InstanceType": "m3.medium",
         "KernelId": "aki-88aa75e1",
         "KeyName": "agave_staging",
         "Monitoring": "false",
@@ -3207,7 +3207,7 @@
       "Properties": {
         "DisableApiTermination": "FALSE",
         "ImageId": "ami-d0f89fb9",
-        "InstanceType": "m1.medium",
+        "InstanceType": "m3.medium",
         "KernelId": "aki-88aa75e1",
         "KeyName": "frontend_app",
         "Monitoring": "false",
@@ -3300,7 +3300,7 @@
       "Properties": {
         "DisableApiTermination": "FALSE",
         "ImageId": "ami-d0f89fb9",
-        "InstanceType": "m1.medium",
+        "InstanceType": "m3.medium",
         "KernelId": "aki-88aa75e1",
         "KeyName": "xyz-app",
         "Monitoring": "false",
@@ -3342,7 +3342,7 @@
       "Properties": {
         "DisableApiTermination": "FALSE",
         "ImageId": "ami-d0f89fb9",
-        "InstanceType": "m1.medium",
+        "InstanceType": "m3.medium",
         "KernelId": "aki-88aa75e1",
         "KeyName": "bluekite-vpc",
         "Monitoring": "false",
@@ -3422,7 +3422,7 @@
       "Properties": {
         "DisableApiTermination": "FALSE",
         "ImageId": "ami-d0f89fb9",
-        "InstanceType": "m1.medium",
+        "InstanceType": "m3.medium",
         "KernelId": "aki-88aa75e1",
         "KeyName": "bluekite-vpc",
         "Monitoring": "false",
@@ -3439,7 +3439,7 @@
       "Properties": {
         "DisableApiTermination": "FALSE",
         "ImageId": "ami-3d4ff254",
-        "InstanceType": "m1.medium",
+        "InstanceType": "m3.medium",
         "KernelId": "aki-825ea7eb",
         "KeyName": "bluekite-vpc",
         "Monitoring": "false",
@@ -3481,7 +3481,7 @@
       "Properties": {
         "DisableApiTermination": "FALSE",
         "ImageId": "ami-3d4ff254",
-        "InstanceType": "m1.medium",
+        "InstanceType": "m3.medium",
         "KernelId": "aki-825ea7eb",
         "KeyName": "bluekite-vpc",
         "Monitoring": "false",
@@ -3565,7 +3565,7 @@
       "Properties": {
         "DisableApiTermination": "FALSE",
         "ImageId": "ami-d0f89fb9",
-        "InstanceType": "m1.medium",
+        "InstanceType": "m3.medium",
         "KernelId": "aki-88aa75e1",
         "KeyName": "notifier-staging",
         "Monitoring": "false",
@@ -3645,7 +3645,7 @@
       "Properties": {
         "DisableApiTermination": "FALSE",
         "ImageId": "ami-d0f89fb9",
-        "InstanceType": "m1.medium",
+        "InstanceType": "m3.medium",
         "KernelId": "aki-88aa75e1",
         "KeyName": "bluekite-vpc",
         "Monitoring": "false",
@@ -3687,7 +3687,7 @@
       "Properties": {
         "DisableApiTermination": "FALSE",
         "ImageId": "ami-3d4ff254",
-        "InstanceType": "m1.medium",
+        "InstanceType": "m3.medium",
         "KernelId": "aki-825ea7eb",
         "KeyName": "bluekite-vpc",
         "Monitoring": "false",
@@ -3805,7 +3805,7 @@
       "Properties": {
         "DisableApiTermination": "FALSE",
         "ImageId": "ami-3d4ff254",
-        "InstanceType": "m1.medium",
+        "InstanceType": "m3.medium",
         "KernelId": "aki-825ea7eb",
         "KeyName": "bluekite-vpc",
         "Monitoring": "false",
@@ -3919,7 +3919,7 @@
       "Properties": {
         "DisableApiTermination": "FALSE",
         "ImageId": "ami-d0f89fb9",
-        "InstanceType": "m1.medium",
+        "InstanceType": "m3.medium",
         "KernelId": "aki-88aa75e1",
         "KeyName": "xyz-app",
         "Monitoring": "false",
@@ -4020,7 +4020,7 @@
       "Properties": {
         "DisableApiTermination": "FALSE",
         "ImageId": "ami-d0f89fb9",
-        "InstanceType": "m1.medium",
+        "InstanceType": "m3.medium",
         "KernelId": "aki-88aa75e1",
         "KeyName": "notifier-staging",
         "Monitoring": "false",
@@ -4079,7 +4079,7 @@
       "Properties": {
         "DisableApiTermination": "FALSE",
         "ImageId": "ami-d0f89fb9",
-        "InstanceType": "m1.medium",
+        "InstanceType": "m3.medium",
         "KernelId": "aki-88aa75e1",
         "KeyName": "notifier_bluekite",
         "Monitoring": "false",
@@ -4117,7 +4117,7 @@
       "Properties": {
         "DisableApiTermination": "FALSE",
         "ImageId": "ami-d0f89fb9",
-        "InstanceType": "m1.medium",
+        "InstanceType": "m3.medium",
         "KernelId": "aki-88aa75e1",
         "KeyName": "accounting_bluekite",
         "Monitoring": "false",
@@ -4155,7 +4155,7 @@
       "Properties": {
         "DisableApiTermination": "FALSE",
         "ImageId": "ami-a73264ce",
-        "InstanceType": "m1.medium",
+        "InstanceType": "m3.medium",
         "KernelId": "aki-88aa75e1",
         "KeyName": "frontend_app",
         "Monitoring": "false",
@@ -4193,7 +4193,7 @@
       "Properties": {
         "DisableApiTermination": "FALSE",
         "ImageId": "ami-d0f89fb9",
-        "InstanceType": "m1.medium",
+        "InstanceType": "m3.medium",
         "KernelId": "aki-88aa75e1",
         "KeyName": "bluekite-vpc",
         "Monitoring": "false",
@@ -4231,7 +4231,7 @@
       "Properties": {
         "DisableApiTermination": "FALSE",
         "ImageId": "ami-d0f89fb9",
-        "InstanceType": "m1.medium",
+        "InstanceType": "m3.medium",
         "KernelId": "aki-88aa75e1",
         "KeyName": "bluekite-vpc",
         "Monitoring": "false",
@@ -4420,7 +4420,7 @@
       "Properties": {
         "DisableApiTermination": "FALSE",
         "ImageId": "ami-3d4ff254",
-        "InstanceType": "m1.medium",
+        "InstanceType": "m3.medium",
         "KernelId": "aki-825ea7eb",
         "KeyName": "bluekite-vpc",
         "Monitoring": "false",
@@ -4458,7 +4458,7 @@
       "Properties": {
         "DisableApiTermination": "FALSE",
         "ImageId": "ami-3d4ff254",
-        "InstanceType": "m1.medium",
+        "InstanceType": "m3.medium",
         "KernelId": "aki-825ea7eb",
         "KeyName": "bluekite-vpc",
         "Monitoring": "false",
@@ -4496,7 +4496,7 @@
       "Properties": {
         "DisableApiTermination": "FALSE",
         "ImageId": "ami-3d4ff254",
-        "InstanceType": "m1.medium",
+        "InstanceType": "m3.medium",
         "KernelId": "aki-825ea7eb",
         "KeyName": "bluekite-vpc",
         "Monitoring": "false",
@@ -4551,7 +4551,7 @@
       "Properties": {
         "DisableApiTermination": "FALSE",
         "ImageId": "ami-3d4ff254",
-        "InstanceType": "m1.medium",
+        "InstanceType": "m3.medium",
         "KernelId": "aki-825ea7eb",
         "KeyName": "bluekite-vpc",
         "Monitoring": "false",
@@ -4593,7 +4593,7 @@
       "Properties": {
         "DisableApiTermination": "FALSE",
         "ImageId": "ami-3d4ff254",
-        "InstanceType": "m1.medium",
+        "InstanceType": "m3.medium",
         "KernelId": "aki-825ea7eb",
         "KeyName": "bluekite-vpc",
         "Monitoring": "false",
@@ -4706,7 +4706,7 @@
       "Properties": {
         "DisableApiTermination": "FALSE",
         "ImageId": "ami-3904ae50",
-        "InstanceType": "m1.medium",
+        "InstanceType": "m3.medium",
         "KernelId": "aki-88aa75e1",
         "KeyName": "xyz-app",
         "Monitoring": "false",
@@ -4782,7 +4782,7 @@
       "Properties": {
         "DisableApiTermination": "FALSE",
         "ImageId": "ami-3d4ff254",
-        "InstanceType": "m1.medium",
+        "InstanceType": "m3.medium",
         "KernelId": "aki-825ea7eb",
         "KeyName": "bluekite-vpc",
         "Monitoring": "false",
@@ -5034,7 +5034,7 @@
       "Properties": {
         "DisableApiTermination": "FALSE",
         "ImageId": "ami-3d4ff254",
-        "InstanceType": "m1.medium",
+        "InstanceType": "m3.medium",
         "KernelId": "aki-825ea7eb",
         "KeyName": "bluekite-vpc",
         "Monitoring": "false",
@@ -5076,7 +5076,7 @@
       "Properties": {
         "DisableApiTermination": "FALSE",
         "ImageId": "ami-3d4ff254",
-        "InstanceType": "m1.medium",
+        "InstanceType": "m3.medium",
         "KernelId": "aki-825ea7eb",
         "KeyName": "bluekite-vpc",
         "Monitoring": "false",
@@ -5156,7 +5156,7 @@
       "Properties": {
         "DisableApiTermination": "FALSE",
         "ImageId": "ami-3d4ff254",
-        "InstanceType": "m1.medium",
+        "InstanceType": "m3.medium",
         "KernelId": "aki-825ea7eb",
         "KeyName": "bluekite-vpc",
         "Monitoring": "false",
@@ -5198,7 +5198,7 @@
       "Properties": {
         "DisableApiTermination": "FALSE",
         "ImageId": "ami-3d4ff254",
-        "InstanceType": "m1.medium",
+        "InstanceType": "m3.medium",
         "KernelId": "aki-825ea7eb",
         "KeyName": "bluekite-vpc",
         "Monitoring": "false",
@@ -5240,7 +5240,7 @@
       "Properties": {
         "DisableApiTermination": "FALSE",
         "ImageId": "ami-3d4ff254",
-        "InstanceType": "m1.medium",
+        "InstanceType": "m3.medium",
         "KernelId": "aki-825ea7eb",
         "KeyName": "bluekite-vpc",
         "Monitoring": "false",
@@ -5282,7 +5282,7 @@
       "Properties": {
         "DisableApiTermination": "FALSE",
         "ImageId": "ami-3d4ff254",
-        "InstanceType": "m1.medium",
+        "InstanceType": "m3.medium",
         "KernelId": "aki-825ea7eb",
         "KeyName": "bluekite-vpc",
         "Monitoring": "false",
@@ -5325,7 +5325,7 @@
         "DisableApiTermination": "FALSE",
         "IamInstanceProfile": "arn:aws:iam::243238936187:instance-profile/oauth-InstanceProfile-KP2703A9YY7R",
         "ImageId": "ami-a73264ce",
-        "InstanceType": "m1.medium",
+        "InstanceType": "m3.medium",
         "KernelId": "aki-88aa75e1",
         "KeyName": "redtail_production",
         "Monitoring": "false",
@@ -5555,7 +5555,7 @@
       "Properties": {
         "DisableApiTermination": "FALSE",
         "ImageId": "ami-f859cf91",
-        "InstanceType": "m1.medium",
+        "InstanceType": "m3.medium",
         "KernelId": "aki-825ea7eb",
         "KeyName": "bluekite-vpc",
         "Monitoring": "false",
@@ -5572,7 +5572,7 @@
       "Properties": {
         "DisableApiTermination": "FALSE",
         "ImageId": "ami-3fec7956",
-        "InstanceType": "m1.medium",
+        "InstanceType": "m3.medium",
         "KernelId": "aki-88aa75e1",
         "KeyName": "xyz-app",
         "Monitoring": "false",
@@ -5610,7 +5610,7 @@
       "Properties": {
         "DisableApiTermination": "FALSE",
         "ImageId": "ami-3fec7956",
-        "InstanceType": "m1.medium",
+        "InstanceType": "m3.medium",
         "KernelId": "aki-88aa75e1",
         "KeyName": "xyz-app",
         "Monitoring": "false",
@@ -5648,7 +5648,7 @@
       "Properties": {
         "DisableApiTermination": "FALSE",
         "ImageId": "ami-3fec7956",
-        "InstanceType": "m1.medium",
+        "InstanceType": "m3.medium",
         "KernelId": "aki-88aa75e1",
         "KeyName": "xyz-app",
         "Monitoring": "false",
@@ -5686,7 +5686,7 @@
       "Properties": {
         "DisableApiTermination": "FALSE",
         "ImageId": "ami-3fec7956",
-        "InstanceType": "m1.medium",
+        "InstanceType": "m3.medium",
         "KernelId": "aki-88aa75e1",
         "KeyName": "xyz-app",
         "Monitoring": "false",
@@ -5724,7 +5724,7 @@
       "Properties": {
         "DisableApiTermination": "FALSE",
         "ImageId": "ami-3fec7956",
-        "InstanceType": "m1.medium",
+        "InstanceType": "m3.medium",
         "KernelId": "aki-88aa75e1",
         "KeyName": "xyz-app",
         "Monitoring": "false",

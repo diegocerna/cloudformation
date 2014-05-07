@@ -18,7 +18,7 @@
             "Description" : "WebServer EC2 instance type",
             "Type" : "String",
             "Default" : "t1.micro",
-            "AllowedValues" : [ "t1.micro","m1.small","m1.medium","m1.large","m1.xlarge","m2.xlarge","m2.2xlarge","m2.4xlarge","m3.xlarge","m3.2xlarge","c1.medium","c1.xlarge","cc1.4xlarge","cc2.8xlarge","cg1.4xlarge"],
+            "AllowedValues" : [ "t1.micro","m1.small","m3.medium","m1.large","m1.xlarge","m2.xlarge","m2.2xlarge","m2.4xlarge","m3.xlarge","m3.2xlarge","c1.medium","c1.xlarge","cc1.4xlarge","cc2.8xlarge","cg1.4xlarge"],
             "ConstraintDescription" : "must be a valid EC2 instance type."
         },
 
@@ -80,11 +80,11 @@
         },
 
         "DOWIP" : {
-            "test"           : { "WIP" : "10.250.1.11" },
-            "dev"            : { "WIP" : "10.4.1.11" },
-            "qa"             : { "WIP" : "10.3.1.11" },
-            "sandbox"        : { "WIP" : "10.2.1.11" },
-            "production"     : { "WIP" : "10.1.1.11" }
+            "test"           : { "WIP" : "10.250.1.111" },
+            "dev"            : { "WIP" : "10.4.1.111" },
+            "qa"             : { "WIP" : "10.3.1.111" },
+            "sandbox"        : { "WIP" : "10.2.1.111" },
+            "production"     : { "WIP" : "10.1.1.111" }
         },
 
         "dot" : {
