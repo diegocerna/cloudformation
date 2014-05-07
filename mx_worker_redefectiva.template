@@ -92,12 +92,12 @@
                 "Name" : { "Fn::Join" : [ "", ["mx.worker.redefectiva", { "Fn::FindInMap" : [ "dot", { "Ref" : "Environment" }, "DOT" ]}, ".bluekite.com."]]},
                 "Type" : "A",
                 "TTL" : "300",
-                "ResourceRecords" : [ { "Fn::GetAtt" : [ "DoWorkerRedefectivaInstance", "PrivateIp" ] } ]
+                "ResourceRecords" : [ { "Fn::GetAtt" : [ "MxWorkerRedefectivaInstance", "PrivateIp" ] } ]
             },
-            "DependsOn" : "DoWorkerRedefectivaInstance"
+            "DependsOn" : "MxWorkerRedefectivaInstance"
         },
 
-        "DoWorkerRedefectivaInstance" : {
+        "MxWorkerRedefectivaInstance" : {
             "Type" : "AWS::EC2::Instance",
             "Metadata" : {
               "Comment" : "Catalog - Rails Aplication Instance",
@@ -172,7 +172,7 @@
                     "# Run Instance default configuration via CloudFormation::Init\n",
                     "cfn-init -v --region ", { "Ref" : "AWS::Region" },
                     "    -s ", { "Ref" : "AWS::StackId" },
-                    " -r DoWorkerRedefectivaInstance",
+                    " -r MxWorkerRedefectivaInstance",
                     " -c default",
                     " || error_exit 'Failed to run cfn-init'\n",
 
@@ -195,6 +195,12 @@
                     "cd /home/ubuntu/worker\n",
                     "sudo puppet apply --verbose --modulepath=puppet/modules puppet/manifests/aws-", {"Ref": "Environment"}, ".pp > /tmp/puppet.log 2>&1 || error_exit 'failed to apply puppet manifests'\n",
 
+                    "# SET TIMEZONE to MX\n",
+                    "aptitude -y install ntp\n",
+                    "service ntp restart\n",
+                    "echo \"America/Mexico_City\" > /etc/timezone\n",
+                    "dpkg-reconfigure -f noninteractive tzdata\n",
+
                     "# Signal setup is complete\n",
                     "cfn-signal -e $? -r 'Completed configuration' '",
                     {
@@ -211,7 +217,7 @@
 
     "WorkerRedefectivaWaitCondition" : {
       "Type" : "AWS::CloudFormation::WaitCondition",
-      "DependsOn" : "DoWorkerRedefectivaInstance",
+      "DependsOn" : "MxWorkerRedefectivaInstance",
       "Properties" : {
         "Handle" : {"Ref" : "WorkerRedefectivaWaitHandle"},
         "Timeout" : "1200"
@@ -231,12 +237,12 @@
   
   "Outputs" : {
     "InstanceId" : {
-      "Value" : { "Ref" : "DoWorkerRedefectivaInstance" },
+      "Value" : { "Ref" : "MxWorkerRedefectivaInstance" },
       "Description" : "Instance Id of newly created instance"
     },
 
       "IPAddress" : {
-      "Value" : { "Fn::GetAtt" : [ "DoWorkerRedefectivaInstance", "PrivateIp" ] },
+      "Value" : { "Fn::GetAtt" : [ "MxWorkerRedefectivaInstance", "PrivateIp" ] },
       "Description" : "Private IP address of instance"
     },
 
