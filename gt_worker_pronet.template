@@ -61,7 +61,7 @@
             "ap-southeast-1" : {"AMI" : "ami-605c0a32" },
             "ap-southeast-2" : {"AMI" : "ami-fb4bd5c1" },
             "eu-west-1"      : {"AMI" : "ami-d03dcaa7" },
-            "us-east-1"      : {"AMI" : "ami-cdc2fda4" },
+            "us-east-1"      : {"AMI" : "ami-c248a8aa" },
             "us-west-2"      : {"AMI" : "ami-9a9dfdaa" }
         },
 
@@ -95,7 +95,7 @@
               "Comment" : "Catalog - Rails Aplication Instance",
               "AWS::CloudFormation::Init" : {
               "configSets" : {
-                "default" : ["config_credentials", "config_packages"]
+                "default" : "config_credentials"
               },
               "config_credentials" : {
                 "files" : {
@@ -124,19 +124,6 @@
                       "\tPreferredAuthentications publickey\n",
                       "\tIdentityFile ~/.ssh/id_rsa\n"
                     ]]}
-                  }
-                }
-              },
-            
-              "config_packages" : {
-                "packages" : {
-                  "apt" : {
-                    "git"                        : [],
-                    "curl"                       : [],
-                    "tmux"                       : [],
-                    "build-essential"            : [],
-                    "python-software-properties" : [],
-                    "rubygems"                   : []
                   }
                 }
               }
@@ -187,8 +174,15 @@
                     "cd /home/ubuntu/worker\n",
                     "sudo puppet apply --verbose --modulepath=puppet/modules puppet/manifests/aws-", {"Ref": "Environment"}, ".pp > /tmp/puppet.log 2>&1 || error_exit 'failed to apply puppet manifests'\n",
 
+                    "# SET TIMEZONE to GT\n",
+                    "aptitude -y install ntp\n",
+                    "service ntp restart\n",
+                    "echo \"America/Guatemala\" > /etc/timezone\n",
+                    "dpkg-reconfigure -f noninteractive tzdata\n",
+
                     "# Signal setup is complete\n",
                     "cfn-signal -e $? -r 'Completed configuration' '",
+
                     {
                         "Ref" : "WorkerPronetWaitHandle"
                     },
