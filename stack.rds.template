@@ -1,7 +1,7 @@
 {
   "AWSTemplateFormatVersion" : "2010-09-09",
 
-  "Description" : "Master template for creation of API Stack",
+  "Description" : "Master template for creation of QA",
 
   "Parameters" : {
     "appEnvironment" : {
@@ -13,7 +13,7 @@
     "KeyName" : {
       "Type" : "String",
       "Description" : "The the key to SSH machines",
-      "Default" : "tbp_"
+      "Default" : ""
     },
 
     "InstanceType" : {
@@ -54,27 +54,9 @@
       "Default" : "sg-"
     },
 
-    "AccountsMXSecurityGroup" : {
-      "Type" : "String",
-      "Description" : "Security Group ID for Accounts Mexico",
-      "Default" : "sg-"
-    },
-
-    "AccountsSVSecurityGroup" : {
-      "Type" : "String",
-      "Description" : "Security Group ID for Accounts El Salvador",
-      "Default" : "sg-"
-    },
-
     "AccountsGTSecurityGroup" : {
       "Type" : "String",
       "Description" : "Security Group ID for Accounts Guatemala",
-      "Default" : "sg-"
-    },
-
-    "AccountsDOSecurityGroup" : {
-      "Type" : "String",
-      "Description" : "Security Group ID for Accounts Dominican Republic",
       "Default" : "sg-"
     },
 
@@ -90,31 +72,13 @@
       "Default" : "subnet-"
     },
 
-    "gtSubnetID" : {
+    "gtSubetID" : {
       "Type" : "String",
       "Default" : "subnet-",
       "Description" : "Subnet ID for GT worker"
     },
 
-    "doSubnetID" : {
-      "Type" : "String",
-      "Default" : "subnet-",
-      "Description" : "Subnet ID for DO worker"
-    },
-
-    "mxSubnetID" : {
-      "Type" : "String",
-      "Default" : "subnet-",
-      "Description" : "Subnet ID for MX worker"
-    },
-
-    "svSubnetID" : {
-      "Type" : "String",
-      "Default" : "subnet-",
-      "Description" : "Subnet ID for SV worker"
-    },
-
-    "isSubnetID" : {
+    "isSubetID" : {
       "Type" : "String",
       "Default" : "subnet-",
       "Description" : "Subnet ID for IS worker"
@@ -122,6 +86,38 @@
   },
 
   "Resources" : {
+
+
+    "PaymentsDB": {
+      "Type" : "AWS::RDS::DBInstance",
+       "Properties" :
+       {
+          "AllocatedStorage" : String,
+          "AutoMinorVersionUpgrade" : Boolean,
+          "AvailabilityZone" : String,
+          "BackupRetentionPeriod" : String,
+          "DBInstanceClass" : String,
+          "DBInstanceIdentifier" : String,
+          "DBName" : String,
+          "DBParameterGroupName" : String,
+          "DBSecurityGroups" : [ String, ... ],
+          "DBSnapshotIdentifier" : String,
+          "DBSubnetGroupName" : String,
+          "Engine" : String,
+          "EngineVersion" : String,
+          "Iops" : Number,
+          "LicenseModel" : String,
+          "MasterUsername" : String,
+          "MasterUserPassword" : String,
+          "MultiAZ" : Boolean,
+          "Port" : String,
+          "PreferredBackupWindow" : String,
+          "PreferredMaintenanceWindow" : String,
+          "SourceDBInstanceIdentifier" : String,
+          "Tags" : [ Resource Tag, ..., ],
+          "VPCSecurityGroups" : [ String, ... ]
+       }
+    },   
 
     "API" : {
       "Type" : "AWS::CloudFormation::Stack",
@@ -131,7 +127,7 @@
           "KeyName": {"Ref":"KeyName"},
           "SubnetId" : { "Ref" : "PublicSubnetId"},
           "SecurityGroupId" : { "Ref" : "ApiSecurityGroup"},
-          "DeployBranch" : "master",
+          "DeployBranch" : "release/v1.1.0",
           "InstanceType" : { "Ref" : "InstanceType"},
           "Environment" : {"Ref" : "appEnvironment"}
         }
@@ -146,7 +142,6 @@
           "KeyName": { "Ref" : "KeyName" },
           "SubnetId" : { "Ref" : "PrivateSubnetId" },
           "SecurityGroupId" : { "Ref" : "PrivateSecurityGroup" },
-          "DeployBranch" : "master",
           "Environment": { "Ref" : "appEnvironment" }
         }
       } 
@@ -180,6 +175,20 @@
       }
     },
 
+    "elastickite" : {
+      "Type" : "AWS::CloudFormation::Stack",
+      "Properties" : {
+        "TemplateURL" : "https://s3-us-west-2.amazonaws.com/pruebastack/search.template",
+        "Parameters" : {
+          "KeyName" : { "Ref" : "KeyName" },
+          "SubnetId" : { "Ref" : "PrivateSubnetId" },
+          "SecurityGroupId" : { "Ref" : "PrivateSecurityGroup" },
+          "DeployBranch" : "edge",
+          "Environment" : { "Ref" : "appEnvironment" }
+        }
+      }
+    },
+
     "catalog" : {
       "Type" : "AWS::CloudFormation::Stack",
       "Properties" : {
@@ -188,7 +197,7 @@
           "KeyName" : { "Ref" : "KeyName" },
           "SubnetId" : { "Ref" : "PrivateSubnetId" },
           "SecurityGroupId" : { "Ref" : "PrivateSecurityGroup" },
-          "DeployBranch" : "master",
+          "DeployBranch" : "release/0.1.0",
           "Environment" : { "Ref" : "appEnvironment" }
         }
       }
@@ -200,9 +209,9 @@
         "TemplateURL" : "https://s3-us-west-2.amazonaws.com/pruebastack/accounts.is.template",
         "Parameters" : {
           "KeyName" : { "Ref" : "KeyName" },
-          "SubnetId" : { "Ref" : "isSubnetID" },
-          "SecurityGroupId" : { "Ref" : "AccountsISSecurityGroup" },
-          "DeployBranch" : "master",
+          "SubnetId" : { "Ref" : "PrivateSubnetId" },
+          "SecurityGroupId" : { "Ref" : "PrivateSecurityGroup" },
+          "DeployBranch" : "release/0.1.0",
           "Environment" : { "Ref" : "appEnvironment" }
         }
       }
@@ -214,9 +223,9 @@
         "TemplateURL" : "https://s3-us-west-2.amazonaws.com/pruebastack/accounts.gt.template",
         "Parameters" : {
           "KeyName" : { "Ref" : "KeyName" },
-          "SubnetId" : { "Ref" : "gtSubnetID" },
-          "SecurityGroupId" : { "Ref" : "AccountsGTSecurityGroup" },
-          "DeployBranch" : "master",
+          "SubnetId" : { "Ref" : "PrivateSubnetId" },
+          "SecurityGroupId" : { "Ref" : "PrivateSecurityGroup" },
+          "DeployBranch" : "release/0.1.0",
           "Environment" : { "Ref" : "appEnvironment" }
         }
       }
@@ -228,23 +237,9 @@
         "TemplateURL" : "https://s3-us-west-2.amazonaws.com/pruebastack/accounts.do.template",
         "Parameters" : {
           "KeyName" : { "Ref" : "KeyName" },
-          "SubnetId" : { "Ref" : "doSubnetID" },
-          "SecurityGroupId" : { "Ref" : "AccountsDOSecurityGroup" },
-          "DeployBranch" : "master",
-          "Environment" : { "Ref" : "appEnvironment" }
-        }
-      }
-    },
-
-    "accountsMx" : {
-      "Type" : "AWS::CloudFormation::Stack",
-      "Properties" : {
-        "TemplateURL" : "https://s3-us-west-2.amazonaws.com/pruebastack/accounts.mx.template",
-        "Parameters" : {
-          "KeyName" : { "Ref" : "KeyName" },
-          "SubnetId" : { "Ref" : "mxSubnetID" },
-          "SecurityGroupId" : { "Ref" : "AccountsMXSecurityGroup" },
-          "DeployBranch" : "master",
+          "SubnetId" : { "Ref" : "PrivateSubnetId" },
+          "SecurityGroupId" : { "Ref" : "PrivateSecurityGroup" },
+          "DeployBranch" : "release/0.1.0",
           "Environment" : { "Ref" : "appEnvironment" }
         }
       }
@@ -258,7 +253,7 @@
           "KeyName" : { "Ref" : "KeyName" },
           "SubnetId" : { "Ref" : "PrivateSubnetId" },
           "SecurityGroupId" : { "Ref" : "PrivateSecurityGroup" },
-          "DeployBranch" : "master",
+          "Branch" : "master",
           "Environment" : { "Ref" : "appEnvironment" }
         }
       }
@@ -272,7 +267,7 @@
           "KeyName" : { "Ref" : "KeyName" },
           "SubnetId" : { "Ref" : "PrivateSubnetId" },
           "SecurityGroupId" : { "Ref" : "PrivateSecurityGroup" },
-          "DeployBranch" : "master",
+          "DeployBranch" : "release/0.1.0",
           "Environment" : { "Ref" : "appEnvironment" }
         }
       }
@@ -286,77 +281,21 @@
           "KeyName" : { "Ref" : "KeyName" },
           "SubnetId" : { "Ref" : "PrivateSubnetId" },
           "SG" : { "Ref" : "PrivateSecurityGroup" },
-          "DeployBranch" : "master",
+          "DeployBranch" : "release/v0.1.2",
           "Environment" : { "Ref" : "appEnvironment" }
         }
       }
-    },
-
-    "Forrest" : {
-      "Type" : "AWS::CloudFormation::Stack",
-      "Properties" : {
-        "TemplateURL" : "https://s3-us-west-2.amazonaws.com/pruebastack/forrest.template",
-        "Parameters" : {
-          "KeyName" : { "Ref" : "KeyName" },
-          "SubnetId" : { "Ref" : "PrivateSubnetId" },
-          "SG" : { "Ref" : "PrivateSecurityGroup" },
-          "DeployBranch" : "master",
-          "Environment" : { "Ref" : "appEnvironment" }
-        }
-      }
-    },
-
-    "XPA" : {
-      "Type" : "AWS::CloudFormation::Stack",
-      "Properties" : {
-        "TemplateURL" : "https://s3-us-west-2.amazonaws.com/pruebastack/xpa.template",
-        "Parameters" : {
-          "KeyName" : { "Ref" : "KeyName" },
-          "SubnetId" : { "Ref" : "PrivateSubnetId" },
-          "SecurityGroupId" : { "Ref" : "PrivateSecurityGroup" },
-          "DeployBranch" : "master",
-          "Environment" : { "Ref" : "appEnvironment" }
-        }
-      }
-    },    
+    },   
 
     "GTWorkerPronet" : {
       "Type" : "AWS::CloudFormation::Stack",
       "Properties" : {
-        "TemplateURL" : "https://s3-us-west-2.amazonaws.com/pruebastack/gt_worker_pronet_timezone.template",
+        "TemplateURL" : "https://s3-us-west-2.amazonaws.com/pruebastack/gt_worker_pronet.template",
         "Parameters" : {
           "KeyName" : { "Ref" : "KeyName" },
-          "SubnetId" : { "Ref" : "gtSubnetID" },
-          "SecurityGroupId" : { "Ref" : "AccountsGTSecurityGroup" },
-          "DeployBranch" : "master",
-          "Environment" : { "Ref" : "appEnvironment" }
-        }
-      }
-    },
-
-    "MXWorkerRedEfectiva" : {
-      "Type" : "AWS::CloudFormation::Stack",
-      "Properties" : {
-        "TemplateURL" : "https://s3-us-west-2.amazonaws.com/pruebastack/mx_worker_redefectiva.template",
-        "Parameters" : {
-          "KeyName" : { "Ref" : "KeyName" },
-          "SubnetId" : { "Ref" : "mxSubnetID" },
-          "SecurityGroupId" : { "Ref" : "AccountsMXSecurityGroup" },
-          "DeployBranch" : "master",
-          "Environment" : { "Ref" : "appEnvironment" }
-        }
-      }
-    },
-
-    "DOWorkerTpago" : {
-      "Type" : "AWS::CloudFormation::Stack",
-      "Properties" : {
-        "TemplateURL" : "https://s3-us-west-2.amazonaws.com/pruebastack/do_worker_tpago.template",
-        "Parameters" : {
-          "KeyName" : { "Ref" : "KeyName" },
-          "SubnetId" : { "Ref" : "doSubnetID" },
-          "SecurityGroupId" : { "Ref" : "AccountsDOSecurityGroup" },
-          "DeployBranch" : "master",
+          "SubnetId" : { "Ref" : "PrivateSubnetId" },
+          "SecurityGroupId" : { "Ref" : "PrivateSecurityGroup" },
+          "DeployBranch" : "release/0.1.0",
           "Environment" : { "Ref" : "appEnvironment" }
         }
       }
@@ -370,7 +309,7 @@
           "KeyName" : { "Ref" : "KeyName" },
           "SubnetId" : { "Ref" : "PrivateSubnetId" },
           "SecurityGroupId" : { "Ref" : "PrivateSecurityGroup" },
-          "DeployBranch" : "master",
+          "DeployBranch" : "release/0.1.0",
           "Environment" : { "Ref" : "appEnvironment" }
         }
       }

@@ -1,7 +1,7 @@
 {
   "AWSTemplateFormatVersion" : "2010-09-09",
 
-  "Description" : "This stack generates the Accounts DO instance",
+  "Description" : "This stack generates the Accounts MX instance",
 
  "Mappings" : {
     "RegionMap" : {
@@ -27,7 +27,7 @@
   "Parameters" : {
     "Environment" : {
       "Type" : "String",
-      "Description" : "Environment for the accounts-do, i.e. dev, production, etc.",
+      "Description" : "Environment for the accounts-mx, i.e. dev, production, etc.",
       "Default" : "qa"
     },
 
@@ -39,7 +39,7 @@
 
     "SubnetId" : {
       "Type" : "String",
-      "Description" : "Dominican Republic Accounts SubnetId in your Virtual Private Cloud (VPC)",
+      "Description" : "Mexico Accounts SubnetId in your Virtual Private Cloud (VPC)",
       "Default": "subnet-d56128fd"
 
     },
@@ -81,14 +81,14 @@
         "InstanceType" : { "Ref" : "InstanceType" },
         "KeyName" : { "Ref" : "KeyName" },
         "Tags" : [ {"Key" : "Application", "Value" : { "Ref" : "AWS::StackId"} },
-          {"Key" : "Name", "Value" : { "Fn::Join" : [ ".", ["accounts.do", { "Ref" : "Environment"} ] ] } } ],
+          {"Key" : "Name", "Value" : { "Fn::Join" : [ ".", ["accounts.mx", { "Ref" : "Environment"} ] ] } } ],
         "UserData"       : { "Fn::Base64" : { "Fn::Join" : ["", [
           "#!/bin/bash\n",
           
           "# Helper function to notify of failed operation\n",
           "function error_exit\n",
           "{\n",
-          "  cfn-signal -e 1 -r \"$1\" '", { "Ref" : "AccountsDOWaitHandle" }, "'\n",
+          "  cfn-signal -e 1 -r \"$1\" '", { "Ref" : "AccountsMXWaitHandle" }, "'\n",
           "  exit 1\n",
           "}\n",
           
@@ -116,37 +116,37 @@
           "cd /home/ubuntu/accounts/puppet\n",
           "export HOME=/home/ubuntu && librarian-puppet install --clean --verbose > /tmp/librarian-puppet.log 2>&1 || error_exit 'failed to install puppet submodules'\n",
           "cd /home/ubuntu/accounts\n",
-          "sudo puppet apply --verbose --modulepath=puppet/modules puppet/manifests/aws-accounts-do-",{"Ref":"Environment"},".pp > /tmp/puppet.log 2>&1 || error_exit 'failed to apply puppet manifests'\n",
+          "sudo puppet apply --verbose --modulepath=puppet/modules puppet/manifests/aws-accounts-mx-",{"Ref":"Environment"},".pp > /tmp/puppet.log 2>&1 || error_exit 'failed to apply puppet manifests'\n",
           
           "# Signal setup is complete\n",
           "cfn-signal -e $? -r 'Completed configuration' '",
           {
-              "Ref" : "AccountsDOWaitHandle"
+              "Ref" : "AccountsMXWaitHandle"
           },
           "'\n"
         ]]}}
       }
     },
 
-    "AccountsDOWaitHandle" : {
+    "AccountsMXWaitHandle" : {
       "Type" : "AWS::CloudFormation::WaitConditionHandle"
     },
 
-    "AccountsDOWaitCondition" : {
+    "AccountsMXWaitCondition" : {
       "Type" : "AWS::CloudFormation::WaitCondition",
       "DependsOn" : "AccountsDoInstance",
       "Properties" : {
-        "Handle" : {"Ref" : "AccountsDOWaitHandle"},
+        "Handle" : {"Ref" : "AccountsMXWaitHandle"},
         "Timeout" : "1500"
       }
     },
 
-    "DNSRecordAccountsDO" : {
+    "DNSRecordAccountsMX" : {
       "Type" : "AWS::Route53::RecordSet",
       "Properties" : {
         "HostedZoneName" : "bluekite.com.",
         "Comment" : "DNS name for my instance.",
-        "Name" : { "Fn::Join" : [ "", ["accounts.do", { "Fn::FindInMap" : [ "dot", { "Ref" : "Environment" }, "DOT" ]}, ".bluekite.com." ]]},
+        "Name" : { "Fn::Join" : [ "", ["accounts.mx", { "Fn::FindInMap" : [ "dot", { "Ref" : "Environment" }, "DOT" ]}, ".bluekite.com." ]]},
         "Type" : "A",
         "TTL" : "900",
         "ResourceRecords" : [ { "Fn::GetAtt" : [ "AccountsDoInstance", "PrivateIp" ] } ]
@@ -156,7 +156,7 @@
   },
 
   "Outputs" : {
-    "AccountsDOInstanceId" : {
+    "AccountsMXInstanceId" : {
       "Value" : { "Ref" : "AccountsDoInstance" },
       "Description" : "Instance Id of newly created instance"
     }

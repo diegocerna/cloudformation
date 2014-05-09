@@ -1,7 +1,7 @@
 {
     "AWSTemplateFormatVersion" : "2010-09-09",
 
-    "Description" : "Configure Oauth Node.js Application",
+    "Description" : "Configure Oauth Node.js Application - filename:oauth.template",
 
     "Parameters" : {
         "KeyName": {
@@ -11,44 +11,47 @@
             "MaxLength": "255",
             "AllowedPattern" : "[\\x20-\\x7E]*",
             "ConstraintDescription" : "can contain only ASCII characters.",
-            "Default": "redtail_production"
+            "Default": "tbp_"
         },
         
         "Environment" : {
             "Description" : "Environment for the Url",
             "Type" : "String",
-            "Default" : "test"
+            "Default" : ""
         },
 
         "InstanceType" : {
             "Description" : "WebServer EC2 instance type",
             "Type" : "String",
-            "Default" : "m1.medium",
-            "AllowedValues" : [ "t1.micro","m1.small","m1.medium","m1.large","m1.xlarge","m2.xlarge","m2.2xlarge","m2.4xlarge","m3.xlarge","m3.2xlarge","c1.medium","c1.xlarge","cc1.4xlarge","cc2.8xlarge","cg1.4xlarge"],
+            "Default" : "m3.medium",
+            "AllowedValues" : [ "t1.micro","m1.small","m3.medium","m1.large","m1.xlarge","m2.xlarge","m2.2xlarge","m2.4xlarge","m3.xlarge","m3.2xlarge","c1.medium","c1.xlarge","cc1.4xlarge","cc2.8xlarge","cg1.4xlarge"],
             "ConstraintDescription" : "must be a valid EC2 instance type."
         },
 
         "DeployBranch" : {
             "Type" : "String",
             "Description" : "Git branch where to deploy the code from.",
-            "Default" : "edge"
+            "Default" : ""
         }
     },
 
     "Mappings" : {
         "RegionMap" : {
-            "us-east-1"      : { "AMI" : "ami-a73264ce" },
-            "us-west-1"      : { "AMI" : "ami-8ca89ec9" },
-            "us-west-2"      : { "AMI" : "ami-6aad335a" },
-            "sa-east-1"      : { "AMI" : "ami-35258228" },
-            "eu-west-1"      : { "AMI" : "ami-d03dcaa7" }
+            "sa-east-1"      : {"AMI" : "ami-d545e5c8" },
+            "us-west-1"      : {"AMI" : "ami-82b98bc7" },
+            "ap-northeast-1" : {"AMI" : "ami-35bbd334" },
+            "ap-southeast-1" : {"AMI" : "ami-605c0a32" },
+            "ap-southeast-2" : {"AMI" : "ami-fb4bd5c1" },
+            "eu-west-1"      : {"AMI" : "ami-d03dcaa7" },
+            "us-east-1"      : {"AMI" : "ami-cdc2fda4" },
+            "us-west-2"      : {"AMI" : "ami-9a9dfdaa" }
         },
         "dot" : {
-          "test"            : { "DOT" : ".test" },
-          "dev"            : { "DOT" : ".dev" },
-          "qa"             : { "DOT" : ".qa" },
-          "sandbox"        : { "DOT" : ".sandbox" },
-          "production"     : { "DOT" : "" }
+          "test"             : { "DOT" : ".test" },
+          "dev"              : { "DOT" : ".dev" },
+          "qa"               : { "DOT" : ".qa" },
+          "sandbox"          : { "DOT" : ".sandbox" },
+          "production"       : { "DOT" : "" }
         }
     },
 
@@ -117,7 +120,6 @@
                                 "curl"            : [],
                                 "tmux"            : [],
                                 "build-essential" : [],
-                                "puppet"          : [],
                                 "python-software-properties" : []
                             }
                         }
@@ -143,22 +145,15 @@
                     "  exit 1\n",
                     "}\n",
 
-                    "# Add puppet repository. Installation will be managed by cfn-init\n",
-                    "wget http://apt.puppetlabs.com/puppetlabs-release-precise.deb\n",
-                    "sudo dpkg -i puppetlabs-release-precise.deb\n",
-                    "sudo apt-get update -y\n",
-                    "sudo apt-get upgrade -y\n",
-
-                    "# Install Amazon Tools\n",
-                    "apt-get -y install python-setuptools\n",
-                    "easy_install https://s3.amazonaws.com/cloudformation-examples/aws-cfn-bootstrap-latest.tar.gz\n",
-
                     "# Run Instance default configuration via CloudFormation::Init\n",
                     "cfn-init -v --region ", { "Ref" : "AWS::Region" },
                     "    -s ", { "Ref" : "AWS::StackId" },
                     " -r WebServerInstance",
                     " -c default",
                     " || error_exit 'Failed to run cfn-init'\n",
+
+                    "# Install puppet via gems\n",
+                    "sudo gem install puppet --no-rdoc --no-ri > /tmp/gem-puppet.log 2>&1 || error_exit 'Failed install puppet gem'\n",
 
                     "# Register Github fingerprints\n",
                     "ssh-keygen -f ~/.ssh/known_hosts -H -F github.com | grep -q found || ssh-keyscan -H github.com >> ~/.ssh/known_hosts\n",
@@ -171,11 +166,13 @@
 
                     "chown ubuntu:ubuntu -R /home/ubuntu/oauth\n",
 
-
                     "# Install application's dependencies via puppet\n",
+                    "sudo gem install puppet || error_exit 'Failed to install gem puppet'\n",
+                    "sudo gem install librarian-puppet\n",
+                    "cd /home/ubuntu/oauth/puppet\n",
+                    "export HOME=/home/ubuntu && librarian-puppet install --verbose > /tmp/librarian-puppet.log 2>&1 || error_exit 'failed to install puppet submodules'\n",
+
                     "cd /home/ubuntu/oauth\n",
-                    "git submodule init\n",
-                    "git submodule update\n",
                     "sudo puppet apply --verbose --modulepath=./puppet/modules ./puppet/manifests/aws-",{"Ref":"Environment"},".pp > /tmp/puppet.log 2>&1 || error_exit 'failed to apply puppet manifests'\n",
 
                     "# Signal setup is complete\n",
@@ -208,7 +205,9 @@
                 "SecurityGroupIngress" : [
                     {"IpProtocol" : "tcp", "FromPort" : "80", "ToPort" : "80", "CidrIp" : "0.0.0.0/0"},
                     {"IpProtocol" : "tcp", "FromPort" : "443", "ToPort" : "443", "CidrIp" : "0.0.0.0/0"},
-                    {"IpProtocol" : "tcp", "FromPort" : "22", "ToPort" : "22", "CidrIp" : "0.0.0.0/0"}
+                    {"IpProtocol" : "tcp", "FromPort" : "22", "ToPort" : "22", "CidrIp" : "190.99.116.194/32"},
+                    {"IpProtocol" : "tcp", "FromPort" : "22", "ToPort" : "22", "CidrIp" : "186.151.60.250/32"},
+                    {"IpProtocol" : "tcp", "FromPort" : "22", "ToPort" : "22", "CidrIp" : "186.64.109.138/32"}
                 ]
             }
         }

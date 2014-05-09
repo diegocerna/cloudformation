@@ -1,7 +1,7 @@
 {
   "AWSTemplateFormatVersion" : "2010-09-09",
 
-  "Description" : "Dominican Republic Tpago Hamster Worker Instance",
+  "Description" : "Mexico Red Efectiva Hamster Worker Instance",
 
   "Parameters" : {
     "KeyName": {
@@ -24,13 +24,13 @@
 
     "SubnetId" : {
       "Type" : "String",
-      "Description" : "Dominican Republic SubnetId in your Virtual Private Cloud (VPC)",
+      "Description" : "Mexico SubnetId in your Virtual Private Cloud (VPC)",
       "Default": "subnet-7ce1bd54"
     },
 
     "SecurityGroupId" : {
       "Type" : "String",
-      "Description" : "Dominican Republic SecurityGroupId your Virtual Private Cloud (VPC)",
+      "Description" : "Mexico SecurityGroupId your Virtual Private Cloud (VPC)",
       "Default": "sg-4bc56f2e"
     },
 
@@ -49,7 +49,7 @@
     "Repository" : {
       "Type" : "String",
       "Description" : "Application's GitHub Repository.",
-      "Default" : "git@github.com:blue-kite/do_worker_tpago.git"
+      "Default" : "git@github.com:blue-kite/mx_worker_red_efectiva.git"
     }
   },
 
@@ -65,12 +65,12 @@
             "us-west-2"      : {"AMI" : "ami-9a9dfdaa" }
         },
 
-        "DOWIP" : {
-            "test"           : { "WIP" : "10.250.12.133" },
-            "dev"            : { "WIP" : "10.4.12.133" },
-            "qa"             : { "WIP" : "10.3.12.133" },
-            "sandbox"        : { "WIP" : "10.2.12.133" },
-            "production"     : { "WIP" : "10.1.12.133" }
+        "MXWIP" : {
+            "test"           : { "WIP" : "10.250.13.133" },
+            "dev"            : { "WIP" : "10.4.13.133" },
+            "qa"             : { "WIP" : "10.3.13.133" },
+            "sandbox"        : { "WIP" : "10.2.13.133" },
+            "production"     : { "WIP" : "10.1.13.133" }
         },
 
         "dot" : {
@@ -89,15 +89,15 @@
             "Properties" : {
                 "HostedZoneName" : "bluekite.com.",
                 "Comment" : "DNS name for my instance.",
-                "Name" : { "Fn::Join" : [ "", ["do.worker.tpago", { "Fn::FindInMap" : [ "dot", { "Ref" : "Environment" }, "DOT" ]}, ".bluekite.com."]]},
+                "Name" : { "Fn::Join" : [ "", ["mx.worker.redefectiva", { "Fn::FindInMap" : [ "dot", { "Ref" : "Environment" }, "DOT" ]}, ".bluekite.com."]]},
                 "Type" : "A",
                 "TTL" : "300",
-                "ResourceRecords" : [ { "Fn::GetAtt" : [ "DoWorkerTpagoInstance", "PrivateIp" ] } ]
+                "ResourceRecords" : [ { "Fn::GetAtt" : [ "MxWorkerRedefectivaInstance", "PrivateIp" ] } ]
             },
-            "DependsOn" : "DoWorkerTpagoInstance"
+            "DependsOn" : "MxWorkerRedefectivaInstance"
         },
 
-        "DoWorkerTpagoInstance" : {
+        "MxWorkerRedefectivaInstance" : {
             "Type" : "AWS::EC2::Instance",
             "Metadata" : {
               "Comment" : "Catalog - Rails Aplication Instance",
@@ -154,25 +154,25 @@
             "Properties" : {
                 "ImageId" : { "Fn::FindInMap" : [ "RegionMap", { "Ref" : "AWS::Region" }, "AMI" ]},
                 "NetworkInterfaces" :  [ { 
-                "NetworkInterfaceId" : { "Ref" : "WorkerTpagoPrivateIP"}, "DeviceIndex" : "0" } ],
+                "NetworkInterfaceId" : { "Ref" : "WorkerRedefectivaPrivateIP"}, "DeviceIndex" : "0" } ],
                 "InstanceType" : { "Ref" : "InstanceType" },
                 "KeyName" : { "Ref" : "KeyName" },
                 "Tags" : [ {"Key" : "Application", "Value" : { "Ref" : "AWS::StackId"} },
-                           {"Key" : "Name", "Value" : { "Fn::Join" : [ ".", ["do.worker.tpago", {"Ref" : "Environment"} ] ] } } ],
+                           {"Key" : "Name", "Value" : { "Fn::Join" : [ ".", ["mx.worker.redefectiva", {"Ref" : "Environment"} ] ] } } ],
                 "UserData"       : { "Fn::Base64" : { "Fn::Join" : ["", [
                     "#!/bin/bash\n",
 
                     "# Helper function to notify of failed operation\n",
                     "function error_exit\n",
                     "{\n",
-                    "  cfn-signal -e 1 -r \"$1\" '", { "Ref" : "WorkerTpagoWaitHandle" }, "'\n",
+                    "  cfn-signal -e 1 -r \"$1\" '", { "Ref" : "WorkerRedefectivaWaitHandle" }, "'\n",
                     "  exit 1\n",
                     "}\n",
 
                     "# Run Instance default configuration via CloudFormation::Init\n",
                     "cfn-init -v --region ", { "Ref" : "AWS::Region" },
                     "    -s ", { "Ref" : "AWS::StackId" },
-                    " -r DoWorkerTpagoInstance",
+                    " -r MxWorkerRedefectivaInstance",
                     " -c default",
                     " || error_exit 'Failed to run cfn-init'\n",
 
@@ -195,40 +195,40 @@
                     "cd /home/ubuntu/worker\n",
                     "sudo puppet apply --verbose --modulepath=puppet/modules puppet/manifests/aws-", {"Ref": "Environment"}, ".pp > /tmp/puppet.log 2>&1 || error_exit 'failed to apply puppet manifests'\n",
 
-                    "# SET TIMEZONE to DO\n",
+                    "# SET TIMEZONE to MX\n",
                     "aptitude -y install ntp\n",
                     "service ntp restart\n",
-                    "echo \"America/Santo_Domingo\" > /etc/timezone\n",
+                    "echo \"America/Mexico_City\" > /etc/timezone\n",
                     "dpkg-reconfigure -f noninteractive tzdata\n",
 
                     "# Signal setup is complete\n",
                     "cfn-signal -e $? -r 'Completed configuration' '",
                     {
-                        "Ref" : "WorkerTpagoWaitHandle"
+                        "Ref" : "WorkerRedefectivaWaitHandle"
                     },
                     "'\n"
                 ]]}}
             }
         },
 
-    "WorkerTpagoWaitHandle" : {
+    "WorkerRedefectivaWaitHandle" : {
       "Type" : "AWS::CloudFormation::WaitConditionHandle"
     },
 
-    "WorkerTpagoWaitCondition" : {
+    "WorkerRedefectivaWaitCondition" : {
       "Type" : "AWS::CloudFormation::WaitCondition",
-      "DependsOn" : "DoWorkerTpagoInstance",
+      "DependsOn" : "MxWorkerRedefectivaInstance",
       "Properties" : {
-        "Handle" : {"Ref" : "WorkerTpagoWaitHandle"},
+        "Handle" : {"Ref" : "WorkerRedefectivaWaitHandle"},
         "Timeout" : "1200"
       }
     },
 
-    "WorkerTpagoPrivateIP" : {
+    "WorkerRedefectivaPrivateIP" : {
        "Type" : "AWS::EC2::NetworkInterface",
        "Properties" : {
-          "Description" : "private ip allowed for tpago",
-          "PrivateIpAddress" : { "Fn::FindInMap" : [ "DOWIP", { "Ref" : "Environment" }, "WIP" ]},
+          "Description" : "private ip allowed for redefectiva",
+          "PrivateIpAddress" : { "Fn::FindInMap" : [ "MXWIP", { "Ref" : "Environment" }, "WIP" ]},
           "GroupSet" : [ {"Ref" : "SecurityGroupId"} ],
          "SubnetId" : {"Ref": "SubnetId"}
       }
@@ -237,12 +237,12 @@
   
   "Outputs" : {
     "InstanceId" : {
-      "Value" : { "Ref" : "DoWorkerTpagoInstance" },
+      "Value" : { "Ref" : "MxWorkerRedefectivaInstance" },
       "Description" : "Instance Id of newly created instance"
     },
 
       "IPAddress" : {
-      "Value" : { "Fn::GetAtt" : [ "DoWorkerTpagoInstance", "PrivateIp" ] },
+      "Value" : { "Fn::GetAtt" : [ "MxWorkerRedefectivaInstance", "PrivateIp" ] },
       "Description" : "Private IP address of instance"
     },
 

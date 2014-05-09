@@ -1,7 +1,7 @@
 {
     "AWSTemplateFormatVersion" : "2010-09-09",
 
-    "Description" : "ElasticSearch",
+    "Description" : "Configure Rails with JRuby Xoom Payments Admin",
 
     "Parameters" : {
         "KeyName": {
@@ -11,80 +11,91 @@
             "MaxLength": "255",
             "AllowedPattern" : "[\\x20-\\x7E]*",
             "ConstraintDescription" : "can contain only ASCII characters.",
-            "Default": "redtail_development"
+            "Default": "tbp_dev"
         },
-
-        "InstanceType" : {
-            "Description" : "WebServer EC2 instance type",
-            "Type" : "String",
-            "Default" : "m3.medium",
-            "AllowedValues" : [ "t1.micro","m1.small","m3.medium","m1.large","m1.xlarge","m2.xlarge","m2.2xlarge","m2.4xlarge","m3.xlarge","m3.2xlarge","c1.medium","c1.xlarge","cc1.4xlarge","cc2.8xlarge","cg1.4xlarge"],
-            "ConstraintDescription" : "must be a valid EC2 instance type."
-        },
-
+        
         "Environment" : {
+            "Description" : "Environment for the Url",
             "Type" : "String",
-            "Description" : "Environment for the NAT, i.e. dev, production, etc.",
             "Default" : "dev"
         },
 
         "SubnetId" : {
             "Type" : "String",
             "Description" : "SubnetId of an existing subnet in your Virtual Private Cloud (VPC)",
-            "Default": "subnet-cbc8c2a9"
+            "Default": "subnet-"
         },
 
         "SecurityGroupId" : {
             "Type" : "String",
             "Description" : "SecurityGroupId of an existing subnet in your Virtual Private Cloud (VPC)",
-            "Default": "sg-1cd6c07e"
+            "Default": "sg-"
+        },
+
+        "InstanceType" : {
+            "Description" : "XPA EC2 instance type",
+            "Type" : "String",
+            "Default" : "m3.medium",
+            "AllowedValues" : [ "t1.micro","m1.small","m3.medium","m1.large","m1.xlarge","m2.xlarge","m2.2xlarge","m2.4xlarge","m3.xlarge","m3.2xlarge","c1.medium","c1.xlarge","cc1.4xlarge","cc2.8xlarge","cg1.4xlarge"],
+            "ConstraintDescription" : "must be a valid EC2 instance type."
         },
 
         "DeployBranch" : {
             "Type" : "String",
             "Description" : "Git branch where to deploy the code from.",
-            "Default" : "master"
+            "Default" : "edge"
         }
     },
 
     "Mappings" : {
         "RegionMap" : {
-            "us-east-1"      : { "AMI" : "ami-cdc2fda4" },
-            "us-west-1"      : { "AMI" : "ami-82b98bc7" },
-            "us-west-2"      : { "AMI" : "ami-9a9dfdaa" },
-            "eu-west-1"      : {"AMI" : "ami-d03dcaa7" },
-            "eu-west-1"      : { "AMI" : "ami-d03dcaa7"}
+          "sa-east-1"      : {"AMI" : "ami-d545e5c8" },
+          "us-west-1"      : {"AMI" : "ami-82b98bc7" },
+          "ap-northeast-1" : {"AMI" : "ami-35bbd334" },
+          "ap-southeast-1" : {"AMI" : "ami-605c0a32" },
+          "ap-southeast-2" : {"AMI" : "ami-fb4bd5c1" },
+          "eu-west-1"      : {"AMI" : "ami-d03dcaa7" },
+          "us-east-1"      : {"AMI" : "ami-cdc2fda4" },
+          "us-west-2"      : {"AMI" : "ami-9a9dfdaa" }
         },
 
         "dot" : {
-            "test"           : { "DOT" : ".test" },
-            "dev"            : { "DOT" : ".dev" },
-            "qa"             : { "DOT" : ".qa" },
-            "sandbox"        : { "DOT" : ".sandbox" },
-            "production"     : { "DOT" : "" }
+          "test"            : { "DOT" : ".test" },
+          "dev"            : { "DOT" : ".dev" },
+          "qa"             : { "DOT" : ".qa" },
+          "sandbox"        : { "DOT" : ".sandbox" },
+          "production"     : { "DOT" : "" }
         }
     },
 
     "Resources" : {
 
+        "IPAddress" : {
+            "Type" : "AWS::EC2::EIP",
+            "Properties" : {
+            "Domain" : "vpc",
+            "InstanceId" : { "Ref" : "XPAInstance" }
+            }
+        },
 
         "DNSRecord" : {
             "Type" : "AWS::Route53::RecordSet",
-            "Properties" : {
+                "Properties" : {
                 "HostedZoneName" : "bluekite.com.",
                 "Comment" : "DNS name for my instance.",
-                "Name" : { "Fn::Join" : [ "", ["search", { "Fn::FindInMap" : [ "dot", { "Ref" : "Environment" }, "DOT" ]}, ".bluekite.com." ]]},
-                "Type" : "A",
-                "TTL" : "900",
-                "ResourceRecords" : [ { "Fn::GetAtt" : [ "ElasticSearchInstance", "PrivateIp" ] } ]
-            },
-            "DependsOn" : "ElasticSearchInstance"
+                "Name" : { "Fn::Join" : [ "", ["xpa", { "Fn::FindInMap" : [ "dot", { "Ref" : "Environment" }, "DOT" ]},".bluekite.com"]]},
+                "Type" : "CNAME",
+                "TTL" : "300",
+                "ResourceRecords" : [ { "Fn::GetAtt" : [ "XPAInstance", "PublicDnsName" ] } ]
+                },
+            "DependsOn" : "IPAddress"
         },
 
-        "ElasticSearchInstance" : {
+        "XPAInstance" : {
             "Type" : "AWS::EC2::Instance",
+
             "Metadata" : {
-                "Comment" : "Elastic Search Application Instance",
+                "Comment" : "Rails with JRuby Xoom Payments Admin",
                 "AWS::CloudFormation::Init" : {
                     "configSets" : {
                         "default" : ["config_credentials", "config_packages"]
@@ -124,8 +135,7 @@
                                 "curl"            : [],
                                 "tmux"            : [],
                                 "build-essential" : [],
-                                "python-software-properties" : [],
-                                "rubygems"                   : []
+                                "python-software-properties" : []
                             }
                         }
                     }
@@ -139,78 +149,77 @@
                 "InstanceType" : { "Ref" : "InstanceType" },
                 "KeyName" : { "Ref" : "KeyName" },
                 "Tags" : [ {"Key" : "Application", "Value" : { "Ref" : "AWS::StackId"} },
-                           {"Key" : "Name", "Value" : { "Fn::Join" : [ "", ["search.", {"Ref" : "Environment"} ] ] } } ],
+                           {"Key" : "Name", "Value" : { "Fn::Join" : ["-", ["xpa",{"Ref":"Environment"} ]]}}],
                 "UserData"       : { "Fn::Base64" : { "Fn::Join" : ["", [
                     "#!/bin/bash\n",
 
                     "# Helper function to notify of failed operation\n",
                     "function error_exit\n",
                     "{\n",
-                    "  cfn-signal -e 1 -r \"$1\" '", { "Ref" : "WebServerWaitHandle" }, "'\n",
+                    "  cfn-signal -e 1 -r \"$1\" '", { "Ref" : "XPAWaitHandle" }, "'\n",
                     "  exit 1\n",
                     "}\n",
-
+          
                     "# Run Instance default configuration via CloudFormation::Init\n",
                     "cfn-init -v --region ", { "Ref" : "AWS::Region" },
                     "    -s ", { "Ref" : "AWS::StackId" },
-                    " -r ElasticSearchInstance",
+                    " -r XPAInstance",
                     " -c default",
                     " || error_exit 'Failed to run cfn-init'\n",
-
-                                        "# Install puppet via gems\n",
-                                         "sudo gem install puppet --no-rdoc --no-ri > /tmp/gem-puppet.log 2>&1 || error_exit 'Failed install puppet gem'\n",
-
+          
+         
                     "# Register Github fingerprints\n",
                     "ssh-keygen -f ~/.ssh/known_hosts -H -F github.com | grep -q found || ssh-keyscan -H github.com >> ~/.ssh/known_hosts\n",
-
+          
                     "# Copy credentials to root user\n",
                     "cp /home/ubuntu/.ssh/* /root/.ssh/\n",
-
+          
                     "# Clone app repo to ubuntu user home\n",
-                    "git clone git@github.com:blue-kite/elastickite.git -b ", {"Ref" : "DeployBranch"}, " /home/ubuntu/elastickite > /tmp/git.log 2>&1 || error_exit 'Failed to clone repo'\n",
-                    "chown ubuntu:ubuntu -R /home/ubuntu/elastickite\n",
-
+                    "git clone git@github.com:blue-kite/jruby_vagrant.git -b ", {"Ref" : "DeployBranch"}, " /home/ubuntu/jruby_vagrant > /tmp/git.log 2>&1 || error_exit 'Failed to clone repo'\n",
+                    "git clone git@github.com:blue-kite/xpa.git -b ", {"Ref" : "DeployBranch"}, " /home/ubuntu/jruby_vagrant/xpa > /tmp/git_xpa.log 2>&1 || error_exit 'Failed to clone XPA repo'\n",
+                    "chown ubuntu:ubuntu -R /home/ubuntu/\n",
+          
+          
                     "# Install application's dependencies via puppet\n",
-                                        "sudo gem install librarian-puppet\n",
-                    "cd /home/ubuntu/elastickite/puppet\n",
+                    "gem install puppet\n",
+                    "gem install librarian-puppet\n",
+                    "cd /home/ubuntu/jruby_vagrant/puppet\n",
                     "export HOME=/home/ubuntu && librarian-puppet install --clean --verbose > /tmp/librarian-puppet.log 2>&1 || error_exit 'failed to install puppet submodules'\n",
-
-                    "cd /home/ubuntu/elastickite\n",
-                    "sudo puppet apply --verbose --modulepath=./puppet/modules ./puppet/manifests/aws-", {"Ref": "Environment"}, ".pp > /tmp/puppet.log 2>&1 || error_exit 'failed to apply puppet manifests'\n",
+                    "cd /home/ubuntu/jruby_vagrant\n",
+                    "sudo puppet apply --verbose --modulepath=./puppet/modules ./puppet/manifests/aws-",{"Ref" : "Environment"},".pp > /tmp/puppet.log 2>&1 || error_exit 'failed to apply puppet manifests'\n",
+          
+                    "cd /home/ubuntu/jruby_vagrant\n",
+                    "sudo puppet apply --verbose --modulepath=puppet/modules puppet/manifests/aws-", {"Ref": "Environment"}, ".pp > /tmp/puppet.log 2>&1 || error_exit 'failed to apply puppet manifests'\n",
 
                     "# Signal setup is complete\n",
                     "cfn-signal -e $? -r 'Completed configuration' '",
                     {
-                        "Ref" : "WebServerWaitHandle"
+                        "Ref" : "XPAWaitHandle"
                     },
                     "'\n"
-                ]]}}
+                 ]]}
+                }
             }
         },
 
-        "WebServerWaitHandle" : {
+        "XPAWaitHandle" : {
             "Type" : "AWS::CloudFormation::WaitConditionHandle"
         },
 
-        "WebServerWaitCondition" : {
+        "XPAWaitCondition" : {
             "Type" : "AWS::CloudFormation::WaitCondition",
-            "DependsOn" : "ElasticSearchInstance",
+            "DependsOn" : "XPAInstance",
             "Properties" : {
-                "Handle" : {"Ref" : "WebServerWaitHandle"},
-                "Timeout" : "1200"
+                "Handle" : {"Ref" : "XPAWaitHandle"},
+                "Timeout" : "1500"
             }
         }
     },
 
     "Outputs" : {
         "InstanceId" : {
-            "Value" : { "Ref" : "ElasticSearchInstance" },
+            "Value" : { "Ref" : "XPAInstance" },
             "Description" : "Instance Id of newly created instance"
-        },
-
-        "IPAddress" : {
-            "Value" : { "Fn::GetAtt" : [ "ElasticSearchInstance", "PrivateIp" ] },
-            "Description" : "Private IP address of instance"
         },
 
         "DomainName" : {

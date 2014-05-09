@@ -17,8 +17,8 @@
     "InstanceType" : {
       "Description" : "Instance type for Test",
       "Type" : "String",
-      "Default" : "m1.medium",
-      "AllowedValues" : [ "t1.micro","m1.small","m1.medium","m1.large","m1.xlarge","m2.xlarge","m2.2xlarge","m2.4xlarge","m3.xlarge","m3.2xlarge","c1.medium","c1.xlarge","cc1.4xlarge","cc2.8xlarge","cg1.4xlarge"],
+      "Default" : "m3.medium",
+      "AllowedValues" : [ "t1.micro","m1.small","m3.medium","m1.large","m1.xlarge","m2.xlarge","m2.2xlarge","m2.4xlarge","m3.xlarge","m3.2xlarge","c1.medium","c1.xlarge","cc1.4xlarge","cc2.8xlarge","cg1.4xlarge"],
       "ConstraintDescription" : "must be a valid EC2 instance type."
     },
 
@@ -79,8 +79,8 @@
       "Properties" : {
         "HostedZoneName" : "bluekite.com.",
         "Comment" : "DNS name for my instance.",
-        "Name" : { "Fn::Join" : [ "", ["test.api", { "Fn::FindInMap" : [ "dot", { "Ref" : "Environment" }, "DOT" ]},".bluekite.com"]]},
-        "Type" : "CNAME",
+        "Name" : { "Fn::Join" : [ "", ["test.harness", { "Fn::FindInMap" : [ "dot", { "Ref" : "Environment" }, "DOT" ]},".bluekite.com"]]},
+        "Type" : "A",
         "TTL" : "300",
         "ResourceRecords" : [ { "Fn::GetAtt" : [ "Test", "PublicIp" ] } ]
       },
@@ -146,7 +146,7 @@
         "InstanceType" : { "Ref" : "InstanceType" },
         "KeyName" : { "Ref" : "KeyName" },
         "Tags" : [ {"Key" : "Application", "Value" : { "Ref" : "AWS::StackId"} },
-                    {"Key" : "Name", "Value" : {"Fn::Join" : [ "", ["test.", {"Ref" : "Environment"} ]]}}
+                    {"Key" : "Name", "Value" : {"Fn::Join" : [ "", ["test.harness.", {"Ref" : "Environment"} ]]}}
                   ],
         "UserData"       : { "Fn::Base64" : { "Fn::Join" : ["", [
           "#!/bin/bash\n",
@@ -202,7 +202,7 @@
       "Type" : "AWS::CloudFormation::WaitConditionHandle"
     },
 
-    "TestWaitCondition" : {
+    "TestWaitConfdition" : {
       "Type" : "AWS::CloudFormation::WaitCondition",
       "DependsOn" : "Test",
       "Properties" : {
