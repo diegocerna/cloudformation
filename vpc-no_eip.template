@@ -499,14 +499,6 @@
       }
     },
 
-    "BastionNetworkInterface": {
-      "Type" : "AWS::EC2::NetworkInterface",
-      "Properties" : {
-        "SourceDestCheck" : true,
-        "SubnetId" : {"Ref" : "subnetPublicApis"}
-      }
-    },
-
     "Bastion" : {
       "Type" : "AWS::EC2::Instance",
       "Properties" : {
@@ -552,7 +544,7 @@
           "Tags":[
             {
             "Key": "Name",
-            "Value": "Monitors Security Groups"
+            "Value": { "Fn::Join" : [ " ", ["Monitors SG", { "Ref" : "Environment"} ] ] }
             }
           ],
 
@@ -633,7 +625,7 @@
           "Tags":[
             {
             "Key": "Name",
-            "Value": "Private Apis Security Groups"
+            "Value": { "Fn::Join" : [ " ", ["Private Apis SG", { "Ref" : "Environment"} ] ] }
             }
           ],
               
@@ -738,7 +730,7 @@
           "Tags":[
             {
             "Key": "Name",
-            "Value": "Logstash Security Groups"
+            "Value": { "Fn::Join" : [ " ", ["Logstash SG", { "Ref" : "Environment"} ] ] }
             }
           ],
                 
@@ -848,7 +840,7 @@
           "Tags":[
             {
             "Key": "Name",
-            "Value": "Bastion Security Groups"
+            "Value": { "Fn::Join" : [ " ", ["Bastion SG", { "Ref" : "Environment"} ] ] }
             }
           ],
                 
@@ -882,7 +874,7 @@
           "Tags":[
             {
             "Key": "Name",
-            "Value": "VPN OpenSwan Security Groups"
+            "Value": "VPN OpenSwan SG"
             }
           ],
                 
@@ -944,7 +936,7 @@
           "Tags":[
             {
             "Key": "Name",
-            "Value": "Nat Security Groups"
+            "Value": "Nat SG"
             }
           ],
                 
@@ -1084,7 +1076,7 @@
           "Tags":[
             {
             "Key": "Name",
-            "Value": "Guatemala Accounts Application Security Groups"
+            "Value": { "Fn::Join" : [ " ", ["Guatemala Accounts Application SG", { "Ref" : "Environment"} ] ] }
             }
           ],
                 
@@ -1164,7 +1156,7 @@
             "Tags":[
               {
               "Key": "Name",
-              "Value": "Dominican Republic Application Security Groups"
+              "Value": { "Fn::Join" : [ " ", ["Dominican Republic Application SG", { "Ref" : "Environment"} ] ] }
               }
             ],
                    
@@ -1244,7 +1236,7 @@
             "Tags":[
               {
               "Key": "Name",
-              "Value": "Mexico Application Security Groups"
+              "Value": { "Fn::Join" : [ " ", ["Mexico Application SG", { "Ref" : "Environment"} ] ] }
               }
             ],
                    
@@ -1319,7 +1311,7 @@
           "Tags":[
             {
             "Key": "Name",
-            "Value": "Island Accounts Application Security Groups"
+            "Value": { "Fn::Join" : [ " ", ["Iceland Accounts Application SG", { "Ref" : "Environment"} ] ] }
             }
           ],
                 
@@ -1393,7 +1385,7 @@
           "Tags":[
             {
             "Key": "Name",
-            "Value": "El Salvador Accounts Application Security Groups"
+            "Value": { "Fn::Join" : [ " ", ["El Salvador Accounts Application SG", { "Ref" : "Environment"} ] ] }
             }
           ],
                 
@@ -1491,7 +1483,7 @@
           "Tags":[
             {
             "Key": "Name",
-            "Value": "Public Apis Security Groups"
+            "Value": { "Fn::Join" : [ " ", ["Public Apis SG", { "Ref" : "Environment"} ] ] }
             }
           ],
                 
