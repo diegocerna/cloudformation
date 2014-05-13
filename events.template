@@ -28,6 +28,12 @@
       "Description" : "Wich branch you want to use as source"
     },
 
+    "StackID" : {
+      "Type" : "String",
+      "Description" : "Stack ID name",
+      "Default" : "-"
+    },
+
     "SG" : {
       "Type" : "String",
       "Default" : "sg-",
@@ -70,7 +76,7 @@
       "Properties" : {
         "HostedZoneName" : "bluekite.com.",
         "Comment" : "Endponit of events.",
-        "Name" : {"Fn::Join" : ["", ["events", { "Fn::FindInMap" : [ "dot", { "Ref" : "Environment" }, "DOT" ]},".bluekite.com."]]},
+        "Name" : { "Fn::Join" : [ "", ["events", { "Ref" : "StackID" } , { "Fn::FindInMap" : [ "dot", { "Ref" : "Environment" }, "DOT" ]},".bluekite.com"]]},
         "Type" : "A",
         "TTL" : "300",
         "ResourceRecords" : [
@@ -86,8 +92,8 @@
         "ImageId" : { "Fn::FindInMap" : [ "InstancesAMIS", { "Ref" : "AWS::Region" }, "AMI" ]},
         "KeyName" : {"Ref" : "KeyName"},
         "InstanceType" : {"Ref" : "InstancesType"},
-        "SecurityGroupIds" : [{"Ref" : "SG"}],
-        "SubnetId" : {"Ref" : "SubnetId"},
+        "NetworkInterfaces" :  [ { 
+        "NetworkInterfaceId" : { "Ref" : "EventsPrivateIP"}, "DeviceIndex" : "0" } ],
         "Tags" : [ {"Key" : "Name", "Value" : {"Fn::Join" : [".", ["Events", {"Ref" : "Environment"}]]} } ],      
         "UserData"       : { "Fn::Base64" : { "Fn::Join" : ["", [
           "#!/bin/bash\n",
@@ -114,6 +120,10 @@
 
           "# Copy credentials to root user\n",
           "cp /home/ubuntu/.ssh/* /root/.ssh/\n",
+
+          "# Add FQDN on etc/environment\n",
+          "echo ", { "Fn::Join" : [ "" , ["FQDN=events", { "Ref" : "StackID" }, { "Fn::FindInMap" : [ "dot", { "Ref" : "Environment" }, "DOT" ]}, ".bluekite.com" ]]}, ">> /etc/environment\n",
+          "echo ", "STACKID=", { "Ref" : "StackID" }, ">> /etc/environment\n",
 
           "# Install Librarian Ruby\n",
           "sudo gem install puppet --no-rdoc --no-ri > /tmp/gem-puppet.log 2>&1 || error_exit 'Failed install puppet gem'\n",
@@ -200,6 +210,16 @@
       "Properties" : {
         "Handle" : {"Ref" : "EventWaitHandler"},
         "Timeout" : "1000"
+      }
+    },
+
+    "EventsPrivateIP" : {
+      "Type" : "AWS::EC2::NetworkInterface",
+       "Properties" : {
+         "Description" : "static IP",
+         "PrivateIpAddress" : "10.1.1.121",
+         "GroupSet" : [ {"Ref" : "SG"} ],
+         "SubnetId" : {"Ref": "SubnetId"}
       }
     }
   }

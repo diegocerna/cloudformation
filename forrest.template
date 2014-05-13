@@ -28,6 +28,12 @@
       "Description" : "Wich branch you want to use as source"
     },
 
+    "StackID" : {
+      "Type" : "String",
+      "Description" : "Stack ID name",
+      "Default" : "-"
+    },
+
     "SG" : {
       "Type" : "String",
       "Default" : "sg-",
@@ -70,7 +76,7 @@
       "Properties" : {
         "HostedZoneName" : "bluekite.com.",
         "Comment" : "Endponit of Forrest.",
-        "Name" : {"Fn::Join" : ["", ["forrest", { "Fn::FindInMap" : [ "dot", { "Ref" : "Environment" }, "DOT" ]},".bluekite.com."]]},
+        "Name" : {"Fn::Join" : ["", ["forrest", { "Ref" : "StackID" } , { "Fn::FindInMap" : [ "dot", { "Ref" : "Environment" }, "DOT" ]},".bluekite.com."]]},
         "Type" : "A",
         "TTL" : "300",
         "ResourceRecords" : [
@@ -114,6 +120,10 @@
 
           "# Copy credentials to root user\n",
           "cp /home/ubuntu/.ssh/* /root/.ssh/\n",
+
+          "# Add FQDN on etc/environment\n",
+          "echo ", { "Fn::Join" : [ "" , ["FQDN=forrest", { "Ref" : "StackID" }, { "Fn::FindInMap" : [ "dot", { "Ref" : "Environment" }, "DOT" ]}, ".bluekite.com" ]]}, ">> /etc/environment\n",
+          "echo ", "STACKID=", { "Ref" : "StackID" }, ">> /etc/environment\n",
 
           "# Install Librarian Ruby\n",
           "sudo gem install puppet --no-rdoc --no-ri > /tmp/gem-puppet.log 2>&1 || error_exit 'Failed install puppet gem'\n",

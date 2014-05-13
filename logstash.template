@@ -28,6 +28,12 @@
             "Default": "subnet-cbc8c2a9"
         },
 
+        "StackID" : {
+            "Type" : "String",
+            "Description" : "Stack ID name",
+            "Default" : "-"
+        },
+
         "SecurityGroupId" : {
             "Type" : "String",
             "Description" : "SecurityGroupId of an existing subnet in your Virtual Private Cloud (VPC)",
@@ -50,22 +56,22 @@
 
     "Mappings" : {
         "RegionMap" : {
-            "sa-east-1" : {"AMI" : "ami-d545e5c8" },
-            "us-west-1" : {"AMI" : "ami-82b98bc7" },
+            "sa-east-1"      : {"AMI" : "ami-d545e5c8" },
+            "us-west-1"      : {"AMI" : "ami-82b98bc7" },
             "ap-northeast-1" : {"AMI" : "ami-35bbd334" },
             "ap-southeast-1" : {"AMI" : "ami-605c0a32" },
             "ap-southeast-2" : {"AMI" : "ami-fb4bd5c1" },
-            "eu-west-1" : {"AMI" : "ami-d03dcaa7" },
-            "us-east-1" : {"AMI" : "ami-cdc2fda4" },
-            "us-west-2" : {"AMI" : "ami-9a9dfdaa" }
+            "eu-west-1"      : {"AMI" : "ami-d03dcaa7" },
+            "us-east-1"      : {"AMI" : "ami-cdc2fda4" },
+            "us-west-2"      : {"AMI" : "ami-9a9dfdaa" }
         },
 
         "dot" : {
-          "test"            : { "DOT" : ".test" },
-          "dev"            : { "DOT" : ".dev" },
-          "qa"             : { "DOT" : ".qa" },
-          "sandbox"        : { "DOT" : ".sandbox" },
-          "production"     : { "DOT" : "" }
+          "test"             : { "DOT" : ".test" },
+          "dev"              : { "DOT" : ".dev" },
+          "qa"               : { "DOT" : ".qa" },
+          "sandbox"          : { "DOT" : ".sandbox" },
+          "production"       : { "DOT" : "" }
         }
     },
 
@@ -78,7 +84,7 @@
                 "HostedZoneName" : "bluekite.com.",
                 "Comment" : "DNS name for my instance.",
                 "Type" : "A",
-                "Name" : { "Fn::Join" : [ "", ["logs", { "Fn::FindInMap" : [ "dot", { "Ref" : "Environment" }, "DOT" ]}, ".bluekite.com." ]]},
+                "Name" : { "Fn::Join" : [ "", ["logs", { "Ref" : "StackID" }, { "Fn::FindInMap" : [ "dot", { "Ref" : "Environment" }, "DOT" ]},".bluekite.com."]]},
                 "TTL" : "900",
                 "ResourceRecords" : [ { "Fn::GetAtt" : [ "logstashInstance", "PrivateIp" ] } ]
             },
@@ -120,6 +126,10 @@
 
                     "# Copy credentials to root user\n",
                     "cp /home/ubuntu/.ssh/* /root/.ssh/\n",
+
+                    "# Add FQDN on etc/environment\n",
+                    "echo ", { "Fn::Join" : [ "" , ["FQDN=logs", { "Ref" : "StackID" }, { "Fn::FindInMap" : [ "dot", { "Ref" : "Environment" }, "DOT" ]}, ".bluekite.com" ]]}, ">> /etc/environment\n",
+                    "echo ", "STACKID=", { "Ref" : "StackID" }, ">> /etc/environment\n",
 
                     "# Clone app repo to ubuntu user home\n",
                     "git clone git@github.com:blue-kite/logstash_vagrant.git -b ", {"Ref" : "DeployBranch"}, " /home/ubuntu/xlogstash > /tmp/git.log 2>&1 || error_exit 'Failed to clone repo'\n",

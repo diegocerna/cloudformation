@@ -11,7 +11,7 @@
             "MaxLength": "255",
             "AllowedPattern" : "[\\x20-\\x7E]*",
             "ConstraintDescription" : "can contain only ASCII characters.",
-            "Default": "tpbqa"
+            "Default": "tbp_"
         },
 
         "InstanceType" : {
@@ -97,8 +97,6 @@
     },
 
     "Resources" : {
-
-
         "HelloWorldInstance" : {
             "Type" : "AWS::EC2::Instance",
             "Metadata" : {
