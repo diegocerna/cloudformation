@@ -1,7 +1,7 @@
 {
   "AWSTemplateFormatVersion" : "2010-09-09",
 
-  "Description" : "Dominican Republic Tpago Hamster Worker Instance",
+  "Description" : "Dominican Republic Tpago Hamster Worker Instance - filename:do_worker_tpago.template",
 
   "Parameters" : {
     "KeyName": {
@@ -11,7 +11,7 @@
       "MaxLength": "255",
       "AllowedPattern" : "[\\x20-\\x7E]*",
       "ConstraintDescription" : "can contain only ASCII characters.",
-      "Default": "tbp_qa"
+      "Default": "tbp_"
     },
 
     "InstanceType" : {
@@ -25,13 +25,19 @@
     "SubnetId" : {
       "Type" : "String",
       "Description" : "Dominican Republic SubnetId in your Virtual Private Cloud (VPC)",
-      "Default": "subnet-7ce1bd54"
+      "Default": "subnet-"
     },
+
+    "StackID" : {
+      "Type" : "String",
+      "Description" : "Stack ID name",
+      "Default" : "-"
+    }, 
 
     "SecurityGroupId" : {
       "Type" : "String",
       "Description" : "Dominican Republic SecurityGroupId your Virtual Private Cloud (VPC)",
-      "Default": "sg-4bc56f2e"
+      "Default": "sg-"
     },
 
     "DeployBranch" : {
@@ -65,14 +71,6 @@
             "us-west-2"      : {"AMI" : "ami-9a9dfdaa" }
         },
 
-        "DOWIP" : {
-            "test"           : { "WIP" : "10.250.12.133" },
-            "dev"            : { "WIP" : "10.4.12.133" },
-            "qa"             : { "WIP" : "10.3.12.133" },
-            "sandbox"        : { "WIP" : "10.2.12.133" },
-            "production"     : { "WIP" : "10.1.12.133" }
-        },
-
         "dot" : {
           "test"             : { "DOT" : ".test" },
           "dev"              : { "DOT" : ".dev" },
@@ -89,7 +87,7 @@
             "Properties" : {
                 "HostedZoneName" : "bluekite.com.",
                 "Comment" : "DNS name for my instance.",
-                "Name" : { "Fn::Join" : [ "", ["do.worker.tpago", { "Fn::FindInMap" : [ "dot", { "Ref" : "Environment" }, "DOT" ]}, ".bluekite.com."]]},
+                "Name" : { "Fn::Join" : [ "", ["do.worker.tpago", { "Ref" : "StackID" } , { "Fn::FindInMap" : [ "dot", { "Ref" : "Environment" }, "DOT" ]},".bluekite.com"]]},
                 "Type" : "A",
                 "TTL" : "300",
                 "ResourceRecords" : [ { "Fn::GetAtt" : [ "DoWorkerTpagoInstance", "PrivateIp" ] } ]
@@ -153,8 +151,8 @@
 
             "Properties" : {
                 "ImageId" : { "Fn::FindInMap" : [ "RegionMap", { "Ref" : "AWS::Region" }, "AMI" ]},
-                "NetworkInterfaces" :  [ { 
-                "NetworkInterfaceId" : { "Ref" : "WorkerTpagoPrivateIP"}, "DeviceIndex" : "0" } ],
+                "SecurityGroupIds" : [ {"Ref" : "SecurityGroupId"} ],
+                "SubnetId" : { "Ref" : "SubnetId" },
                 "InstanceType" : { "Ref" : "InstanceType" },
                 "KeyName" : { "Ref" : "KeyName" },
                 "Tags" : [ {"Key" : "Application", "Value" : { "Ref" : "AWS::StackId"} },
@@ -181,6 +179,10 @@
 
                     "# Copy credentials to root user\n",
                     "cp /home/ubuntu/.ssh/* /root/.ssh/\n",
+
+                    "# Add FQDN on etc/environment\n",
+                    "echo ", { "Fn::Join" : [ "" , ["FQDN=do.worker.tpago", { "Ref" : "StackID" }, { "Fn::FindInMap" : [ "dot", { "Ref" : "Environment" }, "DOT" ]}, ".bluekite.com" ]]}, ">> /etc/environment\n",
+                    "echo ", "STACKID=", { "Ref" : "StackID" }, ">> /etc/environment\n",
 
                     "# Clone app repo to ubuntu user home\n",
                     "git clone ", {"Ref": "Repository"}, " -b ", {"Ref" : "DeployBranch"}, " /home/ubuntu/worker > /tmp/git.log 2>&1 || error_exit 'Failed to clone repo'\n",
@@ -221,16 +223,6 @@
       "Properties" : {
         "Handle" : {"Ref" : "WorkerTpagoWaitHandle"},
         "Timeout" : "1200"
-      }
-    },
-
-    "WorkerTpagoPrivateIP" : {
-       "Type" : "AWS::EC2::NetworkInterface",
-       "Properties" : {
-          "Description" : "private ip allowed for tpago",
-          "PrivateIpAddress" : { "Fn::FindInMap" : [ "DOWIP", { "Ref" : "Environment" }, "WIP" ]},
-          "GroupSet" : [ {"Ref" : "SecurityGroupId"} ],
-         "SubnetId" : {"Ref": "SubnetId"}
       }
     }
   },

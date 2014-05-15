@@ -1,7 +1,7 @@
 {
   "AWSTemplateFormatVersion" : "2010-09-09",
 
-  "Description" : "Configure API Gateway NodeJs Instance",
+  "Description" : "Configure API Gateway NodeJs Instance - filename:api.template",
 
   "Parameters" : {
     "KeyName": {
@@ -86,7 +86,7 @@
       "Properties" : {
         "HostedZoneName" : "bluekite.com.",
         "Comment" : "DNS name for my instance.",
-        "Name" : { "Fn::Join" : [ "", ["api", "-", { "Ref" : "StackID" } , { "Fn::FindInMap" : [ "dot", { "Ref" : "Environment" }, "DOT" ]},".bluekite.com"]]},
+        "Name" : { "Fn::Join" : [ "", ["api", { "Ref" : "StackID" } , { "Fn::FindInMap" : [ "dot", { "Ref" : "Environment" }, "DOT" ]},".bluekite.com"]]},
         "Type" : "CNAME",
         "TTL" : "300",
         "ResourceRecords" : [ { "Fn::GetAtt" : [ "API", "PublicDnsName" ] } ]
@@ -148,8 +148,8 @@
 
       "Properties" : {
         "ImageId" : { "Fn::FindInMap" : [ "apiAMI", { "Ref" : "AWS::Region" }, "AMI" ]},
-        "NetworkInterfaces" :  [ { 
-        "NetworkInterfaceId" : { "Ref" : "APIPrivateIP"}, "DeviceIndex" : "0" } ],
+        "SecurityGroupIds" : [ {"Ref" : "SecurityGroupId"} ],
+        "SubnetId" : { "Ref" : "SubnetId" },
         "InstanceType" : { "Ref" : "InstanceType" },
         "KeyName" : { "Ref" : "KeyName" },
         "Tags" : [ {"Key" : "Application", "Value" : { "Ref" : "AWS::StackId"} },
@@ -220,16 +220,6 @@
       "Properties" : {
         "Handle" : {"Ref" : "APIWaitHandle"},
         "Timeout" : "1200"
-      }
-    },
-
-    "APIPrivateIP" : {
-      "Type" : "AWS::EC2::NetworkInterface",
-       "Properties" : {
-         "Description" : "static IP",
-         "PrivateIpAddress" : "10.1.0.6",
-         "GroupSet" : [ {"Ref" : "SecurityGroupId"} ],
-         "SubnetId" : {"Ref": "SubnetId"}
       }
     }
   },

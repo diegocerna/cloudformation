@@ -1,7 +1,7 @@
 {
   "AWSTemplateFormatVersion" : "2010-09-09",
 
-  "Description" : "Catalog - Rails Aplication Instance",
+  "Description" : "Catalog - Rails Aplication Instance - filename:catalog.template",
 
   "Parameters" : {
     "KeyName": {
@@ -103,8 +103,8 @@
       },
       "Properties" : {
         "ImageId" : { "Fn::FindInMap" : [ "RegionMap", { "Ref" : "AWS::Region" }, "AMI" ]},
-        "NetworkInterfaces" :  [ { 
-        "NetworkInterfaceId" : { "Ref" : "CatalogPrivateIP"}, "DeviceIndex" : "0" } ],
+        "SecurityGroupIds" : [ {"Ref" : "SecurityGroupId"} ],
+        "SubnetId" : { "Ref" : "SubnetId" },
         "InstanceType" : { "Ref" : "InstanceType" },
         "KeyName" : { "Ref" : "KeyName" },
         "Tags" : [ {"Key" : "Application", "Value" : { "Ref" : "AWS::StackId"} },
@@ -170,16 +170,6 @@
       "Properties" : {
         "Handle" : {"Ref" : "CatalogWaitHandle"},
         "Timeout" : "2000"
-      }
-    },
-
-    "CatalogPrivateIP" : {
-      "Type" : "AWS::EC2::NetworkInterface",
-       "Properties" : {
-         "Description" : "static IP",
-         "PrivateIpAddress" : "10.1.1.21",
-         "GroupSet" : [ {"Ref" : "SecurityGroupId"} ],
-         "SubnetId" : {"Ref": "SubnetId"}
       }
     }
   },

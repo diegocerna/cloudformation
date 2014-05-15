@@ -50,7 +50,7 @@
         "StackID" : {
             "Type" : "String",
             "Description" : "Value to create some stacks into same enviroment",
-            "Default" : "01"
+            "Default" : "-"
         },
 
         "Environment" : {
@@ -97,6 +97,20 @@
     },
 
     "Resources" : {
+
+        "DNSRecord" : {
+            "Type" : "AWS::Route53::RecordSet",
+            "Properties" : {
+                "HostedZoneName" : "bluekite.com.",
+                "Comment" : "DNS name for my instance.",
+                "Type" : "A",
+                "Name" : { "Fn::Join" : [ "", ["hello-world", { "Ref" : "StackID" }, { "Fn::FindInMap" : [ "dot", { "Ref" : "Environment" }, "DOT" ]},".bluekite.com."]]},
+                "TTL" : "900",
+                "ResourceRecords" : [ { "Fn::GetAtt" : [ "HelloWorldInstance", "PrivateIp" ] } ]
+            },
+            "DependsOn" : "HelloWorldInstance"
+        },
+
         "HelloWorldInstance" : {
             "Type" : "AWS::EC2::Instance",
             "Metadata" : {
@@ -117,8 +131,8 @@
             },
             "Properties" : {
                 "ImageId" : { "Fn::FindInMap" : [ "RegionMap", { "Ref" : "AWS::Region" }, "AMI" ]},
-                "NetworkInterfaces" :  [ { 
-                "NetworkInterfaceId" : { "Ref" : "HelloWorldPrivateIP"}, "DeviceIndex" : "0" } ],
+                "SecurityGroupIds" : [ {"Ref" : "SecurityGroupId"} ],
+                "SubnetId" : { "Ref" : "SubnetId" },
                 "InstanceType" : { "Ref" : "InstanceType" },
                 "KeyName" : { "Ref" : "KeyName" },
                 "Tags" : [ {"Key" : "Application", "Value" : { "Ref" : "AWS::StackId"} },
@@ -146,7 +160,9 @@
                     "# Copy credentials to root user\n",
                     "cp /home/ubuntu/.ssh/* /root/.ssh/\n",
                     
-                    "echo ", { "Fn::Join" : [ "" , ["FQDN=hello-world-", { "Ref" : "StackID" }, ".", { "Ref" : "Environment" }, ".bluekite.com" ]]}, ">> /etc/environment\n",
+                    "# Add FQDN on etc/environment\n",
+                    "echo ", { "Fn::Join" : [ "" , ["FQDN=hello-world", { "Ref" : "StackID" }, { "Fn::FindInMap" : [ "dot", { "Ref" : "Environment" }, "DOT" ]}, ".bluekite.com" ]]}, ">> /etc/environment\n",
+                    "echo ", "STACKID=", { "Ref" : "StackID" }, ">> /etc/environment\n",
 
                     "# Clone app repo to ubuntu user home\n",
                     "git clone git@github.com:blue-kite/hello-world.git -b ", {"Ref" : "DeployBranch"}, " /home/ubuntu/", {"Ref" : "WorkingDirectory"} , " > /tmp/git.log 2>&1 || error_exit 'Failed to clone repo'\n",
@@ -180,16 +196,6 @@
             "Properties" : {
                 "Handle" : {"Ref" : "WebServerWaitHandle"},
                 "Timeout" : "1200"
-            }
-        },
-
-        "HelloWorldPrivateIP" : {
-            "Type" : "AWS::EC2::NetworkInterface",
-            "Properties" : {
-                "Description" : "static IP",
-                "PrivateIpAddress" : { "Fn::FindInMap" : [ "DOWIP", { "Ref" : "Environment" }, "WIP" ]},
-                "GroupSet" : [ {"Ref" : "SecurityGroupId"} ],
-                "SubnetId" : {"Ref": "SubnetId"}
             }
         }
     },

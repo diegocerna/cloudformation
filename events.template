@@ -92,8 +92,8 @@
         "ImageId" : { "Fn::FindInMap" : [ "InstancesAMIS", { "Ref" : "AWS::Region" }, "AMI" ]},
         "KeyName" : {"Ref" : "KeyName"},
         "InstanceType" : {"Ref" : "InstancesType"},
-        "NetworkInterfaces" :  [ { 
-        "NetworkInterfaceId" : { "Ref" : "EventsPrivateIP"}, "DeviceIndex" : "0" } ],
+        "SecurityGroupIds" : [ {"Ref" : "SecurityGroupId"} ],
+        "SubnetId" : { "Ref" : "SubnetId" },
         "Tags" : [ {"Key" : "Name", "Value" : {"Fn::Join" : [".", ["Events", {"Ref" : "Environment"}]]} } ],      
         "UserData"       : { "Fn::Base64" : { "Fn::Join" : ["", [
           "#!/bin/bash\n",
@@ -210,16 +210,6 @@
       "Properties" : {
         "Handle" : {"Ref" : "EventWaitHandler"},
         "Timeout" : "1000"
-      }
-    },
-
-    "EventsPrivateIP" : {
-      "Type" : "AWS::EC2::NetworkInterface",
-       "Properties" : {
-         "Description" : "static IP",
-         "PrivateIpAddress" : "10.1.1.121",
-         "GroupSet" : [ {"Ref" : "SG"} ],
-         "SubnetId" : {"Ref": "SubnetId"}
       }
     }
   }
