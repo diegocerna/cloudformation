@@ -504,7 +504,7 @@
         "InstanceId": {
           "Ref": "instanceNAT"
         },
-        "AllocationId": { " Ref : "AllocationIdNAT"}
+        "AllocationId": { "Ref" : "AllocationIdNAT"}
       }
      },
 
@@ -527,7 +527,7 @@
         "InstanceId": {
           "Ref": "Bastion"
         },
-        "AllocationId": { " Ref : "AllocationIdBastion"}
+        "AllocationId": { "Ref" : "AllocationIdBastion"}
       }
     },
 
