@@ -28,6 +28,12 @@
       "Default": "subnet-"
     },
 
+    "StackID" : {
+      "Type" : "String",
+      "Description" : "Stack ID name",
+      "Default" : "-"
+    },
+
     "SecurityGroupId" : {
       "Type" : "String",
       "Description" : "SecurityGroupId of an existing subnet in your Virtual Private Cloud (VPC)",
@@ -66,7 +72,7 @@
       "us-west-2"      : {"AMI" : "ami-9a9dfdaa" }
     },
     "dot" : {
-      "test"            : { "DOT" : ".test" },
+      "test"           : { "DOT" : ".test" },
       "dev"            : { "DOT" : ".dev" },
       "qa"             : { "DOT" : ".qa" },
       "sandbox"        : { "DOT" : ".sandbox" },
@@ -82,7 +88,7 @@
       "Properties" : {
         "HostedZoneName" : "bluekite.com.",
         "Comment" : "DNS name for my instance.",
-        "Name" : {"Fn::Join" : ["", ["redis",{ "Fn::FindInMap" : [ "dot", { "Ref" : "Environment" }, "DOT" ]},".bluekite.com."]]},
+        "Name" : { "Fn::Join" : [ "", ["redis", { "Ref" : "StackID" } , { "Fn::FindInMap" : [ "dot", { "Ref" : "Environment" }, "DOT" ]},".bluekite.com"]]},
         "Type" : "A",
         "TTL" : "900",
         "ResourceRecords" : [ { "Fn::GetAtt" : [ "redisInstance", "PrivateIp" ] } ]
@@ -125,6 +131,10 @@
 
           "# Copy credentials to root user\n",
           "cp /home/ubuntu/.ssh/* /root/.ssh/\n",
+
+          "# Add FQDN on etc/environment\n",
+          "echo ", { "Fn::Join" : [ "" , ["FQDN=redis", { "Ref" : "StackID" }, { "Fn::FindInMap" : [ "dot", { "Ref" : "Environment" }, "DOT" ]}, ".bluekite.com" ]]}, ">> /etc/environment\n",
+          "echo ", "STACKID=", { "Ref" : "StackID" }, ">> /etc/environment\n",
 
           "# Clone app repo to ubuntu user home\n",
           "git clone ", {"Ref": "Repository"}, " -b ", {"Ref" : "DeployBranch"}, " /home/ubuntu/redis_server > /tmp/git.log 2>&1 || error_exit 'Failed to clone repo'\n",

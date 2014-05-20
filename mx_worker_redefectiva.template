@@ -1,7 +1,7 @@
 {
   "AWSTemplateFormatVersion" : "2010-09-09",
 
-  "Description" : "Mexico Red Efectiva Hamster Worker Instance",
+  "Description" : "Mexico Red Efectiva Hamster Worker Instance - filename:mx_worker_redefectiva.template",
 
   "Parameters" : {
     "KeyName": {
@@ -11,7 +11,7 @@
       "MaxLength": "255",
       "AllowedPattern" : "[\\x20-\\x7E]*",
       "ConstraintDescription" : "can contain only ASCII characters.",
-      "Default": "tbp_qa"
+      "Default": "tbp_"
     },
 
     "InstanceType" : {
@@ -25,13 +25,19 @@
     "SubnetId" : {
       "Type" : "String",
       "Description" : "Mexico SubnetId in your Virtual Private Cloud (VPC)",
-      "Default": "subnet-7ce1bd54"
+      "Default": "subnet-"
+    },
+
+    "StackID" : {
+        "Type" : "String",
+        "Description" : "Stack ID name",
+        "Default" : "-"
     },
 
     "SecurityGroupId" : {
       "Type" : "String",
       "Description" : "Mexico SecurityGroupId your Virtual Private Cloud (VPC)",
-      "Default": "sg-4bc56f2e"
+      "Default": "sg-"
     },
 
     "DeployBranch" : {
@@ -89,7 +95,7 @@
             "Properties" : {
                 "HostedZoneName" : "bluekite.com.",
                 "Comment" : "DNS name for my instance.",
-                "Name" : { "Fn::Join" : [ "", ["mx.worker.redefectiva", { "Fn::FindInMap" : [ "dot", { "Ref" : "Environment" }, "DOT" ]}, ".bluekite.com."]]},
+                "Name" : { "Fn::Join" : [ "", ["mx", { "Ref" : "StackID" }, ".worker.redefectiva", { "Fn::FindInMap" : [ "dot", { "Ref" : "Environment" }, "DOT" ]},".bluekite.com."]]},
                 "Type" : "A",
                 "TTL" : "300",
                 "ResourceRecords" : [ { "Fn::GetAtt" : [ "MxWorkerRedefectivaInstance", "PrivateIp" ] } ]
@@ -181,6 +187,11 @@
 
                     "# Copy credentials to root user\n",
                     "cp /home/ubuntu/.ssh/* /root/.ssh/\n",
+
+                    "# Add FQDN on etc/environment\n",
+                    "echo ", { "Fn::Join" : [ "" , ["FQDN=mx", { "Ref" : "StackID" }, ".worker.redefectiva", { "Fn::FindInMap" : [ "dot", { "Ref" : "Environment" }, "DOT" ]}, ".bluekite.com" ]]}, ">> /etc/environment\n",
+                    "echo ", "STACKID=", { "Ref" : "StackID" }, ">> /etc/environment\n",
+                    "echo ", { "Fn::Join" : [ "" , ["FACTER_queue_host=accounts", { "Ref" : "StackID" }, ".mx", { "Fn::FindInMap" : [ "dot", { "Ref" : "Environment" }, "DOT" ]}, ".bluekite.com" ]]}, ">> /etc/environment\n",
 
                     "# Clone app repo to ubuntu user home\n",
                     "git clone ", {"Ref": "Repository"}, " -b ", {"Ref" : "DeployBranch"}, " /home/ubuntu/worker > /tmp/git.log 2>&1 || error_exit 'Failed to clone repo'\n",

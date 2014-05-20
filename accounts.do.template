@@ -115,7 +115,7 @@
           "chown ubuntu:ubuntu -R /home/ubuntu/accounts\n",
 
           "# Add FQDN on etc/environment\n",
-          "echo ", { "Fn::Join" : [ "" , ["FQDN=accounts.do", { "Ref" : "StackID" }, { "Fn::FindInMap" : [ "dot", { "Ref" : "Environment" }, "DOT" ]}, ".bluekite.com" ]]}, ">> /etc/environment\n",
+          "echo ", { "Fn::Join" : [ "" , ["FACTER_accounts_fqdn=accounts", { "Ref" : "StackID" }, ".do", { "Fn::FindInMap" : [ "dot", { "Ref" : "Environment" }, "DOT" ]}, ".bluekite.com" ]]}, ">> /etc/environment\n",
           "echo ", "STACKID=", { "Ref" : "StackID" }, ">> /etc/environment\n",
           
           "# Install application's dependencies via puppet\n",
@@ -156,7 +156,7 @@
       "Properties" : {
         "HostedZoneName" : "bluekite.com.",
         "Comment" : "DNS name for my instance.",
-                "Name" : { "Fn::Join" : [ "", ["accounts.do", { "Ref" : "StackID" } , { "Fn::FindInMap" : [ "dot", { "Ref" : "Environment" }, "DOT" ]},".bluekite.com"]]},
+                "Name" : { "Fn::Join" : [ "", ["accounts", { "Ref" : "StackID" } , ".do", { "Fn::FindInMap" : [ "dot", { "Ref" : "Environment" }, "DOT" ]},".bluekite.com"]]},
         "Type" : "A",
         "TTL" : "900",
         "ResourceRecords" : [ { "Fn::GetAtt" : [ "AccountsDoInstance", "PrivateIp" ] } ]

@@ -14,9 +14,7 @@
       "Description" : "Tag the environment, like development, production, etc."
     }
   },
-  
   "Mappings" : {
-    
     "NATMap" : {
       "us-east-1"           : { "AMI" : "ami-ad227cc4" },
       "us-west-1"           : { "AMI" : "ami-d69aad93" },
@@ -25,7 +23,6 @@
       "ap-southeast-2"      : { "AMI" : "ami-3bae3201" },
       "eu-west-1"           : { "AMI" : "ami-f3e30084" }
     },
-
     "keys" : {
           "dev"            : { "keypair" : "tbp_dev"},
           "qa"             : { "keypair" : "tbp_qa" },
@@ -33,7 +30,6 @@
           "sandbox"        : { "keypair" : "tbp_sandbox"},
           "production"     : { "keypair" : "tbp_prod"}
     },
-
     "subnets" : {
       "test"               : { "VPCSN" : "10.250.0.0/16", "PUSN" : "10.250.0.0/24", "PRSN" : "10.250.1.0/24", "GTSN" : "10.250.10.0/24", "ISSN" : "10.250.11.0/24", "DOSN" : "10.250.12.0/24", "MXSN" : "10.250.13.0/24", "SVSN" : "10.250.14.0/24" },
       "dev"                : { "VPCSN" : "10.4.0.0/16", "PUSN" : "10.4.0.0/24", "PRSN" : "10.4.1.0/24", "ISSN" : "10.4.10.0/24", "GTSN" : "10.4.11.0/24", "DOSN" : "10.4.12.0/24", "MXSN" : "10.4.13.0/24", "SVSN" : "10.4.14.0/24" },
@@ -41,12 +37,10 @@
       "sandbox"            : { "VPCSN" : "10.2.0.0/16", "PUSN" : "10.2.0.0/24", "PRSN" : "10.2.1.0/24", "ISSN" : "10.2.10.0/24", "GTSN" : "10.2.11.0/24", "DOSN" : "10.2.12.0/24", "MXSN" : "10.2.13.0/24", "SVSN" : "10.2.14.0/24" },
       "production"         : { "VPCSN" : "10.1.0.0/16", "PUSN" : "10.1.0.0/24", "PRSN" : "10.1.1.0/24", "ISSN" : "10.1.10.0/24", "GTSN" : "10.1.11.0/24", "DOSN" : "10.1.12.0/24", "MXSN" : "10.1.13.0/24", "SVSN" : "10.1.14.0/24" }
     },
-
     "VPN" : {
       "smart"          : { "EP" : "186.64.109.138" },
       "broadcom"       : { "EP" : "190.99.116.194" }
     },
-
     "dot" : {
       "test"            : { "DOT" : ".test" },
       "dev"            : { "DOT" : ".dev" },
@@ -54,7 +48,6 @@
       "sandbox"        : { "DOT" : ".sandbox" },
       "production"     : { "DOT" : "" }
     },
-
     "KernelId" : {
       "us-east-1"         : { "AKI" : "aki-919dcaf8" },
       "us-west-1"         : { "AKI" : "aki-880531cd" },
@@ -63,7 +56,6 @@
       "ap-southeast-2"    : { "AKI" : "aki-c362fff9" },
       "eu-west-1"         : { "AKI" : "aki-52a34525" }
     },
-
     "subnetZone" : {
       "us-west-1"           : { "ZONE" : "us-west-1c" },
       "us-west-2"           : { "ZONE" : "us-west-2b" },
@@ -81,9 +73,7 @@
       "ap-southeast-2"      : { "ZONE" : "ap-southeast-2.compute.internal" }
     }
   },
-
   "Resources": {
-    
     "vpc": {                      
       "Type": "AWS::EC2::VPC",
       "Properties": {
@@ -102,12 +92,11 @@
           },
           {
             "Key": "Name",            
-            "Value": { "Fn::Join" : [ " ", ["Public APIs VPC", { "Ref" : "Environment"} ] ] }
+            "Value": { "Fn::Join" : [ " ", ["Public API VPC", { "Ref" : "Environment"} ] ] }
           }
         ]
       }
     },
-
     "subnetPrivateApis": {
       "Type": "AWS::EC2::Subnet",
       "Properties": {
@@ -132,7 +121,6 @@
         ]
       }
     },
-
     "subnetWorkerGT": {
       "Type": "AWS::EC2::Subnet",
       "Properties": {
@@ -512,13 +500,15 @@
       }
     },
 
-    "BastionIPAddress" : {
-      "Type" : "AWS::EC2::EIP",
-      "Properties" : {
-        "Domain" : "vpc",
-        "InstanceId" : { "Ref" : "Bastion" }
-      }
-    },
+    "IPAssocBastion": {
+      "Type": "AWS::EC2::EIPAssociation",
+      "Properties": {
+        "InstanceId": {
+          "Ref": "Bastion"
+        },
+        "AllocationId": "eipalloc-a07067c2"
+        }
+      },
 
     "DNSRecord" : {
       "Type" : "AWS::Route53::RecordSet",
@@ -530,7 +520,7 @@
         "TTL" : "300",
         "ResourceRecords" : [ { "Fn::GetAtt" : [ "Bastion", "PublicDnsName" ] } ]
       },
-      "DependsOn" : "BastionIPAddress"
+      "DependsOn" : "IPAssocBastion"
     },
 
     "sgMonitors": {
@@ -670,24 +660,12 @@
             "IpProtocol": "tcp",
             "FromPort": "6379",
             "ToPort": "6379",
-            "CidrIp": "192.168.0.0/24"
-          },
-          {
-            "IpProtocol": "tcp",
-            "FromPort": "6379",
-            "ToPort": "6379",
             "CidrIp": { "Fn::FindInMap" : [ "subnets", { "Ref" : "Environment" }, "VPCSN" ]}
           },
           {
             "IpProtocol": "tcp",
             "FromPort": "22",
             "ToPort": "22",
-            "CidrIp": "192.168.0.0/24"
-          },
-          {
-            "IpProtocol": "tcp",
-            "FromPort": "11300",
-            "ToPort": "11300",
             "CidrIp": "192.168.0.0/24"
           },
           {
@@ -757,12 +735,6 @@
             "IpProtocol": "tcp",
             "FromPort": "80",
             "ToPort": "80",
-            "CidrIp": "192.168.0.0/24"
-          },
-          {
-            "IpProtocol": "tcp",
-            "FromPort": "6379",
-            "ToPort": "6379",
             "CidrIp": "192.168.0.0/24"
           },
           {
@@ -1007,18 +979,6 @@
             "FromPort": "6379",
             "ToPort": "6379",
             "CidrIp": { "Fn::FindInMap" : [ "subnets", { "Ref" : "Environment" }, "VPCSN" ]}
-          },
-          {
-            "IpProtocol": "tcp",
-            "FromPort": "6379",
-            "ToPort": "6379",
-            "CidrIp": "192.168.0.0/24"
-          },
-          {
-            "IpProtocol": "tcp",
-            "FromPort": "11300",
-            "ToPort": "11300",
-            "CidrIp": "192.168.0.0/24"
           },
           {
             "IpProtocol": "tcp",
@@ -1471,7 +1431,6 @@
         ]
       }
     },
-
     "sgPublicApis": {
       "Type": "AWS::EC2::SecurityGroup",
       "Properties": {
@@ -1485,8 +1444,7 @@
             "Key": "Name",
             "Value": { "Fn::Join" : [ " ", ["Public Apis SG", { "Ref" : "Environment"} ] ] }
             }
-          ],
-                
+          ],    
         "SecurityGroupIngress": [
           {
             "IpProtocol": "icmp",
@@ -1522,7 +1480,6 @@
       },
       "DependsOn": "sgBastion"
     },
-
     "acl5": {
       "Type": "AWS::EC2::NetworkAclEntry",
       "Properties": {
@@ -1536,7 +1493,6 @@
         }
       }
     },
-
     "acl6": {
       "Type": "AWS::EC2::NetworkAclEntry",
       "Properties": {
@@ -1549,7 +1505,6 @@
         }
       }
     },
-
     "subnetacl5": {
       "Type": "AWS::EC2::SubnetNetworkAclAssociation",
       "Properties": {
@@ -1561,7 +1516,6 @@
         }
       }
     },
-
     "subnetacl6": {
       "Type": "AWS::EC2::SubnetNetworkAclAssociation",
       "Properties": {
@@ -1573,7 +1527,6 @@
         }
       }
     },
-
     "gw3": {
       "Type": "AWS::EC2::VPCGatewayAttachment",
       "Properties": {
@@ -1607,7 +1560,6 @@
         }
       }
     },
-
     "subnetroute5": {
       "Type": "AWS::EC2::SubnetRouteTableAssociation",
       "Properties": {
@@ -1619,7 +1571,6 @@
         }
       }
     },
-
     "subnetroute6": {
       "Type": "AWS::EC2::SubnetRouteTableAssociation",
       "Properties": {
@@ -1631,7 +1582,6 @@
         }
       }
     },
-    
     "subnetroute7": {
       "Type": "AWS::EC2::SubnetRouteTableAssociation",
       "Properties": {
@@ -1643,7 +1593,6 @@
         }
       }
     },
-
     "subnetroute8": {
       "Type": "AWS::EC2::SubnetRouteTableAssociation",
       "Properties": {
@@ -1666,7 +1615,6 @@
         }
       }
     },
-
     "subnetroute10": {
       "Type": "AWS::EC2::SubnetRouteTableAssociation",
       "Properties": {
@@ -1678,7 +1626,6 @@
         }
       }
     },
-
     "route6": {
       "Type": "AWS::EC2::Route",
       "Properties": {
@@ -1692,7 +1639,6 @@
       },
       "DependsOn": "gw4"
     },
-
     "route7": {
       "Type": "AWS::EC2::Route",
       "Properties": {
@@ -1732,7 +1678,6 @@
       },
       "DependsOn": "gw3"
     },
-
     "dchpassoc2": {
       "Type": "AWS::EC2::VPCDHCPOptionsAssociation",
       "Properties": {
@@ -1744,7 +1689,6 @@
         }
       }
     },
-
     "ingress14": {
       "Type": "AWS::EC2::SecurityGroupIngress",
       "Properties": {
@@ -1760,7 +1704,6 @@
         "SourceSecurityGroupOwnerId": "243238936187"
       }
     },
-
     "ingress15": {
       "Type": "AWS::EC2::SecurityGroupIngress",
       "Properties": {
@@ -1776,7 +1719,6 @@
         "SourceSecurityGroupOwnerId": "243238936187"
       }
     },
-
     "ingress16": {
       "Type": "AWS::EC2::SecurityGroupIngress",
       "Properties": {
@@ -1792,7 +1734,6 @@
         "SourceSecurityGroupOwnerId": "243238936187"
       }
     },
-
     "ingress17": {
       "Type": "AWS::EC2::SecurityGroupIngress",
       "Properties": {
@@ -1806,7 +1747,6 @@
         "SourceSecurityGroupOwnerId": "243238936187"
       }
     },
-
     "ingress18": {
       "Type": "AWS::EC2::SecurityGroupIngress",
       "Properties": {
@@ -1870,7 +1810,6 @@
         "SourceSecurityGroupOwnerId": "243238936187"
       }
     },
-
     "ingress22": {
       "Type": "AWS::EC2::SecurityGroupIngress",
       "Properties": {
@@ -1886,7 +1825,6 @@
         "SourceSecurityGroupOwnerId": "243238936187"
       }
     },
-
     "ingress23": {
       "Type": "AWS::EC2::SecurityGroupIngress",
       "Properties": {
@@ -1902,7 +1840,6 @@
         "SourceSecurityGroupOwnerId": "243238936187"
       }
     },
-
     "ingress24": {
       "Type": "AWS::EC2::SecurityGroupIngress",
       "Properties": {
@@ -1918,7 +1855,6 @@
         "SourceSecurityGroupOwnerId": "243238936187"
       }
     },
-
     "ingress25": {
       "Type": "AWS::EC2::SecurityGroupIngress",
       "Properties": {
@@ -1934,7 +1870,6 @@
         "SourceSecurityGroupOwnerId": "243238936187"
       }
     },
-
     "ingress26": {
       "Type": "AWS::EC2::SecurityGroupIngress",
       "Properties": {
@@ -1950,7 +1885,6 @@
         "SourceSecurityGroupOwnerId": "243238936187"
       }
     },
-    
     "ingress27": {
       "Type": "AWS::EC2::SecurityGroupIngress",
       "Properties": {
@@ -1981,7 +1915,6 @@
         "SourceSecurityGroupOwnerId": "243238936187"
       }
     },
-
     "ingress29": {
       "Type": "AWS::EC2::SecurityGroupIngress",
       "Properties": {
@@ -1998,6 +1931,5 @@
       }
     }
   },
-
   "Description": "Public API VPC"
 }

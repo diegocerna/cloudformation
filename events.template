@@ -1,13 +1,13 @@
 {
   "AWSTemplateFormatVersion" : "2010-09-09",
 
-  "Description" : "Events Server",
+  "Description" : "Events Server - filename:events.template",
 
   "Parameters" : {
     
     "Environment" : {
       "Type" : "String",
-      "Default" : "dev"
+      "Default" : ""
     },
     
     "KeyName" : {
