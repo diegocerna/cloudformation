@@ -9,14 +9,14 @@
       "Description" : "Provider for VPN connection - smart or broadcom"
     },
 
-    AllocationIdBastion: {
-      Type: "String",
-      Description: "AllocationId of existing Elastic IP (EIP) in your Virtual Private Cloud (VPC)"
+    "AllocationIdBastion": {
+      "Type": "String",
+      "Description": "AllocationId of existing Elastic IP (EIP) in your Virtual Private Cloud (VPC)"
     },
 
-    AllocationIdNAT: {
-      Type: "String",
-      Description: "AllocationId of existing Elastic IP (EIP) in your Virtual Private Cloud (VPC)"
+    "AllocationIdNAT": {
+      "Type": "String",
+      "Description": "AllocationId of existing Elastic IP (EIP) in your Virtual Private Cloud (VPC)"
     },
 
     "Environment" : {
