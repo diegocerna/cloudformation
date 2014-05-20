@@ -34,7 +34,7 @@
       "Default" : "-"
     },
 
-    "SG" : {
+    "SecurityGroupId" : {
       "Type" : "String",
       "Default" : "sg-",
       "Description" : "Security Group (default = 'dev')"

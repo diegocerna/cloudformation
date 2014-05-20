@@ -9,6 +9,16 @@
       "Description" : "Provider for VPN connection - smart or broadcom"
     },
 
+    AllocationIdBastion: {
+      Type: "String",
+      Description: "AllocationId of existing Elastic IP (EIP) in your Virtual Private Cloud (VPC)"
+    },
+
+    AllocationIdNAT: {
+      Type: "String",
+      Description: "AllocationId of existing Elastic IP (EIP) in your Virtual Private Cloud (VPC)"
+    },
+
     "Environment" : {
       "Type" : "String",
       "Description" : "Tag the environment, like development, production, etc."
@@ -39,6 +49,7 @@
     },
     "VPN" : {
       "smart"          : { "EP" : "186.64.109.138" },
+      "smart2"         : { "EP" : "186.64.109.139" },
       "broadcom"       : { "EP" : "190.99.116.194" }
     },
     "dot" : {
@@ -487,6 +498,16 @@
       }
     },
 
+    "IPAssocNAT": {
+      "Type": "AWS::EC2::EIPAssociation",
+      "Properties": {
+        "InstanceId": {
+          "Ref": "instanceNAT"
+        },
+        "AllocationId": { " Ref : "AllocationIdNAT"}
+      }
+     },
+
     "Bastion" : {
       "Type" : "AWS::EC2::Instance",
       "Properties" : {
@@ -506,9 +527,9 @@
         "InstanceId": {
           "Ref": "Bastion"
         },
-        "AllocationId": "eipalloc-a07067c2"
-        }
-      },
+        "AllocationId": { " Ref : "AllocationIdBastion"}
+      }
+    },
 
     "DNSRecord" : {
       "Type" : "AWS::Route53::RecordSet",
