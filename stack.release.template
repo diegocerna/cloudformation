@@ -153,7 +153,7 @@
           "KeyName": { "Ref" : "KeyName" },
           "SubnetId" : { "Ref" : "PrivateSubnetId" },
           "SecurityGroupId" : { "Ref" : "PrivateSecurityGroup" },
-          "DeployBranch" : "feature/stackid",
+          "DeployBranch" : "master",
           "StackID" : { "Ref" : "StackID" },
           "InstanceType" : { "Ref" : "InstanceType"},
           "Environment": { "Ref" : "appEnvironment" }
@@ -289,7 +289,7 @@
           "KeyName" : { "Ref" : "KeyName" },
           "SubnetId" : { "Ref" : "PrivateSubnetId" },
           "SG" : { "Ref" : "PrivateSecurityGroup" },
-          "DeployBranch" : "edge",
+          "DeployBranch" : "release/0.3.0",
           "StackID" : { "Ref" : "StackID" },
           "Environment" : { "Ref" : "appEnvironment" }
         }
@@ -334,7 +334,7 @@
           "KeyName" : { "Ref" : "KeyName" },
           "SubnetId" : { "Ref" : "PrivateSubnetId" },
           "SecurityGroupId" : { "Ref" : "PrivateSecurityGroup" },
-          "DeployBranch" : "master",
+          "DeployBranch" : "release/0.3.0",
           "StackID" : { "Ref" : "StackID" },
           "Environment" : { "Ref" : "appEnvironment" }
         }

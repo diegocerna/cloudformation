@@ -231,7 +231,7 @@
       "DependsOn" : "MxWorkerRedefectivaInstance",
       "Properties" : {
         "Handle" : {"Ref" : "WorkerRedefectivaWaitHandle"},
-        "Timeout" : "1200"
+        "Timeout" : "2000"
       }
     },
 

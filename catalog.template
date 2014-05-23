@@ -133,7 +133,7 @@
           "cp /home/ubuntu/.ssh/* /root/.ssh/\n",
 
           "# Add FQDN on etc/environment\n",
-          "echo ", { "Fn::Join" : [ "" , ["FQDN=catalog", { "Ref" : "StackID" }, { "Fn::FindInMap" : [ "dot", { "Ref" : "Environment" }, "DOT" ]}, ".bluekite.com" ]]}, ">> /etc/environment\n",
+          "echo ", { "Fn::Join" : [ "" , ["FACTER_accounts_fqdn=catalog", { "Ref" : "StackID" }, { "Fn::FindInMap" : [ "dot", { "Ref" : "Environment" }, "DOT" ]}, ".bluekite.com" ]]}, ">> /etc/environment\n",
           "echo ", "STACKID=", { "Ref" : "StackID" }, ">> /etc/environment\n",
 
           "# Clone app repo to ubuntu user home\n",
