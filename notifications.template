@@ -40,6 +40,12 @@
       "Default" : ""
     },
 
+    "StackID" : {
+      "Type" : "String",
+      "Description" : "Stack ID name",
+      "Default" : "-"
+    },
+
     "Environment" : {
       "Type" : "String",
       "Description" : "Application's environment.",
@@ -66,7 +72,7 @@
       "us-west-2"      : {"AMI" : "ami-9a9dfdaa" }
     },
     "dot" : {
-      "test"            : { "DOT" : ".test" },
+      "test"           : { "DOT" : ".test" },
       "dev"            : { "DOT" : ".dev" },
       "qa"             : { "DOT" : ".qa" },
       "sandbox"        : { "DOT" : ".sandbox" },
@@ -82,7 +88,7 @@
       "Properties" : {
         "HostedZoneName" : "bluekite.com.",
         "Comment" : "DNS name for my instance.",
-        "Name" : {"Fn::Join" : ["", ["notifications",{ "Fn::FindInMap" : [ "dot", { "Ref" : "Environment" }, "DOT" ]},".bluekite.com."]]},
+        "Name" : { "Fn::Join" : [ "", ["notifications", { "Ref" : "StackID" } , { "Fn::FindInMap" : [ "dot", { "Ref" : "Environment" }, "DOT" ]},".bluekite.com"]]},
         "Type" : "A",
         "TTL" : "900",
         "ResourceRecords" : [ { "Fn::GetAtt" : [ "NotificationsInstance", "PrivateIp" ] } ]
