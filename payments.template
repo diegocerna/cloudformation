@@ -1,7 +1,7 @@
 {
   "AWSTemplateFormatVersion" : "2010-09-09",
 
-  "Description" : "This stack generates the Payments IS instance",
+  "Description" : "This stack generates the Payments IS instance - filename: payments.template",
 
  "Mappings" : {
     "RegionMap" : {
@@ -28,19 +28,19 @@
     "Environment" : {
       "Type" : "String",
       "Description" : "Environment for the payments, i.e. dev, production, etc.",
-      "Default" : "qa"
+      "Default" : ""
     },
 
     "DeployBranch" : {
       "Type" : "String",
       "Description" : "Git branch where to deploy the code from.",
-      "Default" : "master"
+      "Default" : ""
     },
 
     "KeyName" : {
       "Type" : "String",
       "Description" : "The SSH access key",
-      "Default" : "tpbqa"
+      "Default" : "tbp_"
     },
 
     "InstanceType" : {
@@ -54,7 +54,7 @@
     "SubnetId" : {
       "Type" : "String",
       "Description" : "Guatemala Payments SubnetId in your Virtual Private Cloud (VPC)",
-      "Default": "subnet-d46128fc"      
+      "Default": "subnet-"      
     },
 
         "StackID" : {
@@ -66,7 +66,7 @@
     "SecurityGroupId" : {
       "Type" : "String",
       "Description" : "Security Group of the VPC",
-      "Default" : "sg-a6c411c3"
+      "Default" : "sg-"
     }
   },
 
