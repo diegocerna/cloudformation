@@ -28,6 +28,12 @@
             "Default" : "dev"
         },
 
+        "StackID" : {
+            "Type" : "String",
+            "Description" : "Stack ID name",
+            "Default" : "-"
+        },
+
         "SubnetId" : {
             "Type" : "String",
             "Description" : "SubnetId of an existing subnet in your Virtual Private Cloud (VPC)",
@@ -76,7 +82,7 @@
             "Properties" : {
                 "HostedZoneName" : "bluekite.com.",
                 "Comment" : "DNS name for my instance.",
-                "Name" : { "Fn::Join" : [ "", ["search", { "Fn::FindInMap" : [ "dot", { "Ref" : "Environment" }, "DOT" ]}, ".bluekite.com." ]]},
+                "Name" : { "Fn::Join" : [ "", ["search", { "Ref" : "StackID" }, { "Fn::FindInMap" : [ "dot", { "Ref" : "Environment" }, "DOT" ]},".bluekite.com."]]},
                 "Type" : "A",
                 "TTL" : "900",
                 "ResourceRecords" : [ { "Fn::GetAtt" : [ "ElasticSearchInstance", "PrivateIp" ] } ]

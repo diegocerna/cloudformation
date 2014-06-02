@@ -386,6 +386,21 @@
       }
     },
 
+    "XPA" : {
+      "Type" : "AWS::CloudFormation::Stack",
+      "Properties" : {
+        "TemplateURL" : "https://s3-us-west-2.amazonaws.com/pruebastack/xpa.template",
+        "Parameters" : {
+          "KeyName": {"Ref":"KeyName"},
+          "SubnetId" : { "Ref" : "PublicSubnetId"},
+          "SecurityGroupId" : { "Ref" : "ApiSecurityGroup"},
+          "DeployBranch" : "master",
+          "InstanceType" : { "Ref" : "InstanceType"},
+          "Environment" : {"Ref" : "appEnvironment"}
+        }
+      }
+    },
+
     "Payments" : {
       "Type" : "AWS::CloudFormation::Stack",
       "Properties" : {
