@@ -161,22 +161,6 @@
       } 
     },
 
-    "logstash" : {
-      "Type" : "AWS::CloudFormation::Stack",
-      "Properties" : {
-        "TemplateURL" : "https://s3-us-west-2.amazonaws.com/pruebastack/logstash.template",
-        "Parameters" : {
-          "KeyName" : { "Ref" : "KeyName" },
-          "SubnetId" : { "Ref" : "PrivateSubnetId" },
-          "SecurityGroupId" : { "Ref" : "PrivateSecurityGroup" },
-          "InstanceType" : { "Ref" : "InstanceType"},
-          "DeployBranch" : "edge",
-          "StackID" : { "Ref" : "StackID" },
-          "Environment" : { "Ref" : "appEnvironment" }
-        }
-      }
-    },
-
     "HelloWorld" : {
       "Type" : "AWS::CloudFormation::Stack",
       "Properties" : {
