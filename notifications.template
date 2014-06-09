@@ -132,6 +132,11 @@
           "# Copy credentials to root user\n",
           "cp /home/ubuntu/.ssh/* /root/.ssh/\n",
 
+          "# Add FQDN on etc/environment\n",
+          "echo ", { "Fn::Join" : [ "" , ["FQDN=notifications", { "Ref" : "StackID" }, ".do", { "Fn::FindInMap" : [ "dot", { "Ref" : "Environment" }, "DOT" ]}, ".bluekite.com" ]]}, ">> /etc/environment\n",
+          "echo ", "STACKID=", { "Ref" : "StackID" }, ">> /etc/environment\n",
+          "echo ", "FACTER_environment=", { "Ref" : "Environment" }, ">> /etc/environment\n",
+
           "# Clone app repo to ubuntu user home\n",
           "git clone ", {"Ref": "Repository"}, " -b ", {"Ref" : "DeployBranch"}, " /home/ubuntu/notifications > /tmp/git.log 2>&1 || error_exit 'Failed to clone repo'\n",
           "chown ubuntu:ubuntu -R /home/ubuntu/notifications\n",
@@ -144,7 +149,7 @@
           "export HOME=/home/ubuntu && librarian-puppet install --clean --verbose > /tmp/librarian-puppet.log 2>&1 || error_exit 'failed to install puppet submodules'\n",
 
           "cd /home/ubuntu/notifications\n",
-          "puppet apply --verbose --modulepath=puppet/modules puppet/manifests/aws-",{"Ref":"Environment"},".pp  > /tmp/puppet.log 2>&1 || error_exit 'failed to apply puppet manifests'\n",
+          "puppet apply --verbose --modulepath=puppet/modules puppet/manifests/aws.pp  > /tmp/puppet.log 2>&1 || error_exit 'failed to apply puppet manifests'\n",
 
           "# Signal setup is complete\n",
           "cfn-signal -e $? -r 'Completed configuration' '",
