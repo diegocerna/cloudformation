@@ -189,9 +189,13 @@
                     "git clone ", {"Ref": "Repository"}, " -b ", {"Ref" : "DeployBranch"}, " /home/ubuntu/worker > /tmp/git.log 2>&1 || error_exit 'Failed to clone repo'\n",
                     "chown ubuntu:ubuntu -R /home/ubuntu/worker\n",
 
+                    "# Install puppet via gems\n",
+                    "sudo gem install puppet --no-rdoc --no-ri > /tmp/gem-puppet.log 2>&1 || error_exit 'Failed install puppet gem'\n",
+
+                    "# Install Librarian Ruby\n",
+                    "sudo gem install librarian-puppet -v 1.0.3 --no-rdoc --no-ri > /tmp/gem-librarian-puppet.log 2>&1 || error_exit 'Failed install librarian puppet gem'\n",
+
                     "# Install application's dependencies via puppet\n",
-                    "sudo gem install puppet\n",
-                    "gem install librarian-puppet\n",
                     "cd /home/ubuntu/worker/puppet\n",
                     "export HOME=/home/ubuntu && librarian-puppet install --clean --verbose > /tmp/librarian-puppet.log 2>&1 || error_exit 'failed to install puppet submodules'\n",
 

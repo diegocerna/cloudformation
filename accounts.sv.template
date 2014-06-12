@@ -117,12 +117,14 @@
           "# Add FQDN on etc/environment\n",
           "echo ", { "Fn::Join" : [ "" , ["FACTER_accounts_fqdn=accounts", { "Ref" : "StackID" }, ".sv", { "Fn::FindInMap" : [ "dot", { "Ref" : "Environment" }, "DOT" ]}, ".bluekite.com" ]]}, ">> /etc/environment\n",
           "echo ", "STACKID=", { "Ref" : "StackID" }, ">> /etc/environment\n",
+
+          "# Install puppet via gems\n",
+          "sudo gem install puppet --no-rdoc --no-ri > /tmp/gem-puppet.log 2>&1 || error_exit 'Failed install puppet gem'\n",
+
+          "# Install Librarian Ruby\n",
+          "sudo gem install librarian-puppet -v 1.0.3 --no-rdoc --no-ri > /tmp/gem-librarian-puppet.log 2>&1 || error_exit 'Failed install librarian puppet gem'\n",
           
           "# Install application's dependencies via puppet\n",
-          "sudo apt-get update\n",
-          "sudo apt-get upgrade\n",
-          "gem install puppet\n",
-          "gem install librarian-puppet\n",
           "cd /home/ubuntu/accounts/puppet\n",
           "export HOME=/home/ubuntu && librarian-puppet install --clean --verbose > /tmp/librarian-puppet.log 2>&1 || error_exit 'failed to install puppet submodules'\n",
           "cd /home/ubuntu/accounts\n",

@@ -114,20 +114,7 @@
         "HelloWorldInstance" : {
             "Type" : "AWS::EC2::Instance",
             "Metadata" : {
-                "Comment" : "Hello World Grape Application Instance",
-                "AWS::CloudFormation::Init" : {
-                 "configSets" : {
-                        "default" : ["config_packages"]
-                    },
-                        "config_packages" : {
-                        "packages" : {
-                            "rubygems" : {
-                                "puppet"             : [],
-                                "librarian-puppet"   : []
-                            }
-                        }
-                    }
-                }
+                "Comment" : "Hello World Grape Application Instance"
             },
             "Properties" : {
                 "ImageId" : { "Fn::FindInMap" : [ "RegionMap", { "Ref" : "AWS::Region" }, "AMI" ]},
@@ -167,8 +154,13 @@
                     "# Clone app repo to ubuntu user home\n",
                     "git clone git@github.com:blue-kite/hello-world.git -b ", {"Ref" : "DeployBranch"}, " /home/ubuntu/", {"Ref" : "WorkingDirectory"} , " > /tmp/git.log 2>&1 || error_exit 'Failed to clone repo'\n",
                     "chown ubuntu:ubuntu -R /home/ubuntu/", {"Ref" : "WorkingDirectory"}, "\n",
-                    "sudo apt-get update\n",
-                    "sudo apt-get upgrade\n",
+
+                    "# Install puppet via gems\n",
+                    "sudo gem install puppet --no-rdoc --no-ri > /tmp/gem-puppet.log 2>&1 || error_exit 'Failed install puppet gem'\n",
+
+                    "# Install Librarian Ruby\n",
+                    "sudo gem install librarian-puppet -v 1.0.3 --no-rdoc --no-ri > /tmp/gem-librarian-puppet.log 2>&1 || error_exit 'Failed install librarian puppet gem'\n",
+
                     "# Install application's dependencies via puppet\n",
                     "cd /home/ubuntu/", {"Ref" : "WorkingDirectory"}, "/puppet\n",
                     "export HOME=/home/ubuntu && librarian-puppet install --clean --verbose > /tmp/librarian-puppet.log 2>&1 || error_exit 'failed to install puppet submodules'\n",

@@ -139,9 +139,6 @@
                     " -c default",
                     " || error_exit 'Failed to run cfn-init'\n",
 
-                    "# Install puppet via gems\n",
-                    "sudo gem install puppet --no-rdoc --no-ri > /tmp/gem-puppet.log 2>&1 || error_exit 'Failed install puppet gem'\n",
-
                     "# Register Github fingerprints\n",
                     "ssh-keygen -f ~/.ssh/known_hosts -H -F github.com | grep -q found || ssh-keyscan -H github.com >> ~/.ssh/known_hosts\n",
 
@@ -153,9 +150,13 @@
 
                     "chown ubuntu:ubuntu -R /home/ubuntu/oauth\n",
 
+                    "# Install puppet via gems\n",
+                    "sudo gem install puppet --no-rdoc --no-ri > /tmp/gem-puppet.log 2>&1 || error_exit 'Failed install puppet gem'\n",
+
+                    "# Install Librarian Ruby\n",
+                    "sudo gem install librarian-puppet -v 1.0.3 --no-rdoc --no-ri > /tmp/gem-librarian-puppet.log 2>&1 || error_exit 'Failed install librarian puppet gem'\n",
+
                     "# Install application's dependencies via puppet\n",
-                    "sudo gem install puppet || error_exit 'Failed to install gem puppet'\n",
-                    "sudo gem install librarian-puppet\n",
                     "cd /home/ubuntu/oauth/puppet\n",
                     "export HOME=/home/ubuntu && librarian-puppet install --verbose > /tmp/librarian-puppet.log 2>&1 || error_exit 'failed to install puppet submodules'\n",
 
