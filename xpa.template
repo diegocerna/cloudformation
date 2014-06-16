@@ -32,6 +32,12 @@
             "Default": "sg-"
         },
 
+        "StackID" : {
+            "Type" : "String",
+            "Description" : "Stack ID name",
+            "Default" : "-"
+        },
+
         "InstanceType" : {
             "Description" : "XPA EC2 instance type",
             "Type" : "String",
@@ -83,7 +89,7 @@
                 "Properties" : {
                 "HostedZoneName" : "bluekite.com.",
                 "Comment" : "DNS name for my instance.",
-                "Name" : { "Fn::Join" : [ "", ["xpa", { "Fn::FindInMap" : [ "dot", { "Ref" : "Environment" }, "DOT" ]},".bluekite.com"]]},
+                "Name" : { "Fn::Join" : [ "", ["xpa", { "Ref" : "StackID" } , { "Fn::FindInMap" : [ "dot", { "Ref" : "Environment" }, "DOT" ]},".bluekite.com"]]},
                 "Type" : "CNAME",
                 "TTL" : "300",
                 "ResourceRecords" : [ { "Fn::GetAtt" : [ "XPAInstance", "PublicDnsName" ] } ]
@@ -149,7 +155,7 @@
                 "InstanceType" : { "Ref" : "InstanceType" },
                 "KeyName" : { "Ref" : "KeyName" },
                 "Tags" : [ {"Key" : "Application", "Value" : { "Ref" : "AWS::StackId"} },
-                           {"Key" : "Name", "Value" : { "Fn::Join" : ["-", ["xpa",{"Ref":"Environment"} ]]}}],
+                           {"Key" : "Name", "Value" : { "Fn::Join" : ["-", ["xpa", { "Ref" : "StackID" }, {"Ref":"Environment"} ]]}}],
                 "UserData"       : { "Fn::Base64" : { "Fn::Join" : ["", [
                     "#!/bin/bash\n",
 
@@ -173,6 +179,10 @@
           
                     "# Copy credentials to root user\n",
                     "cp /home/ubuntu/.ssh/* /root/.ssh/\n",
+
+                    "# Add FQDN on etc/environment\n",
+                     "echo ", { "Fn::Join" : [ "" , ["FQDN=xpa", { "Ref" : "StackID" }, { "Fn::FindInMap" : [ "dot", { "Ref" : "Environment" }, "DOT" ]}, ".bluekite.com" ]]}, ">> /etc/environment\n",
+                    "echo ", "STACKID=", { "Ref" : "StackID" }, ">> /etc/environment\n",
           
                     "# Clone app repo to ubuntu user home\n",
                     "git clone git@github.com:blue-kite/xpa.git -b ", {"Ref" : "DeployBranch"}, " /home/ubuntu/xpa > /tmp/git_xpa.log 2>&1 || error_exit 'Failed to clone XPA repo'\n",
