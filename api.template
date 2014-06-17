@@ -222,7 +222,7 @@
       "DependsOn" : "API",
       "Properties" : {
         "Handle" : {"Ref" : "APIWaitHandle"},
-        "Timeout" : "1200"
+        "Timeout" : "2000"
       }
     }
   },

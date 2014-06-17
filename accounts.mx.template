@@ -149,7 +149,7 @@
       "DependsOn" : "AccountsDoInstance",
       "Properties" : {
         "Handle" : {"Ref" : "AccountsMXWaitHandle"},
-        "Timeout" : "1500"
+        "Timeout" : "2000"
       }
     },
 
