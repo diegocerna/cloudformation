@@ -151,6 +151,8 @@
           "export HOME=/home/ubuntu && librarian-puppet install --clean --verbose > /tmp/librarian-puppet.log 2>&1 || error_exit 'failed to install puppet submodules'\n",
 
           "cd /home/ubuntu/accounts\n",
+          "sudo apt-get update\n",
+          "sudo apt-get upgrade\n",
           "sudo puppet apply --verbose --modulepath=./puppet/modules ./puppet/manifests/aws-catalog-",{"Ref":"Environment"},".pp  > /tmp/puppet.log 2>&1 || error_exit 'failed to apply puppet manifests'\n",
 
           "# Signal setup is complete\n",
