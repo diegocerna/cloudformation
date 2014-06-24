@@ -172,6 +172,7 @@
           "# Add FQDN on etc/environment\n",
           "echo ", { "Fn::Join" : [ "" , ["FQDN=gw", { "Ref" : "StackID" }, { "Fn::FindInMap" : [ "dot", { "Ref" : "Environment" }, "DOT" ]}, ".bluekite.com" ]]}, ">> /etc/environment\n",
           "echo ", "STACKID=", { "Ref" : "StackID" }, ">> /etc/environment\n",
+          "echo ", { "Fn::Join" : [ "" , ["FACTER_logs_host=", "logs" , { "Ref" : "StackID" }, { "Fn::FindInMap" : [ "dot", { "Ref" : "Environment" }, "DOT" ]}, ".bluekite.com" ]]}, " >> /etc/environment\n",
 
           "# Clone app repo to ubuntu user home\n",
           "git clone git@github.com:blue-kite/gw.git -b ", {"Ref" : "DeployBranch"}, "  /home/ubuntu/gw > /tmp/git.log 2>&1 || error_exit 'Failed to clone repo'\n",
