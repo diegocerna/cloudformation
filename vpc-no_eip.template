@@ -981,6 +981,36 @@
           },
           {
             "IpProtocol": "tcp",
+            "FromPort": "8084",
+            "ToPort": "8084",
+            "CidrIp": "10.3.14.0/24"
+          },
+          {
+            "IpProtocol": "tcp",
+            "FromPort": "8080",
+            "ToPort": "8080",
+            "CidrIp": "10.3.14.0/24"
+          },
+                   {
+            "IpProtocol": "tcp",
+            "FromPort": "8089",
+            "ToPort": "8089",
+            "CidrIp": "10.3.14.0/24"
+          },
+          {
+            "IpProtocol": "tcp",
+            "FromPort": "80",
+            "ToPort": "80",
+            "CidrIp": "10.3.12.0/24"
+          },
+          {
+            "IpProtocol": "tcp",
+            "FromPort": "80",
+            "ToPort":   "80",
+            "CidrIp": "10.3.16.0/24"
+          },
+          {
+            "IpProtocol": "tcp",
             "FromPort": "4500",
             "ToPort": "4500",
             "CidrIp": "0.0.0.0/0"
