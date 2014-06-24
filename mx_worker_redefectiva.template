@@ -71,14 +71,6 @@
             "us-west-2"      : {"AMI" : "ami-9a9dfdaa" }
         },
 
-        "MXWIP" : {
-            "test"           : { "WIP" : "10.250.13.133" },
-            "dev"            : { "WIP" : "10.4.13.133" },
-            "qa"             : { "WIP" : "10.3.13.133" },
-            "sandbox"        : { "WIP" : "10.2.13.133" },
-            "production"     : { "WIP" : "10.1.13.133" }
-        },
-
         "dot" : {
           "test"             : { "DOT" : ".test" },
           "dev"              : { "DOT" : ".dev" },
@@ -159,8 +151,8 @@
 
             "Properties" : {
                 "ImageId" : { "Fn::FindInMap" : [ "RegionMap", { "Ref" : "AWS::Region" }, "AMI" ]},
-                "NetworkInterfaces" :  [ { 
-                "NetworkInterfaceId" : { "Ref" : "WorkerRedefectivaPrivateIP"}, "DeviceIndex" : "0" } ],
+                "SecurityGroupIds" : [ {"Ref" : "SecurityGroupId"} ],
+                "SubnetId" : { "Ref" : "SubnetId" },
                 "InstanceType" : { "Ref" : "InstanceType" },
                 "KeyName" : { "Ref" : "KeyName" },
                 "Tags" : [ {"Key" : "Application", "Value" : { "Ref" : "AWS::StackId"} },
@@ -236,16 +228,6 @@
       "Properties" : {
         "Handle" : {"Ref" : "WorkerRedefectivaWaitHandle"},
         "Timeout" : "2000"
-      }
-    },
-
-    "WorkerRedefectivaPrivateIP" : {
-       "Type" : "AWS::EC2::NetworkInterface",
-       "Properties" : {
-          "Description" : "private ip allowed for redefectiva",
-          "PrivateIpAddress" : { "Fn::FindInMap" : [ "MXWIP", { "Ref" : "Environment" }, "WIP" ]},
-          "GroupSet" : [ {"Ref" : "SecurityGroupId"} ],
-         "SubnetId" : {"Ref": "SubnetId"}
       }
     }
   },
