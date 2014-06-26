@@ -132,7 +132,7 @@
                     "echo ", "STACKID=", { "Ref" : "StackID" }, ">> /etc/environment\n",
 
                     "# Clone app repo to ubuntu user home\n",
-                    "git clone git@github.com:blue-kite/logstash_vagrant.git -b ", {"Ref" : "DeployBranch"}, " /home/ubuntu/xlogstash > /tmp/git.log 2>&1 || error_exit 'Failed to clone repo'\n",
+                    "git clone git@github.com:blue-kite/logs.git -b ", {"Ref" : "DeployBranch"}, " /home/ubuntu/xlogstash > /tmp/git.log 2>&1 || error_exit 'Failed to clone repo'\n",
                     "chown ubuntu:ubuntu -R /home/ubuntu/xlogstash\n",
 
                     "# Install puppet via gems\n",
