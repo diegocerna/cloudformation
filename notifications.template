@@ -132,6 +132,10 @@
           "# Copy credentials to root user\n",
           "cp /home/ubuntu/.ssh/* /root/.ssh/\n",
 
+           "# Add FQDN on etc/environment\n",
+          "echo ", { "Fn::Join" : [ "" , ["FQDN=notifications", { "Ref" : "StackID" }, { "Fn::FindInMap" : [ "dot", { "Ref" : "Environment" }, "DOT" ]}, ".bluekite.com" ]]}, ">> /etc/environment\n",
+          "echo ", "STACKID=", { "Ref" : "StackID" }, ">> /etc/environment\n",
+
           "# Clone app repo to ubuntu user home\n",
           "git clone ", {"Ref": "Repository"}, " -b ", {"Ref" : "DeployBranch"}, " /home/ubuntu/notifications > /tmp/git.log 2>&1 || error_exit 'Failed to clone repo'\n",
           "chown ubuntu:ubuntu -R /home/ubuntu/notifications\n",
