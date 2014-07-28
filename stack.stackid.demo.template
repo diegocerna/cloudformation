@@ -1,19 +1,19 @@
 {
   "AWSTemplateFormatVersion" : "2010-09-09",
 
-  "Description" : "release/0.7.0 template for creation of QA - filename: stack.qa.template",
+  "Description" : "Master template for creation of DEV Environment STACKID DEMO stack - filename: stack.stackid.demo.template",
 
  "Parameters" : {
     "appEnvironment" : {
       "Type" : "String",
-      "Description" : "Environment for the NAT, i.e. dev, production, etc.",
-      "Default" : "qa"
+      "Description" : "Environment for the stack, i.e. dev, production, etc.",
+      "Default" : "dev"
     },
 
     "KeyName" : {
       "Type" : "String",
       "Description" : "The the key to SSH machines",
-      "Default" : "tbp_qa"
+      "Default" : "tbp_dev"
     },
 
     "StackID" : {
@@ -33,120 +33,120 @@
     "ApiSecurityGroup" : {
       "Type" : "String",
       "Description" : "Security Group ID for api",
-      "Default" : "sg-4ac56f2f"
+      "Default" : "sg-5ff9453a"
     },
 
     "PrivateSecurityGroup" : {
       "Type" : "String",
       "Description" : "Security Group ID for Private network",
-      "Default" : "sg-56c56f33"
+      "Default" : "sg-54f94531"
     },
 
     "MonitorsSecurityGroup" : {
       "Type" : "String",
       "Description" : "Security Group ID for Monitors",
-      "Default" : "sg-50c56f35"
+      "Default" : "sg-56f94533"
     },
 
     "LogstashSecurityGroup" : {
       "Type" : "String",
       "Description" : "Security Group ID for Logstash",
-      "Default" : "sg-53c56f36"
+      "Default" : "sg-51f94534"
     },
 
     "AccountsISSecurityGroup" : {
       "Type" : "String",
       "Description" : "Security Group ID for Accounts Iceland",
-      "Default" : "sg-51c56f34"
+      "Default" : "sg-5cf94539"
     },
 
     "AccountsMXSecurityGroup" : {
       "Type" : "String",
       "Description" : "Security Group ID for Accounts Mexico",
-      "Default" : "sg-78b13d1d"
+      "Default" : "sg-50f94535"
     },
 
     "AccountsSVSecurityGroup" : {
       "Type" : "String",
       "Description" : "Security Group ID for Accounts El Salvador",
-      "Default" : "sg-66b13d03"
+      "Default" : "sg-43f94526"
     },
 
     "AccountsGTSecurityGroup" : {
       "Type" : "String",
       "Description" : "Security Group ID for Accounts Guatemala",
-      "Default" : "sg-54c56f31"
+      "Default" : "sg-57f94532"
     },
 
     "AccountsDOSecurityGroup" : {
       "Type" : "String",
       "Description" : "Security Group ID for Accounts Dominican Republic",
-      "Default" : "sg-4bc56f2e"
+      "Default" : "sg-57f94532"
     },
 
     "AccountsNISecurityGroup" : {
       "Type" : "String",
       "Description" : "Security Group ID for Accounts Nicaragua",
-      "Default" : "sg-9dd3b7f8"
+      "Default" : "sg-53f94536"
     },
 
     "AccountsPASecurityGroup" : {
       "Type" : "String",
       "Description" : "Security Group ID for Accounts Panama",
-      "Default" : "sg-92d3b7f7"
+      "Default" : "sg-5df94538"
     },
 
     "PublicSubnetId" : {
       "Type" : "String",
       "Description" : "Subnet id that the api belongs",
-      "Default" : "subnet-7fe1bd57"
+      "Default" : "subnet-3cc40d59"
     },
 
     "PrivateSubnetId" : {
       "Type" : "String",
       "Description" : "Subnet id that the api belongs",
-      "Default" : "subnet-7de1bd55"
+      "Default" : "subnet-37c40d52"
     },
 
     "gtSubnetID" : {
       "Type" : "String",
-      "Default" : "subnet-7ee1bd56",
+      "Default" : "subnet-32c40d57",
       "Description" : "Subnet ID for GT worker"
     },
 
     "doSubnetID" : {
       "Type" : "String",
-      "Default" : "subnet-7ce1bd54",
+      "Default" : "subnet-36c40d53",
       "Description" : "Subnet ID for DO worker"
     },
 
     "mxSubnetID" : {
       "Type" : "String",
-      "Default" : "subnet-2252710a",
+      "Default" : "subnet-31c40d54",
       "Description" : "Subnet ID for MX worker"
     },
 
     "svSubnetID" : {
       "Type" : "String",
-      "Default" : "subnet-2352710b",
+      "Default" : "subnet-33c40d56",
       "Description" : "Subnet ID for SV worker"
     },
 
     "niSubnetID" : {
       "Type" : "String",
-      "Default" : "subnet-b7192f9f",
+      "Default" : "subnet-3fc40d5a",
       "Description" : "Subnet ID for NI worker"
     },
 
     "paSubnetID" : {
       "Type" : "String",
-      "Default" : "subnet-b5192f9d",
+      "Default" : "subnet-3dc40d58",
       "Description" : "Subnet ID for PA worker"
     },
 
     "isSubnetID" : {
       "Type" : "String",
-      "Default" : "subnet-7be1bd53",
+      "Default" : "subnet-30c40d55",
       "Description" : "Subnet ID for IS worker"
     }
   },
@@ -161,7 +161,7 @@
           "KeyName": {"Ref":"KeyName"},
           "SubnetId" : { "Ref" : "PublicSubnetId"},
           "SecurityGroupId" : { "Ref" : "ApiSecurityGroup"},
-          "DeployBranch" : "master",
+          "DeployBranch" : "release/0.6.0",
           "StackID" : { "Ref" : "StackID" },
           "InstanceType" : { "Ref" : "InstanceType"},
           "Environment" : {"Ref" : "appEnvironment"}
@@ -239,12 +239,28 @@
           "KeyName" : { "Ref" : "KeyName" },
           "SubnetId" : { "Ref" : "PrivateSubnetId" },
           "SecurityGroupId" : { "Ref" : "PrivateSecurityGroup" },
-          "DeployBranch" : "master",
+          "DeployBranch" : "release/0.6.0",
           "StackID" : { "Ref" : "StackID" },
           "Environment" : { "Ref" : "appEnvironment" }
         }
       }
     },
+
+    "logstash" : {
+      "Type" : "AWS::CloudFormation::Stack",
+      "Properties" : {
+        "TemplateURL" : "https://s3-us-west-2.amazonaws.com/pruebastack/logstash.template",
+        "Parameters" : {
+          "KeyName" : { "Ref" : "KeyName" },
+          "SubnetId" : { "Ref" : "PrivateSubnetId" },
+          "SecurityGroupId" : { "Ref" : "PrivateSecurityGroup" },
+          "InstanceType" : { "Ref" : "InstanceType"},
+          "DeployBranch" : "master",
+          "StackID" : { "Ref" : "StackID" },
+          "Environment" : { "Ref" : "appEnvironment" }
+        }
+      }
+    },      
 
     "accountsIs" : {
       "Type" : "AWS::CloudFormation::Stack",
@@ -254,7 +270,7 @@
           "KeyName" : { "Ref" : "KeyName" },
           "SubnetId" : { "Ref" : "isSubnetID" },
           "SecurityGroupId" : { "Ref" : "AccountsISSecurityGroup" },
-          "DeployBranch" : "master",
+          "DeployBranch" : "release/0.6.0",
           "StackID" : { "Ref" : "StackID" },
           "Environment" : { "Ref" : "appEnvironment" }
         }
@@ -269,7 +285,7 @@
           "KeyName" : { "Ref" : "KeyName" },
           "SubnetId" : { "Ref" : "gtSubnetID" },
           "SecurityGroupId" : { "Ref" : "AccountsGTSecurityGroup" },
-          "DeployBranch" : "master",
+          "DeployBranch" : "release/0.6.0",
           "StackID" : { "Ref" : "StackID" },
           "Environment" : { "Ref" : "appEnvironment" }
         }
@@ -284,7 +300,7 @@
           "KeyName" : { "Ref" : "KeyName" },
           "SubnetId" : { "Ref" : "doSubnetID" },
           "SecurityGroupId" : { "Ref" : "AccountsDOSecurityGroup" },
-          "DeployBranch" : "master",
+          "DeployBranch" : "release/0.6.0",
           "StackID" : { "Ref" : "StackID" },
           "Environment" : { "Ref" : "appEnvironment" }
         }
@@ -299,7 +315,7 @@
           "KeyName" : { "Ref" : "KeyName" },
           "SubnetId" : { "Ref" : "mxSubnetID" },
           "SecurityGroupId" : { "Ref" : "AccountsMXSecurityGroup" },
-          "DeployBranch" : "master",
+          "DeployBranch" : "release/0.6.0",
           "StackID" : { "Ref" : "StackID" },
           "Environment" : { "Ref" : "appEnvironment" }
         }
@@ -314,7 +330,7 @@
           "KeyName" : { "Ref" : "KeyName" },
           "SubnetId" : { "Ref" : "svSubnetID" },
           "SecurityGroupId" : { "Ref" : "AccountsSVSecurityGroup" },
-          "DeployBranch" : "master",
+          "DeployBranch" : "release/0.6.0",
           "StackID" : { "Ref" : "StackID" },
           "Environment" : { "Ref" : "appEnvironment" }
         }
@@ -329,7 +345,7 @@
           "KeyName" : { "Ref" : "KeyName" },
           "SubnetId" : { "Ref" : "niSubnetID" },
           "SecurityGroupId" : { "Ref" : "AccountsNISecurityGroup" },
-          "DeployBranch" : "master",
+          "DeployBranch" : "release/0.6.0",
           "StackID" : { "Ref" : "StackID" },
           "Environment" : { "Ref" : "appEnvironment" }
         }
@@ -344,7 +360,7 @@
           "KeyName" : { "Ref" : "KeyName" },
           "SubnetId" : { "Ref" : "PrivateSubnetId" },
           "SG" : { "Ref" : "PrivateSecurityGroup" },
-          "DeployBranch" : "master",
+          "DeployBranch" : "release/0.6.0",
           "StackID" : { "Ref" : "StackID" },
           "Environment" : { "Ref" : "appEnvironment" }
         }
@@ -374,7 +390,7 @@
           "KeyName" : { "Ref" : "KeyName" },
           "SubnetId" : { "Ref" : "PrivateSubnetId" },
           "SecurityGroupId" : { "Ref" : "PrivateSecurityGroup" },
-          "DeployBranch" : "release/0.7.0",
+          "DeployBranch" : "master",
           "StackID" : { "Ref" : "StackID" },
           "Environment" : { "Ref" : "appEnvironment" }
         }
@@ -434,7 +450,7 @@
           "KeyName" : { "Ref" : "KeyName" },
           "SubnetId" : { "Ref" : "mxSubnetID" },
           "SecurityGroupId" : { "Ref" : "AccountsMXSecurityGroup" },
-          "DeployBranch" : "master",
+          "DeployBranch" : "release/0.6.0",
           "StackID" : { "Ref" : "StackID" },
           "Environment" : { "Ref" : "appEnvironment" }
         }
@@ -502,3 +518,4 @@
     }
   }
 }
+
