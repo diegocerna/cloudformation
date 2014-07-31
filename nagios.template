@@ -130,6 +130,7 @@
                 "tmux"                       : [],
                 "build-essential"            : [],
                 "python-software-properties" : [],
+                "ruby-dev"                   : [],
                 "puppet"                     : []
               }
             }
@@ -160,6 +161,23 @@
           "cfn-init -v --region ", { "Ref" : "AWS::Region" },
           "    -s ", { "Ref" : "AWS::StackId" },
           " -r IntGW",
+          " -c default",
+          " || error_exit 'Failed to run cfn-init'\n",
+
+          "# Add puppet repository. Installation will be managed by cfn-init\n",
+          "wget http://apt.puppetlabs.com/puppetlabs-release-trusty.deb\n",
+          "sudo dpkg -i puppetlabs-release-trusty.deb\n",
+          "sudo apt-get update -y\n",
+          "sudo apt-get upgrade -y\n",
+
+          "# Install Amazon Tools\n",
+          "apt-get -y install python-setuptools\n",
+          "easy_install https://s3.amazonaws.com/cloudformation-examples/aws-cfn-bootstrap-latest.tar.gz\n",
+
+          "# Run Instance default configuration via CloudFormation::Init\n",
+          "cfn-init -v --region ", { "Ref" : "AWS::Region" },
+          "    -s ", { "Ref" : "AWS::StackId" },
+          " -r WebServerInstance",
           " -c default",
           " || error_exit 'Failed to run cfn-init'\n",
 
