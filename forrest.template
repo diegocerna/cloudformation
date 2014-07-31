@@ -208,7 +208,7 @@
       "DependsOn" : "Forrest",
       "Properties" : {
         "Handle" : {"Ref" : "EventWaitHandler"},
-        "Timeout" : "1000"
+        "Timeout" : "1500"
       }
     }
   }

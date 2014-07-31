@@ -374,7 +374,7 @@
           "KeyName" : { "Ref" : "KeyName" },
           "SubnetId" : { "Ref" : "PrivateSubnetId" },
           "SecurityGroupId" : { "Ref" : "PrivateSecurityGroup" },
-          "DeployBranch" : "master",
+          "DeployBranch" : "release/0.7.0",
           "StackID" : { "Ref" : "StackID" },
           "Environment" : { "Ref" : "appEnvironment" }
         }

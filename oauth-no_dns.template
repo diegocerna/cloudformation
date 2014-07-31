@@ -181,6 +181,7 @@
                     "chown ubuntu:ubuntu -R /home/ubuntu/oauth\n",
 
                     "echo ", {"Fn::Join" : [":" , [{ "Ref" : "PgHost" }, { "Ref" : "PgPort" }, { "Ref" : "PgDB" }, { "Ref" : "PgUser" }, { "Ref" : "PgPassword"} ]]}, ">> /home/ubuntu/.pgpass\n",
+                    "chmod 600 /home/ubuntu/.pgpass\n",
 
                     "# Install puppet via gems\n",
                     "sudo gem install puppet --no-rdoc --no-ri > /tmp/gem-puppet.log 2>&1 || error_exit 'Failed install puppet gem'\n",
@@ -226,7 +227,7 @@
                     {"IpProtocol" : "tcp", "FromPort" : "80", "ToPort" : "80", "CidrIp" : "0.0.0.0/0"},
                     {"IpProtocol" : "tcp", "FromPort" : "443", "ToPort" : "443", "CidrIp" : "0.0.0.0/0"},
                     {"IpProtocol" : "tcp", "FromPort" : "22", "ToPort" : "22", "CidrIp" : "190.99.116.194/32"},
-                    {"IpProtocol" : "tcp", "FromPort" : "22", "ToPort" : "22", "CidrIp" : "186.151.60.250/32"},
+                    {"IpProtocol" : "tcp", "FromPort" : "22", "ToPort" : "22", "CidrIp" : "186.151.61.58/32"},
                     {"IpProtocol" : "tcp", "FromPort" : "22", "ToPort" : "22", "CidrIp" : "186.64.109.138/32"}
                 ]
             }

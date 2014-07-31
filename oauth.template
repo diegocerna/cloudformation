@@ -28,6 +28,12 @@
             "ConstraintDescription" : "must be a valid EC2 instance type."
         },
 
+        "PgKey" : {
+            "NoEcho": "true",
+            "Type": "String",
+            "Description" : "Password for created .pgpass file",   
+        },
+
         "DeployBranch" : {
             "Type" : "String",
             "Description" : "Git branch where to deploy the code from.",
