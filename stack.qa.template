@@ -1,7 +1,7 @@
 {
   "AWSTemplateFormatVersion" : "2010-09-09",
 
-  "Description" : "release/0.7.0 template for creation of QA - filename: stack.qa.template",
+  "Description" : "release/0.8.0 template for creation of QA - filename: stack.qa.template",
 
  "Parameters" : {
     "appEnvironment" : {
@@ -374,7 +374,7 @@
           "KeyName" : { "Ref" : "KeyName" },
           "SubnetId" : { "Ref" : "PrivateSubnetId" },
           "SecurityGroupId" : { "Ref" : "PrivateSecurityGroup" },
-          "DeployBranch" : "release/0.7.0",
+          "DeployBranch" : "release/0.8.0",
           "StackID" : { "Ref" : "StackID" },
           "Environment" : { "Ref" : "appEnvironment" }
         }
