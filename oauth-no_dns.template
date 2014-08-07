@@ -29,25 +29,21 @@
         },
 
         "PgHost" : {
-            "NoEcho" : "true",
             "Type" : "String",
             "Description" : "RDS Psql Endpoint"   
         },
 
         "PgPort" : {
-            "NoEcho": "true",
             "Type": "String",
             "Description" : "Psql Port"   
         },
 
         "PgDB" : {
-            "NoEcho": "true",
             "Type": "String",
             "Description" : "Psql DB"   
         },
 
         "PgUser" : {
-            "NoEcho": "true",
             "Type": "String",
             "Description" : "Psql User"   
         },
@@ -180,8 +176,17 @@
 
                     "chown ubuntu:ubuntu -R /home/ubuntu/oauth\n",
 
+                    "# Creates pgpass file\n",
                     "echo ", {"Fn::Join" : [":" , [{ "Ref" : "PgHost" }, { "Ref" : "PgPort" }, { "Ref" : "PgDB" }, { "Ref" : "PgUser" }, { "Ref" : "PgPassword"} ]]}, ">> /home/ubuntu/.pgpass\n",
                     "chmod 600 /home/ubuntu/.pgpass\n",
+                    "chown ubuntu:ubuntu /home/ubuntu/.pgpass\n",
+
+                    "# Install postgresql-client-9.3\n",
+                    "wget --quiet -O - https://www.postgresql.org/media/keys/ACCC4CF8.asc | sudo apt-key add -\n",
+                    "sudo echo 'deb http://apt.postgresql.org/pub/repos/apt/ precise-pgdg main' >> /etc/apt/sources.list.d/postgresql.list\n",
+                    "# sudo sh -c /etc/apt/sources.list.d/postgresql.list\n",
+                    "sudo apt-get update\n",
+                    "sudo apt-get -y install postgresql-client-9.3\n",
 
                     "# Install puppet via gems\n",
                     "sudo gem install puppet --no-rdoc --no-ri > /tmp/gem-puppet.log 2>&1 || error_exit 'Failed install puppet gem'\n",
