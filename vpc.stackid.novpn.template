@@ -5,22 +5,10 @@
 
   "Parameters" : {
 
-    "AllocationIdBastion": {
-      "Type": "String",
-      "Description": "AllocationId of existing Elastic IP (EIP) in your Virtual Private Cloud (VPC)",
-      "Default" : "eipalloc-"
-    },
-
     "StackID" : {
       "Type" : "String",
       "Description" : "Stack ID name",
       "Default" : "-"
-    },
-
-    "AllocationIdNAT": {
-      "Type": "String",
-      "Description": "AllocationId of existing Elastic IP (EIP) in your Virtual Private Cloud (VPC)",
-      "Default" : "eipalloc-"
     },
 
     "Environment" : {
@@ -40,11 +28,11 @@
     },
 
     "keys" : {
-          "dev"            : { "keypair" : "tbp_dev"},
-          "qa"             : { "keypair" : "tbp_qa" },
-          "test"           : { "keypair" : "tbp_test" },
-          "sandbox"        : { "keypair" : "tbp_sandbox"},
-          "production"     : { "keypair" : "tbp_prod"}
+          "dev"            : { "keypair" : "stamp-dev"},
+          "qa"             : { "keypair" : "stamp-qa" },
+          "test"           : { "keypair" : "stamp-test" },
+          "sandbox"        : { "keypair" : "stamp-sandbox"},
+          "production"     : { "keypair" : "stamp-prod"}
     },
 
     "subnets" : {
@@ -485,15 +473,13 @@
       }
     },
 
-    "IPAssocNAT": {
-      "Type": "AWS::EC2::EIPAssociation",
-      "Properties": {
-        "InstanceId": {
-          "Ref": "instanceNAT"
-        },
-        "AllocationId": { "Ref" : "AllocationIdNAT"}
+    "NatIPAddress" : {
+      "Type" : "AWS::EC2::EIP",
+      "Properties" : {
+        "Domain" : "vpc",
+        "InstanceId" : { "Ref" : "instanceNAT" }
       }
-     },
+    },
 
     "DNSRecordNAT" : {
       "Type" : "AWS::Route53::RecordSet",
@@ -505,7 +491,7 @@
         "TTL" : "300",
         "ResourceRecords" : [ { "Fn::GetAtt" : [ "instanceNAT", "PublicDnsName" ] } ]
       },
-      "DependsOn" : "IPAssocNAT"
+      "DependsOn" : "NatIPAddress"
     },
 
     "Bastion" : {
@@ -521,13 +507,11 @@
       }
     },
 
-    "IPAssocBastion": {
-      "Type": "AWS::EC2::EIPAssociation",
-      "Properties": {
-        "InstanceId": {
-          "Ref": "Bastion"
-        },
-        "AllocationId": { "Ref" : "AllocationIdBastion"}
+    "BastionIPAddress" : {
+      "Type" : "AWS::EC2::EIP",
+      "Properties" : {
+        "Domain" : "vpc",
+        "InstanceId" : { "Ref" : "Bastion" }
       }
     },
 
@@ -541,7 +525,7 @@
         "TTL" : "300",
         "ResourceRecords" : [ { "Fn::GetAtt" : [ "Bastion", "PublicDnsName" ] } ]
       },
-      "DependsOn" : "IPAssocBastion"
+      "DependsOn" : "BastionIPAddress"
     },
 
     "sgMonitors": {
@@ -1932,7 +1916,8 @@
           "Ref": "sgdefault"
         },
         "SourceSecurityGroupOwnerId": "243238936187"
-      }
+      },
+        "DependsOn" : "sgdefault"
     },
     "ingress18": {
       "Type": "AWS::EC2::SecurityGroupIngress",
