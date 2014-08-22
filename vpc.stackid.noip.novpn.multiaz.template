@@ -1,0 +1,2388 @@
+{
+  "AWSTemplateFormatVersion": "2010-09-09",
+
+    "Description" : "This template generate a STAMP's VPC to STACKID stack. - filename: vpc.stackid.novpn.template",
+
+  "Parameters" : {
+
+    "AllocationIdBastion": {
+      "Type": "String",
+      "Description": "AllocationId of existing Elastic IP (EIP) in your Virtual Private Cloud (VPC)",
+      "Default" : "eipalloc-"
+    },
+
+    "StackID" : {
+      "Type" : "String",
+      "Description" : "Stack ID name",
+      "Default" : "-"
+    },
+
+    "AllocationIdNAT": {
+      "Type": "String",
+      "Description": "AllocationId of existing Elastic IP (EIP) in your Virtual Private Cloud (VPC)",
+      "Default" : "eipalloc-"
+    },
+
+    "Environment" : {
+      "Type" : "String",
+      "Description" : "Tag the environment, like development, production, etc."
+    }
+  },
+  "Mappings" : {
+
+    "NATMap" : {
+      "us-east-1"           : { "AMI" : "ami-ad227cc4" },
+      "us-west-1"           : { "AMI" : "ami-d69aad93" },
+      "us-west-2"           : { "AMI" : "ami-f032acc0" },
+      "sa-east-1"           : { "AMI" : "ami-d78325ca" },
+      "ap-southeast-2"      : { "AMI" : "ami-3bae3201" },
+      "eu-west-1"           : { "AMI" : "ami-f3e30084" }
+    },
+
+    "keys" : {
+          "dev"            : { "keypair" : "stamp-dev"},
+          "qa"             : { "keypair" : "stamp-qa" },
+          "sandbox"        : { "keypair" : "stamp-sandbox"},
+          "production"     : { "keypair" : "stamp-prod"}
+    },
+
+    "subnets" : {
+      "dev"                : { "VPCSN" : "10.11.0.0/16", "PUSNZ1" : "10.11.1.0/25", "PUSNZ2" : "10.11.1.128/25", "PRSNZ1" : "10.11.2.0/25", "PRSNZ2" : "10.11.2.128/25", "ISSN" : "10.11.10.0/24", "GTSN" : "10.11.11.0/24", "DOSN" : "10.11.12.0/24", "MXSN" : "10.11.13.0/24", "SVSN" : "10.11.14.0/24", "NISN" : "10.11.15.0/24", "PASN" : "10.11.16.0/24" },
+      "qa"                 : { "VPCSN" : "10.12.0.0/16", "PUSNZ1" : "10.12.1.0/25", "PUSNZ2" : "10.12.1.128/25", "PRSNZ1" : "10.12.2.0/25", "PRSNZ2" : "10.12.2.128/25", "ISSN" : "10.12.10.0/24", "GTSN" : "10.12.11.0/24", "DOSN" : "10.12.12.0/24", "MXSN" : "10.12.13.0/24", "SVSN" : "10.12.14.0/24", "NISN" : "10.12.15.0/24", "PASN" : "10.12.16.0/24" },
+      "sandbox"            : { "VPCSN" : "10.2.0.0/16", "PUSN" : "10.2.0.0/24", "PRSNZ1" : "10.4.1.0/25", "PRSNZ2" : "10.4.1.128/25", "ISSN" : "10.2.10.0/24", "GTSN" : "10.2.11.0/24", "DOSN" : "10.2.12.0/24", "MXSN" : "10.2.13.0/24", "SVSN" : "10.2.14.0/24", "NISN" : "10.2.15.0/24", "PASN" : "10.2.16.0/24" },
+      "production"         : { "VPCSN" : "10.1.0.0/16", "PUSN" : "10.1.0.0/24", "PRSNZ1" : "10.4.1.0/25", "PRSNZ2" : "10.4.1.128/25", "ISSN" : "10.1.10.0/24", "GTSN" : "10.1.11.0/24", "DOSN" : "10.1.12.0/24", "MXSN" : "10.1.13.0/24", "SVSN" : "10.1.14.0/24", "NISN" : "10.1.15.0/24", "PASN" : "10.1.16.0/24" }
+    },
+
+    "dot" : {
+      "dev"                : { "DOT" : ".dev" },
+      "qa"                 : { "DOT" : ".qa" },
+      "sandbox"            : { "DOT" : ".sandbox" },
+      "production"         : { "DOT" : "" }
+    },
+
+    "KernelId" : {
+      "us-east-1"          : { "AKI" : "aki-919dcaf8" },
+      "us-west-1"          : { "AKI" : "aki-880531cd" },
+      "us-west-2"          : { "AKI" : "aki-fc8f11cc" },
+      "sa-east-1"          : { "AKI" : "aki-5553f448" },
+      "ap-southeast-2"     : { "AKI" : "aki-c362fff9" },
+      "eu-west-1"          : { "AKI" : "aki-52a34525" }
+    },
+
+    "subnetZone1" : {
+      "us-east-1"          : { "ZONE" : "us-east-1a" },
+      "us-west-1"          : { "ZONE" : "us-west-1b" },
+      "us-west-2"          : { "ZONE" : "us-west-2a" },
+      "eu-west-1"          : { "ZONE" : "eu-west-1a" },
+      "ap-southeast-1"     : { "ZONE" : "ap-southeast-1a" },
+      "ap-northeast-1"     : { "ZONE" : "ap-northeast-1a" },
+      "ap-southeast-2"     : { "ZONE" : "ap-southeast-2a" },
+      "sa-east-1"          : { "ZONE" : "sa-east-1a" }
+    },
+
+    "subnetZone2" : {
+      "us-east-1"          : { "ZONE" : "us-east-1b" },
+      "us-west-1"          : { "ZONE" : "us-west-1c" },
+      "us-west-2"          : { "ZONE" : "us-west-2b" },
+      "eu-west-1"          : { "ZONE" : "eu-west-1b" },
+      "ap-southeast-1"     : { "ZONE" : "ap-southeast-1b" },
+      "ap-northeast-1"     : { "ZONE" : "ap-northeast-1b" },
+      "ap-southeast-2"     : { "ZONE" : "ap-southeast-2b" },
+      "sa-east-1"          : { "ZONE" : "sa-east-1b" }
+    },
+
+    "DnsRegion" : {
+      "us-west-1"          : { "ZONE" : "us-west-1.compute.internal" },
+      "us-west-2"          : { "ZONE" : "us-west-2.compute.internal" },
+      "sa-east-1"          : { "ZONE" : "sa-east-1.compute.internal" },
+      "us-east-1"          : { "ZONE" : "ec2.internal" },
+      "eu-west-1"          : { "ZONE" : "eu-west-1.compute.internal" },
+      "ap-southeast-2"     : { "ZONE" : "ap-southeast-2.compute.internal" }
+    }
+  },
+
+  "Resources": {
+    "vpc": {                      
+      "Type": "AWS::EC2::VPC",
+      "Properties": {
+        "CidrBlock": { "Fn::FindInMap" : [ "subnets", { "Ref" : "Environment" }, "VPCSN" ]},
+        "InstanceTenancy": "default",
+        "EnableDnsSupport": "true",
+        "EnableDnsHostnames": "true",
+        "Tags": [
+          {
+            "Key": "Application",
+            "Value": "Public API"
+          },
+          {
+            "Key": "Environment",   
+            "Value": { "Ref" : "Environment" }
+          },
+          {
+            "Key": "Name",            
+            "Value": { "Fn::Join" : [ " ", ["Public API VPC", { "Ref" : "Environment"} ] ] }
+          }
+        ]
+      }
+    },
+
+    "subnetPublicApisZ1": {
+      "Type": "AWS::EC2::Subnet",
+      "Properties": {
+        "CidrBlock": { "Fn::FindInMap" : [ "subnets", { "Ref" : "Environment" }, "PUSNZ1" ]},
+        "AvailabilityZone": { "Fn::FindInMap" : [ "subnetZone1", { "Ref" : "AWS::Region" }, "ZONE" ]},
+        "VpcId": {
+          "Ref": "vpc"
+        },
+        "Tags": [
+          {
+            "Key": "Name",
+            "Value": { "Fn::Join" : [ " ", ["Public APIs", { "Ref" : "Environment"} ] ] }
+          },
+          {
+            "Key": "Environment",
+            "Value": { "Ref" : "Environment" }
+          },
+          {
+            "Key": "Application",
+            "Value": "Public API"
+          }
+        ]
+      }
+    },
+
+    "subnetPublicApisZ2": {
+      "Type": "AWS::EC2::Subnet",
+      "Properties": {
+        "CidrBlock": { "Fn::FindInMap" : [ "subnets", { "Ref" : "Environment" }, "PUSNZ2" ]},
+        "AvailabilityZone": { "Fn::FindInMap" : [ "subnetZone2", { "Ref" : "AWS::Region" }, "ZONE" ]},
+        "VpcId": {
+          "Ref": "vpc"
+        },
+        "Tags": [
+          {
+            "Key": "Name",
+            "Value": { "Fn::Join" : [ " ", ["Public APIs", { "Ref" : "Environment"} ] ] }
+          },
+          {
+            "Key": "Environment",
+            "Value": { "Ref" : "Environment" }
+          },
+          {
+            "Key": "Application",
+            "Value": "Public API"
+          }
+        ]
+      }
+    },
+
+    "subnetPrivateApisZ1": {
+      "Type": "AWS::EC2::Subnet",
+      "Properties": {
+        "CidrBlock": { "Fn::FindInMap" : [ "subnets", { "Ref" : "Environment" }, "PRSNZ1" ]},
+        "AvailabilityZone": { "Fn::FindInMap" : [ "subnetZone1", { "Ref" : "AWS::Region" }, "ZONE" ]},
+        "VpcId": {
+          "Ref": "vpc"
+        },
+        "Tags": [
+          {
+            "Key": "Name",
+            "Value": { "Fn::Join" : [ " ", ["Private APIs", { "Ref" : "Environment"} ] ] }
+          },
+          {
+            "Key": "Application",
+            "Value": "Public API"
+          },
+          {
+            "Key": "Environment",
+            "Value": { "Ref" : "Environment" }
+          }
+        ]
+      }
+    },
+    "subnetPrivateApisZ2": {
+      "Type": "AWS::EC2::Subnet",
+      "Properties": {
+        "CidrBlock": { "Fn::FindInMap" : [ "subnets", { "Ref" : "Environment" }, "PRSNZ2" ]},
+        "AvailabilityZone": { "Fn::FindInMap" : [ "subnetZone2", { "Ref" : "AWS::Region" }, "ZONE" ]},
+        "VpcId": {
+          "Ref": "vpc"
+        },
+        "Tags": [
+          {
+            "Key": "Name",
+            "Value": { "Fn::Join" : [ " ", ["Private APIs", { "Ref" : "Environment"} ] ] }
+          },
+          {
+            "Key": "Application",
+            "Value": "Public API"
+          },
+          {
+            "Key": "Environment",
+            "Value": { "Ref" : "Environment" }
+          }
+        ]
+      }
+    },
+    "subnetWorkerGT": {
+      "Type": "AWS::EC2::Subnet",
+      "Properties": {
+        "CidrBlock": { "Fn::FindInMap" : [ "subnets", { "Ref" : "Environment" }, "GTSN" ]},
+        "AvailabilityZone": { "Fn::FindInMap" : [ "subnetZone1", { "Ref" : "AWS::Region" }, "ZONE" ]},
+        "VpcId": {
+          "Ref": "vpc"
+        },
+        "Tags": [
+          {
+            "Key": "Name",
+            "Value": { "Fn::Join" : [ " ", ["Guatemala", { "Ref" : "Environment"} ] ] }
+          },
+          {
+            "Key": "Application",
+            "Value": "Public API"
+          },
+          {
+            "Key": "Environment",
+            "Value": { "Ref" : "Environment" }
+          }
+        ]
+      }
+    },
+
+    "subnetWorkerMX": {
+      "Type": "AWS::EC2::Subnet",
+      "Properties": {
+        "CidrBlock": { "Fn::FindInMap" : [ "subnets", { "Ref" : "Environment" }, "MXSN" ]},
+        "AvailabilityZone": { "Fn::FindInMap" : [ "subnetZone1", { "Ref" : "AWS::Region" }, "ZONE" ]},
+        "VpcId": {
+          "Ref": "vpc"
+        },
+        "Tags": [
+          {
+            "Key": "Name",
+            "Value": { "Fn::Join" : [ " ", ["Mexico", { "Ref" : "Environment"} ] ] }
+          },
+          {
+            "Key": "Application",
+            "Value": "Public API"
+          },
+          {
+            "Key": "Environment",
+            "Value": { "Ref" : "Environment" }
+          }
+        ]
+      }
+    },
+
+    "subnetWorkerIS": {
+      "Type": "AWS::EC2::Subnet",
+      "Properties": {
+        "CidrBlock": { "Fn::FindInMap" : [ "subnets", { "Ref" : "Environment" }, "ISSN" ]},
+        "AvailabilityZone": { "Fn::FindInMap" : [ "subnetZone1", { "Ref" : "AWS::Region" }, "ZONE" ]},
+        "VpcId": {
+          "Ref": "vpc"
+        },
+        "Tags": [
+          {
+            "Key": "Name",
+            "Value": { "Fn::Join" : [ " ", ["Iceland", { "Ref" : "Environment"} ] ] }
+          },
+          {
+            "Key": "Application",
+            "Value": "Public API"
+          },
+          {
+            "Key": "Environment",
+            "Value": { "Ref" : "Environment" }
+          }
+        ]
+      }
+    },
+
+    "subnetWorkerDO": {
+      "Type": "AWS::EC2::Subnet",
+      "Properties": {
+        "CidrBlock": { "Fn::FindInMap" : [ "subnets", { "Ref" : "Environment" }, "DOSN" ]},
+        "AvailabilityZone": { "Fn::FindInMap" : [ "subnetZone1", { "Ref" : "AWS::Region" }, "ZONE" ]},
+        "VpcId": {
+          "Ref": "vpc"
+        },
+        "Tags": [
+          {
+            "Key": "Name",
+            "Value": { "Fn::Join" : [ " ", ["Dominican Republic", { "Ref" : "Environment"} ] ] }
+          },
+          {
+            "Key": "Application",
+            "Value": "Public API"
+          },
+          {
+            "Key": "Environment",
+            "Value": { "Ref" : "Environment" }
+          }
+        ]
+      }
+    },
+
+    "subnetWorkerSV": {
+      "Type": "AWS::EC2::Subnet",
+      "Properties": {
+        "CidrBlock": { "Fn::FindInMap" : [ "subnets", { "Ref" : "Environment" }, "SVSN" ]},
+        "AvailabilityZone": { "Fn::FindInMap" : [ "subnetZone1", { "Ref" : "AWS::Region" }, "ZONE" ]},
+        "VpcId": {
+          "Ref": "vpc"
+        },
+        "Tags": [
+          {
+            "Key": "Name",
+            "Value": { "Fn::Join" : [ " ", ["El Salvador", { "Ref" : "Environment"} ] ] }
+          },
+          {
+            "Key": "Application",
+            "Value": "Public API"
+          },
+          {
+            "Key": "Environment",
+            "Value": { "Ref" : "Environment" }
+          }
+        ]
+      }
+    },
+
+    "subnetWorkerNI": {
+      "Type": "AWS::EC2::Subnet",
+      "Properties": {
+        "CidrBlock": { "Fn::FindInMap" : [ "subnets", { "Ref" : "Environment" }, "NISN" ]},
+        "AvailabilityZone": { "Fn::FindInMap" : [ "subnetZone1", { "Ref" : "AWS::Region" }, "ZONE" ]},
+        "VpcId": {
+          "Ref": "vpc"
+        },
+        "Tags": [
+          {
+            "Key": "Name",
+            "Value": { "Fn::Join" : [ " ", ["Nicaragua", { "Ref" : "Environment"} ] ] }
+          },
+          {
+            "Key": "Application",
+            "Value": "Public API"
+          },
+          {
+            "Key": "Environment",
+            "Value": { "Ref" : "Environment" }
+          }
+        ]
+      }
+    },
+
+  "subnetWorkerPA": {
+      "Type": "AWS::EC2::Subnet",
+      "Properties": {
+        "CidrBlock": { "Fn::FindInMap" : [ "subnets", { "Ref" : "Environment" }, "PASN" ]},
+        "AvailabilityZone": { "Fn::FindInMap" : [ "subnetZone1", { "Ref" : "AWS::Region" }, "ZONE" ]},
+        "VpcId": {
+          "Ref": "vpc"
+        },
+        "Tags": [
+          {
+            "Key": "Name",
+            "Value": { "Fn::Join" : [ " ", ["Panama", { "Ref" : "Environment"} ] ] }
+          },
+          {
+            "Key": "Application",
+            "Value": "Public API"
+          },
+          {
+            "Key": "Environment",
+            "Value": { "Ref" : "Environment" }
+          }
+        ]
+      }
+    },
+
+    "igwPublicApi": {
+      "Type": "AWS::EC2::InternetGateway",
+      "Properties": {
+        "Tags": [
+          {
+            "Key": "Environment",
+            "Value": { "Ref" : "Environment" }
+          },
+          {
+            "Key": "Application",
+            "Value": "Public API"
+          },
+          {
+            "Key": "Name",
+            "Value": "Public API IGW"
+          }
+        ]
+      }
+    },
+
+    "doptPublicApi": {
+      "Type": "AWS::EC2::DHCPOptions",
+      "Properties": {
+        "DomainName": { "Fn::FindInMap" : [ "DnsRegion", { "Ref" : "AWS::Region" }, "ZONE" ]},
+        "DomainNameServers": [
+          "AmazonProvidedDNS"
+        ]
+      }
+    },
+
+    "doptPublicApiBluekite": {
+      "Type": "AWS::EC2::DHCPOptions",
+      "Properties": {
+        "DomainName": "bluekite.com",
+        "DomainNameServers": [
+          "AmazonProvidedDNS"
+        ]
+      }
+    },
+
+    "aclPublicApi": {
+      "Type": "AWS::EC2::NetworkAcl",
+      "Properties": {
+        "VpcId": {
+          "Ref": "vpc"
+        },
+        "Tags": [
+          {
+            "Key": "Environment",
+            "Value": { "Ref" : "Environment" }
+          },
+          {
+            "Key": "Application",
+            "Value": "Public API"
+          },
+          {
+            "Key": "Name",
+            "Value": "Public API ACL"
+          }
+        ]
+      }
+    },
+
+    "rtbPrivateSubnets": {
+      "Type": "AWS::EC2::RouteTable",
+      "Properties": {
+        "VpcId": {
+          "Ref": "vpc"
+        },
+        "Tags": [
+          {
+            "Key": "Name",
+            "Value": "Public API Private Routes"
+          },
+          {
+            "Key": "Applilcation",
+            "Value": "Public API"
+          },
+          {
+            "Key": "Environment",
+            "Value": { "Ref" : "Environment" }
+          }
+        ]
+      }
+    },
+    "rtbPublicSubnet": {
+      "Type": "AWS::EC2::RouteTable",
+      "Properties": {
+        "VpcId": {
+          "Ref": "vpc"
+        },
+        "Tags": [
+          {
+            "Key": "Application",
+            "Value": "Public API"
+          },
+          {
+            "Key": "Name",
+            "Value": "Public API Public Routes"
+          },
+          {
+            "Key": "Environment",
+            "Value": { "Ref" : "Environment" }
+          }
+        ]
+      }
+    },
+
+    "NatNetworkInterface": {
+      "Type" : "AWS::EC2::NetworkInterface",
+      "Properties" : {
+        "SourceDestCheck" : true,
+        "SubnetId" : {"Ref" : "subnetPublicApisZ1"}
+      }
+    },
+
+    "instanceNAT": {
+      "Type": "AWS::EC2::Instance",
+      "Properties": {
+        "DisableApiTermination": "FALSE",
+        "ImageId": { "Fn::FindInMap" : [ "NATMap", { "Ref" : "AWS::Region" }, "AMI" ]},
+        "InstanceType": "m3.medium",
+        "SecurityGroupIds" : [ {"Ref" : "sgNat"} ],
+        "SubnetId" : { "Ref" : "subnetPublicApisZ1" },
+        "KernelId": { "Fn::FindInMap" : [ "KernelId", { "Ref" : "AWS::Region" }, "AKI" ]},
+        "KeyName": { "Fn::FindInMap" : [ "keys", { "Ref" : "Environment" }, "keypair" ]},
+        "SourceDestCheck" : "false",
+        "Monitoring": "false",
+        "Tags": [
+          {
+            "Key": "Environment",
+            "Value": { "Ref" : "Environment" }
+          },
+          {
+            "Key": "Application",
+            "Value": "Public API"
+          },
+          {
+            "Key": "Name",
+            "Value": { "Fn::Join" : [ ".", ["nat", { "Ref" : "Environment"} ] ] }
+          }
+        ]
+      }
+    },
+
+    "IPAssocNAT": {
+      "Type": "AWS::EC2::EIPAssociation",
+      "Properties": {
+        "InstanceId": {
+          "Ref": "instanceNAT"
+        },
+        "AllocationId": { "Ref" : "AllocationIdNAT"}
+      }
+     },
+
+    "DNSRecordNAT" : {
+      "Type" : "AWS::Route53::RecordSet",
+      "Properties" : {
+        "HostedZoneName" : "bluekite.com.",
+        "Comment" : "DNS name for my instance.",
+        "Name" : { "Fn::Join" : [ "", ["nat", { "Ref" : "StackID" } , { "Fn::FindInMap" : [ "dot", { "Ref" : "Environment" }, "DOT" ]},".bluekite.com"]]},
+        "Type" : "CNAME",
+        "TTL" : "300",
+        "ResourceRecords" : [ { "Fn::GetAtt" : [ "instanceNAT", "PublicDnsName" ] } ]
+      },
+      "DependsOn" : "IPAssocNAT"
+    },
+
+    "Bastion" : {
+      "Type" : "AWS::EC2::Instance",
+      "Properties" : {
+        "DisableApiTermination": "FALSE",
+        "ImageId" : { "Fn::FindInMap" : [ "NATMap", { "Ref" : "AWS::Region" }, "AMI" ]},
+        "KeyName" : { "Fn::FindInMap" : [ "keys", { "Ref" : "Environment" }, "keypair" ]},
+        "InstanceType" : "t1.micro",
+        "SecurityGroupIds" : [ {"Ref" : "sgBastion"} ],
+        "SubnetId" : { "Ref" : "subnetPublicApisZ1" },
+        "Tags" : [ {"Key" : "Name", "Value" : { "Fn::Join" : [ ".", ["bastion", { "Ref" : "Environment"} ] ] } } ]
+      }
+    },
+
+    "IPAssocBastion": {
+      "Type": "AWS::EC2::EIPAssociation",
+      "Properties": {
+        "InstanceId": {
+          "Ref": "Bastion"
+        },
+        "AllocationId": { "Ref" : "AllocationIdBastion"}
+      }
+    },
+
+    "DNSRecordBastion" : {
+      "Type" : "AWS::Route53::RecordSet",
+      "Properties" : {
+        "HostedZoneName" : "bluekite.com.",
+        "Comment" : "DNS name for my instance.",
+        "Name" : { "Fn::Join" : [ "", ["bastion", { "Ref" : "StackID" } , { "Fn::FindInMap" : [ "dot", { "Ref" : "Environment" }, "DOT" ]},".bluekite.com"]]},
+        "Type" : "CNAME",
+        "TTL" : "300",
+        "ResourceRecords" : [ { "Fn::GetAtt" : [ "Bastion", "PublicDnsName" ] } ]
+      },
+      "DependsOn" : "IPAssocBastion"
+    },
+
+    "sgMonitors": {
+      "Type": "AWS::EC2::SecurityGroup",
+      "DependsOn": "sgBastion",
+      "Properties": {
+        "GroupDescription": "Redis Monitor Service",
+        "VpcId": {
+          "Ref": "vpc"
+          },
+          "Tags":[
+            {
+            "Key": "Name",
+            "Value": { "Fn::Join" : [ " ", ["Monitors SG", { "Ref" : "Environment"} ] ] }
+            }
+          ],
+
+        "SecurityGroupIngress": [
+          {
+            "IpProtocol": "icmp",
+            "FromPort": "-1",
+            "ToPort": "-1",
+            "CidrIp": "0.0.0.0/0"
+          },
+          {
+            "IpProtocol": "tcp",
+            "FromPort": "80",
+            "ToPort": "80",
+            "CidrIp": { "Fn::FindInMap" : [ "subnets", { "Ref" : "Environment" }, "VPCSN" ]}
+          },
+          {
+            "IpProtocol": "tcp",
+            "FromPort": "6379",
+            "ToPort": "6379",
+            "CidrIp": { "Fn::FindInMap" : [ "subnets", { "Ref" : "Environment" }, "VPCSN" ]}
+          },
+          {
+            "IpProtocol": "tcp",
+            "FromPort": "6379",
+            "ToPort": "6379",
+            "CidrIp": { "Fn::FindInMap" : [ "subnets", { "Ref" : "Environment" }, "VPCSN" ]}
+          },
+          {
+            "IpProtocol": "udp",
+            "FromPort": "53",
+            "ToPort": "53",
+            "CidrIp": { "Fn::FindInMap" : [ "subnets", { "Ref" : "Environment" }, "VPCSN" ]}
+          }
+        ],
+        "SecurityGroupEgress": [
+          {
+            "IpProtocol": "-1",
+            "CidrIp": "0.0.0.0/0"
+          }
+        ]
+      }
+    },
+
+    "sgPrivateApis": {
+      "Type": "AWS::EC2::SecurityGroup",
+      "DependsOn": "sgBastion",
+      "Properties": {
+        "GroupDescription": "Private APIs",
+        "VpcId": {
+          "Ref": "vpc"
+          },
+
+          "Tags":[
+            {
+            "Key": "Name",
+            "Value": { "Fn::Join" : [ " ", ["Private Apis SG", { "Ref" : "Environment"} ] ] }
+            }
+          ],
+              
+        "SecurityGroupIngress": [
+          {
+            "IpProtocol": "icmp",
+            "FromPort": "-1",
+            "ToPort": "-1",
+            "CidrIp": "0.0.0.0/0"
+          },
+          {
+            "IpProtocol": "tcp",
+            "FromPort": "443",
+            "ToPort": "443",
+            "CidrIp": { "Fn::FindInMap" : [ "subnets", { "Ref" : "Environment" }, "VPCSN" ]}
+          },
+          {
+            "IpProtocol": "tcp",
+            "FromPort": "80",
+            "ToPort": "80",
+            "CidrIp": { "Fn::FindInMap" : [ "subnets", { "Ref" : "Environment" }, "VPCSN" ]}
+          },
+          {
+            "IpProtocol": "tcp",
+            "FromPort": "6379",
+            "ToPort": "6379",
+            "CidrIp": { "Fn::FindInMap" : [ "subnets", { "Ref" : "Environment" }, "VPCSN" ]}
+          },
+          {
+            "IpProtocol": "tcp",
+            "FromPort": "6379",
+            "ToPort": "6379",
+            "CidrIp": { "Fn::FindInMap" : [ "subnets", { "Ref" : "Environment" }, "VPCSN" ]}
+          },
+          {
+            "IpProtocol": "tcp",
+            "FromPort": "11300",
+            "ToPort": "11300",
+            "CidrIp": { "Fn::FindInMap" : [ "subnets", { "Ref" : "Environment" }, "VPCSN" ]}
+          },
+          {
+            "IpProtocol": "udp",
+            "FromPort": "53",
+            "ToPort": "53",
+            "CidrIp": { "Fn::FindInMap" : [ "subnets", { "Ref" : "Environment" }, "VPCSN" ]}
+          }
+        ],
+        "SecurityGroupEgress": [
+          {
+            "IpProtocol": "-1",
+            "CidrIp": "0.0.0.0/0"
+          }
+        ]
+      }
+    },
+
+    "sgLogstash": {
+      "Type": "AWS::EC2::SecurityGroup",
+      "DependsOn": "sgBastion",
+      "Properties": {
+        "GroupDescription": "Private APIs",
+        "VpcId": {
+          "Ref": "vpc"
+          },
+
+          "Tags":[
+            {
+            "Key": "Name",
+            "Value": { "Fn::Join" : [ " ", ["Logstash SG", { "Ref" : "Environment"} ] ] }
+            }
+          ],
+                
+        "SecurityGroupIngress": [
+          {
+            "IpProtocol": "icmp",
+            "FromPort": "-1",
+            "ToPort": "-1",
+            "CidrIp": "0.0.0.0/0"
+          },
+          {
+            "IpProtocol": "tcp",
+            "FromPort": "22",
+            "ToPort": "22",
+            "CidrIp": "192.168.0.0/24"
+          },
+          {
+            "IpProtocol": "tcp",
+            "FromPort": "80",
+            "ToPort": "80",
+            "CidrIp": { "Fn::FindInMap" : [ "subnets", { "Ref" : "Environment" }, "VPCSN" ]}
+          },
+          {
+            "IpProtocol": "tcp",
+            "FromPort": "80",
+            "ToPort": "80",
+            "CidrIp": "192.168.0.0/24"
+          },
+          {
+            "IpProtocol": "tcp",
+            "FromPort": "6379",
+            "ToPort": "6379",
+            "CidrIp": { "Fn::FindInMap" : [ "subnets", { "Ref" : "Environment" }, "VPCSN" ]}
+          },
+          {
+            "IpProtocol": "tcp",
+            "FromPort": "9200",
+            "ToPort": "9200",
+            "CidrIp": "192.168.0.0/24"
+          },
+          {
+            "IpProtocol": "tcp",
+            "FromPort": "9200",
+            "ToPort": "9200",
+            "CidrIp": { "Fn::FindInMap" : [ "subnets", { "Ref" : "Environment" }, "VPCSN" ]}
+          },
+          {
+            "IpProtocol": "tcp",
+            "FromPort": "5001",
+            "ToPort": "5001",
+            "CidrIp": "192.168.0.0/24"
+          },
+          {
+            "IpProtocol": "tcp",
+            "FromPort": "5001",
+            "ToPort": "5001",
+            "CidrIp": { "Fn::FindInMap" : [ "subnets", { "Ref" : "Environment" }, "VPCSN" ]}
+          },
+          {
+            "IpProtocol": "udp",
+            "FromPort": "5001",
+            "ToPort": "5001",
+            "CidrIp": "192.168.0.0/24"
+          },
+          {
+            "IpProtocol": "udp",
+            "FromPort": "5001",
+            "ToPort": "5001",
+            "CidrIp": { "Fn::FindInMap" : [ "subnets", { "Ref" : "Environment" }, "VPCSN" ]}
+          },
+          {
+            "IpProtocol": "udp",
+            "FromPort": "53",
+            "ToPort": "53",
+            "CidrIp": { "Fn::FindInMap" : [ "subnets", { "Ref" : "Environment" }, "VPCSN" ]}
+          },
+          {
+            "IpProtocol": "udp",
+            "FromPort": "53",
+            "ToPort": "53",
+            "CidrIp": "192.168.0.0/24"
+          }
+        ],
+        "SecurityGroupEgress": [
+          {
+            "IpProtocol": "-1",
+            "CidrIp": "0.0.0.0/0"
+          }
+        ]
+      }
+    },
+
+    "sgBastion": {
+      "Type": "AWS::EC2::SecurityGroup",
+      "Properties": {
+        "GroupDescription": "SHH Connections",
+        "VpcId": {
+          "Ref": "vpc"
+          },
+
+          "Tags":[
+            {
+            "Key": "Name",
+            "Value": { "Fn::Join" : [ " ", ["Bastion SG", { "Ref" : "Environment"} ] ] }
+            }
+          ],
+                
+        "SecurityGroupIngress": [
+          {
+            "IpProtocol": "tcp",
+            "FromPort": "22",
+            "ToPort": "22",
+            "CidrIp": "0.0.0.0/0"
+          }
+        ],
+        "SecurityGroupEgress": [
+          {
+            "IpProtocol": "tcp",
+            "FromPort": "22",
+            "ToPort": "22",
+            "CidrIp": "0.0.0.0/0"
+          }
+        ]
+      }
+    },
+
+    "sgOpenswan": {
+      "Type": "AWS::EC2::SecurityGroup",
+      "Properties": {
+        "GroupDescription": "SHH Connections",
+        "VpcId": {
+          "Ref": "vpc"
+          },
+
+          "Tags":[
+            {
+            "Key": "Name",
+            "Value": "VPN OpenSwan SG"
+            }
+          ],
+                
+        "SecurityGroupIngress": [
+          {
+            "IpProtocol": "icmp",
+            "FromPort": "-1",
+            "ToPort": "-1",
+            "CidrIp": "0.0.0.0/0"
+          },
+          {
+            "IpProtocol": "udp",
+            "FromPort": "500",
+            "ToPort": "500",
+            "CidrIp": "0.0.0.0/0"
+          },
+          {
+            "IpProtocol": "udp",
+            "FromPort": "4500",
+            "ToPort": "4500",
+            "CidrIp": "0.0.0.0/0"
+          },
+          {
+            "IpProtocol": "tcp",
+            "FromPort": "500",
+            "ToPort": "500",
+            "CidrIp": "0.0.0.0/0"
+          },
+          {
+            "IpProtocol": "tcp",
+            "FromPort": "8084",
+            "ToPort": "8084",
+            "CidrIp": { "Fn::FindInMap" : [ "subnets", { "Ref" : "Environment" }, "SVSN" ]}
+          },
+          {
+            "IpProtocol": "tcp",
+            "FromPort": "8089",
+            "ToPort": "8089",
+            "CidrIp": { "Fn::FindInMap" : [ "subnets", { "Ref" : "Environment" }, "SVSN" ]}
+          },
+          {
+            "IpProtocol": "tcp",
+            "FromPort": "80",
+            "ToPort": "80",
+            "CidrIp": { "Fn::FindInMap" : [ "subnets", { "Ref" : "Environment" }, "DOSN" ]}
+          },
+          {
+            "IpProtocol": "tcp",
+            "FromPort": "8080",
+            "ToPort": "8080",
+            "CidrIp": { "Fn::FindInMap" : [ "subnets", { "Ref" : "Environment" }, "DOSN" ]}
+          },
+          {
+            "IpProtocol": "tcp",
+            "FromPort": "80",
+            "ToPort": "80",
+            "CidrIp": { "Fn::FindInMap" : [ "subnets", { "Ref" : "Environment" }, "PASN" ]}
+          },
+          {
+            "IpProtocol": "tcp",
+            "FromPort": "4500",
+            "ToPort": "4500",
+            "CidrIp": "0.0.0.0/0"
+          }
+        ],
+        "SecurityGroupEgress": [
+          {
+            "IpProtocol": "-1",
+            "CidrIp": "0.0.0.0/0"
+          }
+        ]
+      }
+    },
+
+    "sgNat": {
+      "Type": "AWS::EC2::SecurityGroup",
+      "Properties": {
+        "GroupDescription": "Public API NAT",
+        "VpcId": {
+          "Ref": "vpc"
+          },
+
+          "Tags":[
+            {
+            "Key": "Name",
+            "Value": "Nat SG"
+            }
+          ],
+                
+        "SecurityGroupIngress": [
+          {
+            "IpProtocol": "icmp",
+            "FromPort": "-1",
+            "ToPort": "-1",
+            "CidrIp": "0.0.0.0/0"
+          },
+          {
+            "IpProtocol": "-1",
+            "FromPort": "-1",
+            "ToPort": "-1",
+            "CidrIp": { "Fn::FindInMap" : [ "subnets", { "Ref" : "Environment" }, "VPCSN" ]}
+          },
+          {
+            "IpProtocol": "tcp",
+            "FromPort": "9418",
+            "ToPort": "9418",
+            "CidrIp": "0.0.0.0/0"
+          },
+          {
+            "IpProtocol": "tcp",
+            "FromPort": "80",
+            "ToPort": "80",
+            "CidrIp": "0.0.0.0/0"
+          },
+
+          {
+            "IpProtocol": "tcp",
+            "FromPort": "8080",
+            "ToPort": "8080",
+            "CidrIp": "192.168.0.0/24"
+          },
+          {
+            "IpProtocol": "tcp",
+            "FromPort": "8080",
+            "ToPort": "8080",
+            "CidrIp": "186.151.60.250/32"
+          },
+          {
+            "IpProtocol": "tcp",
+            "FromPort": "8080",
+            "ToPort": "8080",
+            "CidrIp": "190.99.116.194/32"
+          },
+                    {
+            "IpProtocol": "tcp",
+            "FromPort": "8080",
+            "ToPort": "8080",
+            "CidrIp": "186.64.109.138/32"
+          },
+          {
+            "IpProtocol": "tcp",
+            "FromPort": "22",
+            "ToPort": "22",
+            "CidrIp": "192.168.0.0/24"
+          },
+          {
+            "IpProtocol": "tcp",
+            "FromPort": "443",
+            "ToPort": "443",
+            "CidrIp": "0.0.0.0/0"
+          },
+          {
+            "IpProtocol": "tcp",
+            "FromPort": "6379",
+            "ToPort": "6379",
+            "CidrIp": { "Fn::FindInMap" : [ "subnets", { "Ref" : "Environment" }, "VPCSN" ]}
+          },
+          {
+            "IpProtocol": "tcp",
+            "FromPort": "11300",
+            "ToPort": "11300",
+            "CidrIp": { "Fn::FindInMap" : [ "subnets", { "Ref" : "Environment" }, "VPCSN" ]}
+          },
+          {
+            "IpProtocol": "udp",
+            "FromPort": "53",
+            "ToPort": "53",
+            "CidrIp": { "Fn::FindInMap" : [ "subnets", { "Ref" : "Environment" }, "VPCSN" ]}
+          },
+          {
+            "IpProtocol": "udp",
+            "FromPort": "53",
+            "ToPort": "53",
+            "CidrIp": "192.168.0.0/24"
+          }
+        ],
+        "SecurityGroupEgress": [
+          {
+            "IpProtocol": "-1",
+            "CidrIp": "0.0.0.0/0"
+          }
+        ]
+      }
+    },
+
+    "sgdefault": {
+      "Type": "AWS::EC2::SecurityGroup",
+      "Properties": {
+        "GroupDescription": "default VPC security group",
+        "VpcId": {
+          "Ref": "vpc"
+        },
+        "SecurityGroupEgress": [
+          {
+            "IpProtocol": "-1",
+            "CidrIp": "0.0.0.0/0"
+          }
+        ]
+      }
+    },
+
+    "sgGTAccounts": {
+      "Type": "AWS::EC2::SecurityGroup",
+      "DependsOn": "sgBastion",
+      "Properties": {
+        "GroupDescription": "Guatemala accounts applications",
+        "VpcId": {
+          "Ref": "vpc"
+          },
+
+          "Tags":[
+            {
+            "Key": "Name",
+            "Value": { "Fn::Join" : [ " ", ["Guatemala Accounts Application SG", { "Ref" : "Environment"} ] ] }
+            }
+          ],
+                
+         "SecurityGroupIngress": [   
+          {
+            "IpProtocol": "icmp",
+            "FromPort": "-1",
+            "ToPort": "-1",
+            "CidrIp": "0.0.0.0/0"
+          },
+          {
+            "IpProtocol": "tcp",
+            "FromPort": "22",
+            "ToPort": "22",
+            "CidrIp": "192.168.0.0/24"
+          },
+          {
+            "IpProtocol": "tcp",
+            "FromPort": "8080",
+            "ToPort": "8080",
+            "CidrIp": "192.168.0.0/24"
+          },
+          {
+            "IpProtocol": "tcp",
+            "FromPort": "6379",
+            "ToPort": "6379",
+            "CidrIp": { "Fn::FindInMap" : [ "subnets", { "Ref" : "Environment" }, "VPCSN" ]}
+          },
+          {
+            "IpProtocol": "tcp",
+            "FromPort": "80",
+            "ToPort": "80",
+            "CidrIp": { "Fn::FindInMap" : [ "subnets", { "Ref" : "Environment" }, "VPCSN" ]}
+          },
+          {
+            "IpProtocol": "tcp",
+            "FromPort": "80",
+            "ToPort": "80",
+            "CidrIp": "192.168.0.0/24"
+          },
+          {
+            "IpProtocol": "tcp",
+            "FromPort": "11300",
+            "ToPort": "11300",
+            "CidrIp": { "Fn::FindInMap" : [ "subnets", { "Ref" : "Environment" }, "VPCSN" ]}
+          },
+          {
+            "IpProtocol": "udp",
+            "FromPort": "53",
+            "ToPort": "53",
+            "CidrIp": { "Fn::FindInMap" : [ "subnets", { "Ref" : "Environment" }, "VPCSN" ]}
+          },
+          {
+            "IpProtocol": "udp",
+            "FromPort": "53",
+            "ToPort": "53",
+            "CidrIp": "192.168.0.0/24"
+          }
+        ],
+       "SecurityGroupEgress": [
+          {
+            "IpProtocol": "-1",
+            "CidrIp": "0.0.0.0/0"
+          }
+        ]
+      }
+    },
+
+    "sgDOAccounts": {
+        "Type": "AWS::EC2::SecurityGroup",
+        "DependsOn": "sgBastion",
+        "Properties": {
+          "GroupDescription": "Dominican Republic accounts applications",
+          "VpcId": {
+            "Ref": "vpc"
+            },    
+            "Tags":[
+              {
+              "Key": "Name",
+              "Value": { "Fn::Join" : [ " ", ["Dominican Republic Application SG", { "Ref" : "Environment"} ] ] }
+              }
+            ],
+                   
+           "SecurityGroupIngress": [   
+            {
+              "IpProtocol": "icmp",
+              "FromPort": "-1",
+              "ToPort": "-1",
+              "CidrIp": "0.0.0.0/0"
+            },
+            {
+              "IpProtocol": "tcp",
+              "FromPort": "22",
+              "ToPort": "22",
+              "CidrIp": "192.168.0.0/24"
+            },
+            {
+              "IpProtocol": "tcp",
+              "FromPort": "6379",
+              "ToPort": "6379",
+              "CidrIp": { "Fn::FindInMap" : [ "subnets", { "Ref" : "Environment" }, "VPCSN" ]}
+            },
+            {
+              "IpProtocol": "tcp",
+              "FromPort": "80",
+              "ToPort": "80",
+              "CidrIp": { "Fn::FindInMap" : [ "subnets", { "Ref" : "Environment" }, "VPCSN" ]}
+            },
+            {
+              "IpProtocol": "tcp",
+              "FromPort": "80",
+              "ToPort": "80",
+              "CidrIp": "192.168.0.0/24"
+            },
+            {
+              "IpProtocol": "tcp",
+              "FromPort": "8080",
+              "ToPort": "8080",
+              "CidrIp": "192.168.0.0/24"
+            },
+            {
+              "IpProtocol": "tcp",
+              "FromPort": "11300",
+              "ToPort": "11300",
+              "CidrIp": { "Fn::FindInMap" : [ "subnets", { "Ref" : "Environment" }, "VPCSN" ]}
+            },
+            {
+              "IpProtocol": "udp",
+              "FromPort": "53",
+              "ToPort": "53",
+              "CidrIp": { "Fn::FindInMap" : [ "subnets", { "Ref" : "Environment" }, "VPCSN" ]}
+            },
+            {
+              "IpProtocol": "udp",
+              "FromPort": "53",
+              "ToPort": "53",
+              "CidrIp": "192.168.0.0/24"
+            }
+          ],
+         "SecurityGroupEgress": [
+            {
+              "IpProtocol": "-1",
+              "CidrIp": "0.0.0.0/0"
+            }
+          ]
+        }
+      },
+
+    "sgMXAccounts": {
+        "Type": "AWS::EC2::SecurityGroup",
+        "DependsOn": "sgBastion",
+        "Properties": {
+          "GroupDescription": "Mexico accounts applications",
+          "VpcId": {
+            "Ref": "vpc"
+            },    
+            "Tags":[
+              {
+              "Key": "Name",
+              "Value": { "Fn::Join" : [ " ", ["Mexico Application SG", { "Ref" : "Environment"} ] ] }
+              }
+            ],
+                   
+           "SecurityGroupIngress": [   
+            {
+              "IpProtocol": "icmp",
+              "FromPort": "-1",
+              "ToPort": "-1",
+              "CidrIp": "0.0.0.0/0"
+            },
+            {
+              "IpProtocol": "tcp",
+              "FromPort": "22",
+              "ToPort": "22",
+              "CidrIp": "192.168.0.0/24"
+            },
+            {
+              "IpProtocol": "tcp",
+              "FromPort": "6379",
+              "ToPort": "6379",
+              "CidrIp": { "Fn::FindInMap" : [ "subnets", { "Ref" : "Environment" }, "VPCSN" ]}
+            },
+            {
+              "IpProtocol": "tcp",
+              "FromPort": "80",
+              "ToPort": "80",
+              "CidrIp": { "Fn::FindInMap" : [ "subnets", { "Ref" : "Environment" }, "VPCSN" ]}
+            },
+            {
+              "IpProtocol": "tcp",
+              "FromPort": "80",
+              "ToPort": "80",
+              "CidrIp": "192.168.0.0/24"
+            },
+            {
+              "IpProtocol": "tcp",
+              "FromPort": "11300",
+              "ToPort": "11300",
+              "CidrIp": { "Fn::FindInMap" : [ "subnets", { "Ref" : "Environment" }, "VPCSN" ]}
+            },
+            {
+              "IpProtocol": "udp",
+              "FromPort": "53",
+              "ToPort": "53",
+              "CidrIp": { "Fn::FindInMap" : [ "subnets", { "Ref" : "Environment" }, "VPCSN" ]}
+            },
+            {
+              "IpProtocol": "udp",
+              "FromPort": "53",
+              "ToPort": "53",
+              "CidrIp": "192.168.0.0/24"
+            }
+          ],
+         "SecurityGroupEgress": [
+            {
+              "IpProtocol": "-1",
+              "CidrIp": "0.0.0.0/0"
+            }
+          ]
+        }
+      },
+
+    "sgISAccounts": {
+      "Type": "AWS::EC2::SecurityGroup",
+      "DependsOn": "sgBastion",
+      "Properties": {
+        "GroupDescription": "Island accounts applications",
+        "VpcId": {
+          "Ref": "vpc"
+          },
+
+          "Tags":[
+            {
+            "Key": "Name",
+            "Value": { "Fn::Join" : [ " ", ["Iceland Accounts Application SG", { "Ref" : "Environment"} ] ] }
+            }
+          ],
+                
+        "SecurityGroupIngress": [
+          {
+            "IpProtocol": "icmp",
+            "FromPort": "-1",
+            "ToPort": "-1",
+            "CidrIp": "0.0.0.0/0"
+          },
+          {
+            "IpProtocol": "tcp",
+            "FromPort": "22",
+            "ToPort": "22",
+            "CidrIp": "192.168.0.0/24"
+          },
+          {
+            "IpProtocol": "tcp",
+            "FromPort": "6379",
+            "ToPort": "6379",
+            "CidrIp": { "Fn::FindInMap" : [ "subnets", { "Ref" : "Environment" }, "VPCSN" ]}
+          },
+          {
+            "IpProtocol": "tcp",
+            "FromPort": "80",
+            "ToPort": "80",
+            "CidrIp": { "Fn::FindInMap" : [ "subnets", { "Ref" : "Environment" }, "VPCSN" ]}
+          },
+          {
+            "IpProtocol": "tcp",
+            "FromPort": "80",
+            "ToPort": "80",
+            "CidrIp": "192.168.0.0/24"
+          },
+          {
+            "IpProtocol": "tcp",
+            "FromPort": "11300",
+            "ToPort": "11300",
+            "CidrIp": { "Fn::FindInMap" : [ "subnets", { "Ref" : "Environment" }, "VPCSN" ]}
+          },
+          {
+            "IpProtocol": "udp",
+            "FromPort": "53",
+            "ToPort": "53",
+            "CidrIp": { "Fn::FindInMap" : [ "subnets", { "Ref" : "Environment" }, "VPCSN" ]}
+          },
+          {
+            "IpProtocol": "udp",
+            "FromPort": "53",
+            "ToPort": "53",
+            "CidrIp": "192.168.0.0/24"
+          }
+        ],
+       "SecurityGroupEgress": [
+          {
+            "IpProtocol": "-1",
+            "CidrIp": "0.0.0.0/0"
+          }
+        ]
+      }
+    },
+
+    "sgSVAccounts": {
+      "Type": "AWS::EC2::SecurityGroup",
+      "Properties": {
+        "GroupDescription": "El Salvador accounts applications",
+        "VpcId": {
+          "Ref": "vpc"
+          },
+
+          "Tags":[
+            {
+            "Key": "Name",
+            "Value": { "Fn::Join" : [ " ", ["El Salvador Accounts Application SG", { "Ref" : "Environment"} ] ] }
+            }
+          ],
+                
+         "SecurityGroupIngress": [   
+          {
+            "IpProtocol": "icmp",
+            "FromPort": "-1",
+            "ToPort": "-1",
+            "CidrIp": "0.0.0.0/0"
+          },
+          {
+            "IpProtocol": "tcp",
+            "FromPort": "22",
+            "ToPort": "22",
+            "CidrIp": "192.168.0.0/24"
+          },
+          {
+            "IpProtocol": "tcp",
+            "FromPort": "6379",
+            "ToPort": "6379",
+            "CidrIp": { "Fn::FindInMap" : [ "subnets", { "Ref" : "Environment" }, "VPCSN" ]}
+          },
+          {
+            "IpProtocol": "tcp",
+            "FromPort": "80",
+            "ToPort": "80",
+            "CidrIp": { "Fn::FindInMap" : [ "subnets", { "Ref" : "Environment" }, "VPCSN" ]}
+          },
+          {
+            "IpProtocol": "tcp",
+            "FromPort": "80",
+            "ToPort": "80",
+            "CidrIp": "192.168.0.0/24"
+          },
+                    {
+            "IpProtocol": "tcp",
+            "FromPort": "8084",
+            "ToPort": "8084",
+            "CidrIp": { "Fn::FindInMap" : [ "subnets", { "Ref" : "Environment" }, "VPCSN" ]}
+          },
+          {
+            "IpProtocol": "tcp",
+            "FromPort": "8089",
+            "ToPort": "8089",
+            "CidrIp": { "Fn::FindInMap" : [ "subnets", { "Ref" : "Environment" }, "VPCSN" ]}
+          },
+          {
+            "IpProtocol": "tcp",
+            "FromPort": "8084",
+            "ToPort": "8084",
+            "CidrIp": "192.168.0.0/24"
+          },
+          {
+            "IpProtocol": "tcp",
+            "FromPort": "8089",
+            "ToPort": "8089",
+            "CidrIp": "192.168.0.0/24"
+          },
+          {
+            "IpProtocol": "tcp",
+            "FromPort": "11300",
+            "ToPort": "11300",
+            "CidrIp": { "Fn::FindInMap" : [ "subnets", { "Ref" : "Environment" }, "VPCSN" ]}
+          },
+          {
+            "IpProtocol": "udp",
+            "FromPort": "53",
+            "ToPort": "53",
+            "CidrIp": { "Fn::FindInMap" : [ "subnets", { "Ref" : "Environment" }, "VPCSN" ]}
+          },
+          {
+            "IpProtocol": "udp",
+            "FromPort": "53",
+            "ToPort": "53",
+            "CidrIp": "192.168.0.0/24"
+          }
+        ],
+       "SecurityGroupEgress": [
+          {
+            "IpProtocol": "-1",
+            "CidrIp": "0.0.0.0/0"
+          }
+        ]
+      }
+    },
+    "sgNIAccounts": {
+      "Type": "AWS::EC2::SecurityGroup",
+      "DependsOn": "sgBastion",
+      "Properties": {
+        "GroupDescription": "Nicaragua accounts applications",
+        "VpcId": {
+          "Ref": "vpc"
+          },
+
+          "Tags":[
+            {
+            "Key": "Name",
+            "Value": { "Fn::Join" : [ " ", ["Nicaragua Accounts Application SG", { "Ref" : "Environment"} ] ] }
+            }
+          ],
+                
+         "SecurityGroupIngress": [   
+          {
+            "IpProtocol": "icmp",
+            "FromPort": "-1",
+            "ToPort": "-1",
+            "CidrIp": "0.0.0.0/0"
+          },
+          {
+            "IpProtocol": "tcp",
+            "FromPort": "22",
+            "ToPort": "22",
+            "CidrIp": "192.168.0.0/24"
+          },
+          {
+            "IpProtocol": "tcp",
+            "FromPort": "8080",
+            "ToPort": "8080",
+            "CidrIp": "192.168.0.0/24"
+          },
+          {
+            "IpProtocol": "tcp",
+            "FromPort": "6379",
+            "ToPort": "6379",
+            "CidrIp": { "Fn::FindInMap" : [ "subnets", { "Ref" : "Environment" }, "VPCSN" ]}
+          },
+          {
+            "IpProtocol": "tcp",
+            "FromPort": "80",
+            "ToPort": "80",
+            "CidrIp": { "Fn::FindInMap" : [ "subnets", { "Ref" : "Environment" }, "VPCSN" ]}
+          },
+          {
+            "IpProtocol": "tcp",
+            "FromPort": "80",
+            "ToPort": "80",
+            "CidrIp": "192.168.0.0/24"
+          },
+          {
+            "IpProtocol": "tcp",
+            "FromPort": "11300",
+            "ToPort": "11300",
+            "CidrIp": { "Fn::FindInMap" : [ "subnets", { "Ref" : "Environment" }, "VPCSN" ]}
+          },
+          {
+            "IpProtocol": "udp",
+            "FromPort": "53",
+            "ToPort": "53",
+            "CidrIp": { "Fn::FindInMap" : [ "subnets", { "Ref" : "Environment" }, "VPCSN" ]}
+          },
+          {
+            "IpProtocol": "udp",
+            "FromPort": "53",
+            "ToPort": "53",
+            "CidrIp": "192.168.0.0/24"
+          }
+        ],
+       "SecurityGroupEgress": [
+          {
+            "IpProtocol": "-1",
+            "CidrIp": "0.0.0.0/0"
+          }
+        ]
+      }
+    },
+
+    "sgPAAccounts": {
+      "Type": "AWS::EC2::SecurityGroup",
+      "DependsOn": "sgBastion",
+      "Properties": {
+        "GroupDescription": "Panama accounts applications",
+        "VpcId": {
+          "Ref": "vpc"
+          },
+
+          "Tags":[
+            {
+            "Key": "Name",
+            "Value": { "Fn::Join" : [ " ", ["Panama Accounts Application SG", { "Ref" : "Environment"} ] ] }
+            }
+          ],
+                
+         "SecurityGroupIngress": [   
+          {
+            "IpProtocol": "icmp",
+            "FromPort": "-1",
+            "ToPort": "-1",
+            "CidrIp": "0.0.0.0/0"
+          },
+          {
+            "IpProtocol": "tcp",
+            "FromPort": "22",
+            "ToPort": "22",
+            "CidrIp": "192.168.0.0/24"
+          },
+          {
+            "IpProtocol": "tcp",
+            "FromPort": "8080",
+            "ToPort": "8080",
+            "CidrIp": "192.168.0.0/24"
+          },
+          {
+            "IpProtocol": "tcp",
+            "FromPort": "6379",
+            "ToPort": "6379",
+            "CidrIp": { "Fn::FindInMap" : [ "subnets", { "Ref" : "Environment" }, "VPCSN" ]}
+          },
+          {
+            "IpProtocol": "tcp",
+            "FromPort": "80",
+            "ToPort": "80",
+            "CidrIp": { "Fn::FindInMap" : [ "subnets", { "Ref" : "Environment" }, "VPCSN" ]}
+          },
+          {
+            "IpProtocol": "tcp",
+            "FromPort": "80",
+            "ToPort": "80",
+            "CidrIp": "192.168.0.0/24"
+          },
+          {
+            "IpProtocol": "tcp",
+            "FromPort": "11300",
+            "ToPort": "11300",
+            "CidrIp": { "Fn::FindInMap" : [ "subnets", { "Ref" : "Environment" }, "VPCSN" ]}
+          },
+          {
+            "IpProtocol": "udp",
+            "FromPort": "53",
+            "ToPort": "53",
+            "CidrIp": { "Fn::FindInMap" : [ "subnets", { "Ref" : "Environment" }, "VPCSN" ]}
+          },
+          {
+            "IpProtocol": "udp",
+            "FromPort": "53",
+            "ToPort": "53",
+            "CidrIp": "192.168.0.0/24"
+          }
+        ],
+       "SecurityGroupEgress": [
+          {
+            "IpProtocol": "-1",
+            "CidrIp": "0.0.0.0/0"
+          }
+        ]
+      }
+    },
+    "sgPublicApis": {
+      "Type": "AWS::EC2::SecurityGroup",
+      "Properties": {
+        "GroupDescription": "Public facing services",
+        "VpcId": {
+          "Ref": "vpc"
+          },
+
+          "Tags":[
+            {
+            "Key": "Name",
+            "Value": { "Fn::Join" : [ " ", ["Public Apis SG", { "Ref" : "Environment"} ] ] }
+            }
+          ],    
+        "SecurityGroupIngress": [
+          {
+            "IpProtocol": "icmp",
+            "FromPort": "-1",
+            "ToPort": "-1",
+            "CidrIp": "0.0.0.0/0"
+          },
+          {
+            "IpProtocol": "tcp",
+            "FromPort": "22",
+            "ToPort": "22",
+            "CidrIp": "192.168.0.0/24"
+          },
+          {
+            "IpProtocol": "tcp",
+            "FromPort": "80",
+            "ToPort": "80",
+            "CidrIp": "186.151.61.58/32"
+          },
+          {
+            "IpProtocol": "tcp",
+            "FromPort": "80",
+            "ToPort": "80",
+            "CidrIp": "186.64.109.136/29"
+          },
+          {
+            "IpProtocol": "tcp",
+            "FromPort": "80",
+            "ToPort": "80",
+            "CidrIp": "190.99.116.192/29"
+          },
+          {
+            "IpProtocol": "tcp",
+            "FromPort": "80",
+            "ToPort": "80",
+            "CidrIp": "190.99.116.112/29"
+          },
+          {
+            "IpProtocol": "tcp",
+            "FromPort": "80",
+            "ToPort": "80",
+            "CidrIp": "38.88.174.184/29"
+          },
+          {
+            "IpProtocol": "tcp",
+            "FromPort": "80",
+            "ToPort": "80",
+            "CidrIp": "38.99.15.104/29"
+          },
+          {
+            "IpProtocol": "tcp",
+            "FromPort": "80",
+            "ToPort": "80",
+            "CidrIp": "38.99.18.224/28"
+          },
+          {
+            "IpProtocol": "tcp",
+            "FromPort": "80",
+            "ToPort": "80",
+            "CidrIp": "38.99.29.128/25"
+          },
+          {
+            "IpProtocol": "tcp",
+            "FromPort": "80",
+            "ToPort": "80",
+            "CidrIp": "38.99.38.0/25"
+          },
+          {
+            "IpProtocol": "tcp",
+            "FromPort": "443",
+            "ToPort": "443",
+            "CidrIp": "186.151.61.58/32"
+          },
+          {
+            "IpProtocol": "tcp",
+            "FromPort": "443",
+            "ToPort": "443",
+            "CidrIp": "186.64.109.136/29"
+          },
+          {
+            "IpProtocol": "tcp",
+            "FromPort": "443",
+            "ToPort": "443",
+            "CidrIp": "190.99.116.192/29"
+          },
+          {
+            "IpProtocol": "tcp",
+            "FromPort": "443",
+            "ToPort": "443",
+            "CidrIp": "190.99.116.112/29"
+          },
+          {
+            "IpProtocol": "tcp",
+            "FromPort": "443",
+            "ToPort": "443",
+            "CidrIp": "38.88.174.184/29"
+          },
+          {
+            "IpProtocol": "tcp",
+            "FromPort": "443",
+            "ToPort": "443",
+            "CidrIp": "38.99.15.104/29"
+          },
+          {
+            "IpProtocol": "tcp",
+            "FromPort": "443",
+            "ToPort": "443",
+            "CidrIp": "38.99.18.224/28"
+          },
+          {
+            "IpProtocol": "tcp",
+            "FromPort": "443",
+            "ToPort": "443",
+            "CidrIp": "38.99.29.128/25"
+          },
+          {
+            "IpProtocol": "tcp",
+            "FromPort": "443",
+            "ToPort": "443",
+            "CidrIp": "38.99.38.0/25"
+          }
+        ],
+        "SecurityGroupEgress": [
+          {
+            "IpProtocol": "-1",
+            "CidrIp": "0.0.0.0/0"
+          }
+        ]
+      },
+      "DependsOn": "sgBastion"
+    },
+    "acl5": {
+      "Type": "AWS::EC2::NetworkAclEntry",
+      "Properties": {
+        "CidrBlock": "0.0.0.0/0",
+        "Egress": true,
+        "Protocol": "-1",
+        "RuleAction": "allow",
+        "RuleNumber": "100",
+        "NetworkAclId": {
+          "Ref": "aclPublicApi"
+        }
+      }
+    },
+    "acl6": {
+      "Type": "AWS::EC2::NetworkAclEntry",
+      "Properties": {
+        "CidrBlock": "0.0.0.0/0",
+        "Protocol": "-1",
+        "RuleAction": "allow",
+        "RuleNumber": "100",
+        "NetworkAclId": {
+          "Ref": "aclPublicApi"
+        }
+      }
+    },
+    "subnetacl4": {
+      "Type": "AWS::EC2::SubnetNetworkAclAssociation",
+      "Properties": {
+        "NetworkAclId": {
+          "Ref": "aclPublicApi"
+        },
+        "SubnetId": {
+          "Ref": "subnetPublicApisZ1"
+        }
+      }
+    },
+    "subnetacl5": {
+      "Type": "AWS::EC2::SubnetNetworkAclAssociation",
+      "Properties": {
+        "NetworkAclId": {
+          "Ref": "aclPublicApi"
+        },
+        "SubnetId": {
+          "Ref": "subnetPublicApisZ2"
+        }
+      }
+    },
+    "subnetacl6": {
+      "Type": "AWS::EC2::SubnetNetworkAclAssociation",
+      "Properties": {
+        "NetworkAclId": {
+          "Ref": "aclPublicApi"
+        },
+        "SubnetId": {
+          "Ref": "subnetPrivateApisZ1"
+        }
+      }
+    },
+    "subnetacl7": {
+      "Type": "AWS::EC2::SubnetNetworkAclAssociation",
+      "Properties": {
+        "NetworkAclId": {
+          "Ref": "aclPublicApi"
+        },
+        "SubnetId": {
+          "Ref": "subnetPrivateApisZ2"
+        }
+      }
+    },
+    "gw3": {
+      "Type": "AWS::EC2::VPCGatewayAttachment",
+      "Properties": {
+        "VpcId": {
+          "Ref": "vpc"
+        },
+        "InternetGatewayId": {
+          "Ref": "igwPublicApi"
+        }
+      }
+    },
+
+    "subnetroute3": {
+      "Type": "AWS::EC2::SubnetRouteTableAssociation",
+      "Properties": {
+        "RouteTableId": {
+          "Ref": "rtbPublicSubnet"
+        },
+        "SubnetId": {
+          "Ref": "subnetPublicApisZ1"
+        }
+      }
+    },
+    "subnetroute4": {
+      "Type": "AWS::EC2::SubnetRouteTableAssociation",
+      "Properties": {
+        "RouteTableId": {
+          "Ref": "rtbPublicSubnet"
+        },
+        "SubnetId": {
+          "Ref": "subnetPublicApisZ2"
+        }
+      }
+    },
+    "subnetroute5": {
+      "Type": "AWS::EC2::SubnetRouteTableAssociation",
+      "Properties": {
+        "RouteTableId": {
+          "Ref": "rtbPrivateSubnets"
+        },
+        "SubnetId": {
+          "Ref": "subnetPrivateApisZ1"
+        }
+      }
+    },
+    "subnetroute6": {
+      "Type": "AWS::EC2::SubnetRouteTableAssociation",
+      "Properties": {
+        "RouteTableId": {
+          "Ref": "rtbPrivateSubnets"
+        },
+        "SubnetId": {
+          "Ref": "subnetPrivateApisZ2"
+        }
+      }
+    },
+    "subnetroute7": {
+      "Type": "AWS::EC2::SubnetRouteTableAssociation",
+      "Properties": {
+        "RouteTableId": {
+          "Ref": "rtbPrivateSubnets"
+        },
+        "SubnetId": {
+          "Ref": "subnetWorkerGT"
+        }
+      }
+    },
+    "subnetroute8": {
+      "Type": "AWS::EC2::SubnetRouteTableAssociation",
+      "Properties": {
+        "RouteTableId": {
+          "Ref": "rtbPrivateSubnets"
+        },
+        "SubnetId": {
+          "Ref": "subnetWorkerIS"
+        }
+      }
+    },
+    "subnetroute9": {
+      "Type": "AWS::EC2::SubnetRouteTableAssociation",
+      "Properties": {
+        "RouteTableId": {
+          "Ref": "rtbPrivateSubnets"
+        },
+        "SubnetId": {
+          "Ref": "subnetWorkerDO"
+        }
+      }
+    },
+    "subnetroute10": {
+      "Type": "AWS::EC2::SubnetRouteTableAssociation",
+      "Properties": {
+        "RouteTableId": {
+          "Ref": "rtbPrivateSubnets"
+        },
+        "SubnetId": {
+          "Ref": "subnetWorkerMX"
+        }
+      }
+    },
+    "subnetroute11": {
+      "Type": "AWS::EC2::SubnetRouteTableAssociation",
+      "Properties": {
+        "RouteTableId": {
+          "Ref": "rtbPrivateSubnets"
+        },
+        "SubnetId": {
+          "Ref": "subnetWorkerSV"
+        }
+      }
+    },
+        "subnetroute11": {
+      "Type": "AWS::EC2::SubnetRouteTableAssociation",
+      "Properties": {
+        "RouteTableId": {
+          "Ref": "rtbPrivateSubnets"
+        },
+        "SubnetId": {
+          "Ref": "subnetWorkerNI"
+        }
+      }
+    },
+    "subnetroute12": {
+      "Type": "AWS::EC2::SubnetRouteTableAssociation",
+      "Properties": {
+        "RouteTableId": {
+          "Ref": "rtbPrivateSubnets"
+        },
+        "SubnetId": {
+          "Ref": "subnetWorkerPA"
+        }
+      }
+    },
+
+    "route7": {
+      "Type": "AWS::EC2::Route",
+      "Properties": {
+        "DestinationCidrBlock": "0.0.0.0/0",
+        "RouteTableId": {
+          "Ref": "rtbPrivateSubnets"
+        },
+        "InstanceId": {
+          "Ref": "instanceNAT"
+        }
+      }
+    },
+
+    "route9": {
+      "Type": "AWS::EC2::Route",
+      "Properties": {
+        "DestinationCidrBlock": "0.0.0.0/0",
+        "RouteTableId": {
+          "Ref": "rtbPublicSubnet"
+        },
+        "GatewayId": {
+          "Ref": "igwPublicApi"
+        }
+      },
+      "DependsOn": "gw3"
+    },
+    "dchpassoc2": {
+      "Type": "AWS::EC2::VPCDHCPOptionsAssociation",
+      "Properties": {
+        "VpcId": {
+          "Ref": "vpc"
+        },
+        "DhcpOptionsId": {
+          "Ref": "doptPublicApi"
+        }
+      }
+    },
+    "ingress14": {
+      "Type": "AWS::EC2::SecurityGroupIngress",
+      "Properties": {
+        "GroupId": {
+          "Ref": "sgMonitors"
+        },
+        "IpProtocol": "tcp",
+        "FromPort": "22",
+        "ToPort": "22",
+        "SourceSecurityGroupId": {
+          "Ref": "sgBastion"
+        },
+        "SourceSecurityGroupOwnerId": "243238936187"
+      }
+    },
+    "ingress15": {
+      "Type": "AWS::EC2::SecurityGroupIngress",
+      "Properties": {
+        "GroupId": {
+          "Ref": "sgPrivateApis"
+        },
+        "IpProtocol": "tcp",
+        "FromPort": "22",
+        "ToPort": "22",
+        "SourceSecurityGroupId": {
+          "Ref": "sgBastion"
+        },
+        "SourceSecurityGroupOwnerId": "243238936187"
+      }
+    },
+    "ingress16": {
+      "Type": "AWS::EC2::SecurityGroupIngress",
+      "Properties": {
+        "GroupId": {
+          "Ref": "sgNat"
+        },
+        "IpProtocol": "tcp",
+        "FromPort": "22",
+        "ToPort": "22",
+        "SourceSecurityGroupId": {
+          "Ref": "sgBastion"
+        },
+        "SourceSecurityGroupOwnerId": "243238936187"
+      }
+    },
+    "ingress17": {
+      "Type": "AWS::EC2::SecurityGroupIngress",
+      "Properties": {
+        "GroupId": {
+          "Ref": "sgdefault"
+        },
+        "IpProtocol": "-1",
+        "SourceSecurityGroupId": {
+          "Ref": "sgdefault"
+        },
+        "SourceSecurityGroupOwnerId": "243238936187"
+      },
+      "DependsOn" : "sgdefault"
+    },
+    "ingress18": {
+      "Type": "AWS::EC2::SecurityGroupIngress",
+      "Properties": {
+        "GroupId": {
+          "Ref": "sgPublicApis"
+        },
+        "IpProtocol": "tcp",
+        "FromPort": "22",
+        "ToPort": "22",
+        "SourceSecurityGroupId": {
+          "Ref": "sgBastion"
+        },
+        "SourceSecurityGroupOwnerId": "243238936187"
+      }
+    },
+
+    "ingress19": {
+      "Type": "AWS::EC2::SecurityGroupIngress",
+      "Properties": {
+        "GroupId": {
+          "Ref": "sgOpenswan"
+        },
+        "IpProtocol": "tcp",
+        "FromPort": "22",
+        "ToPort": "22",
+        "SourceSecurityGroupId": {
+          "Ref": "sgBastion"
+        },
+        "SourceSecurityGroupOwnerId": "243238936187"
+      }
+    },
+
+    "ingress20": {
+      "Type": "AWS::EC2::SecurityGroupIngress",
+      "Properties": {
+        "GroupId": {
+          "Ref": "sgMonitors"
+        },
+        "IpProtocol": "tcp",
+        "FromPort": "22",
+        "ToPort": "22",
+        "SourceSecurityGroupId": {
+          "Ref": "sgBastion"
+        },
+        "SourceSecurityGroupOwnerId": "243238936187"
+      }
+    },
+
+    "ingress21": {
+      "Type": "AWS::EC2::SecurityGroupIngress",
+      "Properties": {
+        "GroupId": {
+          "Ref": "sgLogstash"
+        },
+        "IpProtocol": "tcp",
+        "FromPort": "22",
+        "ToPort": "22",
+        "SourceSecurityGroupId": {
+          "Ref": "sgBastion"
+        },
+        "SourceSecurityGroupOwnerId": "243238936187"
+      }
+    },
+    "ingress22": {
+      "Type": "AWS::EC2::SecurityGroupIngress",
+      "Properties": {
+        "GroupId": {
+          "Ref": "sgPrivateApis"
+        },
+        "IpProtocol": "tcp",
+        "FromPort": "80",
+        "ToPort": "80",
+        "SourceSecurityGroupId": {
+          "Ref": "sgPublicApis"
+        },
+        "SourceSecurityGroupOwnerId": "243238936187"
+      }
+    },
+    "ingress23": {
+      "Type": "AWS::EC2::SecurityGroupIngress",
+      "Properties": {
+        "GroupId": {
+          "Ref": "sgPrivateApis"
+        },
+        "IpProtocol": "tcp",
+        "FromPort": "22",
+        "ToPort": "22",
+        "SourceSecurityGroupId": {
+          "Ref": "sgBastion"
+        },
+        "SourceSecurityGroupOwnerId": "243238936187"
+      }
+    },
+    "ingress24": {
+      "Type": "AWS::EC2::SecurityGroupIngress",
+      "Properties": {
+        "GroupId": {
+          "Ref": "sgGTAccounts"
+        },
+        "IpProtocol": "tcp",
+        "FromPort": "22",
+        "ToPort": "22",
+        "SourceSecurityGroupId": {
+          "Ref": "sgBastion"
+        },
+        "SourceSecurityGroupOwnerId": "243238936187"
+      }
+    },
+    "ingress25": {
+      "Type": "AWS::EC2::SecurityGroupIngress",
+      "Properties": {
+        "GroupId": {
+          "Ref": "sgISAccounts"
+        },
+        "IpProtocol": "tcp",
+        "FromPort": "22",
+        "ToPort": "22",
+        "SourceSecurityGroupId": {
+          "Ref": "sgBastion"
+        },
+        "SourceSecurityGroupOwnerId": "243238936187"
+      }
+    },
+    "ingress26": {
+      "Type": "AWS::EC2::SecurityGroupIngress",
+      "Properties": {
+        "GroupId": {
+          "Ref": "sgPublicApis"
+        },
+        "IpProtocol": "tcp",
+        "FromPort": "22",
+        "ToPort": "22",
+        "SourceSecurityGroupId": {
+          "Ref": "sgBastion"
+        },
+        "SourceSecurityGroupOwnerId": "243238936187"
+      }
+    },
+    "ingress27": {
+      "Type": "AWS::EC2::SecurityGroupIngress",
+      "Properties": {
+        "GroupId": {
+          "Ref": "sgDOAccounts"
+        },
+        "IpProtocol": "tcp",
+        "FromPort": "22",
+        "ToPort": "22",
+        "SourceSecurityGroupId": {
+          "Ref": "sgBastion"
+        },
+        "SourceSecurityGroupOwnerId": "243238936187"
+      }
+    },
+    "ingress28": {
+      "Type": "AWS::EC2::SecurityGroupIngress",
+      "Properties": {
+        "GroupId": {
+          "Ref": "sgMXAccounts"
+        },
+        "IpProtocol": "tcp",
+        "FromPort": "22",
+        "ToPort": "22",
+        "SourceSecurityGroupId": {
+          "Ref": "sgBastion"
+        },
+        "SourceSecurityGroupOwnerId": "243238936187"
+      }
+    },
+    "ingress29": {
+      "Type": "AWS::EC2::SecurityGroupIngress",
+      "Properties": {
+        "GroupId": {
+          "Ref": "sgSVAccounts"
+        },
+        "IpProtocol": "tcp",
+        "FromPort": "22",
+        "ToPort": "22",
+        "SourceSecurityGroupId": {
+          "Ref": "sgBastion"
+        },
+        "SourceSecurityGroupOwnerId": "243238936187"
+      }
+    },
+    "ingress30": {
+      "Type": "AWS::EC2::SecurityGroupIngress",
+      "Properties": {
+        "GroupId": {
+          "Ref": "sgNIAccounts"
+        },
+        "IpProtocol": "tcp",
+        "FromPort": "22",
+        "ToPort": "22",
+        "SourceSecurityGroupId": {
+          "Ref": "sgBastion"
+        },
+        "SourceSecurityGroupOwnerId": "243238936187"
+      }
+    },
+    "ingress31": {
+      "Type": "AWS::EC2::SecurityGroupIngress",
+      "Properties": {
+        "GroupId": {
+          "Ref": "sgPAAccounts"
+        },
+        "IpProtocol": "tcp",
+        "FromPort": "22",
+        "ToPort": "22",
+        "SourceSecurityGroupId": {
+          "Ref": "sgBastion"
+        },
+        "SourceSecurityGroupOwnerId": "243238936187"
+      }
+    }
+  },
+
+    "Outputs" : {
+        "PrivateApiSNZ1" : {
+            "Value" : { "Ref" : "subnetPrivateApisZ1" }
+        },
+        "PrivateApiSNZ2" : {
+            "Value" : { "Ref" : "subnetPrivateApisZ2" }
+        },
+        "PublicApiSNZ1" : {
+            "Value" : { "Ref" : "subnetPublicApisZ1" }
+        },
+        "PublicApiSNZ2" : {
+            "Value" : { "Ref" : "subnetPublicApisZ2" }
+        },
+        "IcelandSN" : {
+            "Value" : { "Ref" : "subnetWorkerIS" }
+        },
+        "GuatemalaSN" : {
+            "Value" : { "Ref" : "subnetWorkerGT" }
+        },
+        "DomincanRepublicSN" : {
+            "Value" : { "Ref" : "subnetWorkerDO" }
+        },
+        "mexicoSN" : {
+            "Value" : { "Ref" : "subnetWorkerMX" }
+        },
+        "ElSalvadorSN" : {
+            "Value" : { "Ref" : "subnetWorkerSV" }
+        },
+        "NicaraguaSN" : {
+            "Value" : { "Ref" : "subnetWorkerNI" }
+        },
+        "PanamaSN" : {
+            "Value" : { "Ref" : "subnetWorkerPA" }
+        },
+        "PrivateApisSG" : {
+            "Value" : { "Ref" : "sgPrivateApis" }
+        },
+        "PublicApisSG" : {
+            "Value" : { "Ref" : "sgPublicApis" }
+        },
+        "ISAccountsSG" : {
+            "Value" : { "Ref" : "sgISAccounts" }
+        },
+        "GTAccountsSG" : {
+            "Value" : { "Ref" : "sgGTAccounts" }
+        },
+        "DOAccountsSG" : {
+            "Value" : { "Ref" : "sgDOAccounts" }
+        },
+        "MXAccountsSG" : {
+            "Value" : { "Ref" : "sgMXAccounts" }
+        },
+        "SVAccountsSG" : {
+            "Value" : { "Ref" : "sgSVAccounts" }
+        },
+        "NIAccountsSG" : {
+            "Value" : { "Ref" : "sgNIAccounts" }
+        },
+        "PAAccountsSG" : {
+            "Value" : { "Ref" : "sgPAAccounts" }
+        },
+        "MonitorsSG" : {
+            "Value" : { "Ref" : "sgMonitors" }
+        },
+        "LogstashSG" : {
+            "Value" : { "Ref" : "sgLogstash" }
+        },
+        "BastionSG" : {
+            "Value" : { "Ref" : "sgBastion" }
+        },
+        "NATSG" : {
+            "Value" : { "Ref" : "sgNat" }
+        },
+        "OpenSwanSG" : {
+            "Value" : { "Ref" : "sgOpenswan" }
+        }
+  },
+  "Description": "Public API VPC"
+}

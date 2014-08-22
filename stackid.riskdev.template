@@ -1,0 +1,391 @@
+{
+  "AWSTemplateFormatVersion" : "2010-09-09",
+
+  "Description" : "Master template for creation of QA - filename: stackid.riskdev.template",
+
+ "Parameters" : {
+    "appEnvironment" : {
+      "Type" : "String",
+      "Description" : "Environment for the NAT, i.e. dev, production, etc.",
+      "Default" : "sandbox"
+    },
+
+    "KeyName" : {
+      "Type" : "String",
+      "Description" : "The the key to SSH machines",
+      "Default" : "stamp-sandbox"
+    },
+
+    "StackID" : {
+      "Type" : "String",
+      "Description" : "Stack ID name",
+      "Default" : "-riskdev"
+    },
+
+    "InstanceType" : {
+      "Description" : "Instance type for API",
+      "Type" : "String",
+      "Default" : "t1.micro",
+      "AllowedValues" : [ "t1.micro","m1.small","m3.medium","m1.large","m1.xlarge","m2.xlarge","m2.2xlarge","m2.4xlarge","m3.xlarge","m3.2xlarge","c1.medium","c1.xlarge","cc1.4xlarge","cc2.8xlarge","cg1.4xlarge"],
+      "ConstraintDescription" : "must be a valid EC2 instance type."
+    },
+
+    "ApiSecurityGroup" : {
+      "Type" : "String",
+      "Description" : "Security Group ID for api",
+      "Default" : "sg-12eb6a77"
+    },
+
+    "PrivateSecurityGroup" : {
+      "Type" : "String",
+      "Description" : "Security Group ID for Private network",
+      "Default" : "sg-1eeb6a7b"
+    },
+
+    "MonitorsSecurityGroup" : {
+      "Type" : "String",
+      "Description" : "Security Group ID for Monitors",
+      "Default" : "sg-18eb6a7d"
+    },
+
+    "LogstashSecurityGroup" : {
+      "Type" : "String",
+      "Description" : "Security Group ID for Logstash",
+      "Default" : "sg-13eb6a76"
+    },
+
+    "AccountsISSecurityGroup" : {
+      "Type" : "String",
+      "Description" : "Security Group ID for Accounts Iceland",
+      "Default" : "sg-10eb6a75"
+    },
+
+    "AccountsMXSecurityGroup" : {
+      "Type" : "String",
+      "Description" : "Security Group ID for Accounts Mexico",
+      "Default" : "sg-1beb6a7e"
+    },
+
+    "AccountsSVSecurityGroup" : {
+      "Type" : "String",
+      "Description" : "Security Group ID for Accounts El Salvador",
+      "Default" : "sg-0deb6a68"
+    },
+
+    "AccountsGTSecurityGroup" : {
+      "Type" : "String",
+      "Description" : "Security Group ID for Accounts Guatemala",
+      "Default" : "sg-1feb6a7a"
+    },
+
+    "AccountsDOSecurityGroup" : {
+      "Type" : "String",
+      "Description" : "Security Group ID for Accounts Dominican Republic",
+      "Default" : "sg-1ceb6a79"
+    },
+
+    "AccountsNISecurityGroup" : {
+      "Type" : "String",
+      "Description" : "Security Group ID for Accounts Nicaragua",
+      "Default" : "sg-1deb6a78"
+    },
+
+    "AccountsPASecurityGroup" : {
+      "Type" : "String",
+      "Description" : "Security Group ID for Accounts Panama",
+      "Default" : "sg-19eb6a7c"
+    },
+
+    "PublicSubnetId" : {
+      "Type" : "String",
+      "Description" : "Subnet id that the api belongs",
+      "Default" : "subnet-f15bae86"
+    },
+
+    "PrivateSubnetId" : {
+      "Type" : "String",
+      "Description" : "Subnet id that the api belongs",
+      "Default" : "subnet-fc5bae8b"
+    },
+
+    "gtSubnetID" : {
+      "Type" : "String",
+      "Description" : "Subnet ID for GT worker",
+      "Default" : "subnet-ff5bae88"
+    },
+
+    "doSubnetID" : {
+      "Type" : "String",
+      "Description" : "Subnet ID for DO worker",
+      "Default" : "subnet-fe5bae89"    
+    },
+
+    "mxSubnetID" : {
+      "Type" : "String",
+      "Description" : "Subnet ID for MX worker",
+      "Default" : "subnet-fa5bae8d"
+    },
+
+    "svSubnetID" : {
+      "Type" : "String",
+      "Description" : "Subnet ID for SV worker",
+      "Default" : "subnet-f05bae87"
+    },
+
+    "niSubnetID" : {
+      "Type" : "String",
+      "Description" : "Subnet ID for NI worker",
+      "Default" : "subnet-f25bae85"
+    },
+
+    "paSubnetID" : {
+      "Type" : "String",
+      "Description" : "Subnet ID for PA worker",
+      "Default" : "subnet-fd5bae8a"
+    },
+
+    "isSubnetID" : {
+      "Type" : "String",
+      "Description" : "Subnet ID for IS worker",
+      "Default" : "subnet-fb5bae8c"
+    }
+  },
+
+  "Mappings" : {
+    "dot" : {
+      "dev"            : { "DOT" : ".dev" },
+      "qa"             : { "DOT" : ".qa" },
+      "sandbox"        : { "DOT" : ".sandbox" },
+      "production"     : { "DOT" : "" }
+    }
+  },
+
+  "Resources" : {
+
+    "API" : {
+      "Type" : "AWS::CloudFormation::Stack",
+      "Properties" : {
+        "TemplateURL" : "https://s3-us-west-2.amazonaws.com/pruebastack/api.template",
+        "Parameters" : {
+          "KeyName": {"Ref":"KeyName"},
+          "SubnetId" : { "Ref" : "PublicSubnetId"},
+          "SecurityGroupId" : { "Ref" : "ApiSecurityGroup"},
+          "DeployBranch" : "master",
+          "StackID" : { "Ref" : "StackID" },
+          "InstanceType" : { "Ref" : "InstanceType"},
+          "Environment" : {"Ref" : "appEnvironment"}
+        }
+      }
+    },
+
+    "HelloWorld" : {
+      "Type" : "AWS::CloudFormation::Stack",
+      "Properties" : {
+        "TemplateURL" : "https://s3-us-west-2.amazonaws.com/pruebastack/hello-world.template",
+        "Parameters" : {
+          "KeyName" : { "Ref" : "KeyName" },
+          "SubnetId" : { "Ref" : "PrivateSubnetId" },
+          "SecurityGroupId" : { "Ref" : "PrivateSecurityGroup" },
+          "DeployBranch" : "master",
+          "StackID" : { "Ref" : "StackID" },
+          "Environment" : { "Ref" : "appEnvironment" }
+        }
+      }
+    },
+
+    "catalog" : {
+      "Type" : "AWS::CloudFormation::Stack",
+      "Properties" : {
+        "TemplateURL" : "https://s3-us-west-2.amazonaws.com/pruebastack/catalog.template",
+        "Parameters" : {
+          "KeyName" : { "Ref" : "KeyName" },
+          "SubnetId" : { "Ref" : "PrivateSubnetId" },
+          "SecurityGroupId" : { "Ref" : "PrivateSecurityGroup" },
+          "DeployBranch" : "master",
+          "StackID" : { "Ref" : "StackID" },
+          "Environment" : { "Ref" : "appEnvironment" }
+        }
+      }
+    },
+
+    "accountsGt" : {
+      "Type" : "AWS::CloudFormation::Stack",
+      "Properties" : {
+        "TemplateURL" : "https://s3-us-west-2.amazonaws.com/pruebastack/accounts.gt.template",
+        "Parameters" : {
+          "KeyName" : { "Ref" : "KeyName" },
+          "SubnetId" : { "Ref" : "gtSubnetID" },
+          "SecurityGroupId" : { "Ref" : "AccountsGTSecurityGroup" },
+          "DeployBranch" : "master",
+          "StackID" : { "Ref" : "StackID" },
+          "Environment" : { "Ref" : "appEnvironment" }
+        }
+      }
+    },
+
+    "accountsMx" : {
+      "Type" : "AWS::CloudFormation::Stack",
+      "Properties" : {
+        "TemplateURL" : "https://s3-us-west-2.amazonaws.com/pruebastack/accounts.mx.template",
+        "Parameters" : {
+          "KeyName" : { "Ref" : "KeyName" },
+          "SubnetId" : { "Ref" : "mxSubnetID" },
+          "SecurityGroupId" : { "Ref" : "AccountsMXSecurityGroup" },
+          "DeployBranch" : "master",
+          "StackID" : { "Ref" : "StackID" },
+          "Environment" : { "Ref" : "appEnvironment" }
+        }
+      }
+    },
+
+    "accountsNi" : {
+      "Type" : "AWS::CloudFormation::Stack",
+      "Properties" : {
+        "TemplateURL" : "https://s3-us-west-2.amazonaws.com/pruebastack/ni_accounts.template",
+        "Parameters" : {
+          "KeyName" : { "Ref" : "KeyName" },
+          "SubnetId" : { "Ref" : "niSubnetID" },
+          "SecurityGroupId" : { "Ref" : "AccountsNISecurityGroup" },
+          "DeployBranch" : "master",
+          "StackID" : { "Ref" : "StackID" },
+          "Environment" : { "Ref" : "appEnvironment" }
+        }
+      }
+    },
+
+    "Forrest" : {
+      "Type" : "AWS::CloudFormation::Stack",
+      "Properties" : {
+        "TemplateURL" : "https://s3-us-west-2.amazonaws.com/pruebastack/forrest.template",
+        "Parameters" : {
+          "KeyName" : { "Ref" : "KeyName" },
+          "SubnetId" : { "Ref" : "PrivateSubnetId" },
+          "SG" : { "Ref" : "PrivateSecurityGroup" },
+          "DeployBranch" : "master",
+          "StackID" : { "Ref" : "StackID" },
+          "Environment" : { "Ref" : "appEnvironment" }
+        }
+      }
+    },
+
+    "monitors" : {
+      "Type" : "AWS::CloudFormation::Stack",
+      "Properties" : {
+        "TemplateURL" : "https://s3-us-west-2.amazonaws.com/pruebastack/monitors.template",
+        "Parameters" : {
+          "KeyName" : { "Ref" : "KeyName" },
+          "SubnetId" : { "Ref" : "PrivateSubnetId" },
+          "SecurityGroupId" : { "Ref" : "PrivateSecurityGroup" },
+          "DeployBranch" : "master",
+          "StackID" : { "Ref" : "StackID" },
+          "Environment" : { "Ref" : "appEnvironment" }
+        }
+      }
+    },  
+
+    "InternalGateway" : {
+      "Type" : "AWS::CloudFormation::Stack",
+      "Properties" : {
+        "TemplateURL" : "https://s3-us-west-2.amazonaws.com/pruebastack/internal_gateway_lp103.template",
+        "Parameters" : {
+          "KeyName" : { "Ref" : "KeyName" },
+          "SubnetId" : { "Ref" : "PrivateSubnetId" },
+          "SecurityGroupId" : { "Ref" : "PrivateSecurityGroup" },
+          "DeployBranch" : "master",
+          "StackID" : { "Ref" : "StackID" },
+          "Environment" : { "Ref" : "appEnvironment" }
+        }
+      }
+    },
+
+    "Events" : {
+      "Type" : "AWS::CloudFormation::Stack",
+      "Properties" : {
+        "TemplateURL" : "https://s3-us-west-2.amazonaws.com/pruebastack/events.template",
+        "Parameters" : {
+          "KeyName" : { "Ref" : "KeyName" },
+          "SubnetId" : { "Ref" : "PrivateSubnetId" },
+          "SecurityGroupId" : { "Ref" : "PrivateSecurityGroup" },
+          "DeployBranch" : "master",
+          "StackID" : { "Ref" : "StackID" },
+          "Environment" : { "Ref" : "appEnvironment" }
+        }
+      }
+    },
+
+    "Notifications" : {
+      "Type" : "AWS::CloudFormation::Stack",
+      "Properties" : {
+        "TemplateURL" : "https://s3-us-west-2.amazonaws.com/pruebastack/notifications.template",
+        "Parameters" : {
+          "KeyName" : { "Ref" : "KeyName" },
+          "SubnetId" : { "Ref" : "PrivateSubnetId" },
+          "SecurityGroupId" : { "Ref" : "PrivateSecurityGroup" },
+          "DeployBranch" : "master",
+          "StackID" : { "Ref" : "StackID" },
+          "Environment" : { "Ref" : "appEnvironment" }
+        }
+      }
+    },
+
+    "GTWorkerPronet" : {
+      "Type" : "AWS::CloudFormation::Stack",
+      "Properties" : {
+        "TemplateURL" : "https://s3-us-west-2.amazonaws.com/pruebastack/gt_worker_pronet.template",
+        "Parameters" : {
+          "KeyName" : { "Ref" : "KeyName" },
+          "SubnetId" : { "Ref" : "gtSubnetID" },
+          "SecurityGroupId" : { "Ref" : "AccountsGTSecurityGroup" },
+          "DeployBranch" : "feature/risk_ofac_only",
+          "StackID" : { "Ref" : "StackID" },
+          "Environment" : { "Ref" : "appEnvironment" }
+        }
+      }
+    },
+
+    "MXWorkerRedEfectiva" : {
+      "Type" : "AWS::CloudFormation::Stack",
+      "Properties" : {
+        "TemplateURL" : "https://s3-us-west-2.amazonaws.com/pruebastack/mx_worker_redefectiva.template",
+        "Parameters" : {
+          "KeyName" : { "Ref" : "KeyName" },
+          "SubnetId" : { "Ref" : "mxSubnetID" },
+          "SecurityGroupId" : { "Ref" : "AccountsMXSecurityGroup" },
+          "DeployBranch" : "feature/risk_ofac_only",
+          "StackID" : { "Ref" : "StackID" },
+          "Environment" : { "Ref" : "appEnvironment" }
+        }
+      }
+    },
+
+    "NIWorkerPuntofacil" : {
+      "Type" : "AWS::CloudFormation::Stack",
+      "Properties" : {
+        "TemplateURL" : "https://s3-us-west-2.amazonaws.com/pruebastack/ni_worker_puntofacil.template",
+        "Parameters" : {
+          "KeyName" : { "Ref" : "KeyName" },
+          "SubnetId" : { "Ref" : "niSubnetID" },
+          "SecurityGroupId" : { "Ref" : "AccountsNISecurityGroup" },
+          "DeployBranch" : "feature/risk_ofac_only",
+          "StackID" : { "Ref" : "StackID" },
+          "Environment" : { "Ref" : "appEnvironment" }
+        }
+      }
+    },
+
+    "Payments" : {
+      "Type" : "AWS::CloudFormation::Stack",
+      "Properties" : {
+        "TemplateURL" : "https://s3-us-west-2.amazonaws.com/pruebastack/payments.template",
+        "Parameters" : {
+          "KeyName" : { "Ref" : "KeyName" },
+          "SubnetId" : { "Ref" : "PrivateSubnetId" },
+          "SecurityGroupId" : { "Ref" : "PrivateSecurityGroup" },
+          "DeployBranch" : "master",
+          "StackID" : { "Ref" : "StackID" },
+          "Environment" : { "Ref" : "appEnvironment" }
+        }
+      }
+    }
+  }
+}
