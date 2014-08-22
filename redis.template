@@ -144,14 +144,14 @@
           "sudo gem install puppet --no-rdoc --no-ri > /tmp/gem-puppet.log 2>&1 || error_exit 'Failed install puppet gem'\n",
 
           "# Install Librarian Ruby\n",
-          "sudo gem install librarian-puppet -v 1.0.3 --no-rdoc --no-ri > /tmp/gem-librarian-puppet.log 2>&1 || error_exit 'Failed install librarian puppet gem'\n",
+          "sudo gem install librarian-puppet --no-rdoc --no-ri > /tmp/gem-librarian-puppet.log 2>&1 || error_exit 'Failed install librarian puppet gem'\n",
 
           "# Install application's dependencies via puppet\n",
           "cd /home/ubuntu/redis_server/puppet\n",
           "export HOME=/home/ubuntu && librarian-puppet install --clean --verbose > /tmp/librarian-puppet.log 2>&1 || error_exit 'failed to install puppet submodules'\n",
 
           "cd /home/ubuntu/redis_server\n",
-          "sudo puppet apply --verbose --modulepath=./puppet/modules ./puppet/manifests/aws-",{"Ref":"Environment"},".pp  > /tmp/puppet.log 2>&1 || error_exit 'failed to apply puppet manifests'\n",
+          "sudo puppet apply --verbose --modulepath=./puppet/modules ./puppet/manifests/site.pp  > /tmp/puppet.log 2>&1 || error_exit 'failed to apply puppet manifests'\n",
 
           "# Signal setup is complete\n",
           "cfn-signal -e $? -r 'Completed configuration' '",

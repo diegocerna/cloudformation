@@ -134,6 +134,7 @@
         ]
       }
     },
+    
     "subnetPrivateApisZ1": {
       "Type": "AWS::EC2::Subnet",
       "Properties": {
@@ -145,7 +146,7 @@
         "Tags": [
           {
             "Key": "Name",
-            "Value": { "Fn::Join" : [ " ", ["Private APIs", { "Ref" : "Environment"} ] ] }
+            "Value": { "Fn::Join" : [ " ", ["Private APIs AZ1", { "Ref" : "Environment"} ] ] }
           },
           {
             "Key": "Application",
@@ -169,11 +170,11 @@
         "Tags": [
           {
             "Key": "Name",
-            "Value": { "Fn::Join" : [ " ", ["Private APIs", { "Ref" : "Environment"} ] ] }
+            "Value": { "Fn::Join" : [ " ", ["Private APIs AZ2", { "Ref" : "Environment"} ] ] }
           },
           {
             "Key": "Application",
-            "Value": "Public API"
+            "Value": "PRIVATE API"
           },
           {
             "Key": "Environment",
@@ -197,7 +198,7 @@
           },
           {
             "Key": "Application",
-            "Value": "Public API"
+            "Value": "WORKER"
           },
           {
             "Key": "Environment",
@@ -222,7 +223,7 @@
           },
           {
             "Key": "Application",
-            "Value": "Public API"
+            "Value": "WORKER"
           },
           {
             "Key": "Environment",
@@ -247,7 +248,7 @@
           },
           {
             "Key": "Application",
-            "Value": "Public API"
+            "Value": "WORKER IS"
           },
           {
             "Key": "Environment",
@@ -272,7 +273,7 @@
           },
           {
             "Key": "Application",
-            "Value": "Public API"
+            "Value": "WORKER DO"
           },
           {
             "Key": "Environment",
@@ -297,7 +298,7 @@
           },
           {
             "Key": "Application",
-            "Value": "Public API"
+            "Value": "WORKER SV"
           },
           {
             "Key": "Environment",
@@ -322,7 +323,7 @@
           },
           {
             "Key": "Application",
-            "Value": "Public API"
+            "Value": "WORKER NI"
           },
           {
             "Key": "Environment",
@@ -347,7 +348,7 @@
           },
           {
             "Key": "Application",
-            "Value": "Public API"
+            "Value": "Worker AP"
           },
           {
             "Key": "Environment",
@@ -357,18 +358,43 @@
       }
     },
 
-    "subnetPublicApis": {
+    "subnetPublicApisAZ1": {
       "Type": "AWS::EC2::Subnet",
       "Properties": {
         "CidrBlock": { "Fn::FindInMap" : [ "subnets", { "Ref" : "Environment" }, "PUSN" ]},
-        "AvailabilityZone": { "Fn::FindInMap" : [ "subnetZone", { "Ref" : "AWS::Region" }, "ZONE" ]},
+        "AvailabilityZone": { "Fn::FindInMap" : [ "subnetZone1", { "Ref" : "AWS::Region" }, "ZONE" ]},
         "VpcId": {
           "Ref": "vpc"
         },
         "Tags": [
           {
             "Key": "Name",
-            "Value": { "Fn::Join" : [ " ", ["Plubic APIs", { "Ref" : "Environment"} ] ] }
+            "Value": { "Fn::Join" : [ " ", ["Plubic APIs AZ1", { "Ref" : "Environment"} ] ] }
+          },
+          {
+            "Key": "Environment",
+            "Value": { "Ref" : "Environment" }
+          },
+          {
+            "Key": "Application",
+            "Value": "Public API"
+          }
+        ]
+      }
+    },
+
+    "subnetPublicApisAZ2": {
+      "Type": "AWS::EC2::Subnet",
+      "Properties": {
+        "CidrBlock": { "Fn::FindInMap" : [ "subnets", { "Ref" : "Environment" }, "PUSN" ]},
+        "AvailabilityZone": { "Fn::FindInMap" : [ "subnetZone2", { "Ref" : "AWS::Region" }, "ZONE" ]},
+        "VpcId": {
+          "Ref": "vpc"
+        },
+        "Tags": [
+          {
+            "Key": "Name",
+            "Value": { "Fn::Join" : [ " ", ["Plubic APIs AZ2", { "Ref" : "Environment"} ] ] }
           },
           {
             "Key": "Environment",
@@ -834,7 +860,7 @@
       "Type": "AWS::EC2::SecurityGroup",
       "DependsOn": "sgBastion",
       "Properties": {
-        "GroupDescription": "Private APIs",
+        "GroupDescription": "Logstash SG",
         "VpcId": {
           "Ref": "vpc"
           },
@@ -955,7 +981,7 @@
             "IpProtocol": "tcp",
             "FromPort": "22",
             "ToPort": "22",
-            "CidrIp": "0.0.0.0/0"
+            "CidrIp": "186.151.61.58/32,186.64.109.136/29,190.99.116.192/29,190.99.116.112/29,38.88.174.184/29,38.99.15.104/29,38.99.18.224/28,38.99.29.128/25,38.99.38.0/25,192.168.0.0/24"
           }
         ],
         "SecurityGroupEgress": [

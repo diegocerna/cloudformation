@@ -42,11 +42,11 @@
     },
 
     "keys" : {
-          "dev"            : { "keypair" : "tbp_dev"},
-          "qa"             : { "keypair" : "tbp_qa" },
-          "test"           : { "keypair" : "tbp_test" },
-          "sandbox"        : { "keypair" : "tbp_sandbox"},
-          "production"     : { "keypair" : "tbp_prod"}
+          "dev"            : { "keypair" : "stamp-dev"},
+          "qa"             : { "keypair" : "stamp-qa" },
+          "test"           : { "keypair" : "stamp-test" },
+          "sandbox"        : { "keypair" : "stamp-sandbox"},
+          "production"     : { "keypair" : "stamp-prod"}
     },
 
     "subnets" : {
@@ -2273,6 +2273,78 @@
         "SourceSecurityGroupOwnerId": "243238936187"
       }
     }
+  },
+
+  "Outputs" : {
+        "PrivateApiSN" : {
+            "Value" : { "Ref" : "subnetPrivateApis" }
+        },
+        "PublicApiSN" : {
+            "Value" : { "Ref" : "subnetPublicApis" }
+        },
+        "IcelandSN" : {
+            "Value" : { "Ref" : "subnetWorkerIS" }
+        },
+        "GuatemalaSN" : {
+            "Value" : { "Ref" : "subnetWorkerGT" }
+        },
+        "DomincanRepublicSN" : {
+            "Value" : { "Ref" : "subnetWorkerDO" }
+        },
+        "mexicoSN" : {
+            "Value" : { "Ref" : "subnetWorkerMX" }
+        },
+        "ElSalvadorSN" : {
+            "Value" : { "Ref" : "subnetWorkerSV" }
+        },
+        "NicaraguaSN" : {
+            "Value" : { "Ref" : "subnetWorkerNI" }
+        },
+        "PanamaSN" : {
+            "Value" : { "Ref" : "subnetWorkerPA" }
+        },
+        "PrivateApisSG" : {
+            "Value" : { "Ref" : "sgPrivateApis" }
+        },
+        "PublicApisSG" : {
+            "Value" : { "Ref" : "sgPublicApis" }
+        },
+        "ISAccountsSG" : {
+            "Value" : { "Ref" : "sgISAccounts" }
+        },
+        "GTAccountsSG" : {
+            "Value" : { "Ref" : "sgGTAccounts" }
+        },
+        "DOAccountsSG" : {
+            "Value" : { "Ref" : "sgDOAccounts" }
+        },
+        "MXAccountsSG" : {
+            "Value" : { "Ref" : "sgMXAccounts" }
+        },
+        "SVAccountsSG" : {
+            "Value" : { "Ref" : "sgSVAccounts" }
+        },
+        "NIAccountsSG" : {
+            "Value" : { "Ref" : "sgNIAccounts" }
+        },
+        "PAAccountsSG" : {
+            "Value" : { "Ref" : "sgPAAccounts" }
+        },
+        "MonitorsSG" : {
+            "Value" : { "Ref" : "sgMonitors" }
+        },
+        "LogstashSG" : {
+            "Value" : { "Ref" : "sgLogstash" }
+        },
+        "BastionSG" : {
+            "Value" : { "Ref" : "sgBastion" }
+        },
+        "NATSG" : {
+            "Value" : { "Ref" : "sgNat" }
+        },
+        "OpenSwanSG" : {
+            "Value" : { "Ref" : "sgOpenswan" }
+        }
   },
   "Description": "Public API VPC"
 }

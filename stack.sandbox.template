@@ -13,7 +13,7 @@
     "KeyName" : {
       "Type" : "String",
       "Description" : "The the key to SSH machines",
-      "Default" : "tbp-sandbox"
+      "Default" : "stamp-sandbox"
     },
 
     "StackID" : {
@@ -33,120 +33,120 @@
     "ApiSecurityGroup" : {
       "Type" : "String",
       "Description" : "Security Group ID for api",
-      "Default" : "sg-5d78d238"
+      "Default" : "sg-a648cfc3"
     },
 
     "PrivateSecurityGroup" : {
       "Type" : "String",
       "Description" : "Security Group ID for Private network",
-      "Default" : "sg-5378d236"
+      "Default" : "sg-a748cfc2"
     },
 
     "MonitorsSecurityGroup" : {
       "Type" : "String",
       "Description" : "Security Group ID for Monitors",
-      "Default" : "sg-5778d232"
+      "Default" : "sg-a048cfc5"
     },
 
     "LogstashSecurityGroup" : {
       "Type" : "String",
       "Description" : "Security Group ID for Logstash",
-      "Default" : "sg-5178d234"
+      "Default" : "sg-a148cfc4"
     },
 
     "AccountsISSecurityGroup" : {
       "Type" : "String",
       "Description" : "Security Group ID for Accounts Iceland",
-      "Default" : "sg-5278d237"
+      "Default" : "sg-a748cfc2"
     },
 
     "AccountsMXSecurityGroup" : {
       "Type" : "String",
       "Description" : "Security Group ID for Accounts Mexico",
-      "Default" : "sg-5678d233"
+      "Default" : "sg-a348cfc6"
     },
 
     "AccountsSVSecurityGroup" : {
       "Type" : "String",
       "Description" : "Security Group ID for Accounts El Salvador",
-      "Default" : "sg-4d78d228"
+      "Default" : "sg-df48cfba"
     },
 
     "AccountsGTSecurityGroup" : {
       "Type" : "String",
       "Description" : "Security Group ID for Accounts Guatemala",
-      "Default" : "sg-5078d235"
+      "Default" : "sg-a448cfc1"
     },
 
     "AccountsDOSecurityGroup" : {
       "Type" : "String",
       "Description" : "Security Group ID for Accounts Dominican Republic",
-      "Default" : "sg-4a78d22f"
+      "Default" : "sg-a248cfc7"
     },
 
     "AccountsNISecurityGroup" : {
       "Type" : "String",
       "Description" : "Security Group ID for Accounts Nicaragua",
-      "Default" : "sg-5478d231"
+      "Default" : "sg-ac48cfc9"
     },
 
     "AccountsPASecurityGroup" : {
       "Type" : "String",
       "Description" : "Security Group ID for Accounts Panama",
-      "Default" : "sg-5578d230"
+      "Default" : "sg-af48cfca"
     },
 
     "PublicSubnetId" : {
       "Type" : "String",
       "Description" : "Subnet id that the api belongs",
-      "Default" : "subnet-94cc0ff1"
+      "Default" : "subnet-4ebd4839"
     },
 
     "PrivateSubnetId" : {
       "Type" : "String",
       "Description" : "Subnet id that the api belongs",
-      "Default" : "subnet-97cc0ff2"
+      "Default" : "subnet-44bd4833"
     },
 
     "gtSubnetID" : {
       "Type" : "String",
-      "Default" : "subnet-88cc0fed",
+      "Default" : "subnet-4fbd4838",
       "Description" : "Subnet ID for GT worker"
     },
 
     "doSubnetID" : {
       "Type" : "String",
-      "Default" : "subnet-8fcc0fea",
+      "Default" : "subnet-42bd4835",
       "Description" : "Subnet ID for DO worker"
     },
 
     "mxSubnetID" : {
       "Type" : "String",
-      "Default" : "subnet-8acc0fef",
+      "Default" : "subnet-4dbd483a",
       "Description" : "Subnet ID for MX worker"
     },
 
     "svSubnetID" : {
       "Type" : "String",
-      "Default" : "subnet-95cc0ff0",
+      "Default" : "subnet-43bd4834",
       "Description" : "Subnet ID for SV worker"
     },
 
     "niSubnetID" : {
       "Type" : "String",
-      "Default" : "subnet-96cc0ff3",
+      "Default" : "subnet-40bd4837",
       "Description" : "Subnet ID for NI worker"
     },
 
     "paSubnetID" : {
       "Type" : "String",
-      "Default" : "subnet-8ecc0feb",
+      "Default" : "subnet-4cbd483b",
       "Description" : "Subnet ID for PA worker"
     },
 
     "isSubnetID" : {
       "Type" : "String",
-      "Default" : "subnet-8bcc0fee",
+      "Default" : "subnet-41bd4836",
       "Description" : "Subnet ID for IS worker"
     }
   },
@@ -374,7 +374,7 @@
           "KeyName" : { "Ref" : "KeyName" },
           "SubnetId" : { "Ref" : "PrivateSubnetId" },
           "SecurityGroupId" : { "Ref" : "PrivateSecurityGroup" },
-          "DeployBranch" : "release/0.7.0",
+          "DeployBranch" : "master",
           "StackID" : { "Ref" : "StackID" },
           "Environment" : { "Ref" : "appEnvironment" }
         }
@@ -420,7 +420,7 @@
           "SubnetId" : { "Ref" : "gtSubnetID" },
           "SecurityGroupId" : { "Ref" : "AccountsGTSecurityGroup" },
           "DeployBranch" : "master",
-          "StackID" : { "Ref" : "StackID" },
+          "StackID" : { "Ref" : "StackID" },edit
           "Environment" : { "Ref" : "appEnvironment" }
         }
       }

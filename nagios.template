@@ -1,7 +1,7 @@
 {
   "AWSTemplateFormatVersion" : "2010-09-09",
 
-  "Description" : "Configure nagios server Instance",
+  "Description" : "NAGIOS Monitoring Instance - filename:nagios.template",
 
   "Parameters" : {
     "KeyName": {
@@ -15,23 +15,17 @@
     },
 
     "InstanceType" : {
-      "Description" : "Instance type for Internal gw",
+      "Description" : "WebServer EC2 instance type",
       "Type" : "String",
       "Default" : "m3.medium",
       "AllowedValues" : [ "t1.micro","m1.small","m3.medium","m1.large","m1.xlarge","m2.xlarge","m2.2xlarge","m2.4xlarge","m3.xlarge","m3.2xlarge","c1.medium","c1.xlarge","cc1.4xlarge","cc2.8xlarge","cg1.4xlarge"],
       "ConstraintDescription" : "must be a valid EC2 instance type."
     },
 
-    "SubnetId" : {
+    "SubnetId" : {  
       "Type" : "String",
       "Description" : "SubnetId of an existing subnet in your Virtual Private Cloud (VPC)",
       "Default": "subnet-"
-    },
-
-    "StackID" : {
-      "Type" : "String",
-      "Description" : "Stack ID name",
-      "Default" : "-"
     },
 
     "SecurityGroupId" : {
@@ -40,30 +34,45 @@
       "Default": "sg-"
     },
 
-    "Environment": {
-      "Description" : "Subdomain to access EC2 Intance",
-      "Type": "String",
-      "Default": "dev"
-    },
+    "StackID" : {
+      "Type" : "String",
+      "Description" : "Stack ID name",
+      "Default" : "-"
+    }, 
 
     "DeployBranch" : {
       "Type" : "String",
       "Description" : "Git branch where to deploy the code from.",
-      "Default" : "master"
+      "Default" : ""
+    },
+
+    "Environment" : {
+      "Type" : "String",
+      "Description" : "Application's environment.",
+      "Default" : ""
+    },
+
+    "Repository" : {
+      "Type" : "String",
+      "Description" : "Application's GitHub Repository.",
+      "Default" : "git@github.com:blue-kite/nagios.git"
     }
+
   },
 
   "Mappings" : {
-    "nagiosAMI" : {
-      "us-east-1"      : { "AMI" : "ami-cdc2fda4" },
-      "us-west-1"      : { "AMI" : "ami-82b98bc7" },
-      "us-west-2"      : { "AMI" : "ami-997eb8fc" },
-      "sa-east-1"      : { "AMI" : "ami-d545e5c8" },
-      "eu-west-1"      : { "AMI" : "ami-d03dcaa7"}
+    "RegionMap" : {
+      "sa-east-1"      : {"AMI" : "ami-d545e5c8" },
+      "us-west-1"      : {"AMI" : "ami-82b98bc7" },
+      "ap-northeast-1" : {"AMI" : "ami-35bbd334" },
+      "ap-southeast-1" : {"AMI" : "ami-605c0a32" },
+      "ap-southeast-2" : {"AMI" : "ami-fb4bd5c1" },
+      "eu-west-1"      : {"AMI" : "ami-d03dcaa7" },
+      "us-east-1"      : {"AMI" : "ami-cdc2fda4" },
+      "us-west-2"      : {"AMI" : "ami-9bfe85ab" }
     },
-
     "dot" : {
-      "test"            : { "DOT" : ".test" },
+      "test"           : { "DOT" : ".test" },
       "dev"            : { "DOT" : ".dev" },
       "qa"             : { "DOT" : ".qa" },
       "sandbox"        : { "DOT" : ".sandbox" },
@@ -73,101 +82,47 @@
 
   "Resources" : {
 
+
     "DNSRecord" : {
       "Type" : "AWS::Route53::RecordSet",
       "Properties" : {
         "HostedZoneName" : "bluekite.com.",
         "Comment" : "DNS name for my instance.",
-        "Name" : { "Fn::Join" : [ "", ["nagios", { "Ref" : "StackID" }, { "Fn::FindInMap" : [ "dot", { "Ref" : "Environment" }, "DOT" ]},".bluekite.com."]]},
+        "Name" : { "Fn::Join" : [ "", ["nagios", { "Ref" : "StackID" } , { "Fn::FindInMap" : [ "dot", { "Ref" : "Environment" }, "DOT" ]},".bluekite.com"]]},
         "Type" : "A",
         "TTL" : "900",
-        "ResourceRecords" : [ { "Fn::GetAtt" : [ "Nagios", "PrivateIp" ] } ]
-      }
+        "ResourceRecords" : [ { "Fn::GetAtt" : [ "NagiosInstance", "PrivateIp" ] } ]
+      },
+      "DependsOn" : "NagiosInstance"
     },
 
-    "Nagios" : {
+    "NagiosInstance" : {
       "Type" : "AWS::EC2::Instance",
       "Metadata" : {
-        "Comment" : "Internal gw NodeJs Application",
-        "AWS::CloudFormation::Init" : {
-          "configSets" : {
-            "default" : ["config_credentials", "config_packages"]
-          },
-          "config_credentials" : {
-            "files" : {
-              "/home/ubuntu/.ssh/id_rsa" : {
-                "source" : "https://s3.amazonaws.com/redtail/redtail_rsa",
-                "mode" : "600",
-                "owner" : "ubuntu",
-                "group" : "ubuntu"
-              },
-              "/home/ubuntu/.ssh/id_rsa.pub" : {
-                "source" : "https://s3.amazonaws.com/redtail/redtail_rsa.pub",
-                "mode" : "600",
-                "owner" : "ubuntu",
-                "group" : "ubuntu"
-              },
-              "/home/ubuntu/.ssh/config" : {
-                "mode" : "600",
-                "owner" : "ubuntu",
-                "group" : "ubuntu",
-                "content" : { "Fn::Join" : ["", [
-                  "Host github.com\n",
-                  "\tStrictHostKeyChecking no\n",
-                  "\tUser git\n",
-                  "\tPreferredAuthentications publickey\n",
-                  "\tIdentityFile ~/.ssh/id_rsa\n"
-                ]]}
-              }
-            }
-          },
-          
-          "config_packages" : {
-            "packages" : {
-              "apt" : {
-                "git"                        : [],
-                "curl"                       : [],
-                "tmux"                       : [],
-                "build-essential"            : [],
-                "python-software-properties" : [],
-                "ruby-dev"                   : [],
-                "puppet"                     : []
-              }
-            }
-          }
-        }
+        "Comment" : "Nagios - Rails Aplication Instance"
       },
-
       "Properties" : {
-        "ImageId" : { "Fn::FindInMap" : [ "nagiosAMI", { "Ref" : "AWS::Region" }, "AMI" ]},
+        "ImageId" : { "Fn::FindInMap" : [ "RegionMap", { "Ref" : "AWS::Region" }, "AMI" ]},
         "SecurityGroupIds" : [ {"Ref" : "SecurityGroupId"} ],
         "SubnetId" : { "Ref" : "SubnetId" },
         "InstanceType" : { "Ref" : "InstanceType" },
         "KeyName" : { "Ref" : "KeyName" },
         "Tags" : [ {"Key" : "Application", "Value" : { "Ref" : "AWS::StackId"} },
-                    {"Key" : "Name", "Value" : {"Fn::Join" : [ "", ["nagios.", {"Ref" : "Environment"} ]]}}
-                  ],
+                {"Key" : "Name", "Value" : { "Fn::Join" : [ ".", ["nagios", {"Ref" : "Environment"} ] ] } } ],
         "UserData"       : { "Fn::Base64" : { "Fn::Join" : ["", [
           "#!/bin/bash\n",
 
           "# Helper function to notify of failed operation\n",
           "function error_exit\n",
           "{\n",
-          "  cfn-signal -e 1 -r \"$1\" '", { "Ref" : "IntGWWaitHandle" }, "'\n",
+          "  cfn-signal -e 1 -r \"$1\" '", { "Ref" : "NagiosWaitHandle" }, "'\n",
           "  exit 1\n",
           "}\n",
-         
-          "# Run Instance default configuration via CloudFormation::Init\n",
-          "cfn-init -v --region ", { "Ref" : "AWS::Region" },
-          "    -s ", { "Ref" : "AWS::StackId" },
-          " -r IntGW",
-          " -c default",
-          " || error_exit 'Failed to run cfn-init'\n",
 
           "# Run Instance default configuration via CloudFormation::Init\n",
           "cfn-init -v --region ", { "Ref" : "AWS::Region" },
           "    -s ", { "Ref" : "AWS::StackId" },
-          " -r WebServerInstance",
+          " -r NagiosInstance",
           " -c default",
           " || error_exit 'Failed to run cfn-init'\n",
 
@@ -178,50 +133,57 @@
           "cp /home/ubuntu/.ssh/* /root/.ssh/\n",
 
           "# Add FQDN on etc/environment\n",
-          "echo ", { "Fn::Join" : [ "" , ["FQDN=nagios", { "Ref" : "StackID" }, { "Fn::FindInMap" : [ "dot", { "Ref" : "Environment" }, "DOT" ]}, ".bluekite.com" ]]}, ">> /etc/environment\n",
+          "echo ", { "Fn::Join" : [ "" , ["FACTER_fqdn=nagios", { "Ref" : "StackID" }, { "Fn::FindInMap" : [ "dot", { "Ref" : "Environment" }, "DOT" ]}, ".bluekite.com" ]]}, ">> /etc/environment\n",
           "echo ", "STACKID=", { "Ref" : "StackID" }, ">> /etc/environment\n",
 
+          "echo ", { "Fn::Join" : [ "" , ["nagios", { "Ref" : "StackID" } ]]}, "> /etc/hostname\n",
+          "echo ", { "Fn::Join" : [ "" , [{ "Fn::GetAtt" : [ "NagiosInstance", "PrivateIp" ] }, "nagios", { "Ref" : "StackID" }, "nagios", { "Ref" : "StackID" }, { "Fn::FindInMap" : [ "dot", { "Ref" : "Environment" }, "DOT" ]}, ".bluekite.com" ]]}, ">> /etc/hosts\n",
+
           "# Clone app repo to ubuntu user home\n",
-          "git clone git@github.com:blue-kite/nagios.git -b ", {"Ref" : "DeployBranch"}, "  /home/ubuntu/nagios > /tmp/git.log 2>&1 || error_exit 'Failed to clone repo'\n",
+          "git clone ", {"Ref": "Repository"}, " -b ", {"Ref" : "DeployBranch"}, " /home/ubuntu/nagios > /tmp/git.log 2>&1 || error_exit 'Failed to clone repo'\n",
           "chown ubuntu:ubuntu -R /home/ubuntu/nagios\n",
 
-          "# Install application's dependencies via puppet\n",
-          "cd /home/ubuntu/nagios/puppet\n",
-          "export HOME=/home/ubuntu && librarian-puppet install --clean --verbose > /tmp/librarian-puppet.log 2>&1 || error_exit 'failed to install puppet submodules'\n",
+          "# Install git & puppet via apt-get\n",
+          "sudo apt-get install -y git puppet > /tmp/apt-get-git-puppet.log 2>&1 || error_exit 'Failed install packages'\n",
 
-          
           "cd /home/ubuntu/nagios\n",
-          "sudo puppet apply --verbose --modulepath=puppet/modules puppet/manifests/nodes.pp > /tmp/puppet.log 2>&1 || error_exit 'failed to apply puppet manifests'\n",
+          "sudo apt-get update\n",
+          "sudo apt-get upgrade\n",
+          "sudo puppet apply --verbose --modulepath=./puppet/modules ./puppet/manifests/nodes.pp  > /tmp/puppet.log 2>&1 || error_exit 'failed to apply puppet manifests'\n",
 
           "# Signal setup is complete\n",
           "cfn-signal -e $? -r 'Completed configuration' '",
           {
-            "Ref" : "IntGWWaitHandle"
+            "Ref" : "NagiosWaitHandle"
           },
           "'\n"
-        ]]}
-        }
+        ]]}}
       }
     },
 
-    "IntGWWaitHandle" : {
+    "NagiosWaitHandle" : {
       "Type" : "AWS::CloudFormation::WaitConditionHandle"
     },
 
-    "IntGWWaitCondition" : {
+    "NagiosWaitCondition" : {
       "Type" : "AWS::CloudFormation::WaitCondition",
-      "DependsOn" : "Nagios",
+      "DependsOn" : "NagiosInstance",
       "Properties" : {
-        "Handle" : {"Ref" : "IntGWWaitHandle"},
+        "Handle" : {"Ref" : "NagiosWaitHandle"},
         "Timeout" : "2000"
       }
     }
   },
 
   "Outputs" : {
-    "ApiInstanceId" : {
-      "Value" : { "Ref" : "Nagios" },
+    "InstanceId" : {
+      "Value" : { "Ref" : "NagiosInstance" },
       "Description" : "Instance Id of newly created instance"
+    },
+
+    "IPAddress" : {
+      "Value" : { "Fn::GetAtt" : [ "NagiosInstance", "PrivateIp" ] },
+      "Description" : "Private IP address of instance"
     },
 
     "DomainName" : {
