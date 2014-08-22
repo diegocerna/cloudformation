@@ -28,6 +28,18 @@
             "ConstraintDescription" : "must be a valid EC2 instance type."
         },
 
+        "SecurityGroupId" : {
+           "Type" : "String",
+           "Description" : "SecurityGroupId of an existing subnet in your Virtual Private Cloud (VPC)",
+           "Default": "sg-"
+        },
+
+        "SubnetId" : {
+           "Type" : "String",
+           "Description" : "SubnetId of an existing subnet in your Virtual Private Cloud (VPC)",
+           "Default": "subnet-"
+        },
+
         "PgHost" : {
             "NoEcho" : "true",
             "Type" : "String",
@@ -86,13 +98,22 @@
     },
 
     "Resources" : {
-        "InstanceProfile" : {
-            "Type" : "AWS::IAM::InstanceProfile",
-            "Properties" : {
-                "Path" : "/",
-                "Roles" : ["SendEmails"]
-            }
-        },
+
+      "IPAddress" : {
+      "Type" : "AWS::EC2::EIP",
+      "Properties" : {
+        "Domain" : "vpc",
+        "InstanceId" : { "Ref" : "WebServerInstance" }
+        }
+      },
+
+      "InstanceProfile" : {
+        "Type" : "AWS::IAM::InstanceProfile",
+        "Properties" : {
+        "Path" : "/",
+        "Roles" : ["SendEmails"]
+        }
+      },
 
         "WebServerInstance" : {
             "Type" : "AWS::EC2::Instance",
@@ -146,8 +167,9 @@
 
             "Properties" : {
                 "ImageId" : { "Fn::FindInMap" : [ "RegionMap", { "Ref" : "AWS::Region" }, "AMI" ]},
-                "SecurityGroupIds" : [ {"Ref" : "WebServerSecurityGroup"} ],
+                "SecurityGroupIds" : [ {"Ref" : "SecurityGroupId"} ],
                 "InstanceType" : { "Ref" : "InstanceType" },
+                "SubnetId" : { "Ref" : "SubnetId" },
                 "KeyName" : { "Ref" : "KeyName" },
                 "IamInstanceProfile" : {"Ref" : "InstanceProfile"},
                 "Tags" : [ {"Key" : "Application", "Value" : { "Ref" : "AWS::StackId"} },
@@ -216,20 +238,6 @@
             "Properties" : {
                 "Handle" : {"Ref" : "WebServerWaitHandle"},
                 "Timeout" : "600"
-            }
-        },
-
-        "WebServerSecurityGroup" : {
-            "Type" : "AWS::EC2::SecurityGroup",
-            "Properties" : {
-                "GroupDescription" : "Enable HTTP access via port 80, 443 and SSH access",
-                "SecurityGroupIngress" : [
-                    {"IpProtocol" : "tcp", "FromPort" : "80", "ToPort" : "80", "CidrIp" : "0.0.0.0/0"},
-                    {"IpProtocol" : "tcp", "FromPort" : "443", "ToPort" : "443", "CidrIp" : "0.0.0.0/0"},
-                    {"IpProtocol" : "tcp", "FromPort" : "22", "ToPort" : "22", "CidrIp" : "190.99.116.194/32"},
-                    {"IpProtocol" : "tcp", "FromPort" : "22", "ToPort" : "22", "CidrIp" : "186.151.61.58/32"},
-                    {"IpProtocol" : "tcp", "FromPort" : "22", "ToPort" : "22", "CidrIp" : "186.64.109.138/32"}
-                ]
             }
         }
     },
