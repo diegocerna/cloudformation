@@ -41,13 +41,12 @@
       "Type" : "String",
       "Description" : "Guatemala Accounts SubnetId in your Virtual Private Cloud (VPC)",
       "Default": "subnet-"
-
     },
 
     "KeyName" : {
       "Type" : "String",
       "Description" : "The SSH access key",
-      "Default" : "tbp_"
+      "Default" : "stamp-"
     },
 
     "InstanceType" : {

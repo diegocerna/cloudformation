@@ -46,7 +46,7 @@
     "KeyName" : {
       "Type" : "String",
       "Description" : "The SSH access key",
-      "Default" : "tbp_"
+      "Default" : "stamp-"
     },
 
     "InstanceType" : {

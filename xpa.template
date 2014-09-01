@@ -11,7 +11,7 @@
             "MaxLength": "255",
             "AllowedPattern" : "[\\x20-\\x7E]*",
             "ConstraintDescription" : "can contain only ASCII characters.",
-            "Default": "tbp_dev"
+            "Default": "stamp-dev"
         },
         
         "Environment" : {

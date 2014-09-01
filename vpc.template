@@ -27,12 +27,12 @@
     },
 
     "keys" : {
-          "dev"            : { "keypair" : "tbp_dev"},
-          "qa"             : { "keypair" : "tbp_qa" },
-          "test"             : { "keypair" : "tbp_test" },
-          "sandbox"        : { "keypair" : "tbp_sandbox"},
-          "test"           : { "keypair" : "tbp_test"},
-          "production"     : { "keypair" : "tbp_prod"}
+          "dev"            : { "keypair" : "stamp-dev"},
+          "qa"             : { "keypair" : "stamp-qa" },
+          "test"             : { "keypair" : "stamp-test" },
+          "sandbox"        : { "keypair" : "stamp-sandbox"},
+          "test"           : { "keypair" : "stamp-test"},
+          "production"     : { "keypair" : "stamp-prod"}
     },
 
     "subnets" : {

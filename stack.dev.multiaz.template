@@ -13,7 +13,7 @@
     "KeyName" : {
       "Type" : "String",
       "Description" : "The the key to SSH machines",
-      "Default" : "tbp_dev"
+      "Default" : "stamp-dev"
     },
 
     "StackID" : {

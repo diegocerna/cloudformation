@@ -13,7 +13,7 @@
     "KeyName" : {
       "Type" : "String",
       "Description" : "The the key to SSH machines",
-      "Default" : "tbp_sandbox"
+      "Default" : "stamp-sandbox"
     },
 
     "StackID" : {

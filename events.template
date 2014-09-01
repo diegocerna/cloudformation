@@ -12,7 +12,7 @@
     
     "KeyName" : {
       "Type" : "String",
-      "Default" : "tbp_"
+      "Default" : "stamp-"
     },
     
     "InstancesType" : {
