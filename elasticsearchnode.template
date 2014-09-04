@@ -17,7 +17,7 @@
     "InstanceType"            : {
       "Description"           : "WebServer EC2 instance type",
       "Type"                  : "String",
-      "Default"               : "m1.small",
+      "Default"               : "t2.micro",
       "AllowedValues"         : [ "t2.micro","m1.small","m3.medium","m1.large","m1.xlarge","m2.xlarge","m2.2xlarge","m2.4xlarge","m3.xlarge","m3.2xlarge","c1.medium","c1.xlarge","cc1.4xlarge","cc2.8xlarge","cg1.4xlarge"],
       "ConstraintDescription" : "must be a valid EC2 instance type."
     },
@@ -74,12 +74,6 @@
       "Type"        : "String",
       "Description" : "The data node identification, 1..n",
       "Default"     : "1"
-    },
-
-    "MasterNode"        : {
-      "Type"        : "String",
-      "Description" : "The data node identification, 1..n",
-      "Default"     : "elk-emaster-tooling.dev.bluekite.com"
     }
 
   },
@@ -87,13 +81,13 @@
   "Mappings" : {
     "RegionMap"        : {
       "sa-east-1"      : {"AMI" : "ami-d545e5c8" },
-      "us-west-1"      : {"AMI" : "ami-c070d5a8" },
+      "us-west-1"      : {"AMI" : "ami-5f5e186f" },
       "ap-northeast-1" : {"AMI" : "ami-35bbd334" },
       "ap-southeast-1" : {"AMI" : "ami-605c0a32" },
       "ap-southeast-2" : {"AMI" : "ami-fb4bd5c1" },
       "eu-west-1"      : {"AMI" : "ami-d03dcaa7" },
-      "us-east-1"      : {"AMI" : "ami-cdc2fda4" },
-      "us-west-2"      : {"AMI" : "ami-9a9dfdaa" }
+      "us-east-1"      : {"AMI" : "ami-c070d5a8" },
+      "us-west-2"      : {"AMI" : "ami-5f5e186f" }
     },
     "dot"              : {
       "test"           : { "DOT" : ".test" },
@@ -112,7 +106,7 @@
       "Properties"        : {
         "HostedZoneName"  : "bluekite.com.",
         "Comment"         : "DNS name for my instance.",
-        "Name"            : { "Fn::Join" : [ "", [{ "Ref" : "ApplicationTag" }, "-", { "Ref" : "NodeType" }, { "Ref" : "StackID" }, { "Fn::FindInMap" : [ "dot", { "Ref" : "Environment" }, "DOT" ]},".bluekite.com"]]},
+        "Name"            : { "Fn::Join" : [ "", [{ "Ref" : "ApplicationTag" }, "-", { "Ref" : "NodeType" }, { "Ref" : "NodeID" }, { "Ref" : "StackID" }, { "Fn::FindInMap" : [ "dot", { "Ref" : "Environment" }, "DOT" ]},".bluekite.com"]]},
         "Type"            : "A",
         "TTL"             : "900",
         "ResourceRecords" : [ { "Fn::GetAtt" : [ "ElkInstance", "PrivateIp" ] } ]
@@ -132,7 +126,7 @@
           "InstanceType"      : {   "Ref" : "InstanceType" },
           "KeyName"           : {   "Ref" : "KeyName" },
           "Tags"              : [ { "Key" : "Application", "Value" : { "Ref" : "AWS::StackId"} },
-                                  { "Key" : "Name", "Value" : { "Fn::Join" : [ "", ["elk", { "Ref" : "StackID"}, ".", { "Ref" : "Environment"} ] ] } } ],
+                                  { "Key" : "Name", "Value" : { "Fn::Join" : [ "", [{ "Ref" : "ApplicationTag" }, "-", { "Ref":"NodeType" }, { "Ref" : "NodeID"}, { "Ref" : "StackID"}, ".", { "Ref" : "Environment"} ] ] } } ],
           "UserData"          : { "Fn::Base64" : { "Fn::Join" : ["", [
             "#!/bin/bash\n",
 
@@ -161,13 +155,13 @@
             "chown ubuntu:ubuntu -R /home/ubuntu/elasticsearch_server\n",
 
             "# Add FQDN on etc/environment\n",
-            "echo ", { "Fn::Join" : [ "" , ["FACTER_fqdn=", { "Ref" : "ApplicationTag" }, "-", { "Ref" : "NodeType" }, { "Ref" : "StackID" }, { "Fn::FindInMap" : [ "dot", { "Ref" : "Environment" }, "DOT" ]}, ".bluekite.com" ]]}, ">> /etc/environment\n",
+            "echo ", { "Fn::Join" : [ "" , ["FACTER_fqdn=", { "Ref" : "ApplicationTag" }, "-", { "Ref" : "NodeType" }, { "Ref" : "NodeID" }, { "Ref" : "StackID" }, { "Fn::FindInMap" : [ "dot", { "Ref" : "Environment" }, "DOT" ]}, ".bluekite.com" ]]}, ">> /etc/environment\n",
             "echo ", "STACKID=",            { "Ref" : "StackID" },        ">> /etc/environment\n",
-            "hostname ", {"Ref": "ApplicationTag"}, "-", { "Ref" : "NodeType" }, { "Ref" : "StackID" }, ".", { "Ref" : "Environment" }, "\n",
+            "hostname ", {"Ref": "ApplicationTag"}, "-", { "Ref" : "NodeType" }, { "Ref" : "NodeID" }, { "Ref" : "StackID" }, ".", { "Ref" : "Environment" }, "\n",
 
             "echo ", {"Ref": "ApplicationTag"}, "-", { "Ref" : "NodeType" }, { "Ref" : "StackID" }, ".", { "Ref" : "Environment" }, "> /etc/hostname\n",
 
-            "echo -e 'import subprocess as s\no=open(\"/etc/newhosts\",\"a\")\nfor line in open(\"/etc/hosts\"):\n\tif line.find(\"127.0.0.1\")+1:\n\t\tline = line.replace(\"localhost\",\"", {"Ref": "ApplicationTag"}, "-", { "Ref" : "NodeType" }, { "Ref" : "StackID" }, ".", { "Ref" : "Environment" }, "\")\n\to.write(line)\no.close()\ns.call(\"mv /etc/newhosts /etc/hosts\", shell=True)' | python > /tmp/hosts.log 2>&1 || error_exit 'Failed to change hosts file'\n",
+            "echo -e 'import subprocess as s\no=open(\"/etc/newhosts\",\"a\")\nfor line in open(\"/etc/hosts\"):\n\tif line.find(\"127.0.0.1\")+1:\n\t\tline = line.replace(\"localhost\",\"", {"Ref": "ApplicationTag"}, "-", { "Ref" : "NodeType" }, { "Ref" : "NodeID" }, { "Ref" : "StackID" }, ".", { "Ref" : "Environment" }, "\")\n\to.write(line)\no.close()\ns.call(\"mv /etc/newhosts /etc/hosts\", shell=True)' | python > /tmp/hosts.log 2>&1 || error_exit 'Failed to change hosts file'\n",
 
             "#Installing Ruby\n",
             "apt-get -y install libyaml-0-2\n",
@@ -175,23 +169,23 @@
             "update-alternatives --set ruby /usr/bin/ruby1.9.1\n",
             "update-alternatives --set gem /usr/bin/gem1.9.1\n",
 
-            "# Install puppet via gems\n",
+            "#Install puppet via gems\n",
             "sudo gem install puppet --no-rdoc --no-ri > /tmp/gem-puppet.log 2>&1 || error_exit 'Failed install puppet gem'\n",
 
-            "# Install Librarian Ruby\n",
+            "#Install Librarian Ruby\n",
             "sudo gem install librarian-puppet --no-rdoc --no-ri > /tmp/gem-librarian-puppet.log 2>&1 || error_exit 'Failed install librarian puppet gem'\n",
 
             "# Install application's dependencies via puppet\n",
             "cd /home/ubuntu/elasticsearch_server/puppet\n",
             "export HOME=/home/ubuntu && librarian-puppet install --clean --verbose > /tmp/librarian-puppet.log 2>&1 || error_exit 'failed to install puppet submodules'\n",
 
-            "#setting my custom facts",
-            "mkdir -p /etc/facter/facts.d\n",
+            "# setting my custom facts\n",
+            "mkdir -p /etc/facter/facts.d > /tmp/facts.log 2>&1 || error_exit 'failed to create facter directory'\n",
             "touch /etc/facter/facts.d/custom_facts.txt\n",
             "echo ", "stackid=",     { "Ref" : "StackID" },        ">> /etc/facter/facts.d/custom_facts.txt\n",
             "echo ", "nodeid=",      { "Ref" : "NodeID" },         ">> /etc/facter/facts.d/custom_facts.txt\n",
             "echo ", "apptag=",      { "Ref" : "ApplicationTag" }, ">> /etc/facter/facts.d/custom_facts.txt\n",
-            "echo ", "masterhost=",  { "Ref" : "MasterNode" },     ">> /etc/facter/facts.d/custom_facts.txt\n",
+            "echo ", "masterhost=",  { "Ref" : "ApplicationTag" }, "-emaster", { "Ref" : "StackID" }, ".", { "Ref" : "Environment" }, ".bluekite.com", ">> /etc/facter/facts.d/custom_facts.txt\n",
             "echo ", "env=",         { "Ref" : "Environment" },    ">> /etc/facter/facts.d/custom_facts.txt\n",
 
             "sudo apt-get update\n",
