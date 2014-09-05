@@ -30,13 +30,11 @@
     "keys" : {
           "dev"            : { "keypair" : "stamp-dev"},
           "qa"             : { "keypair" : "stamp-qa" },
-          "test"           : { "keypair" : "stamp-test" },
           "sandbox"        : { "keypair" : "stamp-sandbox"},
           "production"     : { "keypair" : "stamp-prod"}
     },
 
     "subnets" : {
-      "test"               : { "VPCSN" : "10.250.0.0/16", "PUSN" : "10.250.0.0/24", "PRSN" : "10.250.1.0/24", "GTSN" : "10.250.10.0/24", "ISSN" : "10.250.11.0/24", "DOSN" : "10.250.12.0/24", "MXSN" : "10.250.13.0/24", "SVSN" : "10.250.14.0/24", "NISN" : "10.250.15.0/24", "PASN" : "10.250.16.0/24" },
       "dev"                : { "VPCSN" : "10.4.0.0/16", "PUSN" : "10.4.0.0/24", "PRSN" : "10.4.1.0/24", "ISSN" : "10.4.10.0/24", "GTSN" : "10.4.11.0/24", "DOSN" : "10.4.12.0/24", "MXSN" : "10.4.13.0/24", "SVSN" : "10.4.14.0/24", "NISN" : "10.4.15.0/24", "PASN" : "10.4.16.0/24" },
       "qa"                 : { "VPCSN" : "10.3.0.0/16", "PUSN" : "10.3.0.0/24", "PRSN" : "10.3.1.0/24", "ISSN" : "10.3.10.0/24", "GTSN" : "10.3.11.0/24", "DOSN" : "10.3.12.0/24", "MXSN" : "10.3.13.0/24", "SVSN" : "10.3.14.0/24", "NISN" : "10.3.15.0/24", "PASN" : "10.3.16.0/24" },
       "sandbox"            : { "VPCSN" : "10.2.0.0/16", "PUSN" : "10.2.0.0/24", "PRSN" : "10.2.1.0/24", "ISSN" : "10.2.10.0/24", "GTSN" : "10.2.11.0/24", "DOSN" : "10.2.12.0/24", "MXSN" : "10.2.13.0/24", "SVSN" : "10.2.14.0/24", "NISN" : "10.2.15.0/24", "PASN" : "10.2.16.0/24" },
@@ -44,7 +42,6 @@
     },
 
     "dot" : {
-      "test"               : { "DOT" : ".test" },
       "dev"                : { "DOT" : ".dev" },
       "qa"                 : { "DOT" : ".qa" },
       "sandbox"            : { "DOT" : ".sandbox" },
@@ -575,18 +572,6 @@
             "CidrIp": { "Fn::FindInMap" : [ "subnets", { "Ref" : "Environment" }, "VPCSN" ]}
           },
           {
-            "IpProtocol": "tcp",
-            "FromPort": "6379",
-            "ToPort": "6379",
-            "CidrIp": "192.168.0.0/24"
-          },
-          {
-            "IpProtocol": "tcp",
-            "FromPort": "6379",
-            "ToPort": "6379",
-            "CidrIp": { "Fn::FindInMap" : [ "subnets", { "Ref" : "Environment" }, "VPCSN" ]}
-          },
-          {
             "IpProtocol": "udp",
             "FromPort": "53",
             "ToPort": "53",
@@ -654,12 +639,6 @@
             "FromPort": "80",
             "ToPort": "80",
             "CidrIp": "192.168.0.0/24"
-          },
-          {
-            "IpProtocol": "tcp",
-            "FromPort": "6379",
-            "ToPort": "6379",
-            "CidrIp": { "Fn::FindInMap" : [ "subnets", { "Ref" : "Environment" }, "VPCSN" ]}
           },
           {
             "IpProtocol": "tcp",
@@ -882,12 +861,6 @@
           },
           {
             "IpProtocol": "tcp",
-            "FromPort": "500",
-            "ToPort": "500",
-            "CidrIp": "0.0.0.0/0"
-          },
-          {
-            "IpProtocol": "tcp",
             "FromPort": "8084",
             "ToPort": "8084",
             "CidrIp": "10.3.14.0/24"
@@ -903,12 +876,6 @@
             "FromPort": "80",
             "ToPort": "80",
             "CidrIp": "10.3.12.0/24"
-          },
-          {
-            "IpProtocol": "tcp",
-            "FromPort": "4500",
-            "ToPort": "4500",
-            "CidrIp": "0.0.0.0/0"
           }
         ],
         "SecurityGroupEgress": [
@@ -2134,33 +2101,6 @@
     }
   },
   "Outputs" : {
-        "PrivateApiSN" : {
-            "Value" : { "Ref" : "subnetPrivateApis" }
-        },
-        "PublicApiSN" : {
-            "Value" : { "Ref" : "subnetPublicApis" }
-        },
-        "IcelandSN" : {
-            "Value" : { "Ref" : "subnetWorkerIS" }
-        },
-        "GuatemalaSN" : {
-            "Value" : { "Ref" : "subnetWorkerGT" }
-        },
-        "DomincanRepublicSN" : {
-            "Value" : { "Ref" : "subnetWorkerDO" }
-        },
-        "mexicoSN" : {
-            "Value" : { "Ref" : "subnetWorkerMX" }
-        },
-        "ElSalvadorSN" : {
-            "Value" : { "Ref" : "subnetWorkerSV" }
-        },
-        "NicaraguaSN" : {
-            "Value" : { "Ref" : "subnetWorkerNI" }
-        },
-        "PanamaSN" : {
-            "Value" : { "Ref" : "subnetWorkerPA" }
-        },
         "PrivateApisSG" : {
             "Value" : { "Ref" : "sgPrivateApis" }
         },
@@ -2194,16 +2134,42 @@
         "LogstashSG" : {
             "Value" : { "Ref" : "sgLogstash" }
         },
-        "BastionSG" : {
-            "Value" : { "Ref" : "sgBastion" }
+        "PrivateApiSN" : {
+            "Value" : { "Ref" : "subnetPrivateApis" }
         },
-        "NATSG" : {
-            "Value" : { "Ref" : "sgNat" }
+        "PublicApiSN" : {
+            "Value" : { "Ref" : "subnetPublicApis" }
         },
-        "OpenSwanSG" : {
-            "Value" : { "Ref" : "sgOpenswan" }
-        
-    }
+        "IcelandSN" : {
+            "Value" : { "Ref" : "subnetWorkerIS" }
+        },
+        "GuatemalaSN" : {
+            "Value" : { "Ref" : "subnetWorkerGT" }
+        },
+        "DomincanRepublicSN" : {
+            "Value" : { "Ref" : "subnetWorkerDO" }
+        },
+        "mexicoSN" : {
+            "Value" : { "Ref" : "subnetWorkerMX" }
+        },
+        "ElSalvadorSN" : {
+            "Value" : { "Ref" : "subnetWorkerSV" }
+        },
+        "NicaraguaSN" : {
+            "Value" : { "Ref" : "subnetWorkerNI" }
+        },
+        "PanamaSN" : {
+            "Value" : { "Ref" : "subnetWorkerPA" }
+        },
+        "KeyPair" : {
+            "Value" : {"Fn::FindInMap" : [ "keys", { "Ref" : "Environment" }, "keypair" ]}
+        },
+        "Stackid" : {
+            "Value" : { "Ref" : "StackID" }
+        },
+        "environment" : {
+            "Value" : { "Ref" : "Environment" }
+        }
   },
   "Description": "Public API VPC"
 }
