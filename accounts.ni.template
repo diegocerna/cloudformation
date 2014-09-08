@@ -12,7 +12,7 @@
       "ap-southeast-2" : {"AMI" : "ami-fb4bd5c1" },
       "eu-west-1"      : {"AMI" : "ami-d03dcaa7" },
       "us-east-1"      : {"AMI" : "ami-c070d5a8" },
-      "us-west-2"      : {"AMI" : "ami-9a9dfdaa" }
+      "us-west-2"      : {"AMI" : "ami-5f5e186f" }
     },
 
     "dot" : {
@@ -68,6 +68,12 @@
       "Type" : "String",
       "Description" : "Security Group of the VPC",
       "Default" : "sg-"
+    },
+    "env" : {
+      "dev"            : { "ENV" : "staging" },
+      "qa"             : { "ENV" : "qa" },
+      "sandbox"        : { "ENV" : "sandbox" },
+      "production"     : { "ENV" : "production" }
     }
   },
 
@@ -110,9 +116,12 @@
           "# Copy credentials to root user\n",
           "cp /home/ubuntu/.ssh/* /root/.ssh/\n",
           
-          "# Clone app repo to ubuntu user home\n",
-          "git clone git@github.com:blue-kite/accounts.git -b ", {"Ref" : "DeployBranch"}, " /home/ubuntu/accounts" , " > /tmp/git.log 2>&1 || error_exit 'Failed to clone repo'\n",
-          "chown ubuntu:ubuntu -R /home/ubuntu/accounts\n",
+          "# Clone sites repo to ubuntu user home\n",
+          "git clone git@github.com:blue-kite/xbp_puppet_sites.git -b ", {"Ref" : "DeployBranch"}, "  /home/ubuntu/sites > /tmp/git.log 2>&1 || error_exit 'Failed to clone sites repo'\n",
+
+          "# Clone role app repo\n",
+          "git clone git@github.com:blue-kite/xbp_puppet_role_accounts.git -b ", {"Ref" : "DeployBranch"}, "  /etc/puppet/modules/accounts > /tmp/git.log 2>&1 || error_exit 'Failed to clone role app repo'\n",
+          "chown ubuntu:ubuntu -R /etc/puppet/modules/accounts\n",
 
           "# Add FQDN on etc/environment\n",
           "echo ", { "Fn::Join" : [ "" , ["FACTER_accounts_fqdn=accounts", { "Ref" : "StackID" }, ".ni", { "Fn::FindInMap" : [ "dot", { "Ref" : "Environment" }, "DOT" ]}, ".bluekite.com" ]]}, ">> /etc/environment\n",
@@ -136,21 +145,31 @@
           "# Install Librarian Ruby\n",
           "sudo gem install librarian-puppet --no-rdoc --no-ri > /tmp/gem-librarian-puppet.log 2>&1 || error_exit 'Failed install librarian puppet gem'\n",
 
-          "# Install application's dependencies via puppet\n",
-          "cd /home/ubuntu/accounts/puppet\n",
-          "export HOME=/home/ubuntu && librarian-puppet install --clean --verbose > /tmp/librarian-puppet.log 2>&1 || error_exit 'failed to install puppet submodules'\n",
+          "# Install application's dependencies via librarian puppet\n",
+          "cd /etc/puppet/modules/accounts\n",
+          "sudo librarian-puppet install --clean --verbose --path=/etc/puppet/modules > /tmp/librarian-puppet.log 2>&1 || error_exit 'failed to install puppet submodules'\n",
 
           "#setting my custom facts\n",
           "mkdir -p /etc/facter/facts.d\n",
-           "touch /etc/facter/facts.d/custom_facts.txt\n",
-           "echo ", { "Fn::Join" : [ "" , ["accounts_fqdn=accounts", { "Ref" : "StackID" }, ".ni", { "Fn::FindInMap" : [ "dot", { "Ref" : "Environment" }, "DOT" ]}, ".bluekite.com" ]]},        ">> /etc/facter/facts.d/custom_facts.txt\n",
-           "echo ", "stackid=", { "Ref" : "StackID" },         ">> /etc/facter/facts.d/custom_facts.txt\n",
+          "touch /etc/facter/facts.d/custom_facts.txt\n",
+          "echo ", { "Fn::Join" : [ "" , ["accounts_fqdn=accounts", { "Ref" : "StackID" }, ".ni", { "Fn::FindInMap" : [ "dot", { "Ref" : "Environment" }, "DOT" ]}, ".bluekite.com" ]]},      ">> /etc/facter/facts.d/custom_facts.txt\n",
+          "echo ", "stackid=", { "Ref" : "StackID" },           ">> /etc/facter/facts.d/custom_facts.txt\n",
+          "echo ", { "Fn::Join" : [ "" , ["logserver_host=logs", { "Ref" : "StackID" }, { "Fn::FindInMap" : [ "dot", { "Ref" : "Environment" }, "DOT" ]}, ".bluekite.com" ]]},        ">> /etc/facter/facts.d/custom_facts.txt\n",
+          "echo logserver_port=5001                             >> /etc/facter/facts.d/custom_facts.txt\n",
+          "echo ", "revision=", { "Ref" : "DeployBranch" }, ">> /etc/facter/facts.d/custom_facts.txt\n",
+          "echo app_name=accountsni                             >> /etc/facter/facts.d/custom_facts.txt\n",
+          "echo database_name=accountsdb                         >> /etc/facter/facts.d/custom_facts.txt\n",
+          "echo database_host=accountsdb.ni.bluekite.com            >> /etc/facter/facts.d/custom_facts.txt\n",
+          "echo ", "database_username=", { "Ref" : "dbuser" },  ">> /etc/facter/facts.d/custom_facts.txt\n",
+          "echo ", "database_password=", { "Ref" : "dbpass" },  ">> /etc/facter/facts.d/custom_facts.txt\n",
 
           "sudo apt-get update\n",
           "sudo apt-get upgrade\n",
 
-          "cd /home/ubuntu/accounts\n",
-          "sudo puppet apply --verbose --modulepath=puppet/modules puppet/manifests/aws-accounts-ni-",{"Ref":"Environment"},".pp > /tmp/puppet.log 2>&1 || error_exit 'failed to apply puppet manifests'\n",
+          "cd /home/ubuntu/sites\n",
+          "sudo sh setup.sh\n",
+
+          "export LANG=en_US.UTF-8; sudo puppet apply --verbose --environment=", { "Fn::FindInMap" : [ "env", { "Ref" : "Environment" }, "ENV" ]}, " /home/ubuntu/sites/site.pp > /tmp/puppet.log 2>&1 || error_exit 'failed to apply puppet manifests'\n",
           
           "# Signal setup is complete\n",
           "cfn-signal -e $? -r 'Completed configuration' '",
