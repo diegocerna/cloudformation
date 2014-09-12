@@ -35,7 +35,7 @@
       "Type": "AWS::RDS::DBInstance",
       "Properties": {
         "AutoMinorVersionUpgrade": "true",
-        "DBInstanceClass": "db.t1.micro",
+        "DBInstanceClass": "db.t2.micro",
         "Port": "5432",
         "AllocatedStorage": "5",
         "BackupRetentionPeriod": "2",

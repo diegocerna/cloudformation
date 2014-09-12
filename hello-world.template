@@ -69,7 +69,7 @@
             "ap-southeast-1" : {"AMI" : "ami-605c0a32" },
             "ap-southeast-2" : {"AMI" : "ami-fb4bd5c1" },
             "eu-west-1"      : {"AMI" : "ami-d03dcaa7" },
-            "us-east-1"      : {"AMI" : "ami-cdc2fda4" },
+            "us-east-1"      : {"AMI" : "ami-0e07a566" },
             "us-west-2"      : {"AMI" :	"ami-5f5e186f" }
         },
 
@@ -152,10 +152,10 @@
                     "echo -e 'import subprocess as s\no=open(\"/etc/newhosts\",\"a\")\nfor line in open(\"/etc/hosts\"):\n\tif line.find(\"127.0.0.1\")+1:\n\t\tline = line.replace(\"localhost\", \"localhost\" + \" helloworld\"", { "Ref" : "StackID" }, ")\n\to.write(line)\no.close()\ns.call(\"mv /etc/newhosts /etc/hosts\", shell=True)' | python > /tmp/hosts.log 2>&1 || error_exit 'Failed to change hosts file'\n",
 
                     "# Clone sites repo to ubuntu user home\n",
-                    "git clone git@github.com:blue-kite/xbp_puppet_sites.git -b ", {"Ref" : "DeployBranch"}, "  /home/ubuntu/sites > /tmp/git.log 2>&1 || error_exit 'Failed to clone sites repo'\n",
+                    "git clone git@github.com:blue-kite/xbp_puppet_sites.git /home/ubuntu/sites > /tmp/git.log 2>&1 || error_exit 'Failed to clone sites repo'\n",
 
                     "# Clone role app repo\n",
-                    "git clone git@github.com:blue-kite/xbp_puppet_role_helloworld.git -b ", {"Ref" : "DeployBranch"}, "  /etc/puppet/modules/helloworld > /tmp/git.log 2>&1 || error_exit 'Failed to clone role app repo'\n",
+                    "git clone git@github.com:blue-kite/xbp_puppet_role_helloworld.git /etc/puppet/modules/helloworld > /tmp/git.log 2>&1 || error_exit 'Failed to clone role app repo'\n",
                     "chown ubuntu:ubuntu -R /etc/puppet/modules/helloworld\n",
 
                     "#Installing Ruby\n",
@@ -190,7 +190,7 @@
                     "cd /home/ubuntu/sites\n",
                     "sudo sh setup.sh\n",
 
-                    "export LANG=en_US.UTF-8; sudo puppet apply --verbose --environment=", { "Fn::FindInMap" : [ "env", { "Ref" : "Environment" }, "ENV" ]}, " /home/ubuntu/sites/site.pp > /tmp/puppet.log 2>&1 || error_exit 'failed to apply puppet manifests'\n",
+                    "export LANG=en_US.UTF-8; sudo puppet apply --verbose --debug --environment=", { "Fn::FindInMap" : [ "env", { "Ref" : "Environment" }, "ENV" ]}, " /home/ubuntu/sites/site.pp > /tmp/puppet.log 2>&1 || error_exit 'failed to apply puppet manifests'\n",
                     
                     "# Signal setup is complete\n",
                     "cfn-signal -e $? -r 'Completed configuration' '",

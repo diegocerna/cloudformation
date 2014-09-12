@@ -11,7 +11,7 @@
       "ap-southeast-1" : {"AMI" : "ami-605c0a32" },
       "ap-southeast-2" : {"AMI" : "ami-fb4bd5c1" },
       "eu-west-1"      : {"AMI" : "ami-d03dcaa7" },
-      "us-east-1"      : {"AMI" : "ami-c070d5a8" },
+      "us-east-1"      : {"AMI" : "ami-0e07a566" },
       "us-west-2"      : {"AMI" : "ami-5f5e186f" }
     },
 
@@ -21,6 +21,13 @@
       "qa"             : { "DOT" : ".qa" },
       "sandbox"        : { "DOT" : ".sandbox" },
       "production"     : { "DOT" : "" }
+    },
+
+    "env" : {
+      "dev"            : { "ENV" : "staging" },
+      "qa"             : { "ENV" : "qa" },
+      "sandbox"        : { "ENV" : "sandbox" },
+      "production"     : { "ENV" : "production" }
     }
   },
 
@@ -54,7 +61,7 @@
       "Description" : "WebServer EC2 instance type",
       "Type" : "String",
       "Default" : "m3.medium",
-      "AllowedValues" : [ "t1.micro","m1.small","m3.medium","m1.large","m1.xlarge","m2.xlarge","m2.2xlarge","m2.4xlarge","m3.xlarge","m3.2xlarge","c1.medium","c1.xlarge","cc1.4xlarge","cc2.8xlarge","cg1.4xlarge"],
+      "AllowedValues" : [ "t2.micro","m1.small","m3.medium","m1.large","m1.xlarge","m2.xlarge","m2.2xlarge","m2.4xlarge","m3.xlarge","m3.2xlarge","c1.medium","c1.xlarge","cc1.4xlarge","cc2.8xlarge","cg1.4xlarge"],
       "ConstraintDescription" : "must be a valid EC2 instance type."
     },
 
@@ -69,11 +76,17 @@
       "Description" : "Security Group of the VPC",
       "Default" : "sg-"
     },
-    "env" : {
-      "dev"            : { "ENV" : "staging" },
-      "qa"             : { "ENV" : "qa" },
-      "sandbox"        : { "ENV" : "sandbox" },
-      "production"     : { "ENV" : "production" }
+
+    "dbuser" : {
+      "NoEcho": "true",
+      "Type": "String",
+      "Description" : "Psql User"   
+    },
+
+    "dbpass" : {
+      "NoEcho": "true",
+      "Type": "String",
+      "Description" : "Psql password"   
     }
   },
 
@@ -117,10 +130,10 @@
           "cp /home/ubuntu/.ssh/* /root/.ssh/\n",
           
           "# Clone sites repo to ubuntu user home\n",
-          "git clone git@github.com:blue-kite/xbp_puppet_sites.git -b ", {"Ref" : "DeployBranch"}, "  /home/ubuntu/sites > /tmp/git.log 2>&1 || error_exit 'Failed to clone sites repo'\n",
+          "git clone git@github.com:blue-kite/xbp_puppet_sites.git /home/ubuntu/sites > /tmp/git.log 2>&1 || error_exit 'Failed to clone sites repo'\n",
 
           "# Clone role app repo\n",
-          "git clone git@github.com:blue-kite/xbp_puppet_role_accounts.git -b ", {"Ref" : "DeployBranch"}, "  /etc/puppet/modules/accounts > /tmp/git.log 2>&1 || error_exit 'Failed to clone role app repo'\n",
+          "git clone git@github.com:blue-kite/xbp_puppet_role_accounts.git /etc/puppet/modules/accounts > /tmp/git.log 2>&1 || error_exit 'Failed to clone role app repo'\n",
           "chown ubuntu:ubuntu -R /etc/puppet/modules/accounts\n",
 
           "# Add FQDN on etc/environment\n",
@@ -157,11 +170,11 @@
           "echo ", { "Fn::Join" : [ "" , ["logserver_host=logs", { "Ref" : "StackID" }, { "Fn::FindInMap" : [ "dot", { "Ref" : "Environment" }, "DOT" ]}, ".bluekite.com" ]]},        ">> /etc/facter/facts.d/custom_facts.txt\n",
           "echo logserver_port=5001                             >> /etc/facter/facts.d/custom_facts.txt\n",
           "echo ", "revision=", { "Ref" : "DeployBranch" }, ">> /etc/facter/facts.d/custom_facts.txt\n",
-          "echo app_name=accountsmx                             >> /etc/facter/facts.d/custom_facts.txt\n",
-          "echo database_name=accountsdb                         >> /etc/facter/facts.d/custom_facts.txt\n",
-          "echo database_host=accountsdb.mx.bluekite.com            >> /etc/facter/facts.d/custom_facts.txt\n",
+          "echo database_name=accountsdbmx                         >> /etc/facter/facts.d/custom_facts.txt\n",
+          "echo ", { "Fn::Join" : [ "" , ["database_host=accountsdb", { "Ref" : "StackID" }, ".mx", { "Fn::FindInMap" : [ "dot", { "Ref" : "Environment" }, "DOT" ]}, ".bluekite.com" ]]},        ">> /etc/facter/facts.d/custom_facts.txt\n",
           "echo ", "database_username=", { "Ref" : "dbuser" },  ">> /etc/facter/facts.d/custom_facts.txt\n",
           "echo ", "database_password=", { "Ref" : "dbpass" },  ">> /etc/facter/facts.d/custom_facts.txt\n",
+          "echo app_name=accountsmx >> /etc/facter/facts.d/custom_facts.txt\n",
 
           "sudo apt-get update\n",
           "sudo apt-get upgrade\n",
@@ -169,7 +182,7 @@
           "cd /home/ubuntu/sites\n",
           "sudo sh setup.sh\n",
 
-          "export LANG=en_US.UTF-8; sudo puppet apply --verbose --environment=", { "Fn::FindInMap" : [ "env", { "Ref" : "Environment" }, "ENV" ]}, " /home/ubuntu/sites/site.pp > /tmp/puppet.log 2>&1 || error_exit 'failed to apply puppet manifests'\n",
+          "export LANG=en_US.UTF-8; sudo puppet apply --verbose --debug --environment=", { "Fn::FindInMap" : [ "env", { "Ref" : "Environment" }, "ENV" ]}, " /home/ubuntu/sites/site.pp > /tmp/puppet.log 2>&1 || error_exit 'failed to apply puppet manifests'\n",
           
           "# Signal setup is complete\n",
           "cfn-signal -e $? -r 'Completed configuration' '",

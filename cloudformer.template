@@ -2505,7 +2505,7 @@
       "Properties": {
         "DisableApiTermination": "FALSE",
         "ImageId": "ami-0291ef6b",
-        "InstanceType": "t1.micro",
+        "InstanceType": "t2.micro",
         "KernelId": "aki-88aa75e1",
         "KeyName": "frontend-staging",
         "Monitoring": "false",
@@ -2589,7 +2589,7 @@
       "Properties": {
         "DisableApiTermination": "FALSE",
         "ImageId": "ami-d0f89fb9",
-        "InstanceType": "t1.micro",
+        "InstanceType": "t2.micro",
         "KernelId": "aki-88aa75e1",
         "KeyName": "userapi",
         "Monitoring": "false",
@@ -2837,7 +2837,7 @@
       "Properties": {
         "DisableApiTermination": "FALSE",
         "ImageId": "ami-d0f89fb9",
-        "InstanceType": "t1.micro",
+        "InstanceType": "t2.micro",
         "KernelId": "aki-88aa75e1",
         "KeyName": "xyz-app",
         "Monitoring": "false",
@@ -2879,7 +2879,7 @@
       "Properties": {
         "DisableApiTermination": "FALSE",
         "ImageId": "ami-0491ef6d",
-        "InstanceType": "t1.micro",
+        "InstanceType": "t2.micro",
         "KernelId": "aki-88aa75e1",
         "KeyName": "frontend-staging",
         "Monitoring": "false",
@@ -2921,7 +2921,7 @@
       "Properties": {
         "DisableApiTermination": "FALSE",
         "ImageId": "ami-3d4ff254",
-        "InstanceType": "t1.micro",
+        "InstanceType": "t2.micro",
         "KernelId": "aki-825ea7eb",
         "KeyName": "frontend-staging",
         "Monitoring": "false",
@@ -2959,7 +2959,7 @@
       "Properties": {
         "DisableApiTermination": "FALSE",
         "ImageId": "ami-d0f89fb9",
-        "InstanceType": "t1.micro",
+        "InstanceType": "t2.micro",
         "KernelId": "aki-88aa75e1",
         "KeyName": "history-staging",
         "Monitoring": "false",
@@ -3001,7 +3001,7 @@
       "Properties": {
         "DisableApiTermination": "FALSE",
         "ImageId": "ami-d0f89fb9",
-        "InstanceType": "t1.micro",
+        "InstanceType": "t2.micro",
         "KernelId": "aki-88aa75e1",
         "KeyName": "userapi-staging",
         "Monitoring": "false",
@@ -3123,7 +3123,7 @@
       "Properties": {
         "DisableApiTermination": "FALSE",
         "ImageId": "ami-d0f89fb9",
-        "InstanceType": "t1.micro",
+        "InstanceType": "t2.micro",
         "KernelId": "aki-88aa75e1",
         "KeyName": "bluekite-vpc",
         "Monitoring": "false",
@@ -3245,7 +3245,7 @@
       "Properties": {
         "DisableApiTermination": "FALSE",
         "ImageId": "ami-455e262c",
-        "InstanceType": "t1.micro",
+        "InstanceType": "t2.micro",
         "KernelId": "aki-88aa75e1",
         "KeyName": "bluekite-vpc",
         "Monitoring": "false",
@@ -3380,7 +3380,7 @@
       "Properties": {
         "DisableApiTermination": "FALSE",
         "ImageId": "ami-f619c29f",
-        "InstanceType": "t1.micro",
+        "InstanceType": "t2.micro",
         "KernelId": "aki-88aa75e1",
         "KeyName": "bluekite-vpc",
         "Monitoring": "false",
@@ -3523,7 +3523,7 @@
       "Properties": {
         "DisableApiTermination": "FALSE",
         "ImageId": "ami-d0f89fb9",
-        "InstanceType": "t1.micro",
+        "InstanceType": "t2.micro",
         "KernelId": "aki-88aa75e1",
         "KeyName": "bluekite-vpc",
         "Monitoring": "false",
@@ -3607,7 +3607,7 @@
       "Properties": {
         "DisableApiTermination": "FALSE",
         "ImageId": "ami-d0f89fb9",
-        "InstanceType": "t1.micro",
+        "InstanceType": "t2.micro",
         "KernelId": "aki-88aa75e1",
         "KeyName": "frontend-staging",
         "Monitoring": "false",
@@ -3725,7 +3725,7 @@
       "Properties": {
         "DisableApiTermination": "FALSE",
         "ImageId": "ami-d0f89fb9",
-        "InstanceType": "t1.micro",
+        "InstanceType": "t2.micro",
         "KernelId": "aki-88aa75e1",
         "KeyName": "bluekite-vpc",
         "Monitoring": "false",
@@ -3763,7 +3763,7 @@
       "Properties": {
         "DisableApiTermination": "FALSE",
         "ImageId": "ami-3fec7956",
-        "InstanceType": "t1.micro",
+        "InstanceType": "t2.micro",
         "KernelId": "aki-88aa75e1",
         "KeyName": "bluekite-vpc",
         "Monitoring": "false",
@@ -3843,7 +3843,7 @@
       "Properties": {
         "DisableApiTermination": "FALSE",
         "ImageId": "ami-b3c8b9da",
-        "InstanceType": "t1.micro",
+        "InstanceType": "t2.micro",
         "KernelId": "aki-88aa75e1",
         "KeyName": "bluekite-vpc",
         "Monitoring": "false",
@@ -3881,7 +3881,7 @@
       "Properties": {
         "DisableApiTermination": "FALSE",
         "ImageId": "ami-d0f89fb9",
-        "InstanceType": "t1.micro",
+        "InstanceType": "t2.micro",
         "KernelId": "aki-88aa75e1",
         "KeyName": "frontend_app",
         "Monitoring": "false",
@@ -3961,7 +3961,7 @@
       "Properties": {
         "DisableApiTermination": "FALSE",
         "ImageId": "ami-f619c29f",
-        "InstanceType": "t1.micro",
+        "InstanceType": "t2.micro",
         "KernelId": "aki-88aa75e1",
         "KeyName": "frontend-staging",
         "Monitoring": "false",
@@ -4003,7 +4003,7 @@
       "Properties": {
         "DisableApiTermination": "FALSE",
         "ImageId": "ami-d0f89fb9",
-        "InstanceType": "t1.micro",
+        "InstanceType": "t2.micro",
         "KernelId": "aki-88aa75e1",
         "KeyName": "bluekite-vpc",
         "Monitoring": "false",
@@ -4041,7 +4041,7 @@
       "Properties": {
         "DisableApiTermination": "FALSE",
         "ImageId": "ami-d0f89fb9",
-        "InstanceType": "t1.micro",
+        "InstanceType": "t2.micro",
         "KernelId": "aki-88aa75e1",
         "KeyName": "bluekite-vpc",
         "Monitoring": "false",
@@ -4382,7 +4382,7 @@
       "Properties": {
         "DisableApiTermination": "FALSE",
         "ImageId": "ami-f619c29f",
-        "InstanceType": "t1.micro",
+        "InstanceType": "t2.micro",
         "KernelId": "aki-88aa75e1",
         "KeyName": "bluekite-vpc",
         "Monitoring": "false",
@@ -4744,7 +4744,7 @@
       "Properties": {
         "DisableApiTermination": "FALSE",
         "ImageId": "ami-3d4ff254",
-        "InstanceType": "t1.micro",
+        "InstanceType": "t2.micro",
         "KernelId": "aki-825ea7eb",
         "KeyName": "xyz-app",
         "Monitoring": "false",
@@ -4858,7 +4858,7 @@
       "Properties": {
         "DisableApiTermination": "FALSE",
         "ImageId": "ami-bf5021d6",
-        "InstanceType": "t1.micro",
+        "InstanceType": "t2.micro",
         "KernelId": "aki-88aa75e1",
         "KeyName": "bluekite-vpc",
         "Monitoring": "false",
@@ -4904,7 +4904,7 @@
       "Properties": {
         "DisableApiTermination": "FALSE",
         "ImageId": "ami-bf5021d6",
-        "InstanceType": "t1.micro",
+        "InstanceType": "t2.micro",
         "KernelId": "aki-88aa75e1",
         "KeyName": "bluekite-vpc",
         "Monitoring": "false",
@@ -4950,7 +4950,7 @@
       "Properties": {
         "DisableApiTermination": "FALSE",
         "ImageId": "ami-f619c29f",
-        "InstanceType": "t1.micro",
+        "InstanceType": "t2.micro",
         "KernelId": "aki-88aa75e1",
         "KeyName": "bluekite-vpc",
         "Monitoring": "false",
@@ -4992,7 +4992,7 @@
       "Properties": {
         "DisableApiTermination": "FALSE",
         "ImageId": "ami-f619c29f",
-        "InstanceType": "t1.micro",
+        "InstanceType": "t2.micro",
         "KernelId": "aki-88aa75e1",
         "KeyName": "bluekite-vpc",
         "Monitoring": "false",
@@ -5346,7 +5346,7 @@
       "Properties": {
         "DisableApiTermination": "FALSE",
         "ImageId": "ami-bf5021d6",
-        "InstanceType": "t1.micro",
+        "InstanceType": "t2.micro",
         "KernelId": "aki-88aa75e1",
         "KeyName": "bluekite-vpc",
         "Monitoring": "false",
@@ -5391,7 +5391,7 @@
       "Properties": {
         "DisableApiTermination": "FALSE",
         "ImageId": "ami-b13ab1d8",
-        "InstanceType": "t1.micro",
+        "InstanceType": "t2.micro",
         "KernelId": "aki-88aa75e1",
         "KeyName": "xyz-app",
         "Monitoring": "false",
@@ -5429,7 +5429,7 @@
       "Properties": {
         "DisableApiTermination": "FALSE",
         "ImageId": "ami-31e56f58",
-        "InstanceType": "t1.micro",
+        "InstanceType": "t2.micro",
         "KernelId": "aki-825ea7eb",
         "KeyName": "bluekite-vpc",
         "Monitoring": "false",
@@ -5467,7 +5467,7 @@
       "Properties": {
         "DisableApiTermination": "FALSE",
         "ImageId": "ami-3d4ff254",
-        "InstanceType": "t1.micro",
+        "InstanceType": "t2.micro",
         "KernelId": "aki-825ea7eb",
         "KeyName": "bluekite-vpc",
         "Monitoring": "false",
@@ -5505,7 +5505,7 @@
       "Properties": {
         "DisableApiTermination": "FALSE",
         "ImageId": "ami-ed5ccb84",
-        "InstanceType": "t1.micro",
+        "InstanceType": "t2.micro",
         "KernelId": "aki-88aa75e1",
         "KeyName": "xyz-app",
         "Monitoring": "false",
@@ -5762,7 +5762,7 @@
       "Properties": {
         "DisableApiTermination": "FALSE",
         "ImageId": "ami-a73264ce",
-        "InstanceType": "t1.micro",
+        "InstanceType": "t2.micro",
         "KernelId": "aki-88aa75e1",
         "KeyName": "bluekite-vpc",
         "Monitoring": "false",
@@ -5800,7 +5800,7 @@
       "Properties": {
         "DisableApiTermination": "FALSE",
         "ImageId": "ami-a73264ce",
-        "InstanceType": "t1.micro",
+        "InstanceType": "t2.micro",
         "KernelId": "aki-88aa75e1",
         "KeyName": "bluekite-vpc",
         "Monitoring": "false",

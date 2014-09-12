@@ -18,7 +18,7 @@
       "Description" : "WebServer EC2 instance type",
       "Type" : "String",
       "Default" : "m3.medium",
-      "AllowedValues" : [ "t1.micro","m1.small","m3.medium","m1.large","m1.xlarge","m2.xlarge","m2.2xlarge","m2.4xlarge","m3.xlarge","m3.2xlarge","c1.medium","c1.xlarge","cc1.4xlarge","cc2.8xlarge","cg1.4xlarge"],
+      "AllowedValues" : [ "t2.micro","m1.small","m3.medium","m1.large","m1.xlarge","m2.xlarge","m2.2xlarge","m2.4xlarge","m3.xlarge","m3.2xlarge","c1.medium","c1.xlarge","cc1.4xlarge","cc2.8xlarge","cg1.4xlarge"],
       "ConstraintDescription" : "must be a valid EC2 instance type."
     },
 
@@ -50,12 +50,6 @@
       "Type" : "String",
       "Description" : "Application's environment.",
       "Default" : ""
-    },
-
-    "Repository" : {
-      "Type" : "String",
-      "Description" : "Application's GitHub Repository.",
-      "Default" : "git@github.com:blue-kite/monitors.git"
     }
 
   },
@@ -68,15 +62,23 @@
       "ap-southeast-1" : {"AMI" : "ami-605c0a32" },
       "ap-southeast-2" : {"AMI" : "ami-fb4bd5c1" },
       "eu-west-1"      : {"AMI" : "ami-d03dcaa7" },
-      "us-east-1"      : {"AMI" : "ami-cdc2fda4" },
-      "us-west-2"      : {"AMI" : "ami-9a9dfdaa" }
+      "us-east-1"      : {"AMI" : "ami-0e07a566" },
+      "us-west-2"      : {"AMI" : "ami-5f5e186f" }
     },
+
     "dot" : {
-      "test"            : { "DOT" : ".test" },
+      "test"           : { "DOT" : ".test" },
       "dev"            : { "DOT" : ".dev" },
       "qa"             : { "DOT" : ".qa" },
       "sandbox"        : { "DOT" : ".sandbox" },
       "production"     : { "DOT" : "" }
+    }, 
+
+    "env" : {
+      "dev"            : { "ENV" : "staging" },
+      "qa"             : { "ENV" : "qa" },
+      "sandbox"        : { "ENV" : "sandbox" },
+      "production"     : { "ENV" : "production" }
     }
   },
 
@@ -136,22 +138,53 @@
           "echo ", { "Fn::Join" : [ "" , ["FQDN=monitors", { "Ref" : "StackID" }, { "Fn::FindInMap" : [ "dot", { "Ref" : "Environment" }, "DOT" ]}, ".bluekite.com" ]]}, ">> /etc/environment\n",
           "echo ", "STACKID=", { "Ref" : "StackID" }, ">> /etc/environment\n",
 
-          "# Clone app repo to ubuntu user home\n",
-          "git clone ", {"Ref": "Repository"}, " -b ", {"Ref" : "DeployBranch"}, " /home/ubuntu/monitors > /tmp/git.log 2>&1 || error_exit 'Failed to clone repo'\n",
-          "chown ubuntu:ubuntu -R /home/ubuntu/monitors\n",
+          "hostname monitors", { "Ref" : "StackID" }, "\n",
+
+          "echo monitors", { "Ref" : "StackID" }, "> /etc/hostname\n",
+
+          "echo -e 'import subprocess as s\no=open(\"/etc/newhosts\",\"a\")\nfor line in open(\"/etc/hosts\"):\n\tif line.find(\"127.0.0.1\")+1:\n\t\tline = line.replace(\"localhost\", \"localhost\" + \" monitors\"", { "Ref" : "StackID" }, ")\n\to.write(line)\no.close()\ns.call(\"mv /etc/newhosts /etc/hosts\", shell=True)' | python > /tmp/hosts.log 2>&1 || error_exit 'Failed to change hosts file'\n",
+
+          "# Clone sites repo to ubuntu user home\n",
+          "git clone git@github.com:blue-kite/xbp_puppet_sites.git /home/ubuntu/sites > /tmp/git.log 2>&1 || error_exit 'Failed to clone sites repo'\n",
+
+          "# Clone role app repo\n",
+          "git clone git@github.com:blue-kite/xbp_puppet_role_monitors.git /etc/puppet/modules/monitors > /tmp/git.log 2>&1 || error_exit 'Failed to clone role app repo'\n",
+          "chown ubuntu:ubuntu -R /etc/puppet/modules/monitors\n",
+
+          "#Installing Ruby\n",
+          "apt-get -y install libyaml-0-2\n",
+          "apt-get -y install ruby1.9.3\n",
+          "update-alternatives --set ruby /usr/bin/ruby1.9.1\n",
+          "apt-get -y install rubygems\n",
+          "update-alternatives --set gem /usr/bin/gem1.9.1\n",
 
           "# Install puppet via gems\n",
           "sudo gem install puppet --no-rdoc --no-ri > /tmp/gem-puppet.log 2>&1 || error_exit 'Failed install puppet gem'\n",
 
           "# Install Librarian Ruby\n",
-          "sudo gem install librarian-puppet -v 1.0.3 --no-rdoc --no-ri > /tmp/gem-librarian-puppet.log 2>&1 || error_exit 'Failed install librarian puppet gem'\n",
+          "sudo gem install librarian-puppet --no-rdoc --no-ri > /tmp/gem-librarian-puppet.log 2>&1 || error_exit 'Failed install librarian puppet gem'\n",
 
-          "# Install application's dependencies via puppet\n",
-          "cd /home/ubuntu/monitors/puppet\n",
-          "export HOME=/home/ubuntu && librarian-puppet install --clean --verbose > /tmp/librarian-puppet.log 2>&1 || error_exit 'failed to install puppet submodules'\n",
+          "# Install application's dependencies via librarian puppet\n",
+          "cd /etc/puppet/modules/monitors\n",
+          "sudo librarian-puppet install --clean --verbose --path=/etc/puppet/modules > /tmp/librarian-puppet.log 2>&1 || error_exit 'failed to install puppet submodules'\n",
 
-          "cd /home/ubuntu/monitors\n",
-          "sudo puppet apply --verbose --modulepath=./puppet/modules ./puppet/manifests/aws-",{"Ref":"Environment"},".pp  > /tmp/puppet.log 2>&1 || error_exit 'failed to apply puppet manifests'\n",
+          "#setting my custom facts\n",
+          "mkdir -p /etc/facter/facts.d\n",
+          "touch /etc/facter/facts.d/custom_facts.txt\n",
+          "echo ", { "Fn::Join" : [ "" , ["fqdn=monitors", { "Ref" : "StackID" }, { "Fn::FindInMap" : [ "dot", { "Ref" : "Environment" }, "DOT" ]}, ".bluekite.com" ]]},        ">> /etc/facter/facts.d/custom_facts.txt\n",
+          "echo ", "stackid=", { "Ref" : "StackID" },       ">> /etc/facter/facts.d/custom_facts.txt\n",
+          "echo ", "revision=", { "Ref" : "DeployBranch" }, ">> /etc/facter/facts.d/custom_facts.txt\n",
+          "echo ", { "Fn::Join" : [ "" , ["logserver_host=logs", { "Ref" : "StackID" }, { "Fn::FindInMap" : [ "dot", { "Ref" : "Environment" }, "DOT" ]}, ".bluekite.com" ]]},        ">> /etc/facter/facts.d/custom_facts.txt\n",
+          "echo logserver_port=5001  >> /etc/facter/facts.d/custom_facts.txt\n",
+          "echo app_name=monitors >> /etc/facter/facts.d/custom_facts.txt\n",
+
+          "sudo apt-get update\n",
+          "sudo apt-get upgrade\n",
+
+          "cd /home/ubuntu/sites\n",
+          "sudo sh setup.sh\n",
+
+          "export LANG=en_US.UTF-8; sudo puppet apply --verbose --debug --environment=", { "Fn::FindInMap" : [ "env", { "Ref" : "Environment" }, "ENV" ]}, " /home/ubuntu/sites/site.pp > /tmp/puppet.log 2>&1 || error_exit 'failed to apply puppet manifests'\n",
 
           "# Signal setup is complete\n",
           "cfn-signal -e $? -r 'Completed configuration' '",

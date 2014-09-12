@@ -24,7 +24,7 @@
             "Description" : "WebServer EC2 instance type",
             "Type" : "String",
             "Default" : "m3.medium",
-            "AllowedValues" : [ "t1.micro","m1.small","m3.medium","m1.large","m1.xlarge","m2.xlarge","m2.2xlarge","m2.4xlarge","m3.xlarge","m3.2xlarge","c1.medium","c1.xlarge","cc1.4xlarge","cc2.8xlarge","cg1.4xlarge"],
+            "AllowedValues" : [ "t2.micro","m1.small","m3.medium","m1.large","m1.xlarge","m2.xlarge","m2.2xlarge","m2.4xlarge","m3.xlarge","m3.2xlarge","c1.medium","c1.xlarge","cc1.4xlarge","cc2.8xlarge","cg1.4xlarge"],
             "ConstraintDescription" : "must be a valid EC2 instance type."
         },
 
@@ -172,7 +172,7 @@
                     "cp /home/ubuntu/.ssh/* /root/.ssh/\n",
 
                     "# Clone app repo to ubuntu user home\n",
-                    "git clone git@github.com:blue-kite/bree.git -b ", {"Ref" : "DeployBranch"}, "  /home/ubuntu/oauth > /tmp/git.log 2>&1 || error_exit 'Failed to clone repo'\n",
+                    "git clone git@github.com:blue-kite/bree.git /home/ubuntu/oauth > /tmp/git.log 2>&1 || error_exit 'Failed to clone repo'\n",
 
                     "chown ubuntu:ubuntu -R /home/ubuntu/oauth\n",
 
@@ -199,7 +199,7 @@
                     "export HOME=/home/ubuntu && librarian-puppet install --verbose > /tmp/librarian-puppet.log 2>&1 || error_exit 'failed to install puppet submodules'\n",
 
                     "cd /home/ubuntu/oauth\n",
-                    "sudo puppet apply --verbose --modulepath=./puppet/modules ./puppet/manifests/aws-",{"Ref":"Environment"},".pp > /tmp/puppet.log 2>&1 || error_exit 'failed to apply puppet manifests'\n",
+                    "sudo puppet apply --verbose --debug --modulepath=./puppet/modules ./puppet/manifests/aws-",{"Ref":"Environment"},".pp > /tmp/puppet.log 2>&1 || error_exit 'failed to apply puppet manifests'\n",
 
                     "# gem install pry and aws-sdk for oauth backups to s3\n",
                         "sudo gem install pry\n",

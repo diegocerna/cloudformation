@@ -86,7 +86,7 @@
       "ap-southeast-1" : {"AMI" : "ami-605c0a32" },
       "ap-southeast-2" : {"AMI" : "ami-fb4bd5c1" },
       "eu-west-1"      : {"AMI" : "ami-d03dcaa7" },
-      "us-east-1"      : {"AMI" : "ami-c070d5a8" },
+      "us-east-1"      : {"AMI" : "ami-0e07a566" },
       "us-west-2"      : {"AMI" : "ami-5f5e186f" }
     },
     "dot"              : {
@@ -192,7 +192,7 @@
             "sudo apt-get upgrade\n",
 
             "cd /home/ubuntu/elasticsearch_server\n",
-            "sudo puppet apply --verbose --modulepath=puppet/modules puppet/manifests/site.pp > /tmp/puppet.log 2>&1 || error_exit 'failed to apply puppet manifests'\n",
+            "sudo puppet apply --verbose --debug --modulepath=puppet/modules puppet/manifests/site.pp > /tmp/puppet.log 2>&1 || error_exit 'failed to apply puppet manifests'\n",
 
             "# Signal setup is complete\n",
             "cfn-signal -e $? -r 'Completed configuration' '",
