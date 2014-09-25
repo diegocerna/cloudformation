@@ -75,7 +75,7 @@
       "ap-southeast-2" : {"AMI" : "ami-fb4bd5c1" },
       "eu-west-1"      : {"AMI" : "ami-d03dcaa7" },
       "us-east-1"      : {"AMI" : "ami-0e07a566" },
-      "us-west-2"      : {"AMI" : "ami-5f5e186f" }
+      "us-west-2"      : {"AMI" : "ami-8b6d2ebb" }
     },
     "dot" : {
       "test"           : { "DOT" : ".test" },

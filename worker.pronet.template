@@ -62,7 +62,7 @@
             "ap-southeast-2" : {"AMI" : "ami-fb4bd5c1" },
             "eu-west-1"      : {"AMI" : "ami-d03dcaa7" },
             "us-east-1"      : {"AMI" : "ami-0e07a566" },
-            "us-west-2"      : {"AMI" : "ami-5f5e186f" }
+            "us-west-2"      : {"AMI" : "ami-8b6d2ebb" }
         },
 
         "dot" : {
@@ -71,7 +71,7 @@
           "qa"             : { "DOT" : ".qa" },
           "sandbox"        : { "DOT" : ".sandbox" },
           "production"     : { "DOT" : "" }
-        }, 
+        },
 
         "env" : {
           "dev"            : { "ENV" : "staging" },
@@ -227,6 +227,8 @@
                     "service ntp restart\n",
                     "echo \"America/Guatemala\" > /etc/timezone\n",
                     "dpkg-reconfigure -f noninteractive tzdata\n",
+
+                    "cd /opt/xoom/apps/worker/current && bundle exec rake airbrake:deploy\n",
 
                     "# Signal setup is complete\n",
                     "cfn-signal -e $? -r 'Completed configuration' '",

@@ -57,7 +57,7 @@
     "IntGWAMI" : {
       "us-east-1"      : { "AMI" : "ami-0e07a566" },
       "us-west-1"      : { "AMI" : "ami-82b98bc7" },
-      "us-west-2"      : { "AMI" : "ami-5f5e186f" },
+      "us-west-2"      : { "AMI" : "ami-8b6d2ebb" },
       "sa-east-1"      : { "AMI" : "ami-d545e5c8" },
       "eu-west-1"      : { "AMI" : "ami-d03dcaa7"}
     },
