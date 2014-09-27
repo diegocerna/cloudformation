@@ -62,11 +62,11 @@
           "ap-southeast-2" : {"AMI" : "ami-fb4bd5c1" },
           "eu-west-1"      : {"AMI" : "ami-d03dcaa7" },
           "us-east-1"      : {"AMI" : "ami-cdc2fda4" },
-          "us-west-2"      : {"AMI" : "ami-9a9dfdaa" }
+          "us-west-2"      : {"AMI" : "ami-8b6d2ebb" }
         },
 
         "dot" : {
-          "test"            : { "DOT" : ".test" },
+          "test"           : { "DOT" : ".test" },
           "dev"            : { "DOT" : ".dev" },
           "qa"             : { "DOT" : ".qa" },
           "sandbox"        : { "DOT" : ".sandbox" },
@@ -75,15 +75,6 @@
     },
 
     "Resources" : {
-
-        "IPAddress" : {
-            "Type" : "AWS::EC2::EIP",
-            "Properties" : {
-            "Domain" : "vpc",
-            "InstanceId" : { "Ref" : "XPAInstance" }
-            }
-        },
-
         "DNSRecord" : {
             "Type" : "AWS::Route53::RecordSet",
                 "Properties" : {
@@ -92,9 +83,9 @@
                 "Name" : { "Fn::Join" : [ "", ["xpa", { "Ref" : "StackID" } , { "Fn::FindInMap" : [ "dot", { "Ref" : "Environment" }, "DOT" ]},".bluekite.com"]]},
                 "Type" : "CNAME",
                 "TTL" : "300",
-                "ResourceRecords" : [ { "Fn::GetAtt" : [ "XPAInstance", "PublicDnsName" ] } ]
+                "ResourceRecords" : [ { "Fn::GetAtt" : [ "XPAInstance", "PrivateIp" ] } ]
                 },
-            "DependsOn" : "IPAddress"
+            "DependsOn" : "XPAInstance"
         },
 
         "XPAInstance" : {
@@ -155,7 +146,7 @@
                 "InstanceType" : { "Ref" : "InstanceType" },
                 "KeyName" : { "Ref" : "KeyName" },
                 "Tags" : [ {"Key" : "Application", "Value" : { "Ref" : "AWS::StackId"} },
-                           {"Key" : "Name", "Value" : { "Fn::Join" : ["-", ["xpa", { "Ref" : "StackID" }, {"Ref":"Environment"} ]]}}],
+                           {"Key" : "Name", "Value" : { "Fn::Join" : ["", ["xpa", { "Ref" : "StackID" }, {"Ref":"Environment"} ]]}}],
                 "UserData"       : { "Fn::Base64" : { "Fn::Join" : ["", [
                     "#!/bin/bash\n",
 
@@ -183,7 +174,13 @@
                     "# Add FQDN on etc/environment\n",
                      "echo ", { "Fn::Join" : [ "" , ["FQDN=xpa", { "Ref" : "StackID" }, { "Fn::FindInMap" : [ "dot", { "Ref" : "Environment" }, "DOT" ]}, ".bluekite.com" ]]}, ">> /etc/environment\n",
                     "echo ", "STACKID=", { "Ref" : "StackID" }, ">> /etc/environment\n",
-          
+
+                    "hostname xpa", { "Ref" : "StackID" }, "\n",
+
+                    "echo xpa", { "Ref" : "StackID" }, "> /etc/hostname\n",
+
+                    "echo -e 'import subprocess as s\no=open(\"/etc/newhosts\",\"a\")\nfor line in open(\"/etc/hosts\"):\n\tif line.find(\"127.0.0.1\")+1:\n\t\tline = line.replace(\"localhost\", \"xpa.qa.bluekite.com\" + \" xpa\"", { "Ref" : "StackID" }, ")\n\to.write(line)\no.close()\ns.call(\"mv /etc/newhosts /etc/hosts\", shell=True)' | python > /tmp/hosts.log 2>&1 || error_exit 'Failed to change hosts file'\n",
+
                     "# Clone app repo to ubuntu user home\n",
                     "git clone git@github.com:blue-kite/xpa.git -b ", {"Ref" : "DeployBranch"}, " /home/ubuntu/xpa > /tmp/git_xpa.log 2>&1 || error_exit 'Failed to clone XPA repo'\n",
                     "chown ubuntu:ubuntu -R /home/ubuntu/\n",
