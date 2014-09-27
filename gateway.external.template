@@ -44,7 +44,7 @@
       "Type" : "String",
       "Description" : "Stack ID name",
       "Default" : ""
-    },    
+    },
 
     "DeployBranch" : {
       "Type" : "String",
@@ -69,7 +69,7 @@
       "sandbox"        : { "DOT" : ".sandbox" },
       "production"     : { "DOT" : "" }
     },
-    
+
     "env" : {
       "dev"            : { "ENV" : "staging" },
       "qa"             : { "ENV" : "qa" },
@@ -137,7 +137,7 @@
               }
             }
           },
-          
+
           "config_packages" : {
             "packages" : {
               "apt" : {
@@ -185,7 +185,7 @@
           "cp /home/ubuntu/.ssh/* /root/.ssh/\n",
 
           "# Add FQDN on etc/environment\n",
-          "echo ", { "Fn::Join" : [ "" , ["FQDN=api", { "Ref" : "StackID" }, { "Fn::FindInMap" : [ "dot", { "Ref" : "Environment" }, "DOT" ]}, ".bluekite.com" ]]}, ">> /etc/environment\n",     
+          "echo ", { "Fn::Join" : [ "" , ["FQDN=api", { "Ref" : "StackID" }, { "Fn::FindInMap" : [ "dot", { "Ref" : "Environment" }, "DOT" ]}, ".bluekite.com" ]]}, ">> /etc/environment\n",
           "echo ", "FACTER_stackid=", { "Ref" : "StackID" }, ">> /etc/environment\n",
 
           "hostname api", { "Ref" : "StackID" }, "\n",
@@ -198,8 +198,8 @@
           "git clone git@github.com:blue-kite/xbp_puppet_sites.git /home/ubuntu/sites > /tmp/git.log 2>&1 || error_exit 'Failed to clone sites repo'\n",
 
           "# Clone role app repo\n",
-          "git clone git@github.com:blue-kite/xbp_puppet_role_gateway.git /etc/puppet/modules/gateway > /tmp/git.log 2>&1 || error_exit 'Failed to clone role app repo'\n",
-          "chown ubuntu:ubuntu -R /etc/puppet/modules/gateway\n",
+          "git clone git@github.com:blue-kite/xbp_puppet_role_gw.git /etc/puppet/modules/gw > /tmp/git.log 2>&1 || error_exit 'Failed to clone role app repo'\n",
+          "chown ubuntu:ubuntu -R /etc/puppet/modules/gw\n",
 
           "#Installing Ruby\n",
           "apt-get -y install libyaml-0-2\n",
@@ -215,7 +215,7 @@
           "sudo gem install librarian-puppet --no-rdoc --no-ri > /tmp/gem-librarian-puppet.log 2>&1 || error_exit 'Failed install librarian puppet gem'\n",
 
           "# Install application's dependencies via librarian puppet\n",
-          "cd /etc/puppet/modules/gateway\n",
+          "cd /etc/puppet/modules/gw\n",
           "sudo librarian-puppet install --clean --verbose --path=/etc/puppet/modules > /tmp/librarian-puppet.log 2>&1 || error_exit 'failed to install puppet submodules'\n",
 
           "#setting my custom facts\n",
