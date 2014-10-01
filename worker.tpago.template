@@ -88,7 +88,7 @@
             "Properties" : {
                 "HostedZoneName" : "bluekite.com.",
                 "Comment" : "DNS name for my instance.",
-                "Name" : { "Fn::Join" : [ "", ["worker.tpago", { "Ref" : "StackID" }, { "Fn::FindInMap" : [ "dot", { "Ref" : "Environment" }, "DOT" ]},".bluekite.com"]]},
+                "Name" : { "Fn::Join" : [ "", ["workertpago", { "Ref" : "StackID" }, { "Fn::FindInMap" : [ "dot", { "Ref" : "Environment" }, "DOT" ]},".bluekite.com"]]},
                 "Type" : "A",
                 "TTL" : "300",
                 "ResourceRecords" : [ { "Fn::GetAtt" : [ "DoWorkerTpagoInstance", "PrivateIp" ] } ]
@@ -156,7 +156,7 @@
                 "InstanceType" : { "Ref" : "InstanceType" },
                 "KeyName" : { "Ref" : "KeyName" },
                 "Tags" : [ {"Key" : "Application", "Value" : { "Ref" : "AWS::StackId"} },
-                           {"Key" : "Name", "Value" : { "Fn::Join" : [ ".", ["worker.tpago", {"Ref" : "Environment"} ] ] } } ],
+                           {"Key" : "Name", "Value" : { "Fn::Join" : [ ".", ["workertpago", {"Ref" : "Environment"} ] ] } } ],
                 "UserData"       : { "Fn::Base64" : { "Fn::Join" : ["", [
                     "#!/bin/bash\n",
 
@@ -181,7 +181,7 @@
                     "cp /home/ubuntu/.ssh/* /root/.ssh/\n",
 
                     "# Add FQDN on etc/environment\n",
-                    "echo ", { "Fn::Join" : [ "" , ["FQDN=worker.tpago", { "Ref" : "StackID" }, { "Fn::FindInMap" : [ "dot", { "Ref" : "Environment" }, "DOT" ]}, ".bluekite.com" ]]}, ">> /etc/environment\n",
+                    "echo ", { "Fn::Join" : [ "" , ["FQDN=workertpago", { "Ref" : "StackID" }, { "Fn::FindInMap" : [ "dot", { "Ref" : "Environment" }, "DOT" ]}, ".bluekite.com" ]]}, ">> /etc/environment\n",
                     "echo ", "STACKID=", { "Ref" : "StackID" }, ">> /etc/environment\n",
                     "echo ", { "Fn::Join" : [ "" , ["FACTER_queue_host=accounts", { "Ref" : "StackID" }, ".do", { "Fn::FindInMap" : [ "dot", { "Ref" : "Environment" }, "DOT" ]}, ".bluekite.com" ]]}, ">> /etc/environment\n",
 
@@ -218,7 +218,7 @@
                     "#setting my custom facts\n",
                     "mkdir -p /etc/facter/facts.d\n",
                     "touch /etc/facter/facts.d/custom_facts.txt\n",
-                    "echo ", { "Fn::Join" : [ "" , ["fqdn=worker.tpago", { "Ref" : "StackID" }, { "Fn::FindInMap" : [ "dot", { "Ref" : "Environment" }, "DOT" ]}, ".bluekite.com" ]]},        ">> /etc/facter/facts.d/custom_facts.txt\n",
+                    "echo ", { "Fn::Join" : [ "" , ["fqdn=workertpago", { "Ref" : "StackID" }, { "Fn::FindInMap" : [ "dot", { "Ref" : "Environment" }, "DOT" ]}, ".bluekite.com" ]]},        ">> /etc/facter/facts.d/custom_facts.txt\n",
                     "echo ", { "Fn::Join" : [ "" , ["queue_host=queue", { "Ref" : "StackID" }, ".accounts", { "Fn::FindInMap" : [ "dot", { "Ref" : "Environment" }, "DOT" ]}, ".bluekite.com" ]]},        ">> /etc/facter/facts.d/custom_facts.txt\n",
                     "echo ", "stackid=", { "Ref" : "StackID" },       ">> /etc/facter/facts.d/custom_facts.txt\n",
                     "echo ", "revision=", { "Ref" : "DeployBranch" }, ">> /etc/facter/facts.d/custom_facts.txt\n",
