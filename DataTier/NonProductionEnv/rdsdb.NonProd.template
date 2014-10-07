@@ -1,0 +1,398 @@
+{
+  "AWSTemplateFormatVersion": "2010-09-09",
+  "Description" : "RDS postgres databases  - filename:rds.NonProd.template",
+
+  "Mappings" : {
+     "dot" : {
+       "test"           : { "DOT" : ".test" },
+       "dev"            : { "DOT" : ".dev" },
+       "qa"             : { "DOT" : ".qa" },
+       "sandbox"        : { "DOT" : ".sandbox" },
+       "production"     : { "DOT" : "" }
+     },
+     "env" : {
+       "dev"            : { "ENV" : "-dev" },
+       "qa"             : { "ENV" : "-qa" },
+       "sandbox"        : { "ENV" : "-sandbox" },
+       "production"     : { "ENV" : "" }
+     }
+   },
+
+  "Parameters" : {
+
+    "SubnetIdAz1" : {
+      "Type" : "String",
+      "Description" : "SubnetId for database AZ1 in your Virtual Private Cloud (VPC)",
+      "Default": "subnet-4fd72416"
+    },
+    "SubnetIdAz2" : {
+      "Type" : "String",
+      "Description" : "SubnetId for database AZ2 your Virtual Private Cloud (VPC)",
+      "Default": "subnet-f334e584"
+    },
+
+    "Environment" : {
+      "Type" : "String",
+      "Description" : "Environment i.e. dev, production, etc.",
+      "Default" : "production"
+    },
+
+    "InstanceType" : {
+      "Description" : "WebServer EC2 instance type",
+      "Type" : "String",
+      "Default" : "db.t2.micro",
+      "AllowedValues" : [ "db.t2.micro","db.t2.small","db.t2.medium","db.m3.large","db.m3.xlarge","db.m3.2xlarge"],
+      "ConstraintDescription" : "must be a valid EC2 instance type."
+    },
+
+    "StackID" : {
+      "Type" : "String",
+      "Description" : "Stack ID name",
+      "Default" : "-"
+    },
+
+    "SecurityGroupId" : {
+      "Type" : "String",
+      "Description" : "Security Group of the VPC",
+      "Default" : "sg-f970569c"
+    },
+    "dbuser" : {
+      "NoEcho": "true",
+      "Type": "String",
+      "Description" : "Psql User",
+      "Default" : "stampdb"
+    },
+
+    "dbpass" : {
+      "NoEcho": "true",
+      "Type": "String",
+      "Description" : "Psql password",
+      "Default" : "stamp102214"
+    },
+
+    "Region" : {
+      "Type": "String",
+      "Description" : "region first 2 chars, oregon: or, virginia vi...",
+      "Default" : "or"
+    }
+  },
+
+  "Resources": {
+
+   "RDSSubnetGroup" : {
+     "Type" : "AWS::RDS::DBSubnetGroup",
+       "Properties" : {
+          "DBSubnetGroupDescription" : { "Fn::Join" : [ "", ["RDS-snetGroup", { "Ref" : "StackID" } , { "Fn::FindInMap" : [ "dot", { "Ref" : "Environment" }, "DOT" ]}]]},
+          "SubnetIds" : [{"Ref" : "SubnetIdAz1"} , {"Ref": "SubnetIdAz2"}]
+       }
+   },
+    "DNSAccountsDBDO" : {
+      "Type" : "AWS::Route53::RecordSet",
+      "Properties" : {
+        "HostedZoneName" : "bluekite.com.",
+        "Comment" : "DNS name for my instance.",
+        "Name" : { "Fn::Join" : [ "", ["accountsdb.do", { "Ref" : "StackID" } , { "Fn::FindInMap" : [ "dot", { "Ref" : "Environment" }, "DOT" ]},".bluekite.com"]]},
+        "Type" : "CNAME",
+        "TTL" : "900",
+        "ResourceRecords" : [ { "Fn::GetAtt" : [ "accountsdbdo", "Endpoint.Address" ] } ]
+      },
+      "DependsOn" : "accountsdbdo"
+    },
+    "accountsdbdo" : {
+      "Type": "AWS::RDS::DBInstance",
+      "Properties": {
+        "DBInstanceIdentifier"        : { "Fn::Join" : [ "", [{"Ref":"Region"},"-accountsdbdo", { "Ref" : "StackID" }, { "Fn::FindInMap" : [ "env", { "Ref" : "Environment" }, "ENV" ]}]]},
+        "DBInstanceClass"             : { "Ref" : "InstanceType" },
+        "Port"                        : "5432",
+        "AllocatedStorage"            : "5",
+        "BackupRetentionPeriod"       : "7",
+        "DBName"                      : "accountsdbdo",
+        "Engine"                      : "postgres",
+        "EngineVersion"               : "9.3.3",
+        "LicenseModel"                : "postgresql-license",
+        "MasterUsername"              : { "Ref" : "dbuser" },
+        "MasterUserPassword"          : { "Ref" : "dbpass" },
+        "PreferredBackupWindow"       : "06:00-06:30",
+        "PreferredMaintenanceWindow"  : "thu:09:27-thu:09:57",
+        "MultiAZ"                     : "true",
+        "VPCSecurityGroups"           : [{ "Ref": "SecurityGroupId" }],
+        "DBSubnetGroupName"           : { "Ref": "RDSSubnetGroup"},
+        "Tags"                        : [{"Key": "workload-type", "Value": { "Ref" : "InstanceType" }}]
+      }
+    },
+    "DNSAccountsDBGT" : {
+      "Type" : "AWS::Route53::RecordSet",
+      "Properties" : {
+        "HostedZoneName" : "bluekite.com.",
+        "Comment" : "DNS name for my instance.",
+        "Name" : { "Fn::Join" : [ "", ["accountsdb.gt", { "Ref" : "StackID" } , { "Fn::FindInMap" : [ "dot", { "Ref" : "Environment" }, "DOT" ]},".bluekite.com"]]},
+        "Type" : "CNAME",
+        "TTL" : "900",
+        "ResourceRecords" : [ { "Fn::GetAtt" : [ "accountsdbgt", "Endpoint.Address" ] } ]
+      },
+      "DependsOn" : "accountsdbgt"
+    },
+    "accountsdbgt" : {
+      "Type": "AWS::RDS::DBInstance",
+      "Properties": {
+        "DBInstanceIdentifier"        : { "Fn::Join" : [ "", [{"Ref":"Region"},"-accountsdbgt", { "Ref" : "StackID" }, { "Fn::FindInMap" : [ "env", { "Ref" : "Environment" }, "ENV" ]}]]},
+        "DBInstanceClass"             : { "Ref" : "InstanceType" },
+        "Port"                        : "5432",
+        "AllocatedStorage"            : "5",
+        "BackupRetentionPeriod"       : "7",
+        "DBName"                      : "accountsdbgt",
+        "Engine"                      : "postgres",
+        "EngineVersion"               : "9.3.3",
+        "LicenseModel"                : "postgresql-license",
+        "MasterUsername"              : { "Ref" : "dbuser" },
+        "MasterUserPassword"          : { "Ref" : "dbpass" },
+        "PreferredBackupWindow"       : "06:00-06:30",
+        "PreferredMaintenanceWindow"  : "thu:09:27-thu:09:57",
+        "MultiAZ"                     : "true",
+        "VPCSecurityGroups"           : [{ "Ref": "SecurityGroupId" }],
+        "DBSubnetGroupName"           : { "Ref": "RDSSubnetGroup"},
+        "Tags"                        : [{"Key": "workload-type", "Value": { "Ref" : "InstanceType" }}]
+      }
+    },
+
+    "DNSAccountsDBIS" : {
+      "Type" : "AWS::Route53::RecordSet",
+      "Properties" : {
+        "HostedZoneName" : "bluekite.com.",
+        "Comment" : "DNS name for my instance.",
+        "Name" : { "Fn::Join" : [ "", ["accountsdb.is", { "Ref" : "StackID" } , { "Fn::FindInMap" : [ "dot", { "Ref" : "Environment" }, "DOT" ]},".bluekite.com"]]},
+        "Type" : "CNAME",
+        "TTL" : "900",
+        "ResourceRecords" : [ { "Fn::GetAtt" : [ "accountsdbis", "Endpoint.Address" ] } ]
+      },
+      "DependsOn" : "accountsdbis"
+    },
+    "accountsdbis" : {
+      "Type": "AWS::RDS::DBInstance",
+      "Properties": {
+        "DBInstanceIdentifier"        : { "Fn::Join" : [ "", [{"Ref":"Region"},"-accountsdbis", { "Ref" : "StackID" }, { "Fn::FindInMap" : [ "env", { "Ref" : "Environment" }, "ENV" ]}]]},
+        "DBInstanceClass"             : { "Ref" : "InstanceType" },
+        "Port"                        : "5432",
+        "AllocatedStorage"            : "5",
+        "BackupRetentionPeriod"       : "7",
+        "DBName"                      : "accountsdbis",
+        "Engine"                      : "postgres",
+        "EngineVersion"               : "9.3.3",
+        "LicenseModel"                : "postgresql-license",
+        "MasterUsername"              : { "Ref" : "dbuser" },
+        "MasterUserPassword"          : { "Ref" : "dbpass" },
+        "PreferredBackupWindow"       : "06:00-06:30",
+        "PreferredMaintenanceWindow"  : "thu:09:27-thu:09:57",
+        "MultiAZ"                     : "true",
+        "VPCSecurityGroups"           : [{ "Ref": "SecurityGroupId" }],
+        "DBSubnetGroupName"           : { "Ref": "RDSSubnetGroup"},
+        "Tags"                        : [{"Key": "workload-type", "Value": { "Ref" : "InstanceType" }}]
+      }
+    },
+    "DNSAccountsDBMX" : {
+      "Type" : "AWS::Route53::RecordSet",
+      "Properties" : {
+        "HostedZoneName" : "bluekite.com.",
+        "Comment" : "DNS name for my instance.",
+        "Name" : { "Fn::Join" : [ "", ["accountsdb.mx", { "Ref" : "StackID" } , { "Fn::FindInMap" : [ "dot", { "Ref" : "Environment" }, "DOT" ]},".bluekite.com"]]},
+        "Type" : "CNAME",
+        "TTL" : "900",
+        "ResourceRecords" : [ { "Fn::GetAtt" : [ "accountsdbmx", "Endpoint.Address" ] } ]
+      },
+      "DependsOn" : "accountsdbmx"
+    },
+    "accountsdbmx" : {
+      "Type": "AWS::RDS::DBInstance",
+      "Properties": {
+        "DBInstanceIdentifier"        : { "Fn::Join" : [ "", [{"Ref":"Region"},"-accountsdbmx", { "Ref" : "StackID" }, { "Fn::FindInMap" : [ "env", { "Ref" : "Environment" }, "ENV" ]}]]},
+        "DBInstanceClass"             : { "Ref" : "InstanceType" },
+        "Port"                        : "5432",
+        "AllocatedStorage"            : "5",
+        "BackupRetentionPeriod"       : "7",
+        "DBName"                      : "accountsdbmx",
+        "Engine"                      : "postgres",
+        "EngineVersion"               : "9.3.3",
+        "LicenseModel"                : "postgresql-license",
+        "MasterUsername"              : { "Ref" : "dbuser" },
+        "MasterUserPassword"          : { "Ref" : "dbpass" },
+        "PreferredBackupWindow"       : "06:00-06:30",
+        "PreferredMaintenanceWindow"  : "thu:09:27-thu:09:57",
+        "MultiAZ"                     : "true",
+        "VPCSecurityGroups"           : [{ "Ref": "SecurityGroupId" }],
+        "DBSubnetGroupName"           : { "Ref": "RDSSubnetGroup"},
+        "Tags"                        : [{"Key": "workload-type", "Value": { "Ref" : "InstanceType" }}]
+      }
+    },
+    "DNSAccountsDBNI" : {
+      "Type" : "AWS::Route53::RecordSet",
+      "Properties" : {
+        "HostedZoneName" : "bluekite.com.",
+        "Comment" : "DNS name for my instance.",
+        "Name" : { "Fn::Join" : [ "", ["accountsdb.ni", { "Ref" : "StackID" } , { "Fn::FindInMap" : [ "dot", { "Ref" : "Environment" }, "DOT" ]},".bluekite.com"]]},
+        "Type" : "CNAME",
+        "TTL" : "900",
+        "ResourceRecords" : [ { "Fn::GetAtt" : [ "accountsdbni", "Endpoint.Address" ] } ]
+      },
+      "DependsOn" : "accountsdbni"
+    },
+    "accountsdbni" : {
+      "Type": "AWS::RDS::DBInstance",
+      "Properties": {
+        "DBInstanceIdentifier"        : { "Fn::Join" : [ "", [{"Ref":"Region"},"-accountsdbni", { "Ref" : "StackID" }, { "Fn::FindInMap" : [ "env", { "Ref" : "Environment" }, "ENV" ]}]]},
+        "DBInstanceClass"             : { "Ref" : "InstanceType" },
+        "Port"                        : "5432",
+        "AllocatedStorage"            : "5",
+        "BackupRetentionPeriod"       : "7",
+        "DBName"                      : "accountsdbni",
+        "Engine"                      : "postgres",
+        "EngineVersion"               : "9.3.3",
+        "LicenseModel"                : "postgresql-license",
+        "MasterUsername"              : { "Ref" : "dbuser" },
+        "MasterUserPassword"          : { "Ref" : "dbpass" },
+        "PreferredBackupWindow"       : "06:00-06:30",
+        "PreferredMaintenanceWindow"  : "thu:09:27-thu:09:57",
+        "MultiAZ"                     : "true",
+        "VPCSecurityGroups"           : [{ "Ref": "SecurityGroupId" }],
+        "DBSubnetGroupName"           : { "Ref": "RDSSubnetGroup"},
+        "Tags"                        : [{"Key": "workload-type", "Value": { "Ref" : "InstanceType" }}]
+      }
+    },
+    "DNSAccountsDBSV" : {
+      "Type" : "AWS::Route53::RecordSet",
+      "Properties" : {
+        "HostedZoneName" : "bluekite.com.",
+        "Comment" : "DNS name for my instance.",
+        "Name" : { "Fn::Join" : [ "", ["accountsdb.sv", { "Ref" : "StackID" } , { "Fn::FindInMap" : [ "dot", { "Ref" : "Environment" }, "DOT" ]},".bluekite.com"]]},
+        "Type" : "CNAME",
+        "TTL" : "900",
+        "ResourceRecords" : [ { "Fn::GetAtt" : [ "accountsdbsv", "Endpoint.Address" ] } ]
+      },
+      "DependsOn" : "accountsdbsv"
+    },
+    "accountsdbsv" : {
+      "Type": "AWS::RDS::DBInstance",
+      "Properties": {
+        "DBInstanceIdentifier"        : { "Fn::Join" : [ "", [{"Ref":"Region"},"-accountsdbsv", { "Ref" : "StackID" }, { "Fn::FindInMap" : [ "env", { "Ref" : "Environment" }, "ENV" ]}]]},
+        "DBInstanceClass"             : { "Ref" : "InstanceType" },
+        "Port"                        : "5432",
+        "AllocatedStorage"            : "5",
+        "BackupRetentionPeriod"       : "7",
+        "DBName"                      : "accountsdbsv",
+        "Engine"                      : "postgres",
+        "EngineVersion"               : "9.3.3",
+        "LicenseModel"                : "postgresql-license",
+        "MasterUsername"              : { "Ref" : "dbuser" },
+        "MasterUserPassword"          : { "Ref" : "dbpass" },
+        "PreferredBackupWindow"       : "06:00-06:30",
+        "PreferredMaintenanceWindow"  : "thu:09:27-thu:09:57",
+        "MultiAZ"                     : "true",
+        "VPCSecurityGroups"           : [{ "Ref": "SecurityGroupId" }],
+        "DBSubnetGroupName"           : { "Ref": "RDSSubnetGroup"},
+        "Tags"                        : [{"Key": "workload-type", "Value": { "Ref" : "InstanceType" }}]
+      }
+    },
+    "DNSNotificationsDB" : {
+      "Type" : "AWS::Route53::RecordSet",
+      "Properties" : {
+        "HostedZoneName" : "bluekite.com.",
+        "Comment" : "DNS name for my instance.",
+        "Name" : { "Fn::Join" : [ "", ["notificationsdb", { "Ref" : "StackID" } , { "Fn::FindInMap" : [ "dot", { "Ref" : "Environment" }, "DOT" ]},".bluekite.com"]]},
+        "Type" : "CNAME",
+        "TTL" : "900",
+        "ResourceRecords" : [ { "Fn::GetAtt" : [ "notificationsdb", "Endpoint.Address" ] } ]
+      },
+      "DependsOn" : "notificationsdb"
+    },
+    "notificationsdb" : {
+      "Type": "AWS::RDS::DBInstance",
+      "Properties": {
+        "DBInstanceIdentifier"        : { "Fn::Join" : [ "", [{"Ref":"Region"},"-notificationsdb", { "Ref" : "StackID" }, { "Fn::FindInMap" : [ "env", { "Ref" : "Environment" }, "ENV" ]}]]},
+        "DBInstanceClass"             : { "Ref" : "InstanceType" },
+        "Port"                        : "5432",
+        "AllocatedStorage"            : "5",
+        "BackupRetentionPeriod"       : "7",
+        "DBName"                      : "notificationsdb",
+        "Engine"                      : "postgres",
+        "EngineVersion"               : "9.3.3",
+        "LicenseModel"                : "postgresql-license",
+        "MasterUsername"              : { "Ref" : "dbuser" },
+        "MasterUserPassword"          : { "Ref" : "dbpass" },
+        "PreferredBackupWindow"       : "06:00-06:30",
+        "PreferredMaintenanceWindow"  : "thu:09:27-thu:09:57",
+        "MultiAZ"                     : "true",
+        "VPCSecurityGroups"           : [{ "Ref": "SecurityGroupId" }],
+        "DBSubnetGroupName"           : { "Ref": "RDSSubnetGroup"},
+        "Tags"                        : [{"Key": "workload-type", "Value": { "Ref" : "InstanceType" }}]
+      }
+    },
+    "DNSCatalogDB" : {
+      "Type" : "AWS::Route53::RecordSet",
+      "Properties" : {
+        "HostedZoneName" : "bluekite.com.",
+        "Comment" : "DNS name for my instance.",
+        "Name" : { "Fn::Join" : [ "", ["catalogdb", { "Ref" : "StackID" } , { "Fn::FindInMap" : [ "dot", { "Ref" : "Environment" }, "DOT" ]},".bluekite.com"]]},
+        "Type" : "CNAME",
+        "TTL" : "900",
+        "ResourceRecords" : [ { "Fn::GetAtt" : [ "catalogdb", "Endpoint.Address" ] } ]
+      },
+      "DependsOn" : "catalogdb"
+    },
+    "catalogdb" : {
+      "Type": "AWS::RDS::DBInstance",
+      "Properties": {
+        "DBInstanceIdentifier"        : { "Fn::Join" : [ "", [{"Ref":"Region"},"-catalogdb", { "Ref" : "StackID" }, { "Fn::FindInMap" : [ "env", { "Ref" : "Environment" }, "ENV" ]}]]},
+        "DBInstanceClass"             : { "Ref" : "InstanceType" },
+        "Port"                        : "5432",
+        "AllocatedStorage"            : "5",
+        "BackupRetentionPeriod"       : "7",
+        "DBName"                      : "catalogdb",
+        "Engine"                      : "postgres",
+        "EngineVersion"               : "9.3.3",
+        "LicenseModel"                : "postgresql-license",
+        "MasterUsername"              : { "Ref" : "dbuser" },
+        "MasterUserPassword"          : { "Ref" : "dbpass" },
+        "PreferredBackupWindow"       : "06:00-06:30",
+        "PreferredMaintenanceWindow"  : "thu:09:27-thu:09:57",
+        "MultiAZ"                     : "true",
+        "VPCSecurityGroups"           : [{ "Ref": "SecurityGroupId" }],
+        "DBSubnetGroupName"           : { "Ref": "RDSSubnetGroup"},
+        "Tags"                        : [{"Key": "workload-type", "Value": { "Ref" : "InstanceType" }}]
+      }
+    },
+    "DNSPaymentsDB" : {
+      "Type" : "AWS::Route53::RecordSet",
+      "Properties"        : {
+        "HostedZoneName"  : "bluekite.com.",
+        "Comment"         : "DNS name for my instance.",
+        "Name"            : { "Fn::Join" : [ "", ["paymentsdb", { "Ref" : "StackID" } , { "Fn::FindInMap" : [ "dot", { "Ref" : "Environment" }, "DOT" ]},".bluekite.com"]]},
+        "Type"            : "CNAME",
+        "TTL"             : "900",
+        "ResourceRecords" : [ { "Fn::GetAtt" : [ "paymentsdb", "Endpoint.Address" ] } ]
+      },
+      "DependsOn" : "paymentsdb"
+    },
+
+    "paymentsdb" : {
+      "Type": "AWS::RDS::DBInstance",
+      "Properties": {
+        "DBInstanceIdentifier"        : { "Fn::Join" : [ "", [{"Ref":"Region"},"-paymentsdb", { "Ref" : "StackID" }, { "Fn::FindInMap" : [ "env", { "Ref" : "Environment" }, "ENV" ]}]]},
+        "DBInstanceClass"             : { "Ref" : "InstanceType" },
+        "Port"                        : "5432",
+        "AllocatedStorage"            : "5",
+        "BackupRetentionPeriod"       : "7",
+        "DBName"                      : "paymentsdb",
+        "Engine"                      : "postgres",
+        "EngineVersion"               : "9.3.3",
+        "LicenseModel"                : "postgresql-license",
+        "MasterUsername"              : { "Ref" : "dbuser" },
+        "MasterUserPassword"          : { "Ref" : "dbpass" },
+        "PreferredBackupWindow"       : "06:00-06:30",
+        "PreferredMaintenanceWindow"  : "thu:09:27-thu:09:57",
+        "MultiAZ"                     : "true",
+        "VPCSecurityGroups"           : [{ "Ref": "SecurityGroupId" }],
+        "DBSubnetGroupName"           : { "Ref": "RDSSubnetGroup"},
+        "Tags"                        : [{"Key": "workload-type", "Value": { "Ref" : "InstanceType" }}]
+      }
+    }
+  }
+}
