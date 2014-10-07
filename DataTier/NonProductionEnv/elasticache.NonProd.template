@@ -1,0 +1,76 @@
+{
+  "AWSTemplateFormatVersion": "2010-09-09",
+  "Description" : "ElastiCache - Redis Service Instance - elasticache.NonProd.template",
+
+  "Parameters" : {
+
+    "CacheNodeType" : {
+      "Description" : "ElastiCache node type",
+      "Type" : "String",
+      "Default" : "cache.t2.micro",
+      "AllowedValues" : [ "cache.t2.micro","cache.t2.small","cache.t2.medium","cache.m3.medium","cache.m3.large","cache.m3.xlarge"],
+      "ConstraintDescription" : "must be a valid elasticache node type."
+    },
+    "CacheParameterGroupName" : {
+      "Type" : "String",
+      "Description" : "Cache parameters group name",
+      "Default" : "bluekiteredis"
+    },
+    "StackID" : {
+      "Type" : "String",
+      "Description" : "Stack ID name",
+      "Default" : ""
+    },
+    "VpcSecurityGroups" : {
+      "Type" : "String",
+      "Description" : "Security groups, comma separated values",
+      "Default" : "sg-81aafbe4"
+    },
+    "Environment" : {
+      "Type" : "String",
+      "Description" : "Application's environment.",
+      "Default" : "production"
+    },
+    "SubnetId" : {
+      "Type" : "String",
+      "Description" : "SubnetId of an existing database subnet in your Virtual Private Cloud (VPC)",
+      "Default": "subnet-f82f3ad0"
+    }
+  },
+
+  "Mappings" : {
+    "dot" : {
+      "test"           : { "DOT" : "-test" },
+      "dev"            : { "DOT" : "-dev" },
+      "qa"             : { "DOT" : "-qa" },
+      "sandbox"        : { "DOT" : "-sandbox" },
+      "production"     : { "DOT" : "" }
+    }
+  },
+
+  "Resources": {
+
+    "CacheSubnetGroup" : {
+    "Type" : "AWS::ElastiCache::SubnetGroup",
+    "Properties" : {
+        "Description" : { "Fn::Join" : [ "", ["redis-snet", { "Ref" : "StackID" } , { "Fn::FindInMap" : [ "dot", { "Ref" : "Environment" }, "DOT" ]}]]},
+        "SubnetIds" : [ { "Ref" : "SubnetId" } ]
+      }
+    },
+    "RedisElastiCacheNonProd": {
+      "Type": "AWS::ElastiCache::CacheCluster",
+      "Properties": {
+        "ClusterName" : { "Fn::Join" : [ "", ["redis", { "Ref" : "StackID" } , { "Fn::FindInMap" : [ "dot", { "Ref" : "Environment" }, "DOT" ]}]]},
+        "AutoMinorVersionUpgrade" : false,
+        "CacheParameterGroupName" : { "Ref" : "CacheParameterGroupName" },
+        "CacheSubnetGroupName" : { "Ref" : "CacheSubnetGroup" },
+        "CacheNodeType": { "Ref" : "CacheNodeType" },
+        "VpcSecurityGroupIds" :  ["sg-81aafbe4"],
+        "Engine": "redis",
+        "EngineVersion": "2.8.6",
+        "NumCacheNodes": "1",
+        "PreferredMaintenanceWindow": "wed:01:30-wed:02:30"
+      }
+    }
+  }
+}
