@@ -76,7 +76,7 @@
     "EventsCassandraNode1" : {
       "Type" : "AWS::CloudFormation::Stack",
       "Properties" : {
-        "TemplateURL" : "https://s3-us-west-2.amazonaws.com/pruebastack/cassandranode.template",
+        "TemplateURL" : "https://s3-us-west-2.amazonaws.com/pruebastack/DataTier/cassandranode.template",
         "Parameters"        : {
           "KeyName"         : {"Ref":"KeyName"},
           "SubnetId"        : { "Ref" : "SubnetIdAz1"},
@@ -95,7 +95,7 @@
     "EventsCassandraNode2" : {
       "Type" : "AWS::CloudFormation::Stack",
       "Properties" : {
-        "TemplateURL" : "https://s3-us-west-2.amazonaws.com/pruebastack/cassandranode.template",
+        "TemplateURL" : "https://s3-us-west-2.amazonaws.com/pruebastack/DataTier/cassandranode.template",
         "Parameters"        : {
           "KeyName"         : {"Ref":"KeyName"},
           "SubnetId"        : { "Ref" : "SubnetIdAz2"},

@@ -58,12 +58,6 @@
       "Default"     : "production"
     },
 
-    "Repository"    : {
-      "Type"        : "String",
-      "Description" : "Application's GitHub Repository.",
-      "Default"     : "git@github.com:blue-kite/elasticsearch_server.git"
-    },
-
     "ApplicationTag"       : {
       "Type"        : "String",
       "Description" : "For logstash use 'logs' for Search use 'elk'",
@@ -102,7 +96,6 @@
           "Environment"     : { "Ref" : "Environment" },
           "InstanceType"    : { "Ref" : "InstanceType"},
           "StackID"         : { "Ref" : "StackID"},
-          "Repository"      : { "Ref" : "Repository"},
           "ApplicationTag"  : { "Ref" : "ApplicationTag"},
           "NodeType"        : "emaster",
           "NodeID"          : ""
@@ -122,7 +115,6 @@
           "Environment"     : { "Ref" : "Environment" },
           "InstanceType"    : { "Ref" : "InstanceType"},
           "StackID"         : { "Ref" : "StackID"},
-          "Repository"      : { "Ref" : "Repository"},
           "ApplicationTag"  : { "Ref" : "ApplicationTag"},
           "NodeType"        : "enode",
           "NodeID"          : "1"
