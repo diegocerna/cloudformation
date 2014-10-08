@@ -56,7 +56,7 @@
   "Mappings" : {
     "IntGWAMI" : {
       "us-east-1"      : { "AMI" : "ami-0e07a566" },
-      "us-west-1"      : { "AMI" : "ami-82b98bc7" },
+      "us-west-1"      : { "AMI" : "ami-49ede60c" },
       "us-west-2"      : { "AMI" : "ami-8b6d2ebb" },
       "sa-east-1"      : { "AMI" : "ami-d545e5c8" },
       "eu-west-1"      : { "AMI" : "ami-d03dcaa7"}
@@ -69,7 +69,7 @@
       "sandbox"        : { "DOT" : ".sandbox" },
       "production"     : { "DOT" : "" }
     },
-    
+
     "env" : {
       "dev"            : { "ENV" : "staging" },
       "qa"             : { "ENV" : "qa" },
@@ -128,7 +128,7 @@
               }
             }
           },
-          
+
           "config_packages" : {
             "packages" : {
               "apt" : {
@@ -161,7 +161,7 @@
           "  cfn-signal -e 1 -r \"$1\" '", { "Ref" : "IntGWWaitHandle" }, "'\n",
           "  exit 1\n",
           "}\n",
-         
+
           "# Run Instance default configuration via CloudFormation::Init\n",
           "cfn-init -v --region ", { "Ref" : "AWS::Region" },
           "    -s ", { "Ref" : "AWS::StackId" },
@@ -179,12 +179,6 @@
           "echo ", { "Fn::Join" : [ "" , ["FQDN=gw", { "Ref" : "StackID" }, { "Fn::FindInMap" : [ "dot", { "Ref" : "Environment" }, "DOT" ]}, ".bluekite.com" ]]}, ">> /etc/environment\n",
           "echo ", "STACKID=", { "Ref" : "StackID" }, ">> /etc/environment\n",
           "echo ", { "Fn::Join" : [ "" , ["FACTER_logs_host=", "logs" , { "Ref" : "StackID" }, { "Fn::FindInMap" : [ "dot", { "Ref" : "Environment" }, "DOT" ]}, ".bluekite.com" ]]}, " >> /etc/environment\n",
-
-          "hostname gw", { "Ref" : "StackID" }, "\n",
-
-          "echo gw", { "Ref" : "StackID" }, "> /etc/hostname\n",
-
-          "echo -e 'import subprocess as s\no=open(\"/etc/newhosts\",\"a\")\nfor line in open(\"/etc/hosts\"):\n\tif line.find(\"127.0.0.1\")+1:\n\t\tline = line.replace(\"localhost\", \"localhost\" + \" gw\"", { "Ref" : "StackID" }, ")\n\to.write(line)\no.close()\ns.call(\"mv /etc/newhosts /etc/hosts\", shell=True)' | python > /tmp/hosts.log 2>&1 || error_exit 'Failed to change hosts file'\n",
 
           "# Clone sites repo to ubuntu user home\n",
           "git clone git@github.com:blue-kite/xbp_puppet_sites.git /home/ubuntu/sites > /tmp/git.log 2>&1 || error_exit 'Failed to clone sites repo'\n",
@@ -219,6 +213,11 @@
           "echo ", { "Fn::Join" : [ "" , ["logserver_host=logs", { "Ref" : "StackID" }, { "Fn::FindInMap" : [ "dot", { "Ref" : "Environment" }, "DOT" ]}, ".bluekite.com" ]]},        ">> /etc/facter/facts.d/custom_facts.txt\n",
           "echo logserver_port=5001  >> /etc/facter/facts.d/custom_facts.txt\n",
           "echo app_name=gw >> /etc/facter/facts.d/custom_facts.txt\n",
+
+          "# Clone role hostname repo\n",
+          "git clone git@github.com:victormarroquin/Puppet-HostName.git /etc/puppet/modules/hosts > /tmp/git.log 2>&1 || error_exit 'Failed to clone hostname repo'\n",
+
+          "export LANG=en_US.UTF-8; sudo puppet apply --verbose --debug /etc/puppet/modules/hosts/tests/init.pp > /tmp/pupet_hostname.log 2>&1 || error_exit 'failed to apply hosts puppet manifests'\n",
 
           "sudo apt-get update\n",
           "sudo apt-get upgrade\n",

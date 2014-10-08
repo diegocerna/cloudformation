@@ -4,17 +4,17 @@
   "Description" : "Events Server - filename:events.template",
 
   "Parameters" : {
-    
+
     "Environment" : {
       "Type" : "String",
       "Default" : "production"
     },
-    
+
     "KeyName" : {
       "Type" : "String",
       "Default" : "stamp-prod"
     },
-    
+
     "DeployBranch" : {
       "Type" : "String",
       "Description" : "Wich branch you want to use as source",
@@ -52,13 +52,13 @@
 "Mappings" : {
     "InstancesAMIS" : {
       "us-east-1"      : { "AMI" : "ami-0e07a566" },
-      "us-west-1"      : { "AMI" : "ami-82b98bc7" },
+      "us-west-1"      : { "AMI" : "ami-49ede60c" },
       "us-west-2"      : { "AMI" : "ami-8b6d2ebb" },
-      "sa-east-1"      : { "AMI" : "ami-d545e5c8" },  
+      "sa-east-1"      : { "AMI" : "ami-d545e5c8" },
       "ap-northeast-1" : { "AMI" : "ami-35bbd334" },
       "ap-southeast-1" : { "AMI" : "ami-605c0a32" },
       "ap-southeast-2" : { "AMI" : "ami-fb4bd5c1" },
-      "eu-west-1"      : { "AMI" : "ami-d03dcaa7" }  
+      "eu-west-1"      : { "AMI" : "ami-d03dcaa7" }
     },
 
     "dot" : {
@@ -102,7 +102,7 @@
         "InstanceType" : { "Ref" : "InstanceType" },
         "SecurityGroupIds" : [ {"Ref" : "SecurityGroupId"} ],
         "SubnetId" : { "Ref" : "SubnetId" },
-        "Tags" : [ {"Key" : "Name", "Value" : {"Fn::Join" : [".", ["Events", {"Ref" : "Environment"}]]} } ],      
+        "Tags" : [ {"Key" : "Name", "Value" : {"Fn::Join" : [".", ["Events", {"Ref" : "Environment"}]]} } ],
         "UserData"       : { "Fn::Base64" : { "Fn::Join" : ["", [
           "#!/bin/bash\n",
 
@@ -129,12 +129,6 @@
           "# Add FQDN on etc/environment\n",
           "echo ", { "Fn::Join" : [ "" , ["FQDN=events", { "Ref" : "StackID" }, { "Fn::FindInMap" : [ "dot", { "Ref" : "Environment" }, "DOT" ]}, ".bluekite.com" ]]}, ">> /etc/environment\n",
           "echo ", "STACKID=", { "Ref" : "StackID" }, ">> /etc/environment\n",
-
-          "hostname events", { "Ref" : "StackID" }, "\n",
-
-          "echo events", { "Ref" : "StackID" }, "> /etc/hostname\n",
-
-          "echo -e 'import subprocess as s\no=open(\"/etc/newhosts\",\"a\")\nfor line in open(\"/etc/hosts\"):\n\tif line.find(\"127.0.0.1\")+1:\n\t\tline = line.replace(\"localhost\", \"localhost\" + \" events\"", { "Ref" : "StackID" }, ")\n\to.write(line)\no.close()\ns.call(\"mv /etc/newhosts /etc/hosts\", shell=True)' | python > /tmp/hosts.log 2>&1 || error_exit 'Failed to change hosts file'\n",
 
           "# Clone sites repo to ubuntu user home\n",
           "git clone git@github.com:blue-kite/xbp_puppet_sites.git /home/ubuntu/sites > /tmp/git.log 2>&1 || error_exit 'Failed to clone sites repo'\n",
@@ -169,6 +163,11 @@
           "echo ", { "Fn::Join" : [ "" , ["logserver_host=logs", { "Ref" : "StackID" }, { "Fn::FindInMap" : [ "dot", { "Ref" : "Environment" }, "DOT" ]}, ".bluekite.com" ]]},        ">> /etc/facter/facts.d/custom_facts.txt\n",
           "echo logserver_port=5001  >> /etc/facter/facts.d/custom_facts.txt\n",
           "echo app_name=events >> /etc/facter/facts.d/custom_facts.txt\n",
+
+          "# Clone role hostname repo\n",
+          "git clone git@github.com:victormarroquin/Puppet-HostName.git /etc/puppet/modules/hosts > /tmp/git.log 2>&1 || error_exit 'Failed to clone hostname repo'\n",
+
+          "export LANG=en_US.UTF-8; sudo puppet apply --verbose --debug /etc/puppet/modules/hosts/tests/init.pp > /tmp/pupet_hostname.log 2>&1 || error_exit 'failed to apply hosts puppet manifests'\n",
 
           "sudo apt-get update\n",
           "sudo apt-get upgrade\n",

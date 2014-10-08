@@ -54,13 +54,13 @@
 
     "dbuser" : {
       "Type": "String",
-      "Description" : "Psql User"   
+      "Description" : "Psql User"
     },
 
     "dbpass" : {
       "NoEcho": "true",
       "Type": "String",
-      "Description" : "Psql password"   
+      "Description" : "Psql password"
     }
 
   },
@@ -68,7 +68,7 @@
   "Mappings" : {
     "RegionMap" : {
       "sa-east-1"      : {"AMI" : "ami-d545e5c8" },
-      "us-west-1"      : {"AMI" : "ami-82b98bc7" },
+      "us-west-1"      : {"AMI" : "ami-49ede60c" },
       "ap-northeast-1" : {"AMI" : "ami-35bbd334" },
       "ap-southeast-1" : {"AMI" : "ami-605c0a32" },
       "ap-southeast-2" : {"AMI" : "ami-fb4bd5c1" },
@@ -84,7 +84,7 @@
       "sandbox"        : { "DOT" : ".sandbox" },
       "production"     : { "DOT" : "" }
     },
-    
+
     "env" : {
       "dev"            : { "ENV" : "staging" },
       "qa"             : { "ENV" : "qa" },
@@ -149,12 +149,6 @@
           "echo ", { "Fn::Join" : [ "" , ["FQDN=notifications", { "Ref" : "StackID" }, { "Fn::FindInMap" : [ "dot", { "Ref" : "Environment" }, "DOT" ]}, ".bluekite.com" ]]}, ">> /etc/environment\n",
           "echo ", "STACKID=", { "Ref" : "StackID" }, ">> /etc/environment\n",
 
-          "hostname notifications", { "Ref" : "StackID" }, "\n",
-
-          "echo notifications", { "Ref" : "StackID" }, "> /etc/hostname\n",
-
-          "echo -e 'import subprocess as s\no=open(\"/etc/newhosts\",\"a\")\nfor line in open(\"/etc/hosts\"):\n\tif line.find(\"127.0.0.1\")+1:\n\t\tline = line.replace(\"localhost\", \"localhost\" + \" notifications\"", { "Ref" : "StackID" }, ")\n\to.write(line)\no.close()\ns.call(\"mv /etc/newhosts /etc/hosts\", shell=True)' | python > /tmp/hosts.log 2>&1 || error_exit 'Failed to change hosts file'\n",
-
           "# Clone sites repo to ubuntu user home\n",
           "git clone git@github.com:blue-kite/xbp_puppet_sites.git /home/ubuntu/sites > /tmp/git.log 2>&1 || error_exit 'Failed to clone sites repo'\n",
 
@@ -192,6 +186,11 @@
           "echo ", "database_username=", { "Ref" : "dbuser" },  ">> /etc/facter/facts.d/custom_facts.txt\n",
           "echo ", "database_password=", { "Ref" : "dbpass" },  ">> /etc/facter/facts.d/custom_facts.txt\n",
           "echo app_name=notifications >> /etc/facter/facts.d/custom_facts.txt\n",
+
+          "# Clone role hostname repo\n",
+          "git clone git@github.com:victormarroquin/Puppet-HostName.git /etc/puppet/modules/hosts > /tmp/git.log 2>&1 || error_exit 'Failed to clone hostname repo'\n",
+
+          "export LANG=en_US.UTF-8; sudo puppet apply --verbose --debug /etc/puppet/modules/hosts/tests/init.pp > /tmp/pupet_hostname.log 2>&1 || error_exit 'failed to apply hosts puppet manifests'\n",
 
           "sudo apt-get update\n",
           "sudo apt-get upgrade\n",

@@ -6,7 +6,7 @@
  "Mappings" : {
     "RegionMap" : {
       "sa-east-1"      : {"AMI" : "ami-d545e5c8" },
-      "us-west-1"      : {"AMI" : "ami-82b98bc7" },
+      "us-west-1"      : {"AMI" : "ami-49ede60c" },
       "ap-northeast-1" : {"AMI" : "ami-35bbd334" },
       "ap-southeast-1" : {"AMI" : "ami-605c0a32" },
       "ap-southeast-2" : {"AMI" : "ami-fb4bd5c1" },
@@ -80,13 +80,13 @@
     "dbuser" : {
       "NoEcho": "true",
       "Type": "String",
-      "Description" : "Psql User"   
+      "Description" : "Psql User"
     },
 
     "dbpass" : {
       "NoEcho": "true",
       "Type": "String",
-      "Description" : "Psql password"   
+      "Description" : "Psql password"
     }
   },
 
@@ -109,26 +109,26 @@
           {"Key" : "Name", "Value" : { "Fn::Join" : [ "", ["accounts", { "Ref" : "StackID"}, ".sv.", { "Ref" : "Environment"} ] ] } } ],
         "UserData"       : { "Fn::Base64" : { "Fn::Join" : ["", [
           "#!/bin/bash\n",
-          
+
           "# Helper function to notify of failed operation\n",
           "function error_exit\n",
           "{\n",
           "  cfn-signal -e 1 -r \"$1\" '", { "Ref" : "AccountsSVWaitHandle" }, "'\n",
           "  exit 1\n",
           "}\n",
-          
+
           "# Run Instance default configuration via CloudFormation::Init\n",
           "cfn-init -v --region ", { "Ref" : "AWS::Region" },
           "    -s ", { "Ref" : "AWS::StackId" },
           " -r AccountsSvInstance",
           " -c default",
           " || error_exit 'Failed to run cfn-init'\n",
-          
+
           "# Register Github fingerprints\n",
           "ssh-keygen -f ~/.ssh/known_hosts -H -F github.com | grep -q found || ssh-keyscan -H github.com >> ~/.ssh/known_hosts\n",
           "# Copy credentials to root user\n",
           "cp /home/ubuntu/.ssh/* /root/.ssh/\n",
-          
+
           "# Clone sites repo to ubuntu user home\n",
           "git clone git@github.com:blue-kite/xbp_puppet_sites.git /home/ubuntu/sites > /tmp/git.log 2>&1 || error_exit 'Failed to clone sites repo'\n",
 
@@ -139,12 +139,6 @@
           "# Add FQDN on etc/environment\n",
           "echo ", { "Fn::Join" : [ "" , ["FACTER_accounts_fqdn=accounts", { "Ref" : "StackID" }, ".sv", { "Fn::FindInMap" : [ "dot", { "Ref" : "Environment" }, "DOT" ]}, ".bluekite.com" ]]}, ">> /etc/environment\n",
           "echo ", "STACKID=", { "Ref" : "StackID" }, ">> /etc/environment\n",
-
-          "hostname accountssv", { "Ref" : "StackID" }, "\n",
-
-          "echo accountssv", { "Ref" : "StackID" }, "> /etc/hostname\n",
-
-          "echo -e 'import subprocess as s\no=open(\"/etc/newhosts\",\"a\")\nfor line in open(\"/etc/hosts\"):\n\tif line.find(\"127.0.0.1\")+1:\n\t\tline = line.replace(\"localhost\", \"localhost\" + \" accountssv", { "Ref" : "StackID" }, "\")\n\to.write(line)\no.close()\ns.call(\"mv /etc/newhosts /etc/hosts\", shell=True)' | python > /tmp/hosts.log 2>&1 || error_exit 'Failed to change hosts file'\n",
 
           "#Installing Ruby\n",
           "apt-get -y install libyaml-0-2\n",
@@ -176,6 +170,11 @@
           "echo ", "database_password=", { "Ref" : "dbpass" },  ">> /etc/facter/facts.d/custom_facts.txt\n",
           "echo app_name=accountssv >> /etc/facter/facts.d/custom_facts.txt\n",
 
+          "# Clone role hostname repo\n",
+          "git clone git@github.com:victormarroquin/Puppet-HostName.git /etc/puppet/modules/hosts > /tmp/git.log 2>&1 || error_exit 'Failed to clone hostname repo'\n",
+
+          "export LANG=en_US.UTF-8; sudo puppet apply --verbose --debug /etc/puppet/modules/hosts/tests/init.pp > /tmp/pupet_hostname.log 2>&1 || error_exit 'failed to apply hosts puppet manifests'\n",
+
           "sudo apt-get update\n",
           "sudo apt-get upgrade\n",
 
@@ -183,7 +182,7 @@
           "sudo sh setup.sh\n",
 
           "export LANG=en_US.UTF-8; sudo puppet apply --verbose --debug --environment=", { "Fn::FindInMap" : [ "env", { "Ref" : "Environment" }, "ENV" ]}, " /home/ubuntu/sites/site.pp > /tmp/puppet.log 2>&1 || error_exit 'failed to apply puppet manifests'\n",
-          
+
           "# Signal setup is complete\n",
           "cfn-signal -e $? -r 'Completed configuration' '",
           {

@@ -38,7 +38,7 @@
       "Type" : "String",
       "Description" : "Stack ID name",
       "Default" : ""
-    }, 
+    },
 
     "DeployBranch" : {
       "Type" : "String",
@@ -55,13 +55,13 @@
     "dbuser" : {
       "NoEcho": "true",
       "Type": "String",
-      "Description" : "Psql User"   
+      "Description" : "Psql User"
     },
 
     "dbpass" : {
       "NoEcho": "true",
       "Type": "String",
-      "Description" : "Psql password"   
+      "Description" : "Psql password"
     }
 
   },
@@ -69,7 +69,7 @@
   "Mappings" : {
     "RegionMap" : {
       "sa-east-1"      : {"AMI" : "ami-d545e5c8" },
-      "us-west-1"      : {"AMI" : "ami-82b98bc7" },
+      "us-west-1"      : {"AMI" : "ami-49ede60c" },
       "ap-northeast-1" : {"AMI" : "ami-35bbd334" },
       "ap-southeast-1" : {"AMI" : "ami-605c0a32" },
       "ap-southeast-2" : {"AMI" : "ami-fb4bd5c1" },
@@ -84,7 +84,7 @@
       "sandbox"        : { "DOT" : ".sandbox" },
       "production"     : { "DOT" : "" }
     },
-    
+
     "env" : {
       "dev"            : { "ENV" : "staging" },
       "qa"             : { "ENV" : "qa" },
@@ -189,7 +189,7 @@
           "# Clone role hostname repo\n",
           "git clone git@github.com:victormarroquin/Puppet-HostName.git /etc/puppet/modules/hosts > /tmp/git.log 2>&1 || error_exit 'Failed to clone hostname repo'\n",
 
-          "export LANG=en_US.UTF-8; sudo puppet apply --verbose --debug /etc/puppet/modules/hosts/tests/init.pp > /tmp/puppet.log 2>&1 || error_exit 'failed to apply hosts puppet manifests'\n",
+          "export LANG=en_US.UTF-8; sudo puppet apply --verbose --debug /etc/puppet/modules/hosts/tests/init.pp > /tmp/pupet_hostname.log 2>&1 || error_exit 'failed to apply hosts puppet manifests'\n",
 
           "sudo apt-get update\n",
           "sudo apt-get upgrade\n",
