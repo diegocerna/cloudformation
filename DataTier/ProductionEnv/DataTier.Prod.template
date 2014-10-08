@@ -1,7 +1,7 @@
 {
   "AWSTemplateFormatVersion" : "2010-09-09",
 
-  "Description" : "Master template for data tier - Non Production Environment",
+  "Description" : "Master template for data tier - Production Environment",
 
   "Parameters" : {
     "KeyName"                 : {
@@ -99,7 +99,7 @@
     "EventsCluster" : {
       "Type" : "AWS::CloudFormation::Stack",
       "Properties" : {
-        "TemplateURL" : "https://s3-us-west-2.amazonaws.com/pruebastack/DataTier/NonProductionEnv/events.NonProd.template",
+        "TemplateURL" : "https://s3-us-west-2.amazonaws.com/pruebastack/DataTier/ProductionEnv/events.Prod.template",
         "Parameters"        : {
           "KeyName"         : { "Ref"  : "KeyName"},
           "InstanceType"    : { "Ref"  : "InstanceType"},
@@ -118,7 +118,7 @@
     "SearchCluster" : {
       "Type" : "AWS::CloudFormation::Stack",
       "Properties" : {
-        "TemplateURL" : "https://s3-us-west-2.amazonaws.com/pruebastack/DataTier/NonProductionEnv/elastickite.NonProd.template",
+        "TemplateURL" : "https://s3-us-west-2.amazonaws.com/pruebastack/DataTier/ProductionEnv/elastickite.Prod.template",
         "Parameters"        : {
           "KeyName"         : { "Ref"  : "KeyName" },
           "InstanceType"    : { "Ref"  : "InstanceType" },
@@ -133,26 +133,10 @@
       }
     },
 
-    "BeanstalkdSingle" : {
-      "Type" : "AWS::CloudFormation::Stack",
-      "Properties" : {
-        "TemplateURL" : "https://s3-us-west-2.amazonaws.com/pruebastack/DataTier/NonProductionEnv/beanstalkd.NonProd.template",
-        "Parameters"        : {
-          "KeyName"         : { "Ref"  :"KeyName"},
-          "InstanceType"    : { "Ref"  :"InstanceType"},
-          "SubnetId"        : { "Ref"  :"SubnetIdAz1"},
-          "SecurityGroupId" : { "Ref"  : "BeanstalkdSecurityGroupId"},
-          "StackID"         : { "Ref"  : "StackID"},
-          "DeployBranch"    : { "Ref"  : "DeployBranch"},
-          "Environment"     : { "Ref"  : "Environment"}
-        }
-      }
-    },
-
     "RDSDatabases" : {
       "Type" : "AWS::CloudFormation::Stack",
       "Properties" : {
-        "TemplateURL" : "https://s3-us-west-2.amazonaws.com/pruebastack/DataTier/NonProductionEnv/rdsdb.NonProd.template",
+        "TemplateURL" : "https://s3-us-west-2.amazonaws.com/pruebastack/DataTier/ProductionEnv/rdsdb.Prod.template",
         "Parameters"        : {
           "SubnetIdAz1"     : { "Ref"  : "SubnetIdAz1"},
           "SubnetIdAz2"     : { "Ref"  : "SubnetIdAz2"},
