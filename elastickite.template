@@ -133,8 +133,7 @@
                                 "curl"            : [],
                                 "tmux"            : [],
                                 "build-essential" : [],
-                                "python-software-properties" : [],
-                                "rubygems"                   : []
+                                "python-software-properties" : []
                             }
                         }
                     }
