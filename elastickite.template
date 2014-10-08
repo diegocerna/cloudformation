@@ -37,13 +37,13 @@
         "SubnetId" : {
             "Type" : "String",
             "Description" : "SubnetId of an existing subnet in your Virtual Private Cloud (VPC)",
-            "Default": "subnet-cbc8c2a9"
+            "Default": "subnet-"
         },
 
         "SecurityGroupId" : {
             "Type" : "String",
             "Description" : "SecurityGroupId of an existing subnet in your Virtual Private Cloud (VPC)",
-            "Default": "sg-1cd6c07e"
+            "Default": "sg-"
         },
 
         "DeployBranch" : {
@@ -171,6 +171,13 @@
                     "# Copy credentials to root user\n",
                     "cp /home/ubuntu/.ssh/* /root/.ssh/\n",
 
+                    "# Clone sites repo to ubuntu user home\n",
+                    "git clone git@github.com:blue-kite/xbp_puppet_sites.git /home/ubuntu/sites > /tmp/git.log 2>&1 || error_exit 'Failed to clone sites repo'\n",
+
+                    "# Clone role app repo\n",
+                    "git clone git@github.com:blue-kite/xbp_puppet_role_elastickite.git /etc/puppet/modules/elastickite > /tmp/git.log 2>&1 || error_exit 'Failed to clone role app repo'\n",
+                    "chown ubuntu:ubuntu -R /etc/puppet/modules/elastickite\n",
+
                     "# Add FQDN on etc/environment\n",
                     "echo ", { "Fn::Join" : [ "" , ["FQDN=search", { "Ref" : "StackID" }, { "Fn::FindInMap" : [ "dot", { "Ref" : "Environment" }, "DOT" ]}, ".bluekite.com" ]]}, ">> /etc/environment\n",
                     "echo ", "STACKID=", { "Ref" : "StackID" }, ">> /etc/environment\n",
@@ -181,22 +188,38 @@
                     "update-alternatives --set ruby /usr/bin/ruby1.9.1\n",
                     "update-alternatives --set gem /usr/bin/gem1.9.1\n",
 
-                    "# Clone app repo to ubuntu user home\n",
-                    "git clone git@github.com:blue-kite/elastickite.git -b ", {"Ref" : "DeployBranch"}, " /home/ubuntu/elastickite > /tmp/git.log 2>&1 || error_exit 'Failed to clone repo'\n",
-                    "chown ubuntu:ubuntu -R /home/ubuntu/elastickite\n",
-
                     "# Install puppet via gems\n",
                     "sudo gem install puppet --no-rdoc --no-ri > /tmp/gem-puppet.log 2>&1 || error_exit 'Failed install puppet gem'\n",
 
                     "# Install Librarian Ruby\n",
                     "sudo gem install librarian-puppet --no-rdoc --no-ri > /tmp/gem-librarian-puppet.log 2>&1 || error_exit 'Failed install librarian puppet gem'\n",
 
-                    "# Install application's dependencies via puppet\n",
-                    "cd /home/ubuntu/elastickite/puppet\n",
-                    "export HOME=/home/ubuntu && librarian-puppet install --clean --verbose > /tmp/librarian-puppet.log 2>&1 || error_exit 'failed to install puppet submodules'\n",
+                    "# Install application's dependencies via librarian puppet\n",
+                    "cd /etc/puppet/modules/elastickite\n",
+                    "sudo librarian-puppet install --clean --verbose --path=/etc/puppet/modules > /tmp/librarian-puppet.log 2>&1 || error_exit 'failed to install puppet submodules'\n",
 
-                    "cd /home/ubuntu/elastickite\n",
-                    "sudo puppet apply --verbose --debug --modulepath=./puppet/modules ./puppet/manifests/aws-", {"Ref": "Environment"}, ".pp > /tmp/puppet.log 2>&1 || error_exit 'failed to apply puppet manifests'\n",
+                    "#setting my custom facts\n",
+                    "mkdir -p /etc/facter/facts.d\n",
+                    "touch /etc/facter/facts.d/custom_facts.txt\n",
+                    "echo ", { "Fn::Join" : [ "" , ["fqdn=search", { "Ref" : "StackID" }, { "Fn::FindInMap" : [ "dot", { "Ref" : "Environment" }, "DOT" ]}, ".bluekite.com" ]]},      ">> /etc/facter/facts.d/custom_facts.txt\n",
+                    "echo ", "stackid=", { "Ref" : "StackID" },           ">> /etc/facter/facts.d/custom_facts.txt\n",
+                    "echo ", { "Fn::Join" : [ "" , ["logserver_host=logs", { "Ref" : "StackID" }, { "Fn::FindInMap" : [ "dot", { "Ref" : "Environment" }, "DOT" ]}, ".bluekite.com" ]]},        ">> /etc/facter/facts.d/custom_facts.txt\n",
+                    "echo logserver_port=5001                             >> /etc/facter/facts.d/custom_facts.txt\n",
+                    "echo ", "revision=", { "Ref" : "DeployBranch" }, ">> /etc/facter/facts.d/custom_facts.txt\n",
+                    "echo app_name=search >> /etc/facter/facts.d/custom_facts.txt\n",
+
+                    "# Clone role hostname repo\n",
+                    "git clone git@github.com:victormarroquin/Puppet-HostName.git /etc/puppet/modules/hosts > /tmp/git.log 2>&1 || error_exit 'Failed to clone hostname repo'\n",
+
+                    "export LANG=en_US.UTF-8; sudo puppet apply --verbose --debug /etc/puppet/modules/hosts/tests/init.pp > /tmp/pupet_hostname.log 2>&1 || error_exit 'failed to apply hosts puppet manifests'\n",
+
+                    "sudo apt-get update\n",
+                    "sudo apt-get upgrade\n",
+
+                    "cd /home/ubuntu/sites\n",
+                    "sudo sh setup.sh\n",
+
+                    "export LANG=en_US.UTF-8; sudo puppet apply --verbose --debug --environment=", { "Fn::FindInMap" : [ "env", { "Ref" : "Environment" }, "ENV" ]}, " /home/ubuntu/sites/site.pp > /tmp/puppet.log 2>&1 || error_exit 'failed to apply puppet manifests'\n",
 
                     "# Signal setup is complete\n",
                     "cfn-signal -e $? -r 'Completed configuration' '",
