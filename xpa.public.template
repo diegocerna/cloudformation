@@ -186,7 +186,7 @@
                     "ssh-keygen -f ~/.ssh/known_hosts -H -F github.com | grep -q found || ssh-keyscan -H github.com >> ~/.ssh/known_hosts\n",
 
                     "# Copy credentials to root user\n",
-                    "cp /root/.ssh/* /home/ubuntu/.ssh/\n",
+                    "cp /home/ubuntu/.ssh/* /root/.ssh/\n",
 
                     "# Clone sites repo to ubuntu user home\n",
                     "git clone git@github.com:blue-kite/xbp_puppet_sites.git /home/ubuntu/sites > /tmp/git.log 2>&1 || error_exit 'Failed to clone sites repo'\n",
