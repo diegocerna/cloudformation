@@ -59,6 +59,12 @@
       "Default"       : "sg-77715712"
     },
 
+    "PrivateAPIsSecurityGroupId" : {
+      "Type"          : "String",
+      "Description"   : "SecurityGroupId of an existing subnet in your Virtual Private Cloud (VPC)",
+      "Default"       : "sg-26632a43"
+    },
+
     "StackID"       : {
       "Type"        : "String",
       "Description" : "Stack ID name",
@@ -100,17 +106,18 @@
       "Type" : "AWS::CloudFormation::Stack",
       "Properties" : {
         "TemplateURL" : "https://s3-us-west-2.amazonaws.com/pruebastack/DataTier/NonProductionEnv/events.NonProd.template",
-        "Parameters"        : {
-          "KeyName"         : { "Ref"  : "KeyName"},
-          "InstanceType"    : { "Ref"  : "InstanceType"},
-          "SubnetIdAz1"     : { "Ref"  : "SubnetIdAz1"},
-          "SubnetIdAz2"     : { "Ref"  : "SubnetIdAz2"},
-          "SecurityGroupId" : { "Ref"  : "CassandraSecurityGroupId"},
-          "StackID"         : { "Ref"  : "StackID"},
-          "DeployBranch"    : { "Ref"  : "DeployBranch"},
-          "Environment"     : { "Ref"  : "Environment"},
-          "ApplicationTag"  : "events",
-          "NodeType"        : "cnode"
+        "Parameters" : {
+          "KeyName"                     : { "Ref"  : "KeyName"},
+          "InstanceType"                : { "Ref"  : "InstanceType"},
+          "SubnetIdAz1"                 : { "Ref"  : "SubnetIdAz1"},
+          "SubnetIdAz2"                 : { "Ref"  : "SubnetIdAz2"},
+          "SecurityGroupId"             : { "Ref"  : "CassandraSecurityGroupId"},
+          "PrivateAPIsSecurityGroupId"  : { "Ref"  : "PrivateAPIsSecurityGroupId"},
+          "StackID"                     : { "Ref"  : "StackID"},
+          "DeployBranch"                : { "Ref"  : "DeployBranch"},
+          "Environment"                 : { "Ref"  : "Environment"},
+          "ApplicationTag"              : "events",
+          "NodeType"                    : "cnode"
         }
       }
     },

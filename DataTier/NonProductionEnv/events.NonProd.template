@@ -34,7 +34,13 @@
       "Default"       : "subnet-b6c614d3"
     },
 
-    "SecurityGroupId" : {
+    "CassandraSecurityGroupId" : {
+      "Type"          : "String",
+      "Description"   : "SecurityGroupId of an existing subnet in your Virtual Private Cloud (VPC)",
+      "Default"       : "sg-9c961ef9"
+    },
+
+    "PrivateAPIsSecurityGroupId" : {
       "Type"          : "String",
       "Description"   : "SecurityGroupId of an existing subnet in your Virtual Private Cloud (VPC)",
       "Default"       : "sg-9c961ef9"
@@ -70,8 +76,71 @@
       "Default"     : "cnode"
     }
   },
+  "Mappings" : {
+    "dot"              : {
+      "test"           : { "DOT" : ".test" },
+      "dev"            : { "DOT" : ".dev" },
+      "qa"             : { "DOT" : ".qa" },
+      "sandbox"        : { "DOT" : ".sandbox" },
+      "production"     : { "DOT" : "" }
+    }
+  },
 
   "Resources" : {
+
+    "EventsDNSRecord"           : {
+      "Type"              : "AWS::Route53::RecordSet",
+      "Properties"        : {
+        "HostedZoneName"  : "bluekite.com.",
+        "Comment"         : "DNS name for events elb instance.",
+        "Name"            : { "Fn::Join" : [ "", ["eventsdb", { "Ref" : "StackID" }, { "Fn::FindInMap" : [ "dot", { "Ref" : "Environment" }, "DOT" ]},".bluekite.com"]]},
+        "Type"            : "CNAME",
+        "TTL"             : "300",
+        "ResourceRecords" : [ { "Fn::GetAtt" : [ "elbCassandraEvents", "DNSName" ] } ]
+      },
+      "DependsOn" : "elbCassandraEvents"
+    },
+
+    "elbCassandraEvents": {
+      "Type": "AWS::ElasticLoadBalancing::LoadBalancer",
+      "Properties": {
+        "Scheme": "internal",
+        "Subnets": [
+          { "Ref" : "SubnetIdAz1" },
+          { "Ref" : "SubnetIdAz2" }
+        ],
+        "HealthCheck": {
+          "HealthyThreshold": "10",
+          "Interval": "30",
+          "Target": "TCP:7000",
+          "Timeout": "5",
+          "UnhealthyThreshold": "2"
+        },
+        "Instances": [
+          {
+            "Ref": "EventsCassandraNode1"
+          },
+          {
+            "Ref": "EventsCassandraNode2"
+          }
+        ],
+
+        "SecurityGroups": [
+          {
+            "Ref": "PrivateAPIsSecurityGroupId"
+          },
+          { "Ref" : "CassandraSecurityGroupId"}
+        ],
+        "Listeners": [
+          {
+            "InstancePort": "9160",
+            "LoadBalancerPort": "9160",
+            "Protocol": "TCP",
+            "InstanceProtocol": "TCP"
+          }
+        ]
+      }
+    },
 
     "EventsCassandraNode1" : {
       "Type" : "AWS::CloudFormation::Stack",
@@ -80,7 +149,7 @@
         "Parameters"        : {
           "KeyName"         : {"Ref":"KeyName"},
           "SubnetId"        : { "Ref" : "SubnetIdAz1"},
-          "SecurityGroupId" : { "Ref" : "SecurityGroupId"},
+          "SecurityGroupId" : { "Ref" : "CassandraSecurityGroupId"},
           "DeployBranch"    : { "Ref" : "DeployBranch"},
           "Environment"     : { "Ref" : "Environment"},
           "InstanceType"    : { "Ref" : "InstanceType"},
@@ -99,7 +168,7 @@
         "Parameters"        : {
           "KeyName"         : {"Ref":"KeyName"},
           "SubnetId"        : { "Ref" : "SubnetIdAz2"},
-          "SecurityGroupId" : { "Ref" : "SecurityGroupId"},
+          "SecurityGroupId" : { "Ref" : "CassandraSecurityGroupId"},
           "DeployBranch"    : { "Ref" : "DeployBranch"},
           "Environment"     : { "Ref" : "Environment"},
           "InstanceType"    : { "Ref" : "InstanceType"},
