@@ -127,7 +127,7 @@
 
           "# Register Github fingerprints\n",
           "ssh-keygen -f ~/.ssh/known_hosts -H -F github.com | grep -q found || ssh-keyscan -H github.com >> ~/.ssh/known_hosts\n",
-                      "# Copy credentials to root user\n",
+          "# Copy credentials to root user\n",
           "cp /home/ubuntu/.ssh/* /root/.ssh/\n",
 
           "# Clone sites repo to ubuntu user home\n",
