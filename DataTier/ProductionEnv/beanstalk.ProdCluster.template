@@ -1,0 +1,118 @@
+{
+  "AWSTemplateFormatVersion" : "2010-09-09",
+
+  "Description" : "Master template for beanstalkd 2 instance service",
+
+  "Parameters" : {
+    "KeyName"                 : {
+      "Description"           : "Name of an existing EC2 KeyPair to enable SSH access to the instance",
+      "Type"                  : "String",
+      "MinLength"             : "1",
+      "MaxLength"             : "255",
+      "AllowedPattern"        : "[\\x20-\\x7E]*",
+      "ConstraintDescription" : "can contain only ASCII characters.",
+      "Default"               : "stamp-elasticsearch"
+    },
+
+    "InstanceType"            : {
+      "Description"           : "WebServer EC2 instance type",
+      "Type"                  : "String",
+      "Default"               : "t2.micro",
+      "AllowedValues"         : [ "t2.micro","m1.small","m3.medium","m1.large","m1.xlarge","m2.xlarge","m2.2xlarge","m2.4xlarge","m3.xlarge","m3.2xlarge","c1.medium","c1.xlarge","cc1.4xlarge","cc2.8xlarge","cg1.4xlarge"],
+      "ConstraintDescription" : "must be a valid EC2 instance type."
+    },
+
+    "SubnetIdAz1"        : {
+      "Type"          : "String",
+      "Description"   : "SubnetId of an existing subnet in your Virtual Private Cloud (VPC)",
+      "Default"       : "subnet-10382856"
+    },
+
+    "SubnetIdAz2"        : {
+      "Type"          : "String",
+      "Description"   : "SubnetId of an existing subnet in your Virtual Private Cloud (VPC)",
+      "Default"       : "subnet-b6c614d3"
+    },
+
+    "SecurityGroupId" : {
+      "Type"          : "String",
+      "Description"   : "SecurityGroupId of an existing subnet in your Virtual Private Cloud (VPC)",
+      "Default"       : "sg-2b5fd54e"
+    },
+
+    "StackID"       : {
+      "Type"        : "String",
+      "Description" : "Stack ID name",
+      "Default"     : "-"
+    },
+
+    "DeployBranch"  : {
+      "Type"        : "String",
+      "Description" : "Git branch where to deploy the code from.",
+      "Default"     : "feature/awstest"
+    },
+
+    "Environment"   : {
+      "Type"        : "String",
+      "Description" : "Application's environment.",
+      "Default"     : "dev"
+    },
+
+    "Repository"    : {
+      "Type"        : "String",
+      "Description" : "Application's GitHub Repository.",
+      "Default"     : "git@github.com:blue-kite/beanstalkd_server.git"
+    },
+
+    "ApplicationTag"       : {
+      "Type"        : "String",
+      "Description" : "For logstash use 'logs' for Search use 'elk'",
+      "Default"     : "elk"
+    },
+
+    "NodeType"      : {
+      "Type"        : "String",
+      "Description" : "The node type, it can be emaster or data (enode)",
+      "Default"     : "emaster"
+    }
+  },
+
+  "Resources" : {
+    "BeanstalkdAz1"         : {
+      "Type"                : "AWS::CloudFormation::Stack",
+      "Properties"          : {
+        "TemplateURL"       : "https://s3-us-west-2.amazonaws.com/pruebastack/beanstalkd.template",
+        "Parameters"        : {
+          "KeyName"         : {"Ref":"KeyName"},
+          "SubnetId"        : { "Ref" : "SubnetIdAz1"},
+          "SecurityGroupId" : { "Ref" : "SecurityGroupId"},
+          "DeployBranch"    : { "Ref" : "DeployBranch"},
+          "InstanceType"    : {"Ref" : "InstanceType"},
+          "StackID"         : {"Ref" : "StackID"},
+          "Repository"      : {"Ref" : "Repository"},
+          "ApplicationTag"  : {"Ref" : "ApplicationTag"},
+          "NodeType"        : "emaster",
+          "NodeID"          : ""
+        }
+      }
+    },
+    "BeanstalkdAz2"         : {
+      "Type"                : "AWS::CloudFormation::Stack",
+      "Properties"          : {
+        "TemplateURL"       : "https://s3-us-west-2.amazonaws.com/pruebastack/beanstalkd.template",
+        "Parameters"        : {
+          "KeyName"         : {"Ref":"KeyName"},
+          "SubnetId"        : { "Ref" : "SubnetIdAz2"},
+          "SecurityGroupId" : { "Ref" : "SecurityGroupId"},
+          "DeployBranch"    : { "Ref" : "DeployBranch"},
+          "InstanceType"    : {"Ref" : "InstanceType"},
+          "StackID"         : {"Ref" : "StackID"},
+          "Repository"      : {"Ref" : "Repository"},
+          "ApplicationTag"  : {"Ref" : "ApplicationTag"},
+          "NodeType"        : "emaster",
+          "NodeID"          : ""
+        }
+      }
+    }
+  }
+}
