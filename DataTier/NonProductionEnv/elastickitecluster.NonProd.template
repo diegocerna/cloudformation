@@ -84,6 +84,57 @@
 
   "Resources" : {
 
+    "ElasticKiteDNSRecord"           : {
+      "Type"              : "AWS::Route53::RecordSet",
+      "Properties"        : {
+        "HostedZoneName"  : "bluekite.com.",
+        "Comment"         : "DNS name for events elb instance.",
+        "Name"            : { "Fn::Join" : [ "", ["searchdb", { "Ref" : "StackID" }, { "Fn::FindInMap" : [ "dot", { "Ref" : "Environment" }, "DOT" ]},".bluekite.com"]]},
+        "Type"            : "CNAME",
+        "TTL"             : "300",
+        "ResourceRecords" : [ { "Fn::GetAtt" : [ "elbElasticKite", "DNSName" ] } ]
+      },
+      "DependsOn" : "elbCassandraEvents"
+    },
+
+    "elbElasticKite": {
+      "Type": "AWS::ElasticLoadBalancing::LoadBalancer",
+      "Properties": {
+        "Scheme": "internal",
+        "Subnets": [
+          { "Ref" : "SubnetIdAz1" },
+          { "Ref" : "SubnetIdAz2" }
+        ],
+        "HealthCheck": {
+          "HealthyThreshold": "10",
+          "Interval": "30",
+          "Target": "TCP:9200",
+          "Timeout": "5",
+          "UnhealthyThreshold": "2"
+        },
+        "Instances": [
+          {
+            "Ref": "ElasticKiteMasterAZ1"
+          }
+        ],
+
+        "SecurityGroups": [
+          {
+            "Ref": "PrivateAPIsSecurityGroupId"
+          },
+          { "Ref" : "ElasticSearchSecurityGroupId"}
+        ],
+        "Listeners": [
+          {
+            "InstancePort": "9200",
+            "LoadBalancerPort": "9200",
+            "Protocol": "TCP",
+            "InstanceProtocol": "TCP"
+          }
+        ]
+      }
+    },
+
     "ElasticKiteMasterAZ1"    : {
       "Type"                : "AWS::CloudFormation::Stack",
       "Properties"          : {

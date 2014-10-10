@@ -111,7 +111,7 @@
           "InstanceType"                : { "Ref"  : "InstanceType"},
           "SubnetIdAz1"                 : { "Ref"  : "SubnetIdAz1"},
           "SubnetIdAz2"                 : { "Ref"  : "SubnetIdAz2"},
-          "SecurityGroupId"             : { "Ref"  : "CassandraSecurityGroupId"},
+          "CassandraSecurityGroupId"    : { "Ref"  : "CassandraSecurityGroupId"},
           "PrivateAPIsSecurityGroupId"  : { "Ref"  : "PrivateAPIsSecurityGroupId"},
           "StackID"                     : { "Ref"  : "StackID"},
           "DeployBranch"                : { "Ref"  : "DeployBranch"},
@@ -170,6 +170,22 @@
           "dbuser"          : { "Ref"  : "dbuser"},
           "dbpass"          : { "Ref"  : "dbpass"},
           "Region"          : { "Ref"  : "Region"}
+        }
+      }
+    },
+
+    "ElastiCacheService" : {
+      "Type" : "AWS::CloudFormation::Stack",
+      "Properties" : {
+        "TemplateURL" : "https://s3-us-west-2.amazonaws.com/pruebastack/DataTier/NonProductionEnv/elasticache.NonProd.template",
+        "Parameters"        : {
+          "CacheNodeType"             : "cache.t2.medium",
+          "CacheParameterGroupName"   : "bluekiteredis",
+          "StackID"                   : { "Ref"  : "StackID"},
+          "Environment"               : { "Ref"  : "Environment"},
+          "ElastiCacheSecurityGroup"  : { "Ref"  : "ElastiCacheSecurityGroup"},
+          "SubnetIdAz1"               : { "Ref"  : "SubnetIdAz1"},
+          "SubnetIdAz2"               : { "Ref"  : "SubnetIdAz2"}
         }
       }
     }
