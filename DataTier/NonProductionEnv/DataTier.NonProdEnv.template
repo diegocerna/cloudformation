@@ -65,12 +65,6 @@
       "Default"       : "sg-9f8ab4fa"
     },
 
-    "PrivateAPIsSecurityGroupId" : {
-      "Type"          : "String",
-      "Description"   : "Virtual Private Cloud (VPC) security group id for PrivateAPIs",
-      "Default"       : "sg-26632a43"
-    },
-
     "StackID"       : {
       "Type"        : "String",
       "Description" : "Stack ID name",
@@ -118,7 +112,6 @@
           "SubnetIdAz1"                 : { "Ref"  : "SubnetIdAz1"},
           "SubnetIdAz2"                 : { "Ref"  : "SubnetIdAz2"},
           "CassandraSecurityGroupId"    : { "Ref"  : "CassandraSecurityGroupId"},
-          "PrivateAPIsSecurityGroupId"  : { "Ref"  : "PrivateAPIsSecurityGroupId"},
           "StackID"                     : { "Ref"  : "StackID"},
           "DeployBranch"                : { "Ref"  : "DeployBranch"},
           "Environment"                 : { "Ref"  : "Environment"},
