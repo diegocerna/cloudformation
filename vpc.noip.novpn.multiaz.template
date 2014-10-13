@@ -801,7 +801,7 @@
       "Properties": {
         "DisableApiTermination": "FALSE",
         "ImageId": { "Fn::FindInMap" : [ "NATMap", { "Ref" : "AWS::Region" }, "AMI" ]},
-        "InstanceType": "m3.medium",
+        "InstanceType": "t1.micro",
         "SecurityGroupIds" : [ {"Ref" : "sgNat"} ],
         "SubnetId" : { "Ref" : "subnetPublicApis1" },
         "KernelId": { "Fn::FindInMap" : [ "KernelId", { "Ref" : "AWS::Region" }, "AKI" ]},
@@ -854,7 +854,7 @@
         "DisableApiTermination": "FALSE",
         "ImageId" : { "Fn::FindInMap" : [ "NATMap", { "Ref" : "AWS::Region" }, "AMI" ]},
         "KeyName" : { "Fn::FindInMap" : [ "keys", { "Ref" : "Environment" }, "keypair" ]},
-        "InstanceType" : "t2.micro",
+        "InstanceType" : "t1.micro",
         "SecurityGroupIds" : [ {"Ref" : "sgBastion"} ],
         "SubnetId" : { "Ref" : "subnetPublicApis1" },
         "Tags" : [ {"Key" : "Name", "Value" : { "Fn::Join" : [ ".", ["bastion", { "Ref" : "Environment"} ] ] } } ]
