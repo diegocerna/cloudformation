@@ -145,10 +145,10 @@
                     "config_packages" : {
                         "packages" : {
                             "apt" : {
-                                "git"             : [],
-                                "curl"            : [],
-                                "tmux"            : [],
-                                "build-essential" : [],
+                                "git"                        : [],
+                                "curl"                       : [],
+                                "tmux"                       : [],
+                                "build-essential"            : [],
                                 "python-software-properties" : []
                             }
                         }
@@ -226,6 +226,7 @@
                     "echo ", "revision=", { "Ref" : "DeployBranch" }, ">> /etc/facter/facts.d/custom_facts.txt\n",
                     "echo app_name=xpa >> /etc/facter/facts.d/custom_facts.txt\n",
                     "echo ", "rack_env=", { "Ref" : "Environment" }, ">> /etc/facter/facts.d/custom_facts.txt\n",
+                    "echo ", { "Fn::Join" : [ "" , ["internal_gateway_host=gw", { "Ref" : "StackID" }, { "Fn::FindInMap" : [ "dot", { "Ref" : "Environment" }, "DOT" ]}, ".bluekite.com" ]]},      ">> /etc/facter/facts.d/custom_facts.txt\n",
 
                     "# Clone role hostname repo\n",
                     "git clone git@github.com:victormarroquin/Puppet-HostName.git /etc/puppet/modules/hosts > /tmp/git.log 2>&1 || error_exit 'Failed to clone hostname repo'\n",
