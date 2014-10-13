@@ -17,7 +17,7 @@
 
     "Version" : {
       "Type" : "String",
-      "Description" : "stamp1 for current version, stamp2 for new version"
+      "Description" : "stamp1 for current version, stamp2 for disaster recovery and staging for staging production"
     },
 
     "Environment" : {
@@ -27,17 +27,10 @@
   },
   "Mappings" : {
 
-    "keys" : {
-          "Dev"            : { "keypair" : "stamp-dev"},
-          "Qa"             : { "keypair" : "stamp-qa" },
-          "Sandbox"        : { "keypair" : "stamp-sandbox"},
-          "Production"     : { "keypair" : "stamp-prod"}
-    },
-
     "subnets" : {
       "stamp1"             : { "VPCSN" : "10.10.0.0/16", "PRIVATESN" : "10.10.22.0/23", "MANAGESN" : "10.10.82.0/24", "MANAGESN2" : "10.10.83.0/24", "WORKERSN1" : "10.10.24.0/27", "WORKERSN2" : "10.10.24.32/27", "WORKERSN3" : "10.10.24.64/27", "WORKERSN4" : "10.10.24.96/27", "WORKERSN5" : "10.10.24.128/27", "WORKERSN6" : "10.10.24.160/27", "WORKERSN7" : "10.10.24.192/27", "DBSN" : "10.10.3.0/24", "DBSN2" : "10.10.4.0/24", "PRIVATESN2" : "10.10.52.0/23", "WORKERSN101" : "10.10.54.0/27", "WORKERSN102" : "10.10.54.32/27", "WORKERSN103" : "10.10.54.64/27", "WORKERSN104" : "10.10.54.96/27", "WORKERSN105" : "10.10.54.128/27", "WORKERSN106" : "10.10.54.160/27", "WORKERSN107" : "10.10.54.192/27" },
-      "stamp2"             : { "VPCSN" : "10.11.0.0/16", "PRIVATESN" : "10.11.22.0/23", "MANAGESN" : "10.11.82.0/24", "MANAGESN2" : "10.11.83.0/24", "WORKERSN1" : "10.11.24.0/27", "WORKERSN2" : "10.11.24.32/27", "WORKERSN3" : "10.11.24.64/27", "WORKERSN4" : "10.11.24.96/27", "WORKERSN5" : "10.11.24.128/27", "WORKERSN6" : "10.11.24.160/27", "WORKERSN7" : "10.11.24.192/27", "DBSN" : "10.11.3.0/24", "DBSN2" : "10.11.4.0/24", "PRIVATESN2" : "10.11.52.0/23", "WORKERSN101" : "10.11.54.0/27", "WORKERSN102" : "10.11.54.32/27", "WORKERSN103" : "10.11.54.64/27", "WORKERSN104" : "10.11.54.96/27", "WORKERSN105" : "10.11.54.128/27", "WORKERSN106" : "10.11.54.160/27", "WORKERSN107" : "10.11.54.192/27" }
-
+      "stamp2"             : { "VPCSN" : "10.11.0.0/16", "PRIVATESN" : "10.11.22.0/23", "MANAGESN" : "10.11.82.0/24", "MANAGESN2" : "10.11.83.0/24", "WORKERSN1" : "10.11.24.0/27", "WORKERSN2" : "10.11.24.32/27", "WORKERSN3" : "10.11.24.64/27", "WORKERSN4" : "10.11.24.96/27", "WORKERSN5" : "10.11.24.128/27", "WORKERSN6" : "10.11.24.160/27", "WORKERSN7" : "10.11.24.192/27", "DBSN" : "10.11.3.0/24", "DBSN2" : "10.11.4.0/24", "PRIVATESN2" : "10.11.52.0/23", "WORKERSN101" : "10.11.54.0/27", "WORKERSN102" : "10.11.54.32/27", "WORKERSN103" : "10.11.54.64/27", "WORKERSN104" : "10.11.54.96/27", "WORKERSN105" : "10.11.54.128/27", "WORKERSN106" : "10.11.54.160/27", "WORKERSN107" : "10.11.54.192/27" },
+      "staging"             : { "VPCSN" : "10.20.0.0/16", "PRIVATESN" : "10.20.22.0/23", "MANAGESN" : "10.20.82.0/24", "MANAGESN2" : "10.20.83.0/24", "WORKERSN1" : "10.20.24.0/27", "WORKERSN2" : "10.20.24.32/27", "WORKERSN3" : "10.20.24.64/27", "WORKERSN4" : "10.20.24.96/27", "WORKERSN5" : "10.20.24.128/27", "WORKERSN6" : "10.20.24.160/27", "WORKERSN7" : "10.20.24.192/27", "DBSN" : "10.20.3.0/24", "DBSN2" : "10.20.4.0/24", "PRIVATESN2" : "10.20.52.0/23", "WORKERSN101" : "10.20.54.0/27", "WORKERSN102" : "10.20.54.32/27", "WORKERSN103" : "10.20.54.64/27", "WORKERSN104" : "10.20.54.96/27", "WORKERSN105" : "10.20.54.128/27", "WORKERSN106" : "10.20.54.160/27", "WORKERSN107" : "10.20.54.192/27" }
     },
 
     "VPN" : {
@@ -142,7 +135,7 @@
           },
           {
             "Key": "Application",
-            "Value": "Public API"
+            "Value": "Stamp Api"
           },
           {
             "Key": "Environment",
@@ -167,7 +160,7 @@
           },
           {
             "Key": "Application",
-            "Value": "Public API"
+            "Value": "Stamp Api"
           },
           {
             "Key": "Environment",
@@ -192,7 +185,7 @@
           },
           {
             "Key": "Application",
-            "Value": "Public API"
+            "Value": "Stamp Api"
           },
           {
             "Key": "Environment",
@@ -217,7 +210,7 @@
           },
           {
             "Key": "Application",
-            "Value": "Public API"
+            "Value": "Stamp Api"
           },
           {
             "Key": "Environment",
@@ -242,7 +235,7 @@
           },
           {
             "Key": "Application",
-            "Value": "Public API"
+            "Value": "Stamp Api"
           },
           {
             "Key": "Environment",
@@ -267,7 +260,7 @@
           },
           {
             "Key": "Application",
-            "Value": "Public API"
+            "Value": "Stamp Api"
           },
           {
             "Key": "Environment",
@@ -292,7 +285,7 @@
           },
           {
             "Key": "Application",
-            "Value": "Public API"
+            "Value": "Stamp Api"
           },
           {
             "Key": "Environment",
@@ -317,7 +310,7 @@
           },
           {
             "Key": "Application",
-            "Value": "Public API"
+            "Value": "Stamp Api"
           },
           {
             "Key": "Environment",
@@ -342,7 +335,7 @@
           },
           {
             "Key": "Application",
-            "Value": "Public API"
+            "Value": "Stamp Api"
           },
           {
             "Key": "Environment",
@@ -367,7 +360,7 @@
           },
           {
             "Key": "Application",
-            "Value": "Public API"
+            "Value": "Stamp Api"
           },
           {
             "Key": "Environment",
@@ -392,7 +385,7 @@
           },
           {
             "Key": "Application",
-            "Value": "Public API"
+            "Value": "Stamp Api"
           },
           {
             "Key": "Environment",
@@ -417,7 +410,7 @@
           },
           {
             "Key": "Application",
-            "Value": "Public API"
+            "Value": "Stamp Api"
           },
           {
             "Key": "Environment",
@@ -442,7 +435,7 @@
           },
           {
             "Key": "Application",
-            "Value": "Public API"
+            "Value": "Stamp Api"
           },
           {
             "Key": "Environment",
@@ -467,7 +460,7 @@
           },
           {
             "Key": "Application",
-            "Value": "Public API"
+            "Value": "Stamp Api"
           },
           {
             "Key": "Environment",
@@ -492,7 +485,7 @@
           },
           {
             "Key": "Application",
-            "Value": "Public API"
+            "Value": "Stamp Api"
           },
           {
             "Key": "Environment",
@@ -517,7 +510,7 @@
           },
           {
             "Key": "Application",
-            "Value": "Public API"
+            "Value": "Stamp Api"
           },
           {
             "Key": "Environment",
@@ -542,7 +535,7 @@
           },
           {
             "Key": "Application",
-            "Value": "Public API"
+            "Value": "Stamp Api"
           },
           {
             "Key": "Environment",
@@ -567,7 +560,7 @@
           },
           {
             "Key": "Application",
-            "Value": "Public API"
+            "Value": "Stamp Api"
           },
           {
             "Key": "Environment",
@@ -592,7 +585,7 @@
           },
           {
             "Key": "Application",
-            "Value": "Public API"
+            "Value": "Stamp Api"
           },
           {
             "Key": "Environment",
@@ -617,7 +610,7 @@
           },
           {
             "Key": "Application",
-            "Value": "Public API"
+            "Value": "Stamp Api"
           },
           {
             "Key": "Environment",
@@ -627,7 +620,7 @@
       }
     },
 
-    "cgwPublicApi": {
+    "cgwStampApi": {
       "Type": "AWS::EC2::CustomerGateway",
       "Properties": {
         "Tags": [
@@ -650,7 +643,7 @@
       }
     },
 
-"vgwPublicApi": {
+"vgwStampApi": {
       "Type": "AWS::EC2::VPNGateway",
       "Properties": {
         "Type": "ipsec.1",
@@ -691,7 +684,7 @@
       }
     },
 
-    "vpnHQ": {
+    "vpnStamp": {
       "Type": "AWS::EC2::VPNConnection",
       "Properties": {
         "Tags": [
@@ -711,10 +704,10 @@
         "Type": "ipsec.1",
         "StaticRoutesOnly" : "true",
         "VpnGatewayId": {
-          "Ref": "vgwPublicApi"
+          "Ref": "vgwStampApi"
         },
         "CustomerGatewayId": {
-          "Ref": "cgwPublicApi"
+          "Ref": "cgwStampApi"
         }
       }
     },
@@ -723,7 +716,7 @@
       "Type" : "AWS::EC2::VPNConnectionRoute",
       "Properties" : {
         "DestinationCidrBlock" : "0.0.0.0/0",
-        "VpnConnectionId" : {"Ref" : "vpnHQ"}
+        "VpnConnectionId" : {"Ref" : "vpnStamp"}
       }
     },
 
@@ -779,27 +772,9 @@
           },
           {
             "IpProtocol": "tcp",
-            "FromPort": "80",
-            "ToPort": "80",
-            "CidrIp": "192.168.0.0/24"
-          },
-          {
-            "IpProtocol": "tcp",
-            "FromPort": "22",
-            "ToPort": "22",
-            "CidrIp": "192.168.0.0/24"
-          },
-          {
-            "IpProtocol": "tcp",
             "FromPort": "6379",
             "ToPort": "6379",
             "CidrIp": { "Fn::FindInMap" : [ "subnets", { "Ref" : "Version" }, "VPCSN" ]}
-          },
-          {
-            "IpProtocol": "tcp",
-            "FromPort": "6379",
-            "ToPort": "6379",
-            "CidrIp": "192.168.0.0/24"
           },
           {
             "IpProtocol": "tcp",
@@ -812,12 +787,6 @@
             "FromPort": "53",
             "ToPort": "53",
             "CidrIp": { "Fn::FindInMap" : [ "subnets", { "Ref" : "Version" }, "VPCSN" ]}
-          },
-                    {
-            "IpProtocol": "udp",
-            "FromPort": "53",
-            "ToPort": "53",
-            "CidrIp": "192.168.0.0/24"
           }
         ],
         "SecurityGroupEgress": [
@@ -1156,6 +1125,28 @@
       }
     },
 
+    "sgElasticacheSG": {
+      "Type": "AWS::EC2::SecurityGroup",
+      "Properties": {
+        "GroupDescription": "Elasticache Security group ",
+        "VpcId": {
+          "Ref": "vpc"
+          },
+          "Tags":[
+            {
+            "Key": "Name",
+            "Value": { "Fn::Join" : [ " ", ["Elasticache SG", { "Ref" : "Environment"} ] ] }
+            }
+          ],
+        "SecurityGroupEgress": [
+          {
+            "IpProtocol": "-1",
+            "CidrIp": "0.0.0.0/0"
+          }
+        ]
+      }
+    },
+
     "sgRds": {
       "Type": "AWS::EC2::SecurityGroup",
       "Properties": {
@@ -1357,22 +1348,6 @@
             "CidrIp": { "Fn::FindInMap" : [ "subnets", { "Ref" : "Version" }, "VPCSN" ]}
           }
         ],
-        "SecurityGroupEgress": [
-          {
-            "IpProtocol": "-1",
-            "CidrIp": "0.0.0.0/0"
-          }
-        ]
-      }
-    },
-
-    "sgdefault": {
-      "Type": "AWS::EC2::SecurityGroup",
-      "Properties": {
-        "GroupDescription": "default VPC security group",
-        "VpcId": {
-          "Ref": "vpc"
-        },
         "SecurityGroupEgress": [
           {
             "IpProtocol": "-1",
@@ -1701,12 +1676,6 @@
           },
           {
             "IpProtocol": "tcp",
-            "FromPort": "8080",
-            "ToPort": "8080",
-            "CidrIp": "192.168.0.0/24"
-          },
-          {
-            "IpProtocol": "tcp",
             "FromPort": "6379",
             "ToPort": "6379",
             "CidrIp": { "Fn::FindInMap" : [ "subnets", { "Ref" : "Version" }, "VPCSN" ]}
@@ -1803,7 +1772,7 @@
           "Ref": "vpc"
         },
         "VpnGatewayId": {
-          "Ref": "vgwPublicApi"
+          "Ref": "vgwStampApi"
         }
       }
     },
@@ -2039,7 +2008,7 @@
           "Ref": "rtbPrivateSubnets"
         },
         "GatewayId": {
-          "Ref": "vgwPublicApi"
+          "Ref": "vgwStampApi"
         }
       },
       "DependsOn": "gw4"
@@ -2084,21 +2053,6 @@
         },
         "SourceSecurityGroupOwnerId": "243238936187"
       }
-    },
-
-    "ingress17": {
-      "Type": "AWS::EC2::SecurityGroupIngress",
-      "Properties": {
-        "GroupId": {
-          "Ref": "sgdefault"
-        },
-        "IpProtocol": "-1",
-        "SourceSecurityGroupId": {
-          "Ref": "sgdefault"
-        },
-        "SourceSecurityGroupOwnerId": "243238936187"
-      },
-      "DependsOn" : "sgdefault"
     },
 
     "ingress20": {
@@ -2647,13 +2601,103 @@
       "Type": "AWS::EC2::SecurityGroupIngress",
       "Properties": {
         "GroupId": {
-          "Ref": "sgRds"
+          "Ref": "sgElasticacheSG"
         },
         "IpProtocol": "tcp",
-        "FromPort": "22",
-        "ToPort": "22",
+        "FromPort": "6379",
+        "ToPort": "6379",
         "SourceSecurityGroupId": {
-          "Ref": "sgMGTInbound"
+          "Ref": "sgPrivateApis"
+        },
+        "SourceSecurityGroupOwnerId": "243238936187"
+      }
+    },
+    "ingress59": {
+      "Type": "AWS::EC2::SecurityGroupIngress",
+      "Properties": {
+        "GroupId": {
+          "Ref": "sgElasticacheSG"
+        },
+        "IpProtocol": "tcp",
+        "FromPort": "6379",
+        "ToPort": "6379",
+        "SourceSecurityGroupId": {
+          "Ref": "sgGTAccounts"
+        },
+        "SourceSecurityGroupOwnerId": "243238936187"
+      }
+    },
+    "ingress60": {
+      "Type": "AWS::EC2::SecurityGroupIngress",
+      "Properties": {
+        "GroupId": {
+          "Ref": "sgElasticacheSG"
+        },
+        "IpProtocol": "tcp",
+        "FromPort": "6379",
+        "ToPort": "6379",
+        "SourceSecurityGroupId": {
+          "Ref": "sgDOAccounts"
+        },
+        "SourceSecurityGroupOwnerId": "243238936187"
+      }
+    },
+    "ingress61": {
+      "Type": "AWS::EC2::SecurityGroupIngress",
+      "Properties": {
+        "GroupId": {
+          "Ref": "sgElasticacheSG"
+        },
+        "IpProtocol": "tcp",
+        "FromPort": "6379",
+        "ToPort": "6379",
+        "SourceSecurityGroupId": {
+          "Ref": "sgMXAccounts"
+        },
+        "SourceSecurityGroupOwnerId": "243238936187"
+      }
+    },
+    "ingress62": {
+      "Type": "AWS::EC2::SecurityGroupIngress",
+      "Properties": {
+        "GroupId": {
+          "Ref": "sgElasticacheSG"
+        },
+        "IpProtocol": "tcp",
+        "FromPort": "6379",
+        "ToPort": "6379",
+        "SourceSecurityGroupId": {
+          "Ref": "sgSVAccounts"
+        },
+        "SourceSecurityGroupOwnerId": "243238936187"
+      }
+    },
+    "ingress63": {
+      "Type": "AWS::EC2::SecurityGroupIngress",
+      "Properties": {
+        "GroupId": {
+          "Ref": "sgElasticacheSG"
+        },
+        "IpProtocol": "tcp",
+        "FromPort": "6379",
+        "ToPort": "6379",
+        "SourceSecurityGroupId": {
+          "Ref": "sgNIAccounts"
+        },
+        "SourceSecurityGroupOwnerId": "243238936187"
+      }
+    },
+    "ingress64": {
+      "Type": "AWS::EC2::SecurityGroupIngress",
+      "Properties": {
+        "GroupId": {
+          "Ref": "sgElasticacheSG"
+        },
+        "IpProtocol": "tcp",
+        "FromPort": "6379",
+        "ToPort": "6379",
+        "SourceSecurityGroupId": {
+          "Ref": "sgMonitors"
         },
         "SourceSecurityGroupOwnerId": "243238936187"
       }
