@@ -34,12 +34,6 @@
       "Default": "sg-2b5fd54e"
     },
 
-    "Environment": {
-      "Description" : "Subdomain to access EC2 Intance",
-      "Type": "String",
-      "Default": "dev"
-    },
-
     "StackID" : {
       "Type" : "String",
       "Description" : "Stack ID name",
@@ -50,6 +44,18 @@
       "Type" : "String",
       "Description" : "Git branch where to deploy the code from.",
       "Default" : "master"
+    },
+
+    "Environment": {
+      "Description" : "Subdomain to access EC2 Intance",
+      "Type": "String",
+      "Default": "dev"
+    },
+
+    "NodeID"        : {
+      "Type"        : "String",
+      "Description" : "The data node identification, 1..n",
+      "Default"     : "1"
     }
   },
 
@@ -60,9 +66,9 @@
       "ap-northeast-1" : {"AMI" : "ami-35bbd334" },
       "ap-southeast-1" : {"AMI" : "ami-605c0a32" },
       "ap-southeast-2" : {"AMI" : "ami-fb4bd5c1" },
-      "eu-west-1"      : {"AMI" : "ami-a72e25e2" },
-      "us-east-1"      : {"AMI" : "ami-0e07a566" },
-      "us-west-2"      : {"AMI" : "ami-9a9dfdaa" }
+      "eu-west-1"      : {"AMI" : "ami-d03dcaa7" },
+      "us-east-1"      : {"AMI" : "ami-c070d5a8" },
+      "us-west-2"      : {"AMI" : "ami-5f5e186f" }
     },
     "dot" : {
       "test"           : { "DOT" : ".test" },
@@ -87,7 +93,7 @@
       "Properties" : {
         "HostedZoneName" : "bluekite.com.",
         "Comment" : "DNS name for my instance.",
-        "Name" : { "Fn::Join" : [ "", ["queue", { "Ref" : "StackID" } ,".accounts", { "Fn::FindInMap" : [ "dot", { "Ref" : "Environment" }, "DOT" ]},".bluekite.com"]]},
+        "Name" : { "Fn::Join" : [ "", ["queue", { "Ref" : "StackID" }, { "Ref" : "NodeID" } ,".accounts", { "Fn::FindInMap" : [ "dot", { "Ref" : "Environment" }, "DOT" ]},".bluekite.com"]]},
         "Type" : "A",
         "TTL" : "300",
         "ResourceRecords" : [ { "Fn::GetAtt" : [ "BeanstalkdServer", "PrivateIp" ] } ]
@@ -127,7 +133,7 @@
         "InstanceType" : { "Ref" : "InstanceType" },
         "KeyName" : { "Ref" : "KeyName" },
         "Tags" : [ {"Key" : "Application", "Value" : { "Ref" : "AWS::StackId"} },
-                    {"Key" : "Name", "Value" : {"Fn::Join" : [ "", ["queue.accounts", {"Ref" : "Environment"} ]]}}
+                    {"Key" : "Name", "Value" : {"Fn::Join" : [ "", ["queue", { "Ref" : "NodeID" } ,".accounts", {"Ref" : "Environment"} ]]}}
                   ],
         "UserData"       : { "Fn::Base64" : { "Fn::Join" : ["", [
           "#!/bin/bash\n",
@@ -188,6 +194,10 @@
           "sudo apt-get update\n",
           "sudo apt-get upgrade\n",
 
+          "#add key to authorized_keys\n",
+          "cd /home/ubuntu/.ssh\n",
+          "sudo cat beanstalkd.pub >> authorized_keys\n",
+
           "cd /home/ubuntu/sites\n",
           "sudo sh setup.sh\n",
 
@@ -214,7 +224,7 @@
         "Handle" : {"Ref" : "BeanstalkdWaitHandle"},
         "Timeout" : "2000"
       }
-    } 
+    }
   },
 
   "Outputs" : {
