@@ -91,37 +91,8 @@
         "Comment" : "Internal gw NodeJs Application",
         "AWS::CloudFormation::Init" : {
           "configSets" : {
-            "default" : ["config_credentials", "config_packages"]
+            "default" : ["config_packages"]
           },
-          "config_credentials" : {
-            "files" : {
-              "/home/ubuntu/.ssh/id_rsa" : {
-                "source" : "https://s3.amazonaws.com/redtail/redtail_rsa",
-                "mode" : "600",
-                "owner" : "ubuntu",
-                "group" : "ubuntu"
-              },
-              "/home/ubuntu/.ssh/id_rsa.pub" : {
-                "source" : "https://s3.amazonaws.com/redtail/redtail_rsa.pub",
-                "mode" : "600",
-                "owner" : "ubuntu",
-                "group" : "ubuntu"
-              },
-              "/home/ubuntu/.ssh/config" : {
-                "mode" : "600",
-                "owner" : "ubuntu",
-                "group" : "ubuntu",
-                "content" : { "Fn::Join" : ["", [
-                  "Host github.com\n",
-                  "\tStrictHostKeyChecking no\n",
-                  "\tUser git\n",
-                  "\tPreferredAuthentications publickey\n",
-                  "\tIdentityFile ~/.ssh/id_rsa\n"
-                ]]}
-              }
-            }
-          },
-          
           "config_packages" : {
             "packages" : {
               "apt" : {
