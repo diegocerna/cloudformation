@@ -33,19 +33,9 @@
       "staging"             : { "VPCSN" : "10.20.0.0/16", "PRIVATESN" : "10.20.22.0/23", "MANAGESN" : "10.20.82.0/24", "MANAGESN2" : "10.20.83.0/24", "WORKERSN1" : "10.20.24.0/27", "WORKERSN2" : "10.20.24.32/27", "WORKERSN3" : "10.20.24.64/27", "WORKERSN4" : "10.20.24.96/27", "WORKERSN5" : "10.20.24.128/27", "WORKERSN6" : "10.20.24.160/27", "WORKERSN7" : "10.20.24.192/27", "DBSN" : "10.20.3.0/24", "DBSN2" : "10.20.4.0/24", "PRIVATESN2" : "10.20.52.0/23", "WORKERSN101" : "10.20.54.0/27", "WORKERSN102" : "10.20.54.32/27", "WORKERSN103" : "10.20.54.64/27", "WORKERSN104" : "10.20.54.96/27", "WORKERSN105" : "10.20.54.128/27", "WORKERSN106" : "10.20.54.160/27", "WORKERSN107" : "10.20.54.192/27" }
     },
 
-    "VPN" : {
-      "sjc"                : { "EP" : "205.189.102.230" },
-      "atl"                : { "EP" : "205.189.103.230" }
-    },
-
-    "DC" : {
-      "sjc"                : { "EP" : "205.189.102.0/24" },
-      "atl"                : { "EP" : "205.189.103.0/24" }
-    },
-
-    "HOST" : {
-      "sjc"                : { "EP" : "205.189.102.230/32" },
-      "atl"                : { "EP" : "205.189.103.230/32" }
+    "DATACENTER" : {
+      "sjc"                : { "EPVPN" : "205.189.102.230", "PUBSUBNET" : "205.189.102.0/24", "SBVPN" : "205.189.102.230/32", "DCSUBNET" : "10.7.0.0/16", "MGTSUBNET" : "10.7.82.0/24" },
+      "atl"                : { "EPVPN" : "205.189.103.230", "PUBSUBNET" : "205.189.103.0/24", "SBVPN" : "205.189.103.230/32", "DCSUBNET" : "10.5.0.0/16", "MGTSUBNET" : "10.5.82.0/24" }
     },
 
     "dot" : {
@@ -638,7 +628,7 @@
           }
         ],
         "Type": "ipsec.1",
-        "IpAddress": { "Fn::FindInMap" : [ "VPN", { "Ref" : "Provider" }, "EP" ]},
+        "IpAddress": { "Fn::FindInMap" : [ "DATACENTER", { "Ref" : "Provider" }, "EPVPN" ]},
         "BgpAsn": "65000"
       }
     },
@@ -853,7 +843,7 @@
             "IpProtocol": "tcp",
             "FromPort": "443",
             "ToPort": "443",
-            "CidrIp": "10.7.0.0/16"
+            "CidrIp": { "Fn::FindInMap" : [ "DATACENTER", { "Ref" : "Provider" }, "DCSUBNET" ]}
           },
           {
             "IpProtocol": "tcp",
@@ -896,13 +886,13 @@
             "IpProtocol": "-1",
             "FromPort": "-1",
             "ToPort": "-1",
-            "CidrIp": { "Fn::FindInMap" : [ "HOST", { "Ref" : "Provider" }, "EP" ]}
+            "CidrIp": { "Fn::FindInMap" : [ "DATACENTER", { "Ref" : "Provider" }, "SBVPN" ]}
           },
           {
             "IpProtocol": "icmp",
             "FromPort": "-1",
             "ToPort": "-1",
-            "CidrIp": "10.7.0.0/16"
+            "CidrIp": { "Fn::FindInMap" : [ "DATACENTER", { "Ref" : "Provider" }, "DCSUBNET" ]}
           },
           {
             "IpProtocol": "tcp",
@@ -926,7 +916,7 @@
             "IpProtocol": "tcp",
             "FromPort": "22",
             "ToPort": "22",
-            "CidrIp": "10.7.0.0/16"
+            "CidrIp": { "Fn::FindInMap" : [ "DATACENTER", { "Ref" : "Provider" }, "DCSUBNET" ]}
           },
           {
             "IpProtocol": "tcp",
@@ -938,13 +928,7 @@
             "IpProtocol": "tcp",
             "FromPort": "53",
             "ToPort": "53",
-            "CidrIp": "10.5.82.0/24"
-          },
-          {
-            "IpProtocol": "tcp",
-            "FromPort": "53",
-            "ToPort": "53",
-            "CidrIp": "10.7.82.0/24"
+            "CidrIp": { "Fn::FindInMap" : [ "DATACENTER", { "Ref" : "Provider" }, "MGTSUBNET" ]}
           },
           {
             "IpProtocol": "udp",
@@ -956,13 +940,7 @@
             "IpProtocol": "udp",
             "FromPort": "53",
             "ToPort": "53",
-            "CidrIp": "10.5.82.0/24"
-          },
-          {
-            "IpProtocol": "udp",
-            "FromPort": "53",
-            "ToPort": "53",
-            "CidrIp": "10.7.82.0/24"
+            "CidrIp": { "Fn::FindInMap" : [ "DATACENTER", { "Ref" : "Provider" }, "MGTSUBNET" ]}
           }
         ],
         "SecurityGroupEgress": [
@@ -1048,7 +1026,7 @@
             "IpProtocol": "tcp",
             "FromPort": "80",
             "ToPort": "80",
-            "CidrIp": "10.7.0.0/16"
+            "CidrIp": { "Fn::FindInMap" : [ "DATACENTER", { "Ref" : "Provider" }, "DCSUBNET" ]}
           },
           {
             "IpProtocol": "tcp",
@@ -1252,7 +1230,7 @@
             "IpProtocol": "tcp",
             "FromPort": "5671",
             "ToPort": "5671",
-            "CidrIp": { "Fn::FindInMap" : [ "DC", { "Ref" : "Provider" }, "EP" ]}
+            "CidrIp": { "Fn::FindInMap" : [ "DATACENTER", { "Ref" : "Provider" }, "PUBSUBNET" ]}
           },
           {
             "IpProtocol": "tcp",
