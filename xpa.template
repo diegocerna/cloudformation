@@ -72,7 +72,7 @@
           "sandbox"        : { "DOT" : ".sandbox" },
           "production"     : { "DOT" : "" }
         },
-        
+
         "env" : {
           "dev"            : { "ENV" : "staging" },
           "qa"             : { "ENV" : "qa" },
@@ -222,7 +222,7 @@
             "DependsOn" : "XPAInstance",
             "Properties" : {
                 "Handle" : {"Ref" : "XPAWaitHandle"},
-                "Timeout" : "2000"
+                "Timeout" : "3000"
             }
         }
     },
