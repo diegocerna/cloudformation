@@ -200,9 +200,9 @@
 
           "#add key to authorized_keys\n",
           "cd /home/ubuntu/.ssh\n",
-          "wget https://s3.amazonaws.com/redtail/beanstalkd.pub  > /tmp/beanstalkd_keyfiles.log 2>&1 || error_exit 'Failed to clone beanstalkd.pub key\n",
-          "wget https://s3.amazonaws.com/redtail/beanstalkd_rsa  > /tmp/beanstalkd_keyfiles.log 2>&1 || error_exit 'Failed to clone beanstalkd.pub key\n",
+          "wget https://s3.amazonaws.com/redtail/beanstalkd.pub https://s3.amazonaws.com/redtail/beanstalkd_rsa  > /tmp/beanstalkd_keyfiles.log 2>&1 || error_exit 'Failed to clone beanstalkd.pub key'\n",
           "sudo chmod 600 beanstalkd.pub beanstalkd_rsa\n",
+          "sudo chown ubuntu:ubuntu beanstalkd.pub beanstalkd_rsa\n",
           "sudo cat beanstalkd.pub >> authorized_keys\n",
 
           "cd /home/ubuntu/sites\n",
@@ -339,9 +339,9 @@
 
           "#add key to authorized_keys\n",
           "cd /home/ubuntu/.ssh\n",
-          "wget https://s3.amazonaws.com/redtail/beanstalkd.pub  > /tmp/beanstalkd_keyfiles.log 2>&1 || error_exit 'Failed to clone beanstalkd.pub key\n",
-          "wget https://s3.amazonaws.com/redtail/beanstalkd_rsa  > /tmp/beanstalkd_keyfiles.log 2>&1 || error_exit 'Failed to clone beanstalkd.pub key\n",
+          "wget https://s3.amazonaws.com/redtail/beanstalkd.pub https://s3.amazonaws.com/redtail/beanstalkd_rsa  > /tmp/beanstalkd_keyfiles.log 2>&1 || error_exit 'Failed to clone beanstalkd.pub key'\n",
           "sudo chmod 600 beanstalkd.pub beanstalkd_rsa\n",
+          "sudo chown ubuntu:ubuntu beanstalkd.pub beanstalkd_rsa\n",
           "sudo cat beanstalkd.pub >> authorized_keys\n",
 
           "cd /home/ubuntu/sites\n",
