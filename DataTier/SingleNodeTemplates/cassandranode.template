@@ -103,12 +103,12 @@
         "Name"            : { "Fn::Join" : [ "", [{ "Ref" : "ApplicationTag" }, "-", { "Ref" : "NodeType" }, { "Ref" : "NodeID" }, { "Ref" : "StackID" }, { "Fn::FindInMap" : [ "dot", { "Ref" : "Environment" }, "DOT" ]},".bluekite.com"]]},
         "Type"            : "A",
         "TTL"             : "900",
-        "ResourceRecords" : [ { "Fn::GetAtt" : [ "ElkInstance", "PrivateIp" ] } ]
+        "ResourceRecords" : [ { "Fn::GetAtt" : [ "CassandraInstance", "PrivateIp" ] } ]
       },
-      "DependsOn" : "ElkInstance"
+      "DependsOn" : "CassandraInstance"
     },
 
-    "ElkInstance"     : {
+    "CassandraInstance"     : {
       "Type"          : "AWS::EC2::Instance",
         "Metadata"    : {
           "Comment"   : "Cassandra - Cassandra cluster node"
@@ -127,14 +127,14 @@
             "# Helper function to notify of failed operation\n",
             "function error_exit\n",
             "{\n",
-            "  cfn-signal -e 1 -r \"$1\" '", { "Ref" : "ElkWaitHandle" }, "'\n",
+            "  cfn-signal -e 1 -r \"$1\" '", { "Ref" : "CassandraWaitHandle" }, "'\n",
             "  exit 1\n",
             "}\n",
 
             "# Run Instance default configuration via CloudFormation::Init\n",
             "cfn-init -v --region ", { "Ref" : "AWS::Region" },
             "    -s ", { "Ref" : "AWS::StackId" },
-            " -r ElkInstance",
+            " -r CassandraInstance",
             " -c default",
             " || error_exit 'Failed to run cfn-init'\n",
 
@@ -200,22 +200,22 @@
             "# Signal setup is complete\n",
             "cfn-signal -e $? -r 'Completed configuration' '",
             {
-              "Ref" : "ElkWaitHandle"
+              "Ref" : "CassandraWaitHandle"
             },
             "'\n"
           ]]}}
         }
     },
 
-    "ElkWaitHandle" : {
+    "CassandraWaitHandle" : {
       "Type"        : "AWS::CloudFormation::WaitConditionHandle"
     },
 
-    "ElkWaitCondition"  : {
+    "CassandraWaitCondition"  : {
       "Type"            : "AWS::CloudFormation::WaitCondition",
-      "DependsOn"       : "ElkInstance",
+      "DependsOn"       : "CassandraInstance",
       "Properties"      : {
-        "Handle"        : {"Ref" : "ElkWaitHandle"},
+        "Handle"        : {"Ref" : "CassandraWaitHandle"},
         "Timeout"       : "2000"
       }
     }
@@ -223,12 +223,12 @@
 
   "Outputs"         : {
     "InstanceId"    : {
-      "Value"       : { "Ref" : "ElkInstance" },
+      "Value"       : { "Ref" : "CassandraInstance" },
       "Description" : "Instance Id of newly created instance"
     },
 
     "IPAddress"     : {
-      "Value"       : { "Fn::GetAtt" : [ "ElkInstance", "PrivateIp" ] },
+      "Value"       : { "Fn::GetAtt" : [ "CassandraInstance", "PrivateIp" ] },
       "Description" : "Private IP address of instance"
     },
 
