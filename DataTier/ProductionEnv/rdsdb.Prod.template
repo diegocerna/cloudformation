@@ -1,6 +1,7 @@
 {
   "AWSTemplateFormatVersion": "2010-09-09",
-  "Description" : "This stack generates the Accounts IS instance - filename:accounts.is.template",
+  "Description" : "RDS postgres databases  - filename:rds.Prod.template",
+
   "Mappings" : {
      "dot" : {
        "test"           : { "DOT" : ".test" },
@@ -19,16 +20,21 @@
 
   "Parameters" : {
 
+    "SubnetIdAz1" : {
+      "Type" : "String",
+      "Description" : "SubnetId for database AZ1 in your Virtual Private Cloud (VPC)",
+      "Default": "subnet-4fd72416"
+    },
+    "SubnetIdAz2" : {
+      "Type" : "String",
+      "Description" : "SubnetId for database AZ2 your Virtual Private Cloud (VPC)",
+      "Default": "subnet-f334e584"
+    },
+
     "Environment" : {
       "Type" : "String",
       "Description" : "Environment i.e. dev, production, etc.",
       "Default" : "production"
-    },
-
-    "SubnetId" : {
-      "Type" : "String",
-      "Description" : "Guatemala Accounts SubnetId in your Virtual Private Cloud (VPC)",
-      "Default": "stamp-db-subnet"
     },
 
     "InstanceType" : {
@@ -39,7 +45,7 @@
       "ConstraintDescription" : "must be a valid EC2 instance type."
     },
 
-  "StackID" : {
+    "StackID" : {
       "Type" : "String",
       "Description" : "Stack ID name",
       "Default" : "-"
@@ -48,7 +54,7 @@
     "SecurityGroupId" : {
       "Type" : "String",
       "Description" : "Security Group of the VPC",
-      "Default" : "sg-4274fc27"
+      "Default" : "sg-f970569c"
     },
     "dbuser" : {
       "NoEcho": "true",
@@ -69,11 +75,17 @@
       "Description" : "region first 2 chars, oregon: or, virginia vi...",
       "Default" : "or"
     }
-
   },
 
   "Resources": {
 
+   "RDSSubnetGroup" : {
+     "Type" : "AWS::RDS::DBSubnetGroup",
+       "Properties" : {
+          "DBSubnetGroupDescription" : { "Fn::Join" : [ "", ["RDS-snetGroup", { "Ref" : "StackID" } , { "Fn::FindInMap" : [ "dot", { "Ref" : "Environment" }, "DOT" ]}]]},
+          "SubnetIds" : [{"Ref" : "SubnetIdAz1"} , {"Ref": "SubnetIdAz2"}]
+       }
+   },
     "DNSAccountsDBDO" : {
       "Type" : "AWS::Route53::RecordSet",
       "Properties" : {
@@ -104,7 +116,7 @@
         "PreferredMaintenanceWindow"  : "thu:09:27-thu:09:57",
         "MultiAZ"                     : "true",
         "VPCSecurityGroups"           : [{ "Ref": "SecurityGroupId" }],
-        "DBSubnetGroupName"           : { "Ref": "SubnetId"},
+        "DBSubnetGroupName"           : { "Ref": "RDSSubnetGroup"},
         "Tags"                        : [{"Key": "workload-type", "Value": { "Ref" : "InstanceType" }}]
       }
     },
@@ -138,7 +150,7 @@
         "PreferredMaintenanceWindow"  : "thu:09:27-thu:09:57",
         "MultiAZ"                     : "true",
         "VPCSecurityGroups"           : [{ "Ref": "SecurityGroupId" }],
-        "DBSubnetGroupName"           : { "Ref": "SubnetId"},
+        "DBSubnetGroupName"           : { "Ref": "RDSSubnetGroup"},
         "Tags"                        : [{"Key": "workload-type", "Value": { "Ref" : "InstanceType" }}]
       }
     },
@@ -173,7 +185,7 @@
         "PreferredMaintenanceWindow"  : "thu:09:27-thu:09:57",
         "MultiAZ"                     : "true",
         "VPCSecurityGroups"           : [{ "Ref": "SecurityGroupId" }],
-        "DBSubnetGroupName"           : { "Ref": "SubnetId"},
+        "DBSubnetGroupName"           : { "Ref": "RDSSubnetGroup"},
         "Tags"                        : [{"Key": "workload-type", "Value": { "Ref" : "InstanceType" }}]
       }
     },
@@ -207,7 +219,7 @@
         "PreferredMaintenanceWindow"  : "thu:09:27-thu:09:57",
         "MultiAZ"                     : "true",
         "VPCSecurityGroups"           : [{ "Ref": "SecurityGroupId" }],
-        "DBSubnetGroupName"           : { "Ref": "SubnetId"},
+        "DBSubnetGroupName"           : { "Ref": "RDSSubnetGroup"},
         "Tags"                        : [{"Key": "workload-type", "Value": { "Ref" : "InstanceType" }}]
       }
     },
@@ -241,7 +253,7 @@
         "PreferredMaintenanceWindow"  : "thu:09:27-thu:09:57",
         "MultiAZ"                     : "true",
         "VPCSecurityGroups"           : [{ "Ref": "SecurityGroupId" }],
-        "DBSubnetGroupName"           : { "Ref": "SubnetId"},
+        "DBSubnetGroupName"           : { "Ref": "RDSSubnetGroup"},
         "Tags"                        : [{"Key": "workload-type", "Value": { "Ref" : "InstanceType" }}]
       }
     },
@@ -275,7 +287,7 @@
         "PreferredMaintenanceWindow"  : "thu:09:27-thu:09:57",
         "MultiAZ"                     : "true",
         "VPCSecurityGroups"           : [{ "Ref": "SecurityGroupId" }],
-        "DBSubnetGroupName"           : { "Ref": "SubnetId"},
+        "DBSubnetGroupName"           : { "Ref": "RDSSubnetGroup"},
         "Tags"                        : [{"Key": "workload-type", "Value": { "Ref" : "InstanceType" }}]
       }
     },
@@ -309,7 +321,7 @@
         "PreferredMaintenanceWindow"  : "thu:09:27-thu:09:57",
         "MultiAZ"                     : "true",
         "VPCSecurityGroups"           : [{ "Ref": "SecurityGroupId" }],
-        "DBSubnetGroupName"           : { "Ref": "SubnetId"},
+        "DBSubnetGroupName"           : { "Ref": "RDSSubnetGroup"},
         "Tags"                        : [{"Key": "workload-type", "Value": { "Ref" : "InstanceType" }}]
       }
     },
@@ -343,7 +355,7 @@
         "PreferredMaintenanceWindow"  : "thu:09:27-thu:09:57",
         "MultiAZ"                     : "true",
         "VPCSecurityGroups"           : [{ "Ref": "SecurityGroupId" }],
-        "DBSubnetGroupName"           : { "Ref": "SubnetId"},
+        "DBSubnetGroupName"           : { "Ref": "RDSSubnetGroup"},
         "Tags"                        : [{"Key": "workload-type", "Value": { "Ref" : "InstanceType" }}]
       }
     },
@@ -378,7 +390,7 @@
         "PreferredMaintenanceWindow"  : "thu:09:27-thu:09:57",
         "MultiAZ"                     : "true",
         "VPCSecurityGroups"           : [{ "Ref": "SecurityGroupId" }],
-        "DBSubnetGroupName"           : { "Ref": "SubnetId"},
+        "DBSubnetGroupName"           : { "Ref": "RDSSubnetGroup"},
         "Tags"                        : [{"Key": "workload-type", "Value": { "Ref" : "InstanceType" }}]
       }
     }
