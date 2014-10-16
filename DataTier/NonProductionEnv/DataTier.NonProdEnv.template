@@ -112,6 +112,7 @@
           "SubnetIdAz1"                 : { "Ref"  : "SubnetIdAz1"},
           "SubnetIdAz2"                 : { "Ref"  : "SubnetIdAz2"},
           "CassandraSecurityGroupId"    : { "Ref"  : "CassandraSecurityGroupId"},
+          "PrivateAPIsSecurityGroupId"  : { "Ref"  : "PrivateAPIsSecurityGroupId"},
           "StackID"                     : { "Ref"  : "StackID"},
           "DeployBranch"                : { "Ref"  : "DeployBranch"},
           "Environment"                 : { "Ref"  : "Environment"},
