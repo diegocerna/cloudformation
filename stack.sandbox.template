@@ -227,6 +227,22 @@
       }
     },
 
+    "elastickite" : {
+      "Type" : "AWS::CloudFormation::Stack",
+      "Properties" : {
+        "TemplateURL" : "https://s3-us-west-2.amazonaws.com/pruebastack/elastickite.template",
+        "Parameters" : {
+          "KeyName" : { "Ref" : "KeyName" },
+          "SubnetId" : { "Ref" : "PrivateSubnetId" },
+          "SecurityGroupId" : { "Ref" : "PrivateSecurityGroup" },
+          "DeployBranch" : "master",
+          "StackID" : { "Ref" : "StackID" },
+          "InstanceType" : { "Ref" : "InstanceType"},
+          "Environment" : { "Ref" : "appEnvironment" }
+        }
+      }
+    },
+
     "accountsGt" : {
       "Type" : "AWS::CloudFormation::Stack",
       "Properties" : {

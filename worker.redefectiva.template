@@ -65,19 +65,11 @@
             "us-west-2"      : {"AMI" : "ami-8b6d2ebb" }
         },
 
-        "dot" : {
-          "test"             : { "DOT" : ".test" },
-          "dev"              : { "DOT" : ".dev" },
-          "qa"               : { "DOT" : ".qa" },
-          "sandbox"          : { "DOT" : ".sandbox" },
-          "production"       : { "DOT" : "" }
-        },
-
         "env" : {
-          "dev"            : { "ENV" : "staging" },
-          "qa"             : { "ENV" : "qa" },
-          "sandbox"        : { "ENV" : "sandbox" },
-          "production"     : { "ENV" : "production" }
+          "dev"            : { "ENV" : "staging", "DOT" : ".dev" },
+          "qa"             : { "ENV" : "qa", "DOT" : ".qa" },
+          "sandbox"        : { "ENV" : "sandbox", "DOT" : ".sandbox"  },
+          "production"     : { "ENV" : "production", "DOT" : "" }
         }
     },
 
@@ -88,7 +80,7 @@
             "Properties" : {
                 "HostedZoneName" : "bluekite.com.",
                 "Comment" : "DNS name for my instance.",
-                "Name" : { "Fn::Join" : [ "", ["workerredefectiva", { "Ref" : "StackID" }, { "Fn::FindInMap" : [ "dot", { "Ref" : "Environment" }, "DOT" ]},".bluekite.com."]]},
+                "Name" : { "Fn::Join" : [ "", ["workerredefectiva", { "Ref" : "StackID" }, { "Fn::FindInMap" : [ "env", { "Ref" : "Environment" }, "DOT" ]},".bluekite.com."]]},
                 "Type" : "A",
                 "TTL" : "300",
                 "ResourceRecords" : [ { "Fn::GetAtt" : [ "MxWorkerRedefectivaInstance", "PrivateIp" ] } ]
@@ -99,54 +91,7 @@
         "MxWorkerRedefectivaInstance" : {
             "Type" : "AWS::EC2::Instance",
             "Metadata" : {
-              "Comment" : "Catalog - Rails Aplication Instance",
-              "AWS::CloudFormation::Init" : {
-              "configSets" : {
-                "default" : ["config_credentials", "config_packages"]
-              },
-              "config_credentials" : {
-                "files" : {
-                  "/home/ubuntu/.ssh/id_rsa" : {
-                    "source" : "https://s3.amazonaws.com/redtail/redtail_rsa",
-                    "mode" : "600",
-                    "owner" : "ubuntu",
-                    "group" : "ubuntu"
-                  },
-
-                  "/home/ubuntu/.ssh/id_rsa.pub" : {
-                    "source" : "https://s3.amazonaws.com/redtail/redtail_rsa.pub",
-                    "mode" : "600",
-                    "owner" : "ubuntu",
-                    "group" : "ubuntu"
-                  },
-
-                  "/home/ubuntu/.ssh/config" : {
-                    "mode" : "600",
-                    "owner" : "ubuntu",
-                    "group" : "ubuntu",
-                    "content" : { "Fn::Join" : ["", [
-                      "Host github.com\n",
-                      "\tStrictHostKeyChecking no\n",
-                      "\tUser git\n",
-                      "\tPreferredAuthentications publickey\n",
-                      "\tIdentityFile ~/.ssh/id_rsa\n"
-                    ]]}
-                  }
-                }
-              },
-
-              "config_packages" : {
-                "packages" : {
-                  "apt" : {
-                    "git"                        : [],
-                    "curl"                       : [],
-                    "tmux"                       : [],
-                    "build-essential"            : [],
-                    "python-software-properties" : []
-                  }
-                }
-              }
-            }
+              "Comment" : "Catalog - Rails Aplication Instance"
           },
 
             "Properties" : {
@@ -181,9 +126,9 @@
                     "cp /home/ubuntu/.ssh/* /root/.ssh/\n",
 
                     "# Add FQDN on etc/environment\n",
-                    "echo ", { "Fn::Join" : [ "" , ["FQDN=workerredefectiva", { "Ref" : "StackID" }, { "Fn::FindInMap" : [ "dot", { "Ref" : "Environment" }, "DOT" ]}, ".bluekite.com" ]]}, ">> /etc/environment\n",
+                    "echo ", { "Fn::Join" : [ "" , ["FQDN=workerredefectiva", { "Ref" : "StackID" }, { "Fn::FindInMap" : [ "env", { "Ref" : "Environment" }, "DOT" ]}, ".bluekite.com" ]]}, ">> /etc/environment\n",
                     "echo ", "STACKID=", { "Ref" : "StackID" }, ">> /etc/environment\n",
-                    "echo ", { "Fn::Join" : [ "" , ["FACTER_queue_host=accounts", { "Ref" : "StackID" }, ".mx", { "Fn::FindInMap" : [ "dot", { "Ref" : "Environment" }, "DOT" ]}, ".bluekite.com" ]]}, ">> /etc/environment\n",
+                    "echo ", { "Fn::Join" : [ "" , ["FACTER_queue_host=accounts", { "Ref" : "StackID" }, ".mx", { "Fn::FindInMap" : [ "env", { "Ref" : "Environment" }, "DOT" ]}, ".bluekite.com" ]]}, ">> /etc/environment\n",
 
                     "# Clone sites repo to ubuntu user home\n",
                     "git clone git@github.com:blue-kite/xbp_puppet_sites.git /home/ubuntu/sites > /tmp/git.log 2>&1 || error_exit 'Failed to clone sites repo'\n",
@@ -212,11 +157,11 @@
                     "#setting my custom facts\n",
                     "mkdir -p /etc/facter/facts.d\n",
                     "touch /etc/facter/facts.d/custom_facts.txt\n",
-                    "echo ", { "Fn::Join" : [ "" , ["fqdn=workerredefectiva", { "Ref" : "StackID" }, { "Fn::FindInMap" : [ "dot", { "Ref" : "Environment" }, "DOT" ]}, ".bluekite.com" ]]},        ">> /etc/facter/facts.d/custom_facts.txt\n",
-                    "echo ", { "Fn::Join" : [ "" , ["queue_host=queue", { "Ref" : "StackID" }, ".accounts", { "Fn::FindInMap" : [ "dot", { "Ref" : "Environment" }, "DOT" ]}, ".bluekite.com" ]]},        ">> /etc/facter/facts.d/custom_facts.txt\n",
+                    "echo ", { "Fn::Join" : [ "" , ["fqdn=workerredefectiva", { "Ref" : "StackID" }, { "Fn::FindInMap" : [ "env", { "Ref" : "Environment" }, "DOT" ]}, ".bluekite.com" ]]},        ">> /etc/facter/facts.d/custom_facts.txt\n",
+                    "echo ", { "Fn::Join" : [ "" , ["queue_host=queue", { "Ref" : "StackID" }, ".accounts", { "Fn::FindInMap" : [ "env", { "Ref" : "Environment" }, "DOT" ]}, ".bluekite.com" ]]},        ">> /etc/facter/facts.d/custom_facts.txt\n",
                     "echo ", "stackid=", { "Ref" : "StackID" },       ">> /etc/facter/facts.d/custom_facts.txt\n",
                     "echo ", "revision=", { "Ref" : "DeployBranch" }, ">> /etc/facter/facts.d/custom_facts.txt\n",
-                    "echo ", { "Fn::Join" : [ "" , ["logserver_host=logs", { "Ref" : "StackID" }, { "Fn::FindInMap" : [ "dot", { "Ref" : "Environment" }, "DOT" ]}, ".bluekite.com" ]]},        ">> /etc/facter/facts.d/custom_facts.txt\n",
+                    "echo ", { "Fn::Join" : [ "" , ["logserver_host=logs", { "Ref" : "StackID" }, { "Fn::FindInMap" : [ "env", { "Ref" : "Environment" }, "DOT" ]}, ".bluekite.com" ]]},        ">> /etc/facter/facts.d/custom_facts.txt\n",
                     "echo logserver_port=5001  >> /etc/facter/facts.d/custom_facts.txt\n",
                     "echo app_name=workerredefectiva >> /etc/facter/facts.d/custom_facts.txt\n",
 

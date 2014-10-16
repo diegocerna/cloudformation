@@ -20,6 +20,12 @@
       "Default" : "-"
     },
 
+    "StackIDDB" : {
+      "Type" : "String",
+      "Description" : "Stack ID name for DataBase",
+      "Default" : "-"
+    },
+
     "AllocationIdNAT": {
       "Type": "String",
       "Description": "AllocationId of existing Elastic IP (EIP) in your Virtual Private Cloud (VPC)"

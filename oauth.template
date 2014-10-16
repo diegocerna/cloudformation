@@ -52,12 +52,12 @@
             "us-east-1"      : {"AMI" : "ami-cdc2fda4" },
             "us-west-2"      : {"AMI" : "ami-9a9dfdaa" }
         },
-        "dot" : {
-          "test"             : { "DOT" : ".test" },
-          "dev"              : { "DOT" : ".dev" },
-          "qa"               : { "DOT" : ".qa" },
-          "sandbox"          : { "DOT" : ".sandbox" },
-          "production"       : { "DOT" : "" }
+        
+        "env" : {
+          "dev"            : { "ENV" : "staging", "DOT" : ".dev" },
+          "qa"             : { "ENV" : "qa", "DOT" : ".qa" },
+          "sandbox"        : { "ENV" : "sandbox", "DOT" : ".sandbox"  },
+          "production"     : { "ENV" : "production", "DOT" : "" }
         }
     },
 
@@ -75,7 +75,7 @@
             "Properties" : {
                 "HostedZoneName" : "bluekite.com.",
                 "Comment" : "DNS name for my instance.",
-                "Name" : { "Fn::Join" : ["", ["oauth",{ "Fn::FindInMap" : [ "dot", { "Ref" : "Environment" }, "DOT" ]},".bluekite.com."]]},
+                "Name" : { "Fn::Join" : ["", ["oauth",{ "Fn::FindInMap" : [ "env", { "Ref" : "Environment" }, "DOT" ]},".bluekite.com."]]},
                 "Type" : "CNAME",
                 "TTL" : "900",
                 "ResourceRecords" : [ { "Fn::GetAtt" : [ "WebServerInstance", "PublicDnsName" ] } ]

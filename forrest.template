@@ -60,22 +60,14 @@
       "eu-west-1"      : { "AMI" : "ami-d03dcaa7" }
     },
 
-    "dot" : {
-      "test"           : { "DOT" : ".test" },
-      "dev"            : { "DOT" : ".dev" },
-      "qa"             : { "DOT" : ".qa" },
-      "sandbox"        : { "DOT" : ".sandbox" },
-      "production"     : { "DOT" : "" }
-    },
-
     "env" : {
-      "dev"            : { "ENV" : "staging" },
-      "qa"             : { "ENV" : "qa" },
-      "sandbox"        : { "ENV" : "sandbox" },
-      "production"     : { "ENV" : "production" }
+      "dev"            : { "ENV" : "staging", "DOT" : ".dev" },
+      "qa"             : { "ENV" : "qa", "DOT" : ".qa" },
+      "sandbox"        : { "ENV" : "sandbox", "DOT" : ".sandbox"  },
+      "production"     : { "ENV" : "production", "DOT" : "" }
     }
-
   },
+
   "Resources":{
 
     "myDNSRecord2" : {
@@ -83,7 +75,7 @@
       "Properties" : {
         "HostedZoneName" : "bluekite.com.",
         "Comment" : "Endponit of Forrest.",
-        "Name" : {"Fn::Join" : ["", ["forrest", { "Ref" : "StackID" } , { "Fn::FindInMap" : [ "dot", { "Ref" : "Environment" }, "DOT" ]},".bluekite.com."]]},
+        "Name" : {"Fn::Join" : ["", ["forrest", { "Ref" : "StackID" } , { "Fn::FindInMap" : [ "env", { "Ref" : "Environment" }, "DOT" ]},".bluekite.com."]]},
         "Type" : "A",
         "TTL" : "300",
         "ResourceRecords" : [
@@ -126,7 +118,7 @@
           "cp /home/ubuntu/.ssh/* /root/.ssh/\n",
 
           "# Add FQDN on etc/environment\n",
-          "echo ", { "Fn::Join" : [ "" , ["FQDN=forrest", { "Ref" : "StackID" }, { "Fn::FindInMap" : [ "dot", { "Ref" : "Environment" }, "DOT" ]}, ".bluekite.com" ]]}, ">> /etc/environment\n",
+          "echo ", { "Fn::Join" : [ "" , ["FQDN=forrest", { "Ref" : "StackID" }, { "Fn::FindInMap" : [ "env", { "Ref" : "Environment" }, "DOT" ]}, ".bluekite.com" ]]}, ">> /etc/environment\n",
           "echo ", "STACKID=", { "Ref" : "StackID" }, ">> /etc/environment\n",
 
           "# Clone sites repo to ubuntu user home\n",
@@ -156,10 +148,10 @@
           "#setting my custom facts\n",
           "mkdir -p /etc/facter/facts.d\n",
           "touch /etc/facter/facts.d/custom_facts.txt\n",
-          "echo ", { "Fn::Join" : [ "" , ["fqdn=forrest", { "Ref" : "StackID" }, { "Fn::FindInMap" : [ "dot", { "Ref" : "Environment" }, "DOT" ]}, ".bluekite.com" ]]},        ">> /etc/facter/facts.d/custom_facts.txt\n",
+          "echo ", { "Fn::Join" : [ "" , ["fqdn=forrest", { "Ref" : "StackID" }, { "Fn::FindInMap" : [ "env", { "Ref" : "Environment" }, "DOT" ]}, ".bluekite.com" ]]},        ">> /etc/facter/facts.d/custom_facts.txt\n",
           "echo ", "stackid=", { "Ref" : "StackID" },       ">> /etc/facter/facts.d/custom_facts.txt\n",
           "echo ", "revision=", { "Ref" : "DeployBranch" }, ">> /etc/facter/facts.d/custom_facts.txt\n",
-          "echo ", { "Fn::Join" : [ "" , ["logserver_host=logs", { "Ref" : "StackID" }, { "Fn::FindInMap" : [ "dot", { "Ref" : "Environment" }, "DOT" ]}, ".bluekite.com" ]]},        ">> /etc/facter/facts.d/custom_facts.txt\n",
+          "echo ", { "Fn::Join" : [ "" , ["logserver_host=logs", { "Ref" : "StackID" }, { "Fn::FindInMap" : [ "env", { "Ref" : "Environment" }, "DOT" ]}, ".bluekite.com" ]]},        ">> /etc/facter/facts.d/custom_facts.txt\n",
           "echo logserver_port=5001  >> /etc/facter/facts.d/custom_facts.txt\n",
           "echo app_name=forrest >> /etc/facter/facts.d/custom_facts.txt\n",
 

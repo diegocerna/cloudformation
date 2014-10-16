@@ -15,19 +15,11 @@
       "us-west-2"      : {"AMI" : "ami-8b6d2ebb" }
     },
 
-    "dot" : {
-      "test"           : { "DOT" : ".test" },
-      "dev"            : { "DOT" : ".dev" },
-      "qa"             : { "DOT" : ".qa" },
-      "sandbox"        : { "DOT" : ".sandbox" },
-      "production"     : { "DOT" : "" }
-    },
-
     "env" : {
-      "dev"            : { "ENV" : "staging" },
-      "qa"             : { "ENV" : "qa" },
-      "sandbox"        : { "ENV" : "sandbox" },
-      "production"     : { "ENV" : "production" }
+      "dev"            : { "ENV" : "staging", "DOT" : ".dev" },
+      "qa"             : { "ENV" : "qa", "DOT" : ".qa" },
+      "sandbox"        : { "ENV" : "sandbox", "DOT" : ".sandbox"  },
+      "production"     : { "ENV" : "production", "DOT" : "" }
     }
   },
 
@@ -67,6 +59,12 @@
     "StackID" : {
       "Type" : "String",
       "Description" : "Stack ID name",
+      "Default" : "-"
+    },
+
+    "StackIDDB" : {
+      "Type" : "String",
+      "Description" : "Stack ID name for DataBase",
       "Default" : "-"
     },
 
@@ -136,7 +134,7 @@
           "chown ubuntu:ubuntu -R /etc/puppet/modules/accounts\n",
 
           "# Add FQDN on etc/environment\n",
-          "echo ", { "Fn::Join" : [ "" , ["FACTER_accounts_fqdn=accounts", { "Ref" : "StackID" }, ".gt", { "Fn::FindInMap" : [ "dot", { "Ref" : "Environment" }, "DOT" ]}, ".bluekite.com" ]]}, ">> /etc/environment\n",
+          "echo ", { "Fn::Join" : [ "" , ["FACTER_accounts_fqdn=accounts", { "Ref" : "StackID" }, ".gt", { "Fn::FindInMap" : [ "env", { "Ref" : "Environment" }, "DOT" ]}, ".bluekite.com" ]]}, ">> /etc/environment\n",
           "echo ", "STACKID=", { "Ref" : "StackID" }, ">> /etc/environment\n",
 
           "#Installing Ruby\n",
@@ -158,13 +156,13 @@
           "#setting my custom facts\n",
           "mkdir -p /etc/facter/facts.d\n",
           "touch /etc/facter/facts.d/custom_facts.txt\n",
-          "echo ", { "Fn::Join" : [ "" , ["fqdn=accounts", { "Ref" : "StackID" }, ".gt", { "Fn::FindInMap" : [ "dot", { "Ref" : "Environment" }, "DOT" ]}, ".bluekite.com" ]]},      ">> /etc/facter/facts.d/custom_facts.txt\n",
+          "echo ", { "Fn::Join" : [ "" , ["fqdn=accounts", { "Ref" : "StackID" }, ".gt", { "Fn::FindInMap" : [ "env", { "Ref" : "Environment" }, "DOT" ]}, ".bluekite.com" ]]},      ">> /etc/facter/facts.d/custom_facts.txt\n",
           "echo ", "stackid=", { "Ref" : "StackID" },           ">> /etc/facter/facts.d/custom_facts.txt\n",
-          "echo ", { "Fn::Join" : [ "" , ["logserver_host=logs", { "Ref" : "StackID" }, { "Fn::FindInMap" : [ "dot", { "Ref" : "Environment" }, "DOT" ]}, ".bluekite.com" ]]},        ">> /etc/facter/facts.d/custom_facts.txt\n",
+          "echo ", { "Fn::Join" : [ "" , ["logserver_host=logs", { "Ref" : "StackID" }, { "Fn::FindInMap" : [ "env", { "Ref" : "Environment" }, "DOT" ]}, ".bluekite.com" ]]},        ">> /etc/facter/facts.d/custom_facts.txt\n",
           "echo logserver_port=5001                             >> /etc/facter/facts.d/custom_facts.txt\n",
           "echo ", "revision=", { "Ref" : "DeployBranch" }, ">> /etc/facter/facts.d/custom_facts.txt\n",
           "echo database_name=accountsdbgt                         >> /etc/facter/facts.d/custom_facts.txt\n",
-          "echo ", { "Fn::Join" : [ "" , ["database_host=accountsdb", { "Ref" : "StackID" }, ".gt", { "Fn::FindInMap" : [ "dot", { "Ref" : "Environment" }, "DOT" ]}, ".bluekite.com" ]]},        ">> /etc/facter/facts.d/custom_facts.txt\n",
+          "echo ", { "Fn::Join" : [ "" , ["database_host=accountsdb", { "Ref" : "StackIDDB" }, ".gt", { "Fn::FindInMap" : [ "env", { "Ref" : "Environment" }, "DOT" ]}, ".bluekite.com" ]]},        ">> /etc/facter/facts.d/custom_facts.txt\n",
           "echo ", "database_username=", { "Ref" : "dbuser" },  ">> /etc/facter/facts.d/custom_facts.txt\n",
           "echo ", "database_password=", { "Ref" : "dbpass" },  ">> /etc/facter/facts.d/custom_facts.txt\n",
           "echo app_name=accountsgt >> /etc/facter/facts.d/custom_facts.txt\n",
@@ -210,7 +208,7 @@
       "Properties" : {
         "HostedZoneName" : "bluekite.com.",
         "Comment" : "DNS name for my instance.",
-                "Name" : { "Fn::Join" : [ "", ["accounts", { "Ref" : "StackID" }, ".gt" , { "Fn::FindInMap" : [ "dot", { "Ref" : "Environment" }, "DOT" ]},".bluekite.com"]]},
+                "Name" : { "Fn::Join" : [ "", ["accounts", { "Ref" : "StackID" }, ".gt" , { "Fn::FindInMap" : [ "env", { "Ref" : "Environment" }, "DOT" ]},".bluekite.com"]]},
         "Type" : "A",
         "TTL" : "900",
         "ResourceRecords" : [ { "Fn::GetAtt" : [ "AccountsGtInstance", "PrivateIp" ] } ]

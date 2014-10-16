@@ -32,7 +32,7 @@
             "Default": "sg-"
         },
 
-        "StackID" : {
+         "StackID" : {
             "Type" : "String",
             "Description" : "Stack ID name",
             "Default" : "-"
@@ -65,12 +65,11 @@
           "us-west-2"      : {"AMI" : "ami-9a9dfdaa" }
         },
 
-        "dot" : {
-          "test"            : { "DOT" : ".test" },
-          "dev"            : { "DOT" : ".dev" },
-          "qa"             : { "DOT" : ".qa" },
-          "sandbox"        : { "DOT" : ".sandbox" },
-          "production"     : { "DOT" : "" }
+        "env" : {
+          "dev"            : { "ENV" : "staging", "DOT" : ".dev" },
+          "qa"             : { "ENV" : "qa", "DOT" : ".qa" },
+          "sandbox"        : { "ENV" : "sandbox", "DOT" : ".sandbox"  },
+          "production"     : { "ENV" : "production", "DOT" : "" }
         }
     },
 
@@ -89,7 +88,7 @@
                 "Properties" : {
                 "HostedZoneName" : "bluekite.com.",
                 "Comment" : "DNS name for my instance.",
-                "Name" : { "Fn::Join" : [ "", ["xpa", { "Ref" : "StackID" } , { "Fn::FindInMap" : [ "dot", { "Ref" : "Environment" }, "DOT" ]},".bluekite.com"]]},
+                "Name" : { "Fn::Join" : [ "", ["xpa", { "Ref" : "StackID" } , { "Fn::FindInMap" : [ "env", { "Ref" : "Environment" }, "DOT" ]},".bluekite.com"]]},
                 "Type" : "CNAME",
                 "TTL" : "300",
                 "ResourceRecords" : [ { "Fn::GetAtt" : [ "XPAInstance", "PublicDnsName" ] } ]
@@ -181,7 +180,7 @@
                     "cp /home/ubuntu/.ssh/* /root/.ssh/\n",
 
                     "# Add FQDN on etc/environment\n",
-                     "echo ", { "Fn::Join" : [ "" , ["FQDN=xpa", { "Ref" : "StackID" }, { "Fn::FindInMap" : [ "dot", { "Ref" : "Environment" }, "DOT" ]}, ".bluekite.com" ]]}, ">> /etc/environment\n",
+                     "echo ", { "Fn::Join" : [ "" , ["FQDN=xpa", { "Ref" : "StackID" }, { "Fn::FindInMap" : [ "env", { "Ref" : "Environment" }, "DOT" ]}, ".bluekite.com" ]]}, ">> /etc/environment\n",
                     "echo ", "stackid=", { "Ref" : "StackID" }, ">> /etc/environment\n",
           
                     "# Clone app repo to ubuntu user home\n",
@@ -197,7 +196,7 @@
                     "#setting my custom facts\n",
                     "mkdir -p /etc/facter/facts.d\n",
                     "touch /etc/facter/facts.d/custom_facts.txt\n",
-                    "echo ", { "Fn::Join" : [ "" , ["fqdn=", { "Ref" : "StackID" }, { "Fn::FindInMap" : [ "dot", { "Ref" : "Environment" }, "DOT" ]}, ".bluekite.com" ]]},        ">> /etc/facter/facts.d/custom_facts.txt\n",
+                    "echo ", { "Fn::Join" : [ "" , ["fqdn=", { "Ref" : "StackID" }, { "Fn::FindInMap" : [ "env", { "Ref" : "Environment" }, "DOT" ]}, ".bluekite.com" ]]},        ">> /etc/facter/facts.d/custom_facts.txt\n",
                     "echo ", "stackid=", { "Ref" : "StackID" },         ">> /etc/facter/facts.d/custom_facts.txt\n",
           
                     "# Install application's dependencies via puppet\n",

@@ -38,7 +38,7 @@
       "Type" : "String",
       "Description" : "Stack ID name",
       "Default" : "-"
-    }, 
+    },
 
     "DeployBranch" : {
       "Type" : "String",
@@ -71,24 +71,22 @@
       "us-east-1"      : {"AMI" : "ami-cdc2fda4" },
       "us-west-2"      : {"AMI" : "ami-9bfe85ab" }
     },
-    "dot" : {
-      "test"           : { "DOT" : ".test" },
-      "dev"            : { "DOT" : ".dev" },
-      "qa"             : { "DOT" : ".qa" },
-      "sandbox"        : { "DOT" : ".sandbox" },
-      "production"     : { "DOT" : "" }
+
+    "env" : {
+      "dev"            : { "ENV" : "staging", "DOT" : ".dev" },
+      "qa"             : { "ENV" : "qa", "DOT" : ".qa" },
+      "sandbox"        : { "ENV" : "sandbox", "DOT" : ".sandbox"  },
+      "production"     : { "ENV" : "production", "DOT" : "" }
     }
   },
 
   "Resources" : {
-
-
     "DNSRecord" : {
       "Type" : "AWS::Route53::RecordSet",
       "Properties" : {
         "HostedZoneName" : "bluekite.com.",
         "Comment" : "DNS name for my instance.",
-        "Name" : { "Fn::Join" : [ "", ["nagios", { "Ref" : "StackID" } , { "Fn::FindInMap" : [ "dot", { "Ref" : "Environment" }, "DOT" ]},".bluekite.com"]]},
+        "Name" : { "Fn::Join" : [ "", ["nagios", { "Ref" : "StackID" } , { "Fn::FindInMap" : [ "env", { "Ref" : "Environment" }, "DOT" ]},".bluekite.com"]]},
         "Type" : "A",
         "TTL" : "900",
         "ResourceRecords" : [ { "Fn::GetAtt" : [ "NagiosInstance", "PrivateIp" ] } ]
@@ -133,11 +131,11 @@
           "cp /home/ubuntu/.ssh/* /root/.ssh/\n",
 
           "# Add FQDN on etc/environment\n",
-          "echo ", { "Fn::Join" : [ "" , ["FACTER_fqdn=nagios", { "Ref" : "StackID" }, { "Fn::FindInMap" : [ "dot", { "Ref" : "Environment" }, "DOT" ]}, ".bluekite.com" ]]}, ">> /etc/environment\n",
+          "echo ", { "Fn::Join" : [ "" , ["FACTER_fqdn=nagios", { "Ref" : "StackID" }, { "Fn::FindInMap" : [ "env", { "Ref" : "Environment" }, "DOT" ]}, ".bluekite.com" ]]}, ">> /etc/environment\n",
           "echo ", "STACKID=", { "Ref" : "StackID" }, ">> /etc/environment\n",
 
           "echo ", { "Fn::Join" : [ "" , ["nagios", { "Ref" : "StackID" } ]]}, "> /etc/hostname\n",
-          "echo ", { "Fn::Join" : [ "" , [{ "Fn::GetAtt" : [ "NagiosInstance", "PrivateIp" ] }, "nagios", { "Ref" : "StackID" }, "nagios", { "Ref" : "StackID" }, { "Fn::FindInMap" : [ "dot", { "Ref" : "Environment" }, "DOT" ]}, ".bluekite.com" ]]}, ">> /etc/hosts\n",
+          "echo ", { "Fn::Join" : [ "" , [{ "Fn::GetAtt" : [ "NagiosInstance", "PrivateIp" ] }, "nagios", { "Ref" : "StackID" }, "nagios", { "Ref" : "StackID" }, { "Fn::FindInMap" : [ "env", { "Ref" : "Environment" }, "DOT" ]}, ".bluekite.com" ]]}, ">> /etc/hosts\n",
 
           "# Clone app repo to ubuntu user home\n",
           "git clone ", {"Ref": "Repository"}, " -b ", {"Ref" : "DeployBranch"}, " /home/ubuntu/nagios > /tmp/git.log 2>&1 || error_exit 'Failed to clone repo'\n",
