@@ -79,7 +79,7 @@
         "Properties" : {
             "HostedZoneName" : "bluekite.com.",
             "Comment" : "DNS name for my instance.",
-            "Name" : {"Fn::Join" : ["", ["workerpronet", { "Ref" : "StackID" }, { "Fn::FindInMap" : [ "dot", { "Ref" : "Environment" }, "DOT" ]},".bluekite.com."]]},
+            "Name" : {"Fn::Join" : ["", ["workerpronet", { "Ref" : "StackID" }, { "Fn::FindInMap" : [ "env", { "Ref" : "Environment" }, "DOT" ]},".bluekite.com."]]},
             "Type" : "A",
             "TTL" : "300",
             "ResourceRecords" : [ { "Fn::GetAtt" : [ "GtWorkerPronetInstance", "PrivateIp" ] } ]
@@ -90,7 +90,7 @@
         "GtWorkerPronetInstance" : {
             "Type" : "AWS::EC2::Instance",
             "Metadata" : {
-              "Comment" : "Catalog - Rails Aplication Instance",
+              "Comment" : "Catalog - Rails Aplication Instance"
           },
 
             "Properties" : {
@@ -125,9 +125,9 @@
                     "cp /home/ubuntu/.ssh/* /root/.ssh/\n",
 
                     "# Add FQDN on etc/environment\n",
-                    "echo ", { "Fn::Join" : [ "" , ["FQDN=workerpronet", { "Ref" : "StackID" }, { "Fn::FindInMap" : [ "dot", { "Ref" : "Environment" }, "DOT" ]}, ".bluekite.com" ]]}, ">> /etc/environment\n",
+                    "echo ", { "Fn::Join" : [ "" , ["FQDN=workerpronet", { "Ref" : "StackID" }, { "Fn::FindInMap" : [ "env", { "Ref" : "Environment" }, "DOT" ]}, ".bluekite.com" ]]}, ">> /etc/environment\n",
                     "echo ", "STACKID=", { "Ref" : "StackID" }, ">> /etc/environment\n",
-                    "echo ", { "Fn::Join" : [ "" , ["FACTER_queue_host=accounts", { "Ref" : "StackID" }, ".gt", { "Fn::FindInMap" : [ "dot", { "Ref" : "Environment" }, "DOT" ]}, ".bluekite.com" ]]}, ">> /etc/environment\n",
+                    "echo ", { "Fn::Join" : [ "" , ["FACTER_queue_host=accounts", { "Ref" : "StackID" }, ".gt", { "Fn::FindInMap" : [ "env", { "Ref" : "Environment" }, "DOT" ]}, ".bluekite.com" ]]}, ">> /etc/environment\n",
 
                     "# Clone sites repo to ubuntu user home\n",
                     "git clone git@github.com:blue-kite/xbp_puppet_sites.git /home/ubuntu/sites > /tmp/git.log 2>&1 || error_exit 'Failed to clone sites repo'\n",
@@ -156,11 +156,11 @@
                     "#setting my custom facts\n",
                     "mkdir -p /etc/facter/facts.d\n",
                     "touch /etc/facter/facts.d/custom_facts.txt\n",
-                    "echo ", { "Fn::Join" : [ "" , ["fqdn=workerpronet", { "Ref" : "StackID" }, { "Fn::FindInMap" : [ "dot", { "Ref" : "Environment" }, "DOT" ]}, ".bluekite.com" ]]},        ">> /etc/facter/facts.d/custom_facts.txt\n",
-                    "echo ", { "Fn::Join" : [ "" , ["queue_host=queue", { "Ref" : "StackID" }, ".accounts", { "Fn::FindInMap" : [ "dot", { "Ref" : "Environment" }, "DOT" ]}, ".bluekite.com" ]]},        ">> /etc/facter/facts.d/custom_facts.txt\n",
+                    "echo ", { "Fn::Join" : [ "" , ["fqdn=workerpronet", { "Ref" : "StackID" }, { "Fn::FindInMap" : [ "env", { "Ref" : "Environment" }, "DOT" ]}, ".bluekite.com" ]]},        ">> /etc/facter/facts.d/custom_facts.txt\n",
+                    "echo ", { "Fn::Join" : [ "" , ["queue_host=queue", { "Ref" : "StackID" }, ".accounts", { "Fn::FindInMap" : [ "env", { "Ref" : "Environment" }, "DOT" ]}, ".bluekite.com" ]]},        ">> /etc/facter/facts.d/custom_facts.txt\n",
                     "echo ", "stackid=", { "Ref" : "StackID" },       ">> /etc/facter/facts.d/custom_facts.txt\n",
                     "echo ", "revision=", { "Ref" : "DeployBranch" }, ">> /etc/facter/facts.d/custom_facts.txt\n",
-                    "echo ", { "Fn::Join" : [ "" , ["logserver_host=logs", { "Ref" : "StackID" }, { "Fn::FindInMap" : [ "dot", { "Ref" : "Environment" }, "DOT" ]}, ".bluekite.com" ]]},        ">> /etc/facter/facts.d/custom_facts.txt\n",
+                    "echo ", { "Fn::Join" : [ "" , ["logserver_host=logs", { "Ref" : "StackID" }, { "Fn::FindInMap" : [ "env", { "Ref" : "Environment" }, "DOT" ]}, ".bluekite.com" ]]},        ">> /etc/facter/facts.d/custom_facts.txt\n",
                     "echo logserver_port=5001  >> /etc/facter/facts.d/custom_facts.txt\n",
                     "echo app_name=workerpronet >> /etc/facter/facts.d/custom_facts.txt\n",
 

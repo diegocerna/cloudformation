@@ -91,7 +91,7 @@
         "WwWorkerTransfertoInstance" : {
             "Type" : "AWS::EC2::Instance",
             "Metadata" : {
-              "Comment" : "Catalog - Rails Aplication Instance",
+              "Comment" : "Catalog - Rails Aplication Instance"
           },
 
             "Properties" : {
