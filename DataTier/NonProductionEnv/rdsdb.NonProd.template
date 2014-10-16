@@ -114,7 +114,7 @@
         "MasterUserPassword"          : { "Ref" : "dbpass" },
         "PreferredBackupWindow"       : "06:00-06:30",
         "PreferredMaintenanceWindow"  : "thu:09:27-thu:09:57",
-        "MultiAZ"                     : "true",
+        "MultiAZ"                     : "false",
         "VPCSecurityGroups"           : [{ "Ref": "SecurityGroupId" }],
         "DBSubnetGroupName"           : { "Ref": "RDSSubnetGroup"},
         "Tags"                        : [{"Key": "workload-type", "Value": { "Ref" : "InstanceType" }}]
@@ -148,7 +148,7 @@
         "MasterUserPassword"          : { "Ref" : "dbpass" },
         "PreferredBackupWindow"       : "06:00-06:30",
         "PreferredMaintenanceWindow"  : "thu:09:27-thu:09:57",
-        "MultiAZ"                     : "true",
+        "MultiAZ"                     : "false",
         "VPCSecurityGroups"           : [{ "Ref": "SecurityGroupId" }],
         "DBSubnetGroupName"           : { "Ref": "RDSSubnetGroup"},
         "Tags"                        : [{"Key": "workload-type", "Value": { "Ref" : "InstanceType" }}]
@@ -183,7 +183,7 @@
         "MasterUserPassword"          : { "Ref" : "dbpass" },
         "PreferredBackupWindow"       : "06:00-06:30",
         "PreferredMaintenanceWindow"  : "thu:09:27-thu:09:57",
-        "MultiAZ"                     : "true",
+        "MultiAZ"                     : "false",
         "VPCSecurityGroups"           : [{ "Ref": "SecurityGroupId" }],
         "DBSubnetGroupName"           : { "Ref": "RDSSubnetGroup"},
         "Tags"                        : [{"Key": "workload-type", "Value": { "Ref" : "InstanceType" }}]
@@ -217,7 +217,7 @@
         "MasterUserPassword"          : { "Ref" : "dbpass" },
         "PreferredBackupWindow"       : "06:00-06:30",
         "PreferredMaintenanceWindow"  : "thu:09:27-thu:09:57",
-        "MultiAZ"                     : "true",
+        "MultiAZ"                     : "false",
         "VPCSecurityGroups"           : [{ "Ref": "SecurityGroupId" }],
         "DBSubnetGroupName"           : { "Ref": "RDSSubnetGroup"},
         "Tags"                        : [{"Key": "workload-type", "Value": { "Ref" : "InstanceType" }}]
@@ -251,7 +251,7 @@
         "MasterUserPassword"          : { "Ref" : "dbpass" },
         "PreferredBackupWindow"       : "06:00-06:30",
         "PreferredMaintenanceWindow"  : "thu:09:27-thu:09:57",
-        "MultiAZ"                     : "true",
+        "MultiAZ"                     : "false",
         "VPCSecurityGroups"           : [{ "Ref": "SecurityGroupId" }],
         "DBSubnetGroupName"           : { "Ref": "RDSSubnetGroup"},
         "Tags"                        : [{"Key": "workload-type", "Value": { "Ref" : "InstanceType" }}]
@@ -285,7 +285,7 @@
         "MasterUserPassword"          : { "Ref" : "dbpass" },
         "PreferredBackupWindow"       : "06:00-06:30",
         "PreferredMaintenanceWindow"  : "thu:09:27-thu:09:57",
-        "MultiAZ"                     : "true",
+        "MultiAZ"                     : "false",
         "VPCSecurityGroups"           : [{ "Ref": "SecurityGroupId" }],
         "DBSubnetGroupName"           : { "Ref": "RDSSubnetGroup"},
         "Tags"                        : [{"Key": "workload-type", "Value": { "Ref" : "InstanceType" }}]
@@ -319,7 +319,7 @@
         "MasterUserPassword"          : { "Ref" : "dbpass" },
         "PreferredBackupWindow"       : "06:00-06:30",
         "PreferredMaintenanceWindow"  : "thu:09:27-thu:09:57",
-        "MultiAZ"                     : "true",
+        "MultiAZ"                     : "false",
         "VPCSecurityGroups"           : [{ "Ref": "SecurityGroupId" }],
         "DBSubnetGroupName"           : { "Ref": "RDSSubnetGroup"},
         "Tags"                        : [{"Key": "workload-type", "Value": { "Ref" : "InstanceType" }}]
@@ -353,7 +353,7 @@
         "MasterUserPassword"          : { "Ref" : "dbpass" },
         "PreferredBackupWindow"       : "06:00-06:30",
         "PreferredMaintenanceWindow"  : "thu:09:27-thu:09:57",
-        "MultiAZ"                     : "true",
+        "MultiAZ"                     : "false",
         "VPCSecurityGroups"           : [{ "Ref": "SecurityGroupId" }],
         "DBSubnetGroupName"           : { "Ref": "RDSSubnetGroup"},
         "Tags"                        : [{"Key": "workload-type", "Value": { "Ref" : "InstanceType" }}]
@@ -388,7 +388,7 @@
         "MasterUserPassword"          : { "Ref" : "dbpass" },
         "PreferredBackupWindow"       : "06:00-06:30",
         "PreferredMaintenanceWindow"  : "thu:09:27-thu:09:57",
-        "MultiAZ"                     : "true",
+        "MultiAZ"                     : "false",
         "VPCSecurityGroups"           : [{ "Ref": "SecurityGroupId" }],
         "DBSubnetGroupName"           : { "Ref": "RDSSubnetGroup"},
         "Tags"                        : [{"Key": "workload-type", "Value": { "Ref" : "InstanceType" }}]
