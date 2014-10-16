@@ -62,6 +62,12 @@
     "Default" : "-"
     },
 
+    "StackIDDB" : {
+      "Type" : "String",
+      "Description" : "Stack ID name for DataBase",
+      "Default" : "-"
+    },
+    
     "SecurityGroupId" : {
       "Type" : "String",
       "Description" : "Security Group of the VPC",
@@ -157,7 +163,7 @@
           "echo ", { "Fn::Join" : [ "" , ["logserver_host=logs", { "Ref" : "StackID" }, { "Fn::FindInMap" : [ "env", { "Ref" : "Environment" }, "DOT" ]}, ".bluekite.com" ]]},        ">> /etc/facter/facts.d/custom_facts.txt\n",
           "echo logserver_port=5001  >> /etc/facter/facts.d/custom_facts.txt\n",
           "echo database_name=paymentsdb                         >> /etc/facter/facts.d/custom_facts.txt\n",
-          "echo ", { "Fn::Join" : [ "" , ["database_host=paymentsdb", { "Ref" : "StackID" }, { "Fn::FindInMap" : [ "env", { "Ref" : "Environment" }, "DOT" ]}, ".bluekite.com" ]]},        ">> /etc/facter/facts.d/custom_facts.txt\n",
+          "echo ", { "Fn::Join" : [ "" , ["database_host=paymentsdb", { "Ref" : "StackIDDB" }, { "Fn::FindInMap" : [ "env", { "Ref" : "Environment" }, "DOT" ]}, ".bluekite.com" ]]},        ">> /etc/facter/facts.d/custom_facts.txt\n",
           "echo ", "database_username=", { "Ref" : "dbuser" },  ">> /etc/facter/facts.d/custom_facts.txt\n",
           "echo ", "database_password=", { "Ref" : "dbpass" },  ">> /etc/facter/facts.d/custom_facts.txt\n",
           "echo app_name=payments >> /etc/facter/facts.d/custom_facts.txt\n",

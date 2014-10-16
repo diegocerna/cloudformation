@@ -62,7 +62,7 @@
       "eu-west-1"      : { "AMI" : "ami-d03dcaa7" }
 
     },
-    
+
     "env" : {
       "dev"            : { "ENV" : "staging", "DOT" : ".dev" },
       "qa"             : { "ENV" : "qa", "DOT" : ".qa" },

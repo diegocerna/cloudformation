@@ -32,7 +32,7 @@
             "Default": "sg-"
         },
 
-        "StackID" : {
+         "StackID" : {
             "Type" : "String",
             "Description" : "Stack ID name",
             "Default" : "-"

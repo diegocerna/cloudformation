@@ -40,6 +40,12 @@
       "Default" : ""
     },
 
+    "StackIDDB" : {
+      "Type" : "String",
+      "Description" : "Stack ID name for DataBase",
+      "Default" : ""
+    },
+
     "DeployBranch" : {
       "Type" : "String",
       "Description" : "Git branch where to deploy the code from.",
@@ -173,7 +179,7 @@
           "echo ", "revision=", { "Ref" : "DeployBranch" }, ">> /etc/facter/facts.d/custom_facts.txt\n",
           "echo app_name=catalog                                >> /etc/facter/facts.d/custom_facts.txt\n",
           "echo database_name=catalogdb                         >> /etc/facter/facts.d/custom_facts.txt\n",
-          "echo ", { "Fn::Join" : [ "" , ["database_host=catalogdb", { "Ref" : "StackID" }, { "Fn::FindInMap" : [ "env", { "Ref" : "Environment" }, "DOT" ]}, ".bluekite.com" ]]},        ">> /etc/facter/facts.d/custom_facts.txt\n",
+          "echo ", { "Fn::Join" : [ "" , ["database_host=catalogdb", { "Ref" : "StackIDDB" }, { "Fn::FindInMap" : [ "env", { "Ref" : "Environment" }, "DOT" ]}, ".bluekite.com" ]]},        ">> /etc/facter/facts.d/custom_facts.txt\n",
           "echo ", "database_username=", { "Ref" : "dbuser" },  ">> /etc/facter/facts.d/custom_facts.txt\n",
           "echo ", "database_password=", { "Ref" : "dbpass" },  ">> /etc/facter/facts.d/custom_facts.txt\n",
 

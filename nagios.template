@@ -38,7 +38,7 @@
       "Type" : "String",
       "Description" : "Stack ID name",
       "Default" : "-"
-    }, 
+    },
 
     "DeployBranch" : {
       "Type" : "String",

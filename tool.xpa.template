@@ -32,15 +32,9 @@
             "Default": "sg-"
         },
 
-        "StackID" : {
+         "StackID" : {
             "Type" : "String",
             "Description" : "Stack ID name",
-            "Default" : "-"
-        },
-
-        "StackIDDB" : {
-            "Type" : "String",
-            "Description" : "Stack ID name for DataBase",
             "Default" : "-"
         },
 

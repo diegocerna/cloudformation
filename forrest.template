@@ -67,7 +67,7 @@
       "production"     : { "ENV" : "production", "DOT" : "" }
     }
   },
-  
+
   "Resources":{
 
     "myDNSRecord2" : {
