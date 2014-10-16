@@ -11,7 +11,7 @@
       "MaxLength"             : "255",
       "AllowedPattern"        : "[\\x20-\\x7E]*",
       "ConstraintDescription" : "can contain only ASCII characters.",
-      "Default"               : "stamp-dev"
+      "Default"               : "stamp-qa"
     },
 
     "InstanceType"            : {
@@ -63,6 +63,12 @@
       "Type"          : "String",
       "Description"   : "Virtual Private Cloud (VPC) security group id for Elasticache",
       "Default"       : "sg-9f8ab4fa"
+    },
+
+    "PrivateAPIsSecurityGroupId" : {
+      "Type"          : "String",
+      "Description"   : "SecurityGroupId of an existing subnet in your Virtual Private Cloud (VPC)",
+      "Default"       : "sg-26632a43"
     },
 
     "StackID"       : {
@@ -127,31 +133,16 @@
       "Properties" : {
         "TemplateURL" : "https://s3-us-west-2.amazonaws.com/pruebastack/DataTier/NonProductionEnv/elastickitecluster.NonProd.template",
         "Parameters"        : {
-          "KeyName"         : { "Ref"  : "KeyName" },
-          "InstanceType"    : { "Ref"  : "InstanceType" },
-          "SubnetIdAz1"     : { "Ref"  : "SubnetIdAz1" },
-          "SubnetIdAz2"     : { "Ref"  : "SubnetIdAz2" },
-          "SecurityGroupId" : { "Ref"  : "ElasticSearchSecurityGroupId" },
-          "StackID"         : { "Ref"  : "StackID" },
-          "DeployBranch"    : { "Ref"  : "DeployBranch" },
-          "Environment"     : { "Ref"  : "Environment" },
-          "ApplicationTag"  : "elk"
-        }
-      }
-    },
-
-    "BeanstalkdSingle" : {
-      "Type" : "AWS::CloudFormation::Stack",
-      "Properties" : {
-        "TemplateURL" : "https://s3-us-west-2.amazonaws.com/pruebastack/DataTier/NonProductionEnv/beanstalkd.NonProd.template",
-        "Parameters"        : {
-          "KeyName"         : { "Ref"  :"KeyName"},
-          "InstanceType"    : { "Ref"  :"InstanceType"},
-          "SubnetId"        : { "Ref"  :"SubnetIdAz1"},
-          "SecurityGroupId" : { "Ref"  : "BeanstalkdSecurityGroupId"},
-          "StackID"         : { "Ref"  : "StackID"},
-          "DeployBranch"    : { "Ref"  : "DeployBranch"},
-          "Environment"     : { "Ref"  : "Environment"}
+          "KeyName"                     : { "Ref"  : "KeyName" },
+          "InstanceType"                : { "Ref"  : "InstanceType" },
+          "SubnetIdAz1"                 : { "Ref"  : "SubnetIdAz1" },
+          "SubnetIdAz2"                 : { "Ref"  : "SubnetIdAz2" },
+          "SecurityGroupId"             : { "Ref"  : "ElasticSearchSecurityGroupId" },
+          "PrivateAPIsSecurityGroupId"  : { "Ref"  : "PrivateAPIsSecurityGroupId"},
+          "StackID"                     : { "Ref"  : "StackID" },
+          "DeployBranch"                : { "Ref"  : "DeployBranch" },
+          "Environment"                 : { "Ref"  : "Environment" },
+          "ApplicationTag"              : "elk"
         }
       }
     },
@@ -170,6 +161,24 @@
           "dbuser"          : { "Ref"  : "dbuser"},
           "dbpass"          : { "Ref"  : "dbpass"},
           "Region"          : { "Ref"  : "Region"}
+        }
+      }
+    },
+
+    "BeanstalkdSingle" : {
+      "Type" : "AWS::CloudFormation::Stack",
+      "Properties" : {
+        "TemplateURL" : "https://s3-us-west-2.amazonaws.com/pruebastack/DataTier/NonProductionEnv/beanstalkd.NonProd.template",
+        "Parameters"        : {
+          "KeyName"                     : { "Ref"  : "KeyName" },
+          "InstanceType"                : { "Ref"  : "InstanceType" },
+          "SubnetIdAz1"                 : { "Ref"  : "SubnetIdAz1" },
+          "SubnetIdAz2"                 : { "Ref"  : "SubnetIdAz2" },
+          "SecurityGroupId"             : { "Ref"  : "BeanstalkdSecurityGroupId" },
+          "PrivateAPIsSecurityGroupId"  : { "Ref"  : "PrivateAPIsSecurityGroupId" },
+          "StackID"                     : { "Ref"  : "StackID" },
+          "DeployBranch"                : { "Ref"  : "DeployBranch" },
+          "Environment"                 : { "Ref"  : "Environment" }
         }
       }
     },

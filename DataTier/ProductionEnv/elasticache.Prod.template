@@ -1,6 +1,6 @@
 {
   "AWSTemplateFormatVersion": "2010-09-09",
-  "Description" : "ElastiCache - Redis Service Instance - elasticache.ProdEnv.template",
+  "Description" : "ElastiCache - Redis Service Instance - elasticache.Prod.template",
 
   "Parameters" : {
 
@@ -11,35 +11,41 @@
       "AllowedValues" : [ "cache.t2.micro","cache.t2.small","cache.t2.medium","cache.m3.medium","cache.m3.large","cache.m3.xlarge"],
       "ConstraintDescription" : "must be a valid elasticache node type."
     },
+
     "CacheParameterGroupName" : {
       "Type" : "String",
       "Description" : "Cache parameters group name",
       "Default" : "bluekiteredis"
     },
+
     "StackID" : {
       "Type" : "String",
       "Description" : "Stack ID name",
-      "Default" : ""
+      "Default" : "-"
     },
-    "VpcSecurityGroups" : {
-      "Type" : "String",
-      "Description" : "Security groups, comma separated values",
-      "Default" : "sg-81aafbe4"
-    },
+
     "Environment" : {
       "Type" : "String",
       "Description" : "Application's environment.",
       "Default" : "production"
     },
-    "SubnetId1" : {
-      "Type" : "String",
-      "Description" : "Database AZ1 subnet id",
-      "Default": "subnet-f82f3ad0"
+
+    "ElastiCacheSecurityGroup" : {
+      "Type"          : "String",
+      "Description"   : "SecurityGroupId of an existing subnet in your Virtual Private Cloud (VPC)",
+      "Default"       : "sg-9f8ab4fa"
     },
-    "SubnetId2" : {
-      "Type" : "String",
-      "Description" : "Database AZ2 subnet id",
-      "Default": "subnet-f82f3ad0"
+
+    "SubnetIdAz1"        : {
+      "Type"          : "String",
+      "Description"   : "SubnetId of an existing subnet in your Virtual Private Cloud (VPC)",
+      "Default"       : "subnet-4fd72416"
+    },
+
+    "SubnetIdAz2"        : {
+      "Type"          : "String",
+      "Description"   : "SubnetId of an existing subnet in your Virtual Private Cloud (VPC)",
+      "Default"       : "subnet-f334e584"
     }
   },
 
@@ -59,7 +65,7 @@
     "Type" : "AWS::ElastiCache::SubnetGroup",
     "Properties" : {
         "Description" : { "Fn::Join" : [ "", ["redis-snet", { "Ref" : "StackID" } , { "Fn::FindInMap" : [ "dot", { "Ref" : "Environment" }, "DOT" ]}]]},
-        "SubnetIds" : [ { "Ref" : "SubnetId" } ]
+        "SubnetIds" : [ { "Ref" : "SubnetIdAz1" }, { "Ref" : "SubnetIdAz2" } ]
       }
     },
     "RedisElastiCacheNonProd": {
@@ -70,7 +76,7 @@
         "CacheParameterGroupName" : { "Ref" : "CacheParameterGroupName" },
         "CacheSubnetGroupName" : { "Ref" : "CacheSubnetGroup" },
         "CacheNodeType": { "Ref" : "CacheNodeType" },
-        "VpcSecurityGroupIds" :  ["sg-81aafbe4"],
+        "VpcSecurityGroupIds" :  [{ "Ref" : "ElastiCacheSecurityGroup" }],
         "Engine": "redis",
         "EngineVersion": "2.8.6",
         "NumCacheNodes": "1",
