@@ -55,7 +55,7 @@
       "sa-east-1"      : { "AMI" : "ami-d545e5c8" },
       "eu-west-1"      : { "AMI" : "ami-d03dcaa7" }
     },
-    "dot" : {
+    "env" : {
       "test"           : { "DOT" : ".test" },
       "dev"            : { "DOT" : ".dev" },
       "qa"             : { "DOT" : ".qa" },
@@ -79,7 +79,7 @@
       "Properties" : {
         "HostedZoneName" : "bluekite.com.",
         "Comment" : "DNS name for my instance.",
-        "Name" : { "Fn::Join" : [ "", ["test.harness", { "Fn::FindInMap" : [ "dot", { "Ref" : "Environment" }, "DOT" ]},".bluekite.com"]]},
+        "Name" : { "Fn::Join" : [ "", ["test.harness", { "Fn::FindInMap" : [ "env", { "Ref" : "Environment" }, "DOT" ]},".bluekite.com"]]},
         "Type" : "A",
         "TTL" : "300",
         "ResourceRecords" : [ { "Fn::GetAtt" : [ "Test", "PublicIp" ] } ]
