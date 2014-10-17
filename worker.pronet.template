@@ -133,7 +133,7 @@
                     "git clone git@github.com:blue-kite/xbp_puppet_sites.git /home/ubuntu/sites > /tmp/git.log 2>&1 || error_exit 'Failed to clone sites repo'\n",
 
                     "# Clone role app repo\n",
-                    "git clone git@github.com:blue-kite/xbp_puppet_role_worker_pronet.git /etc/puppet/modules/worker_pronet > /tmp/git.log 2>&1 || error_exit 'Failed to clone role app repo'\n",
+                    "git clone -b edge git@github.com:blue-kite/xbp_puppet_role_worker_pronet.git /etc/puppet/modules/worker_pronet > /tmp/git.log 2>&1 || error_exit 'Failed to clone role app repo'\n",
                     "chown ubuntu:ubuntu -R /etc/puppet/modules/worker_pronet\n",
 
                     "#Installing Ruby\n",
@@ -163,6 +163,9 @@
                     "echo ", { "Fn::Join" : [ "" , ["logserver_host=logs", { "Ref" : "StackID" }, { "Fn::FindInMap" : [ "env", { "Ref" : "Environment" }, "DOT" ]}, ".bluekite.com" ]]},        ">> /etc/facter/facts.d/custom_facts.txt\n",
                     "echo logserver_port=5001  >> /etc/facter/facts.d/custom_facts.txt\n",
                     "echo app_name=workerpronet >> /etc/facter/facts.d/custom_facts.txt\n",
+
+                    "echo ", { "Fn::Join" : [ "" , ["nagios_beanstalk_host=queue", { "Ref" : "StackID" }, ".accounts", { "Fn::FindInMap" : [ "env", { "Ref" : "Environment" }, "DOT" ]}, ".bluekite.com" ]]},      ">> /etc/facter/facts.d/custom_facts.txt\n",
+
 
                     "# Clone role hostname repo\n",
                     "git clone git@github.com:victormarroquin/Puppet-HostName.git /etc/puppet/modules/hosts > /tmp/git.log 2>&1 || error_exit 'Failed to clone hostname repo'\n",
