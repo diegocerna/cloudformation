@@ -149,7 +149,7 @@
           "git clone git@github.com:blue-kite/xbp_puppet_sites.git /home/ubuntu/sites > /tmp/git.log 2>&1 || error_exit 'Failed to clone sites repo'\n",
 
           "# Clone role app repo\n",
-          "git clone git@github.com:blue-kite/xbp_puppet_role_notifications.git /etc/puppet/modules/notifications > /tmp/git.log 2>&1 || error_exit 'Failed to clone role app repo'\n",
+          "git clone -b edge git@github.com:blue-kite/xbp_puppet_role_notifications.git /etc/puppet/modules/notifications > /tmp/git.log 2>&1 || error_exit 'Failed to clone role app repo'\n",
           "chown ubuntu:ubuntu -R /etc/puppet/modules/notifications\n",
 
           "#Installing Ruby\n",
