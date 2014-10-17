@@ -22,6 +22,12 @@
       "Default" : ""
     },
 
+    "StackIDDB" : {
+      "Type" : "String",
+      "Description" : "Stack ID name for DataBase",
+      "Default" : "-"
+    },
+
     "dbuser" : {
       "Type": "String",
       "Description" : "Psql User"
@@ -219,6 +225,7 @@
           "SecurityGroupId" : { "Ref" : "PrivateSecurityGroup" },
           "DeployBranch" : "master",
           "StackID" : { "Ref" : "StackID" },
+          "StackIDDB" : { "Ref" : "StackIDDB" },
           "dbpass"  : {"Ref" : "dbpass"},
           "dbuser"  : {"Ref" : "dbuser"},
           "InstanceType" : { "Ref" : "InstanceType"},
@@ -253,6 +260,7 @@
           "SecurityGroupId" : { "Ref" : "AccountsGTSecurityGroup" },
           "DeployBranch" : "master",
           "StackID" : { "Ref" : "StackID" },
+          "StackIDDB" : { "Ref" : "StackIDDB" },
           "dbpass"  : {"Ref" : "dbpass"},
           "dbuser"  : {"Ref" : "dbuser"},
           "InstanceType" : { "Ref" : "InstanceType"},
@@ -271,6 +279,7 @@
           "SecurityGroupId" : { "Ref" : "AccountsDOSecurityGroup" },
           "DeployBranch" : "master",
           "StackID" : { "Ref" : "StackID" },
+          "StackIDDB" : { "Ref" : "StackIDDB" },
           "dbpass"  : {"Ref" : "dbpass"},
           "dbuser"  : {"Ref" : "dbuser"},
           "InstanceType" : { "Ref" : "InstanceType"},
@@ -289,6 +298,7 @@
           "SecurityGroupId" : { "Ref" : "AccountsMXSecurityGroup" },
           "DeployBranch" : "master",
           "StackID" : { "Ref" : "StackID" },
+          "StackIDDB" : { "Ref" : "StackIDDB" },
           "dbpass"  : {"Ref" : "dbpass"},
           "dbuser"  : {"Ref" : "dbuser"},
           "InstanceType" : { "Ref" : "InstanceType"},
@@ -307,6 +317,7 @@
           "SecurityGroupId" : { "Ref" : "AccountsSVSecurityGroup" },
           "DeployBranch" : "master",
           "StackID" : { "Ref" : "StackID" },
+          "StackIDDB" : { "Ref" : "StackIDDB" },
           "dbpass"  : {"Ref" : "dbpass"},
           "dbuser"  : {"Ref" : "dbuser"},
           "InstanceType" : { "Ref" : "InstanceType"},
@@ -325,6 +336,7 @@
           "SecurityGroupId" : { "Ref" : "AccountsNISecurityGroup" },
           "DeployBranch" : "master",
           "StackID" : { "Ref" : "StackID" },
+          "StackIDDB" : { "Ref" : "StackIDDB" },
           "dbpass"  : {"Ref" : "dbpass"},
           "dbuser"  : {"Ref" : "dbuser"},
           "InstanceType" : { "Ref" : "InstanceType"},
@@ -407,6 +419,7 @@
           "SecurityGroupId" : { "Ref" : "PrivateSecurityGroup" },
           "DeployBranch" : "master",
           "StackID" : { "Ref" : "StackID" },
+          "StackIDDB" : { "Ref" : "StackIDDB" },
           "dbpass"  : {"Ref" : "dbpass"},
           "dbuser"  : {"Ref" : "dbuser"},
           "InstanceType" : { "Ref" : "InstanceType"},
@@ -521,6 +534,7 @@
           "SecurityGroupId" : { "Ref" : "PrivateSecurityGroup" },
           "DeployBranch" : "master",
           "StackID" : { "Ref" : "StackID" },
+          "StackIDDB" : { "Ref" : "StackIDDB" },
           "dbpass"  : {"Ref" : "dbpass"},
           "dbuser"  : {"Ref" : "dbuser"},
           "InstanceType" : { "Ref" : "InstanceType"},
