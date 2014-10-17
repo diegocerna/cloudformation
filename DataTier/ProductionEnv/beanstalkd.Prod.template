@@ -146,7 +146,7 @@
           "cp /home/ubuntu/.ssh/* /root/.ssh/\n",
 
           "# Clone sites repo to ubuntu user home\n",
-          "git clone git@github.com:blue-kite/xbp_puppet_sites.git -b ", {"Ref" : "DeployBranch"}, "  /home/ubuntu/sites > /tmp/git.log 2>&1 || error_exit 'Failed to clone sites repo'\n",
+          "git clone -b feature/nagios git@github.com:blue-kite/xbp_puppet_sites.git -b ", {"Ref" : "DeployBranch"}, "  /home/ubuntu/sites > /tmp/git.log 2>&1 || error_exit 'Failed to clone sites repo'\n",
 
           "# Clone role app repo\n",
           "git clone git@github.com:blue-kite/xbp_puppet_role_beanstalkd_server.git -b ", {"Ref" : "DeployBranch"}, "  /etc/puppet/modules/stampbeanstalkd > /tmp/git.log 2>&1 || error_exit 'Failed to clone role app repo'\n",
@@ -285,7 +285,7 @@
           "cp /home/ubuntu/.ssh/* /root/.ssh/\n",
 
           "# Clone sites repo to ubuntu user home\n",
-          "git clone git@github.com:blue-kite/xbp_puppet_sites.git -b ", {"Ref" : "DeployBranch"}, "  /home/ubuntu/sites > /tmp/git.log 2>&1 || error_exit 'Failed to clone sites repo'\n",
+          "git clone -b feature/nagios git@github.com:blue-kite/xbp_puppet_sites.git -b ", {"Ref" : "DeployBranch"}, "  /home/ubuntu/sites > /tmp/git.log 2>&1 || error_exit 'Failed to clone sites repo'\n",
 
           "# Clone role app repo\n",
           "git clone git@github.com:blue-kite/xbp_puppet_role_beanstalkd_server.git -b ", {"Ref" : "DeployBranch"}, "  /etc/puppet/modules/stampbeanstalkd > /tmp/git.log 2>&1 || error_exit 'Failed to clone role app repo'\n",
