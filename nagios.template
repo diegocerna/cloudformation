@@ -22,7 +22,7 @@
       "ConstraintDescription" : "must be a valid EC2 instance type."
     },
 
-    "SubnetId" : {  
+    "SubnetId" : {
       "Type" : "String",
       "Description" : "SubnetId of an existing subnet in your Virtual Private Cloud (VPC)",
       "Default": "subnet-"
@@ -73,7 +73,7 @@
     },
 
     "env" : {
-      "dev"            : { "ENV" : "staging", "DOT" : ".dev" },
+      "dev"            : { "ENV" : "development", "DOT" : ".dev" },
       "qa"             : { "ENV" : "qa", "DOT" : ".qa" },
       "sandbox"        : { "ENV" : "sandbox", "DOT" : ".sandbox"  },
       "production"     : { "ENV" : "production", "DOT" : "" }
