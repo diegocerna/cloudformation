@@ -22,6 +22,12 @@
       "Default" : ""
     },
 
+    "StackIDDB" : {
+      "Type" : "String",
+      "Description" : "Stack ID name for DataBase",
+      "Default" : "-"
+    },
+
     "dbuser" : {
       "Type": "String",
       "Description" : "Psql User"
@@ -182,7 +188,7 @@
           "KeyName": {"Ref":"KeyName"},
           "SubnetId" : { "Ref" : "PublicSubnetId"},
           "SecurityGroupId" : { "Ref" : "ApiSecurityGroup"},
-          "DeployBranch" : "release/0.12.0",
+          "DeployBranch" : "0.12.6",
           "StackID" : { "Ref" : "StackID" },
           "InstanceType" : { "Ref" : "InstanceType"},
           "Environment" : {"Ref" : "appEnvironment"}
@@ -198,7 +204,7 @@
           "KeyName" : { "Ref" : "KeyName" },
           "SubnetId" : { "Ref" : "PrivateSubnetId" },
           "SecurityGroupId" : { "Ref" : "PrivateSecurityGroup" },
-          "DeployBranch" : "release/0.12.0",
+          "DeployBranch" : "0.12.0",
           "StackID" : { "Ref" : "StackID" },
           "Environment" : { "Ref" : "appEnvironment" }
         }
@@ -213,8 +219,9 @@
           "KeyName" : { "Ref" : "KeyName" },
           "SubnetId" : { "Ref" : "PrivateSubnetId" },
           "SecurityGroupId" : { "Ref" : "PrivateSecurityGroup" },
-          "DeployBranch" : "release/0.12.0",
+          "DeployBranch" : "0.12.0",
           "StackID" : { "Ref" : "StackID" },
+          "StackIDDB" : { "Ref" : "StackIDDB" },
           "dbpass"  : {"Ref" : "dbpass"},
           "dbuser"  : {"Ref" : "dbuser"},
           "InstanceType" : { "Ref" : "InstanceType"},
@@ -231,8 +238,9 @@
           "KeyName" : { "Ref" : "KeyName" },
           "SubnetId" : { "Ref" : "PrivateSubnetId" },
           "SecurityGroupId" : { "Ref" : "AccountsGTSecurityGroup" },
-          "DeployBranch" : "release/0.12.0",
+          "DeployBranch" : "0.12.0",
           "StackID" : { "Ref" : "StackID" },
+          "StackIDDB" : { "Ref" : "StackIDDB" },
           "dbpass"  : {"Ref" : "dbpass"},
           "dbuser"  : {"Ref" : "dbuser"},
           "InstanceType" : { "Ref" : "InstanceType"},
@@ -249,8 +257,9 @@
           "KeyName" : { "Ref" : "KeyName" },
           "SubnetId" : { "Ref" : "PrivateSubnetId" },
           "SecurityGroupId" : { "Ref" : "AccountsDOSecurityGroup" },
-          "DeployBranch" : "release/0.12.0",
+          "DeployBranch" : "0.12.0",
           "StackID" : { "Ref" : "StackID" },
+          "StackIDDB" : { "Ref" : "StackIDDB" },
           "dbpass"  : {"Ref" : "dbpass"},
           "dbuser"  : {"Ref" : "dbuser"},
           "InstanceType" : { "Ref" : "InstanceType"},
@@ -267,8 +276,9 @@
           "KeyName" : { "Ref" : "KeyName" },
           "SubnetId" : { "Ref" : "PrivateSubnetId" },
           "SecurityGroupId" : { "Ref" : "AccountsMXSecurityGroup" },
-          "DeployBranch" : "release/0.12.0",
+          "DeployBranch" : "0.12.0",
           "StackID" : { "Ref" : "StackID" },
+          "StackIDDB" : { "Ref" : "StackIDDB" },
           "dbpass"  : {"Ref" : "dbpass"},
           "dbuser"  : {"Ref" : "dbuser"},
           "InstanceType" : { "Ref" : "InstanceType"},
@@ -285,8 +295,9 @@
           "KeyName" : { "Ref" : "KeyName" },
           "SubnetId" : { "Ref" : "PrivateSubnetId" },
           "SecurityGroupId" : { "Ref" : "AccountsSVSecurityGroup" },
-          "DeployBranch" : "release/0.12.0",
+          "DeployBranch" : "0.12.0",
           "StackID" : { "Ref" : "StackID" },
+          "StackIDDB" : { "Ref" : "StackIDDB" },
           "dbpass"  : {"Ref" : "dbpass"},
           "dbuser"  : {"Ref" : "dbuser"},
           "InstanceType" : { "Ref" : "InstanceType"},
@@ -303,8 +314,9 @@
           "KeyName" : { "Ref" : "KeyName" },
           "SubnetId" : { "Ref" : "PrivateSubnetId" },
           "SecurityGroupId" : { "Ref" : "AccountsNISecurityGroup" },
-          "DeployBranch" : "release/0.12.0",
+          "DeployBranch" : "0.12.0",
           "StackID" : { "Ref" : "StackID" },
+          "StackIDDB" : { "Ref" : "StackIDDB" },
           "dbpass"  : {"Ref" : "dbpass"},
           "dbuser"  : {"Ref" : "dbuser"},
           "InstanceType" : { "Ref" : "InstanceType"},
@@ -321,7 +333,7 @@
           "KeyName" : { "Ref" : "KeyName" },
           "SubnetId" : { "Ref" : "PrivateSubnetId" },
           "SG" : { "Ref" : "PrivateSecurityGroup" },
-          "DeployBranch" : "release/0.12.0",
+          "DeployBranch" : "0.12.0",
           "StackID" : { "Ref" : "StackID" },
           "InstanceType" : { "Ref" : "InstanceType"},
           "Environment" : { "Ref" : "appEnvironment" }
@@ -337,7 +349,7 @@
           "KeyName" : { "Ref" : "KeyName" },
           "SubnetId" : { "Ref" : "PrivateSubnetId" },
           "SecurityGroupId" : { "Ref" : "PrivateSecurityGroup" },
-          "DeployBranch" : "release/0.12.0",
+          "DeployBranch" : "0.12.0",
           "StackID" : { "Ref" : "StackID" },
           "InstanceType" : { "Ref" : "InstanceType"},
           "Environment" : { "Ref" : "appEnvironment" }
@@ -353,7 +365,7 @@
           "KeyName" : { "Ref" : "KeyName" },
           "SubnetId" : { "Ref" : "PrivateSubnetId" },
           "SecurityGroupId" : { "Ref" : "PrivateSecurityGroup" },
-          "DeployBranch" : "release/0.12.0",
+          "DeployBranch" : "0.12.6",
           "StackID" : { "Ref" : "StackID" },
           "InstanceType" : { "Ref" : "InstanceType"},
           "Environment" : { "Ref" : "appEnvironment" }
@@ -369,7 +381,7 @@
           "KeyName" : { "Ref" : "KeyName" },
           "SubnetId" : { "Ref" : "PrivateSubnetId" },
           "SecurityGroupId" : { "Ref" : "PrivateSecurityGroup" },
-          "DeployBranch" : "release/0.12.0",
+          "DeployBranch" : "0.12.0",
           "StackID" : { "Ref" : "StackID" },
           "InstanceType" : { "Ref" : "InstanceType"},
           "Environment" : { "Ref" : "appEnvironment" }
@@ -385,8 +397,9 @@
           "KeyName" : { "Ref" : "KeyName" },
           "SubnetId" : { "Ref" : "PrivateSubnetId" },
           "SecurityGroupId" : { "Ref" : "PrivateSecurityGroup" },
-          "DeployBranch" : "release/0.12.0",
+          "DeployBranch" : "0.12.0",
           "StackID" : { "Ref" : "StackID" },
+          "StackIDDB" : { "Ref" : "StackIDDB" },
           "dbpass"  : {"Ref" : "dbpass"},
           "dbuser"  : {"Ref" : "dbuser"},
           "InstanceType" : { "Ref" : "InstanceType"},
@@ -403,7 +416,7 @@
           "KeyName" : { "Ref" : "KeyName" },
           "SubnetId" : { "Ref" : "gtSubnetID" },
           "SecurityGroupId" : { "Ref" : "AccountsGTSecurityGroup" },
-          "DeployBranch" : "release/0.12.0",
+          "DeployBranch" : "0.12.0",
           "StackID" : { "Ref" : "StackID" },
           "InstanceType" : { "Ref" : "InstanceType"},
           "Environment" : { "Ref" : "appEnvironment" }
@@ -419,7 +432,7 @@
           "KeyName" : { "Ref" : "KeyName" },
           "SubnetId" : { "Ref" : "mxSubnetID" },
           "SecurityGroupId" : { "Ref" : "AccountsMXSecurityGroup" },
-          "DeployBranch" : "release/0.12.0",
+          "DeployBranch" : "0.12.0",
           "StackID" : { "Ref" : "StackID" },
           "InstanceType" : { "Ref" : "InstanceType"},
           "Environment" : { "Ref" : "appEnvironment" }
@@ -435,7 +448,7 @@
           "KeyName" : { "Ref" : "KeyName" },
           "SubnetId" : { "Ref" : "doSubnetID" },
           "SecurityGroupId" : { "Ref" : "AccountsDOSecurityGroup" },
-          "DeployBranch" : "release/0.12.0",
+          "DeployBranch" : "0.12.0",
           "StackID" : { "Ref" : "StackID" },
           "InstanceType" : { "Ref" : "InstanceType"},
           "Environment" : { "Ref" : "appEnvironment" }
@@ -451,7 +464,7 @@
           "KeyName" : { "Ref" : "KeyName" },
           "SubnetId" : { "Ref" : "svSubnetID" },
           "SecurityGroupId" : { "Ref" : "AccountsSVSecurityGroup" },
-          "DeployBranch" : "release/0.12.0",
+          "DeployBranch" : "0.12.0",
           "StackID" : { "Ref" : "StackID" },
           "InstanceType" : { "Ref" : "InstanceType"},
           "Environment" : { "Ref" : "appEnvironment" }
@@ -467,7 +480,7 @@
           "KeyName" : { "Ref" : "KeyName" },
           "SubnetId" : { "Ref" : "niSubnetID" },
           "SecurityGroupId" : { "Ref" : "AccountsNISecurityGroup" },
-          "DeployBranch" : "release/0.12.0",
+          "DeployBranch" : "0.12.1",
           "StackID" : { "Ref" : "StackID" },
           "InstanceType" : { "Ref" : "InstanceType"},
           "Environment" : { "Ref" : "appEnvironment" }
@@ -483,7 +496,7 @@
           "KeyName" : { "Ref" : "KeyName" },
           "SubnetId" : { "Ref" : "mxSubnetID" },
           "SecurityGroupId" : { "Ref" : "AccountsMXSecurityGroup" },
-          "DeployBranch" : "release/0.12.0",
+          "DeployBranch" : "0.12.0",
           "StackID" : { "Ref" : "StackID" },
           "InstanceType" : { "Ref" : "InstanceType"},
           "Environment" : { "Ref" : "appEnvironment" }
@@ -499,7 +512,7 @@
           "KeyName" : { "Ref" : "KeyName" },
           "SubnetId" : { "Ref" : "PrivateSubnetId" },
           "SecurityGroupId" : { "Ref" : "PrivateSecurityGroup" },
-          "DeployBranch" : "release/0.12.0",
+          "DeployBranch" : "0.12.0",
           "StackID" : { "Ref" : "StackID" },
           "InstanceType" : { "Ref" : "InstanceType"},
           "Environment" : { "Ref" : "appEnvironment" }
@@ -516,7 +529,7 @@
           "KeyName" : { "Ref" : "KeyName" },
           "SubnetId" : { "Ref" : "PrivateSubnetId" },
           "SecurityGroupId" : { "Ref" : "PrivateSecurityGroup" },
-          "DeployBranch" : "release/0.12.0",
+          "DeployBranch" : "0.12.0",
           "StackID" : { "Ref" : "StackID" },
           "InstanceType" : { "Ref" : "InstanceType"},
           "Environment" : { "Ref" : "appEnvironment" }
@@ -532,8 +545,9 @@
           "KeyName" : { "Ref" : "KeyName" },
           "SubnetId" : { "Ref" : "PrivateSubnetId" },
           "SecurityGroupId" : { "Ref" : "PrivateSecurityGroup" },
-          "DeployBranch" : "release/0.12.0",
+          "DeployBranch" : "0.12.0",
           "StackID" : { "Ref" : "StackID" },
+          "StackIDDB" : { "Ref" : "StackIDDB" },
           "dbpass"  : {"Ref" : "dbpass"},
           "dbuser"  : {"Ref" : "dbuser"},
           "InstanceType" : { "Ref" : "InstanceType"},
