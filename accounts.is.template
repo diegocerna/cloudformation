@@ -15,6 +15,12 @@
       "us-west-2"      : {"AMI" : "ami-8b6d2ebb" }
     },
 
+    "version" : {
+      "stamp1"          : { "HOSTNAME" : "ais1001" },
+      "stamp2"          : { "HOSTNAME" : "ais1002" },
+      "staging"         : { "HOSTNAME" : "ais3001" }
+    },
+
     "env" : {
       "dev"            : { "ENV" : "development", "DOT" : ".dev" },
       "qa"             : { "ENV" : "qa", "DOT" : ".qa" },
@@ -30,7 +36,19 @@
       "Default" : ""
     },
 
-    "DeployBranch" : {
+    "AppDeployBranch" : {
+      "Type" : "String",
+      "Description" : "Git branch where to deploy the code from.",
+      "Default" : ""
+    },
+
+    "RoleDeployBranch" : {
+      "Type" : "String",
+      "Description" : "Git branch where to deploy the code from.",
+      "Default" : ""
+    },
+
+    "SitesDeployBranch" : {
       "Type" : "String",
       "Description" : "Git branch where to deploy the code from.",
       "Default" : ""
@@ -72,6 +90,11 @@
       "Type" : "String",
       "Description" : "Security Group of the VPC",
       "Default" : "sg-"
+    },
+
+    "Version" : {
+      "Type" : "String",
+      "Description" : "stamp1 for current version, stamp2 for disaster recovery and staging for staging production"
     },
 
     "dbuser" : {
@@ -127,10 +150,10 @@
           "cp /home/ubuntu/.ssh/* /root/.ssh/\n",
 
           "# Clone sites repo to ubuntu user home\n",
-          "git clone -b feature/nagios git@github.com:blue-kite/xbp_puppet_sites.git /home/ubuntu/sites > /tmp/git.log 2>&1 || error_exit 'Failed to clone sites repo'\n",
+          "git clone -b", { "Ref" : "SitesDeployBranch" }, "git@github.com:blue-kite/xbp_puppet_sites.git /home/ubuntu/sites > /tmp/git.log 2>&1 || error_exit 'Failed to clone sites repo'\n",
 
           "# Clone role app repo\n",
-          "git clone git@github.com:blue-kite/xbp_puppet_role_accounts.git /etc/puppet/modules/accounts > /tmp/git.log 2>&1 || error_exit 'Failed to clone role app repo'\n",
+          "git clone -b", { "Ref" : "RoleDeployBranch" }, "git@github.com:blue-kite/xbp_puppet_role_accounts.git /etc/puppet/modules/accounts > /tmp/git.log 2>&1 || error_exit 'Failed to clone role app repo'\n",
           "chown ubuntu:ubuntu -R /etc/puppet/modules/accounts\n",
 
           "# Add FQDN on etc/environment\n",
@@ -160,12 +183,13 @@
           "echo ", "stackid=", { "Ref" : "StackID" },           ">> /etc/facter/facts.d/custom_facts.txt\n",
           "echo ", { "Fn::Join" : [ "" , ["logserver_host=logs", { "Ref" : "StackID" }, { "Fn::FindInMap" : [ "env", { "Ref" : "Environment" }, "DOT" ]}, ".bluekite.com" ]]},        ">> /etc/facter/facts.d/custom_facts.txt\n",
           "echo logserver_port=5001                             >> /etc/facter/facts.d/custom_facts.txt\n",
-          "echo ", "revision=", { "Ref" : "DeployBranch" }, ">> /etc/facter/facts.d/custom_facts.txt\n",
+          "echo ", "revision=", { "Ref" : "AppDeployBranch" }, ">> /etc/facter/facts.d/custom_facts.txt\n",
           "echo database_name=accountsdbis                         >> /etc/facter/facts.d/custom_facts.txt\n",
           "echo ", { "Fn::Join" : [ "" , ["database_host=accountsdb", { "Ref" : "StackIDDB" }, ".is", { "Fn::FindInMap" : [ "env", { "Ref" : "Environment" }, "DOT" ]}, ".bluekite.com" ]]},        ">> /etc/facter/facts.d/custom_facts.txt\n",
           "echo ", "database_username=", { "Ref" : "dbuser" },  ">> /etc/facter/facts.d/custom_facts.txt\n",
           "echo ", "database_password=", { "Ref" : "dbpass" },  ">> /etc/facter/facts.d/custom_facts.txt\n",
           "echo app_name=accountsis >> /etc/facter/facts.d/custom_facts.txt\n",
+          "echo custom_hostname=", { "Fn::FindInMap" : [ "version", { "Ref" : "Version" }, "HOSTNAME" ]}, ">> /etc/facter/facts.d/custom_facts.txt\n",
 
           "echo ", { "Fn::Join" : [ "" , ["nagios_beanstalk_host=queue", { "Ref" : "StackID" }, ".accounts", { "Fn::FindInMap" : [ "env", { "Ref" : "Environment" }, "DOT" ]}, ".bluekite.com" ]]},      ">> /etc/facter/facts.d/custom_facts.txt\n",
 
