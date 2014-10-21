@@ -40,10 +40,27 @@
       "Default": "sg-"
     },
 
-    "DeployBranch" : {
+    "AppDeployBranch" : {
       "Type" : "String",
       "Description" : "Git branch where to deploy the code from.",
-      "Default" : "release/0.8.0"
+      "Default" : ""
+    },
+
+    "RoleDeployBranch" : {
+      "Type" : "String",
+      "Description" : "Git branch where to deploy the code from.",
+      "Default" : ""
+    },
+
+    "SitesDeployBranch" : {
+      "Type" : "String",
+      "Description" : "Git branch where to deploy the code from.",
+      "Default" : ""
+    },
+
+    "Version" : {
+      "Type" : "String",
+      "Description" : "stamp1 for current version, stamp2 for disaster recovery and staging for staging production"
     },
 
     "Environment" : {
@@ -63,6 +80,12 @@
             "eu-west-1"      : {"AMI" : "ami-d03dcaa7" },
             "us-east-1"      : {"AMI" : "ami-0e07a566" },
             "us-west-2"      : {"AMI" : "ami-8b6d2ebb" }
+        },
+
+        "version" : {
+          "stamp1"          : { "HOSTNAME" : "wtt1001" },
+          "stamp2"          : { "HOSTNAME" : "wtt1002" },
+          "staging"         : { "HOSTNAME" : "wtt3001" }
         },
 
         "env" : {
@@ -131,10 +154,10 @@
                     "echo ", { "Fn::Join" : [ "" , ["FACTER_queue_host=accounts", { "Ref" : "StackID" }, ".mx", { "Fn::FindInMap" : [ "env", { "Ref" : "Environment" }, "DOT" ]}, ".bluekite.com" ]]}, ">> /etc/environment\n",
 
                     "# Clone sites repo to ubuntu user home\n",
-                    "git clone -b feature/nagios git@github.com:blue-kite/xbp_puppet_sites.git /home/ubuntu/sites > /tmp/git.log 2>&1 || error_exit 'Failed to clone sites repo'\n",
+                    "git clone -b", { "Ref" : "SitesDeployBranch" }, "git@github.com:blue-kite/xbp_puppet_sites.git /home/ubuntu/sites > /tmp/git.log 2>&1 || error_exit 'Failed to clone sites repo'\n",
 
                     "# Clone role app repo\n",
-                    "git clone git@github.com:blue-kite/xbp_puppet_role_worker_transferto.git /etc/puppet/modules/worker_transferto > /tmp/git.log 2>&1 || error_exit 'Failed to clone role app repo'\n",
+                    "git clone -b", { "Ref" : "RoleDeployBranch" }, "git@github.com:blue-kite/xbp_puppet_role_worker_transferto.git /etc/puppet/modules/worker_transferto > /tmp/git.log 2>&1 || error_exit 'Failed to clone role app repo'\n",
                     "chown ubuntu:ubuntu -R /etc/puppet/modules/worker_transferto\n",
 
                     "#Installing Ruby\n",
@@ -160,10 +183,11 @@
                     "echo ", { "Fn::Join" : [ "" , ["fqdn=workertransferto", { "Ref" : "StackID" }, { "Fn::FindInMap" : [ "env", { "Ref" : "Environment" }, "DOT" ]}, ".bluekite.com" ]]},        ">> /etc/facter/facts.d/custom_facts.txt\n",
                     "echo ", { "Fn::Join" : [ "" , ["queue_host=queue", { "Ref" : "StackID" }, ".accounts", { "Fn::FindInMap" : [ "env", { "Ref" : "Environment" }, "DOT" ]}, ".bluekite.com" ]]},        ">> /etc/facter/facts.d/custom_facts.txt\n",
                     "echo ", "stackid=", { "Ref" : "StackID" },       ">> /etc/facter/facts.d/custom_facts.txt\n",
-                    "echo ", "revision=", { "Ref" : "DeployBranch" }, ">> /etc/facter/facts.d/custom_facts.txt\n",
+                    "echo ", "revision=", { "Ref" : "AppDeployBranch" }, ">> /etc/facter/facts.d/custom_facts.txt\n",
                     "echo ", { "Fn::Join" : [ "" , ["logserver_host=logs", { "Ref" : "StackID" }, { "Fn::FindInMap" : [ "env", { "Ref" : "Environment" }, "DOT" ]}, ".bluekite.com" ]]},        ">> /etc/facter/facts.d/custom_facts.txt\n",
                     "echo logserver_port=5001  >> /etc/facter/facts.d/custom_facts.txt\n",
                     "echo app_name=workertransferto >> /etc/facter/facts.d/custom_facts.txt\n",
+                    "echo custom_hostname=", { "Fn::FindInMap" : [ "version", { "Ref" : "Version" }, "HOSTNAME" ]}, ">> /etc/facter/facts.d/custom_facts.txt\n",
 
                     "# Clone role hostname repo\n",
                     "git clone git@github.com:victormarroquin/Puppet-HostName.git /etc/puppet/modules/hosts > /tmp/git.log 2>&1 || error_exit 'Failed to clone hostname repo'\n",
