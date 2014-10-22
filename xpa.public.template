@@ -85,7 +85,8 @@
         "version" : {
           "stamp1"          : { "HOSTNAME" : "xpa1001" },
           "stamp2"          : { "HOSTNAME" : "xpa1002" },
-          "staging"         : { "HOSTNAME" : "xpa3001" }
+          "staging"         : { "HOSTNAME" : "xpa3001" },
+          "old"             : { "HOSTNAME" : "xpa" }
         },
 
         "env" : {

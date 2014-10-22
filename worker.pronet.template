@@ -85,7 +85,8 @@
     "version" : {
       "stamp1"          : { "HOSTNAME" : "wpn1001" },
       "stamp2"          : { "HOSTNAME" : "wpn1002" },
-      "staging"         : { "HOSTNAME" : "wpn3001" }
+      "staging"         : { "HOSTNAME" : "wpn3001" },
+      "old"             : { "HOSTNAME" : "workerpronet" }
     },
 
     "env" : {

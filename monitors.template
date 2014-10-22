@@ -86,7 +86,8 @@
     "version" : {
       "stamp1"          : { "HOSTNAME" : "mon1001" },
       "stamp2"          : { "HOSTNAME" : "mon1002" },
-      "staging"         : { "HOSTNAME" : "mon3001" }
+      "staging"         : { "HOSTNAME" : "mon3001" },
+      "old"             : { "HOSTNAME" : "monitors" }
     },
 
     "env" : {

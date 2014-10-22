@@ -86,7 +86,8 @@
     "version" : {
       "stamp1"          : { "HOSTNAME" : "fst1001" },
       "stamp2"          : { "HOSTNAME" : "fst1002" },
-      "staging"         : { "HOSTNAME" : "fst3001" }
+      "staging"         : { "HOSTNAME" : "fst3001" },
+      "old"             : { "HOSTNAME" : "forrest" }
     },
 
     "env" : {

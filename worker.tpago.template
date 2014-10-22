@@ -85,7 +85,8 @@
         "version" : {
           "stamp1"          : { "HOSTNAME" : "wtp1001" },
           "stamp2"          : { "HOSTNAME" : "wtp1002" },
-          "staging"         : { "HOSTNAME" : "wtp3001" }
+          "staging"         : { "HOSTNAME" : "wtp3001" },
+          "old"             : { "HOSTNAME" : "workertpago" }
         },
 
         "env" : {

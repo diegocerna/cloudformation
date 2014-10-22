@@ -103,7 +103,8 @@
     "version" : {
       "stamp1"          : { "HOSTNAME" : "not1001" },
       "stamp2"          : { "HOSTNAME" : "not1002" },
-      "staging"         : { "HOSTNAME" : "not3001" }
+      "staging"         : { "HOSTNAME" : "not3001" },
+      "old"             : { "HOSTNAME" : "notifications" }
     },
 
     "env" : {

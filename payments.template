@@ -18,7 +18,8 @@
     "version" : {
       "stamp1"          : { "HOSTNAME" : "pay1001" },
       "stamp2"          : { "HOSTNAME" : "pay1002" },
-      "staging"         : { "HOSTNAME" : "pay3001" }
+      "staging"         : { "HOSTNAME" : "pay3001" },
+      "old"             : { "HOSTNAME" : "payments" }
     },
 
     "env" : {

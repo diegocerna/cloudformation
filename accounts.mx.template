@@ -18,7 +18,8 @@
     "version" : {
       "stamp1"          : { "HOSTNAME" : "amx1001" },
       "stamp2"          : { "HOSTNAME" : "amx1002" },
-      "staging"         : { "HOSTNAME" : "amx3001" }
+      "staging"         : { "HOSTNAME" : "amx3001" },
+      "old"             : { "HOSTNAME" : "accountsmx" }
     },
 
     "env" : {

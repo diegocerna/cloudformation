@@ -18,7 +18,8 @@
     "version" : {
       "stamp1"          : { "HOSTNAME" : "ado1001" },
       "stamp2"          : { "HOSTNAME" : "ado1002" },
-      "staging"         : { "HOSTNAME" : "ado3001" }
+      "staging"         : { "HOSTNAME" : "ado3001" },
+      "old"             : { "HOSTNAME" : "accountsdo" }
     },
 
     "env" : {

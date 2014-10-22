@@ -85,7 +85,8 @@
         "version" : {
           "stamp1"          : { "HOSTNAME" : "wpx1001" },
           "stamp2"          : { "HOSTNAME" : "wpx1002" },
-          "staging"         : { "HOSTNAME" : "wpx3001" }
+          "staging"         : { "HOSTNAME" : "wpx3001" },
+          "old"             : { "HOSTNAME" : "workerpuntoxpress" }
         },
 
         "env" : {

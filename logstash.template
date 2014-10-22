@@ -85,7 +85,8 @@
         "version" : {
           "stamp1"          : { "HOSTNAME" : "log1001" },
           "stamp2"          : { "HOSTNAME" : "log1002" },
-          "staging"         : { "HOSTNAME" : "log3001" }
+          "staging"         : { "HOSTNAME" : "log3001" },
+          "old"             : { "HOSTNAME" : "logs" }
         },
 
         "env" : {

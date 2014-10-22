@@ -85,7 +85,8 @@
         "version" : {
           "stamp1"          : { "HOSTNAME" : "wpf1001" },
           "stamp2"          : { "HOSTNAME" : "wpf1002" },
-          "staging"         : { "HOSTNAME" : "wpf3001" }
+          "staging"         : { "HOSTNAME" : "wpf3001" },
+          "old"             : { "HOSTNAME" : "workerpuntofacil" }
         },
 
         "env" : {

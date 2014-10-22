@@ -85,7 +85,8 @@
         "version" : {
           "stamp1"          : { "HOSTNAME" : "wre1001" },
           "stamp2"          : { "HOSTNAME" : "wre1002" },
-          "staging"         : { "HOSTNAME" : "wre3001" }
+          "staging"         : { "HOSTNAME" : "wre3001" },
+          "old"             : { "HOSTNAME" : "workerredefectiva" }
         },
 
         "env" : {

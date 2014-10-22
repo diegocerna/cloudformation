@@ -82,7 +82,8 @@
     "version" : {
       "stamp1"          : { "HOSTNAME" : "sia1001" },
       "stamp2"          : { "HOSTNAME" : "sia1002" },
-      "staging"         : { "HOSTNAME" : "sia3001" }
+      "staging"         : { "HOSTNAME" : "sia3001" },
+      "old"             : { "HOSTNAME" : "gw" }
     },
 
     "env" : {

@@ -104,7 +104,8 @@
     "version" : {
       "stamp1"          : { "HOSTNAME" : "cat1001" },
       "stamp2"          : { "HOSTNAME" : "cat1002" },
-      "staging"         : { "HOSTNAME" : "cat3001" }
+      "staging"         : { "HOSTNAME" : "cat3001" },
+      "old"             : { "HOSTNAME" : "catalog" }
     },
 
     "env" : {
