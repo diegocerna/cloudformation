@@ -83,8 +83,8 @@
       "Type" : "AWS::CloudFormation::Stack",
       "Properties" : {
         "TemplateURL" : "https://s3-us-west-2.amazonaws.com/pruebastack/hello-world.multiaz.template",
-        "Parameters" : {
-          "KeyName" : { "Ref" : "KeyName" },
+"KeyName" : { "Ref" : "KeyName" },
+          "Version" : { "Ref" : "Version" },
           "SubnetId" : { "Ref" : "PrivateSubnetIdZ1" },
           "SecurityGroupId" : { "Ref" : "PrivateSecurityGroup" },
           "DeployBranch" : "master",
@@ -98,8 +98,8 @@
       "Type" : "AWS::CloudFormation::Stack",
       "Properties" : {
         "TemplateURL" : "https://s3-us-west-2.amazonaws.com/pruebastack/hello-world.multiaz.template",
-        "Parameters" : {
-          "KeyName" : { "Ref" : "KeyName" },
+"KeyName" : { "Ref" : "KeyName" },
+          "Version" : { "Ref" : "Version" },
           "SubnetId" : { "Ref" : "PrivateSubnetIdZ2" },
           "SecurityGroupId" : { "Ref" : "PrivateSecurityGroup" },
           "DeployBranch" : "master",

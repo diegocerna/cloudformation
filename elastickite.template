@@ -85,8 +85,7 @@
         "version" : {
           "stamp1"          : { "HOSTNAME" : "srh1001" },
           "stamp2"          : { "HOSTNAME" : "srh1002" },
-          "staging"         : { "HOSTNAME" : "srh3001" },
-          "old"             : { "HOSTNAME" : "search" }
+          "staging"         : { "HOSTNAME" : "srh3001" }
         },
 
         "env" : {
@@ -113,7 +112,7 @@
 
         "ElasticSearchInstance" : {
             "Type" : "AWS::EC2::Instance",
-
+            
     "Metadata" : {
         "Comment" : "Elastic Search Application Instance"
     },
@@ -150,10 +149,10 @@
           "cp /home/ubuntu/.ssh/* /root/.ssh/\n",
 
           "# Clone sites repo to ubuntu user home\n",
-          "git clone -b", { "Ref" : "SitesDeployBranch" }, "git@github.com:blue-kite/xbp_puppet_sites.git /home/ubuntu/sites > /tmp/git.log 2>&1 || error_exit 'Failed to clone sites repo'\n",
+          "git clone -b ", { "Ref" : "SitesDeployBranch" }, " git@github.com:blue-kite/xbp_puppet_sites.git /home/ubuntu/sites > /tmp/git.log 2>&1 || error_exit 'Failed to clone sites repo'\n",
 
           "# Clone role app repo\n",
-          "git clone -b", { "Ref" : "RoleDeployBranch" }, "git@github.com:blue-kite/xbp_puppet_role_elastickite.git /etc/puppet/modules/elastickite > /tmp/git.log 2>&1 || error_exit 'Failed to clone role app repo'\n",
+          "git clone -b ", { "Ref" : "RoleDeployBranch" }, " git@github.com:blue-kite/xbp_puppet_role_elastickite.git /etc/puppet/modules/elastickite > /tmp/git.log 2>&1 || error_exit 'Failed to clone role app repo'\n",
           "chown ubuntu:ubuntu -R /etc/puppet/modules/elastickite\n",
 
             "# Add FQDN on etc/environment\n",

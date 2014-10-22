@@ -152,10 +152,10 @@
                     "echo ", "STACKID=", { "Ref" : "StackID" }, ">> /etc/environment\n",
 
                     "# Clone sites repo to ubuntu user home\n",
-                      "git clone -b", { "Ref" : "SitesDeployBranch" }, "git@github.com:blue-kite/xbp_puppet_sites.git /home/ubuntu/sites > /tmp/git.log 2>&1 || error_exit 'Failed to clone sites repo'\n",
+                      "git clone -b ", { "Ref" : "SitesDeployBranch" }, " git@github.com:blue-kite/xbp_puppet_sites.git /home/ubuntu/sites > /tmp/git.log 2>&1 || error_exit 'Failed to clone sites repo'\n",
 
                       "# Clone role app repo\n",
-                      "git clone -b", { "Ref" : "RoleDeployBranch" }, "git@github.com:blue-kite/xbp_puppet_profile_logstash.git /etc/puppet/modules/logs > /tmp/git.log 2>&1 || error_exit 'Failed to clone role app repo'\n",
+                      "git clone -b ", { "Ref" : "RoleDeployBranch" }, " git@github.com:blue-kite/xbp_puppet_profile_logstash.git /etc/puppet/modules/logs > /tmp/git.log 2>&1 || error_exit 'Failed to clone role app repo'\n",
                       "chown ubuntu:ubuntu -R /etc/puppet/modules/logs\n",
 
                       "#Installing Ruby\n",

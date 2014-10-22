@@ -173,8 +173,8 @@
       "Type" : "AWS::CloudFormation::Stack",
       "Properties" : {
         "TemplateURL" : "https://s3-us-west-2.amazonaws.com/pruebastack/hello-world.template",
-        "Parameters" : {
-          "KeyName" : { "Ref" : "KeyName" },
+"KeyName" : { "Ref" : "KeyName" },
+          "Version" : { "Ref" : "Version" },
           "SubnetId" : { "Ref" : "PrivateSubnetId" },
           "SecurityGroupId" : { "Ref" : "PrivateSecurityGroup" },
           "DeployBranch" : "master",
@@ -188,8 +188,8 @@
       "Type" : "AWS::CloudFormation::Stack",
       "Properties" : {
         "TemplateURL" : "https://s3-us-west-2.amazonaws.com/pruebastack/catalog.template",
-        "Parameters" : {
-          "KeyName" : { "Ref" : "KeyName" },
+"KeyName" : { "Ref" : "KeyName" },
+          "Version" : { "Ref" : "Version" },
           "SubnetId" : { "Ref" : "PrivateSubnetId" },
           "SecurityGroupId" : { "Ref" : "PrivateSecurityGroup" },
           "DeployBranch" : "rfeature/add_polling_strategy",
@@ -203,8 +203,8 @@
       "Type" : "AWS::CloudFormation::Stack",
       "Properties" : {
         "TemplateURL" : "https://s3-us-west-2.amazonaws.com/pruebastack/accounts.is.template",
-        "Parameters" : {
-          "KeyName" : { "Ref" : "KeyName" },
+"KeyName" : { "Ref" : "KeyName" },
+          "Version" : { "Ref" : "Version" },
           "SubnetId" : { "Ref" : "isSubnetID" },
           "SecurityGroupId" : { "Ref" : "AccountsISSecurityGroup" },
           "DeployBranch" : "feature/add_polling_strategy",
@@ -218,8 +218,8 @@
       "Type" : "AWS::CloudFormation::Stack",
       "Properties" : {
         "TemplateURL" : "https://s3-us-west-2.amazonaws.com/pruebastack/accounts.gt.template",
-        "Parameters" : {
-          "KeyName" : { "Ref" : "KeyName" },
+"KeyName" : { "Ref" : "KeyName" },
+          "Version" : { "Ref" : "Version" },
           "SubnetId" : { "Ref" : "gtSubnetID" },
           "SecurityGroupId" : { "Ref" : "AccountsGTSecurityGroup" },
           "DeployBranch" : "rfeature/add_polling_strategy",
@@ -233,8 +233,8 @@
       "Type" : "AWS::CloudFormation::Stack",
       "Properties" : {
         "TemplateURL" : "https://s3-us-west-2.amazonaws.com/pruebastack/accounts.do.template",
-        "Parameters" : {
-          "KeyName" : { "Ref" : "KeyName" },
+"KeyName" : { "Ref" : "KeyName" },
+          "Version" : { "Ref" : "Version" },
           "SubnetId" : { "Ref" : "doSubnetID" },
           "SecurityGroupId" : { "Ref" : "AccountsDOSecurityGroup" },
           "DeployBranch" : "feature/add_polling_strategy",
@@ -248,8 +248,8 @@
       "Type" : "AWS::CloudFormation::Stack",
       "Properties" : {
         "TemplateURL" : "https://s3-us-west-2.amazonaws.com/pruebastack/accounts.mx.template",
-        "Parameters" : {
-          "KeyName" : { "Ref" : "KeyName" },
+"KeyName" : { "Ref" : "KeyName" },
+          "Version" : { "Ref" : "Version" },
           "SubnetId" : { "Ref" : "mxSubnetID" },
           "SecurityGroupId" : { "Ref" : "AccountsMXSecurityGroup" },
           "DeployBranch" : "feature/add_polling_strategy",
@@ -263,8 +263,8 @@
       "Type" : "AWS::CloudFormation::Stack",
       "Properties" : {
         "TemplateURL" : "https://s3-us-west-2.amazonaws.com/pruebastack/accounts.sv.template",
-        "Parameters" : {
-          "KeyName" : { "Ref" : "KeyName" },
+"KeyName" : { "Ref" : "KeyName" },
+          "Version" : { "Ref" : "Version" },
           "SubnetId" : { "Ref" : "svSubnetID" },
           "SecurityGroupId" : { "Ref" : "AccountsSVSecurityGroup" },
           "DeployBranch" : "feature/add_polling_strategy",
@@ -278,8 +278,8 @@
       "Type" : "AWS::CloudFormation::Stack",
       "Properties" : {
         "TemplateURL" : "https://s3-us-west-2.amazonaws.com/pruebastack/accounts.ni.template",
-        "Parameters" : {
-          "KeyName" : { "Ref" : "KeyName" },
+"KeyName" : { "Ref" : "KeyName" },
+          "Version" : { "Ref" : "Version" },
           "SubnetId" : { "Ref" : "niSubnetID" },
           "SecurityGroupId" : { "Ref" : "AccountsNISecurityGroup" },
           "DeployBranch" : "feature/add_polling_strategy",
@@ -293,8 +293,8 @@
       "Type" : "AWS::CloudFormation::Stack",
       "Properties" : {
         "TemplateURL" : "https://s3-us-west-2.amazonaws.com/pruebastack/forrest.template",
-        "Parameters" : {
-          "KeyName" : { "Ref" : "KeyName" },
+"KeyName" : { "Ref" : "KeyName" },
+          "Version" : { "Ref" : "Version" },
           "SubnetId" : { "Ref" : "PrivateSubnetId" },
           "SG" : { "Ref" : "PrivateSecurityGroup" },
           "DeployBranch" : "release/0.8.0",
@@ -308,8 +308,8 @@
       "Type" : "AWS::CloudFormation::Stack",
       "Properties" : {
         "TemplateURL" : "https://s3-us-west-2.amazonaws.com/pruebastack/monitors.template",
-        "Parameters" : {
-          "KeyName" : { "Ref" : "KeyName" },
+"KeyName" : { "Ref" : "KeyName" },
+          "Version" : { "Ref" : "Version" },
           "SubnetId" : { "Ref" : "PrivateSubnetId" },
           "SecurityGroupId" : { "Ref" : "PrivateSecurityGroup" },
           "DeployBranch" : "release/0.8.0",
@@ -323,8 +323,8 @@
       "Type" : "AWS::CloudFormation::Stack",
       "Properties" : {
         "TemplateURL" : "https://s3-us-west-2.amazonaws.com/pruebastack/internal_gateway.template",
-        "Parameters" : {
-          "KeyName" : { "Ref" : "KeyName" },
+"KeyName" : { "Ref" : "KeyName" },
+          "Version" : { "Ref" : "Version" },
           "SubnetId" : { "Ref" : "PrivateSubnetId" },
           "SecurityGroupId" : { "Ref" : "PrivateSecurityGroup" },
           "DeployBranch" : "release/0.8.0",
@@ -338,8 +338,8 @@
       "Type" : "AWS::CloudFormation::Stack",
       "Properties" : {
         "TemplateURL" : "https://s3-us-west-2.amazonaws.com/pruebastack/events.template",
-        "Parameters" : {
-          "KeyName" : { "Ref" : "KeyName" },
+"KeyName" : { "Ref" : "KeyName" },
+          "Version" : { "Ref" : "Version" },
           "SubnetId" : { "Ref" : "PrivateSubnetId" },
           "SecurityGroupId" : { "Ref" : "PrivateSecurityGroup" },
           "DeployBranch" : "release/0.8.0",
@@ -353,8 +353,8 @@
       "Type" : "AWS::CloudFormation::Stack",
       "Properties" : {
         "TemplateURL" : "https://s3-us-west-2.amazonaws.com/pruebastack/notifications.template",
-        "Parameters" : {
-          "KeyName" : { "Ref" : "KeyName" },
+"KeyName" : { "Ref" : "KeyName" },
+          "Version" : { "Ref" : "Version" },
           "SubnetId" : { "Ref" : "PrivateSubnetId" },
           "SecurityGroupId" : { "Ref" : "PrivateSecurityGroup" },
           "DeployBranch" : "release/0.8.0",
@@ -368,8 +368,8 @@
       "Type" : "AWS::CloudFormation::Stack",
       "Properties" : {
         "TemplateURL" : "https://s3-us-west-2.amazonaws.com/pruebastack/gt_worker_pronet.template",
-        "Parameters" : {
-          "KeyName" : { "Ref" : "KeyName" },
+"KeyName" : { "Ref" : "KeyName" },
+          "Version" : { "Ref" : "Version" },
           "SubnetId" : { "Ref" : "gtSubnetID" },
           "SecurityGroupId" : { "Ref" : "AccountsGTSecurityGroup" },
           "DeployBranch" : "release/0.8.0",
@@ -383,8 +383,8 @@
       "Type" : "AWS::CloudFormation::Stack",
       "Properties" : {
         "TemplateURL" : "https://s3-us-west-2.amazonaws.com/pruebastack/mx_worker_redefectiva.template",
-        "Parameters" : {
-          "KeyName" : { "Ref" : "KeyName" },
+"KeyName" : { "Ref" : "KeyName" },
+          "Version" : { "Ref" : "Version" },
           "SubnetId" : { "Ref" : "mxSubnetID" },
           "SecurityGroupId" : { "Ref" : "AccountsMXSecurityGroup" },
           "DeployBranch" : "release/0.8.0",
@@ -398,8 +398,8 @@
       "Type" : "AWS::CloudFormation::Stack",
       "Properties" : {
         "TemplateURL" : "https://s3-us-west-2.amazonaws.com/pruebastack/do_worker_tpago.template",
-        "Parameters" : {
-          "KeyName" : { "Ref" : "KeyName" },
+"KeyName" : { "Ref" : "KeyName" },
+          "Version" : { "Ref" : "Version" },
           "SubnetId" : { "Ref" : "doSubnetID" },
           "SecurityGroupId" : { "Ref" : "AccountsDOSecurityGroup" },
           "DeployBranch" : "release/0.8.0",
@@ -413,8 +413,8 @@
       "Type" : "AWS::CloudFormation::Stack",
       "Properties" : {
         "TemplateURL" : "https://s3-us-west-2.amazonaws.com/pruebastack/sv_worker_puntoxpress.template",
-        "Parameters" : {
-          "KeyName" : { "Ref" : "KeyName" },
+"KeyName" : { "Ref" : "KeyName" },
+          "Version" : { "Ref" : "Version" },
           "SubnetId" : { "Ref" : "svSubnetID" },
           "SecurityGroupId" : { "Ref" : "AccountsSVSecurityGroup" },
           "DeployBranch" : "release/0.8.0",
@@ -428,8 +428,8 @@
       "Type" : "AWS::CloudFormation::Stack",
       "Properties" : {
         "TemplateURL" : "https://s3-us-west-2.amazonaws.com/pruebastack/ni_worker_puntofacil.template",
-        "Parameters" : {
-          "KeyName" : { "Ref" : "KeyName" },
+"KeyName" : { "Ref" : "KeyName" },
+          "Version" : { "Ref" : "Version" },
           "SubnetId" : { "Ref" : "niSubnetID" },
           "SecurityGroupId" : { "Ref" : "AccountsNISecurityGroup" },
           "DeployBranch" : "release/0.8.0",
@@ -443,8 +443,8 @@
       "Type" : "AWS::CloudFormation::Stack",
       "Properties" : {
         "TemplateURL" : "https://s3-us-west-2.amazonaws.com/pruebastack/payments.template",
-        "Parameters" : {
-          "KeyName" : { "Ref" : "KeyName" },
+"KeyName" : { "Ref" : "KeyName" },
+          "Version" : { "Ref" : "Version" },
           "SubnetId" : { "Ref" : "PrivateSubnetId" },
           "SecurityGroupId" : { "Ref" : "PrivateSecurityGroup" },
           "DeployBranch" : "release/0.8.0",

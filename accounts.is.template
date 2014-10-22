@@ -18,8 +18,7 @@
     "version" : {
       "stamp1"          : { "HOSTNAME" : "ais1001" },
       "stamp2"          : { "HOSTNAME" : "ais1002" },
-      "staging"         : { "HOSTNAME" : "ais3001" },
-      "old"             : { "HOSTNAME" : "accountsis" }
+      "staging"         : { "HOSTNAME" : "ais3001" }
     },
 
     "env" : {
@@ -151,10 +150,10 @@
           "cp /home/ubuntu/.ssh/* /root/.ssh/\n",
 
           "# Clone sites repo to ubuntu user home\n",
-          "git clone -b", { "Ref" : "SitesDeployBranch" }, "git@github.com:blue-kite/xbp_puppet_sites.git /home/ubuntu/sites > /tmp/git.log 2>&1 || error_exit 'Failed to clone sites repo'\n",
+          "git clone -b ", { "Ref" : "SitesDeployBranch" }, " git@github.com:blue-kite/xbp_puppet_sites.git /home/ubuntu/sites > /tmp/git.log 2>&1 || error_exit 'Failed to clone sites repo'\n",
 
           "# Clone role app repo\n",
-          "git clone -b", { "Ref" : "RoleDeployBranch" }, "git@github.com:blue-kite/xbp_puppet_role_accounts.git /etc/puppet/modules/accounts > /tmp/git.log 2>&1 || error_exit 'Failed to clone role app repo'\n",
+          "git clone -b ", { "Ref" : "RoleDeployBranch" }, " git@github.com:blue-kite/xbp_puppet_role_accounts.git /etc/puppet/modules/accounts > /tmp/git.log 2>&1 || error_exit 'Failed to clone role app repo'\n",
           "chown ubuntu:ubuntu -R /etc/puppet/modules/accounts\n",
 
           "# Add FQDN on etc/environment\n",

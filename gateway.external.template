@@ -96,26 +96,17 @@
   },
 
   "Resources" : {
-
-    "IPAddress" : {
-      "Type" : "AWS::EC2::EIP",
-      "Properties" : {
-        "Domain" : "vpc",
-        "InstanceId" : { "Ref" : "API" }
-      }
-    },
-
     "DNSRecord" : {
       "Type" : "AWS::Route53::RecordSet",
       "Properties" : {
         "HostedZoneName" : "bluekite.com.",
         "Comment" : "DNS name for my instance.",
         "Name" : { "Fn::Join" : [ "", ["api", { "Ref" : "StackID" } , { "Fn::FindInMap" : [ "env", { "Ref" : "Environment" }, "DOT" ]},".bluekite.com"]]},
-        "Type" : "CNAME",
+        "Type" : "A",
         "TTL" : "300",
-        "ResourceRecords" : [ { "Fn::GetAtt" : [ "API", "PublicDnsName" ] } ]
+        "ResourceRecords" : [ { "Fn::GetAtt" : [ "API", "PrivateIp" ] } ]
       },
-      "DependsOn" : "IPAddress"
+      "DependsOn" : "API"
     },
 
     "API" : {
@@ -177,10 +168,10 @@
           "echo ", "FACTER_stackid=", { "Ref" : "StackID" }, ">> /etc/environment\n",
 
           "# Clone sites repo to ubuntu user home\n",
-          "git clone -b", { "Ref" : "SitesDeployBranch" }, "git@github.com:blue-kite/xbp_puppet_sites.git /home/ubuntu/sites > /tmp/git.log 2>&1 || error_exit 'Failed to clone sites repo'\n",
+          "git clone -b ", { "Ref" : "SitesDeployBranch" }, " git@github.com:blue-kite/xbp_puppet_sites.git /home/ubuntu/sites > /tmp/git.log 2>&1 || error_exit 'Failed to clone sites repo'\n",
 
           "# Clone role app repo\n",
-          "git clone -b", { "Ref" : "RoleDeployBranch" }, "git@github.com:blue-kite/xbp_puppet_role_gw.git /etc/puppet/modules/gw > /tmp/git.log 2>&1 || error_exit 'Failed to clone role app repo'\n",
+          "git clone -b ", { "Ref" : "RoleDeployBranch" }, " git@github.com:blue-kite/xbp_puppet_role_gw.git /etc/puppet/modules/gw > /tmp/git.log 2>&1 || error_exit 'Failed to clone role app repo'\n",
           "chown ubuntu:ubuntu -R /etc/puppet/modules/gw\n",
 
           "#Installing Ruby\n",
@@ -268,11 +259,6 @@
     "ApiInstanceId" : {
       "Value" : { "Ref" : "API" },
       "Description" : "Instance Id of newly created instance"
-    },
-
-    "ApiIPAddress" : {
-      "Value" : { "Ref" : "IPAddress" },
-      "Description" : "Public IP address of instance"
     },
 
     "DomainName" : {
