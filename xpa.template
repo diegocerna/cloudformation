@@ -67,7 +67,7 @@
         "Version" : {
           "Type" : "String",
           "Description" : "stamp1 for current version, stamp2 for disaster recovery and staging for staging production"
-        },
+        }
     },
 
     "Mappings" : {
