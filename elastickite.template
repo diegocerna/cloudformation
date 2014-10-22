@@ -85,7 +85,8 @@
         "version" : {
           "stamp1"          : { "HOSTNAME" : "srh1001" },
           "stamp2"          : { "HOSTNAME" : "srh1002" },
-          "staging"         : { "HOSTNAME" : "srh3001" }
+          "staging"         : { "HOSTNAME" : "srh3001" },
+          "old"             : { "HOSTNAME" : "search" }
         },
 
         "env" : {
@@ -112,7 +113,7 @@
 
         "ElasticSearchInstance" : {
             "Type" : "AWS::EC2::Instance",
-            
+
     "Metadata" : {
         "Comment" : "Elastic Search Application Instance"
     },

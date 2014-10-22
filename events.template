@@ -86,7 +86,8 @@
     "version" : {
       "stamp1"          : { "HOSTNAME" : "evt1001" },
       "stamp2"          : { "HOSTNAME" : "evt1002" },
-      "staging"         : { "HOSTNAME" : "evt3001" }
+      "staging"         : { "HOSTNAME" : "evt3001" },
+      "old"             : { "HOSTNAME" : "events" }
     },
 
     "env" : {
