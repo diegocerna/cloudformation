@@ -23,11 +23,6 @@
       "ConstraintDescription" : "must be a valid EC2 instance type."
     },
 
-    "DeployBranch" : {
-      "Type" : "String",
-      "Description" : "Wich branch you want to use as source"
-    },
-
     "StackID" : {
       "Type" : "String",
       "Description" : "Stack ID name",
