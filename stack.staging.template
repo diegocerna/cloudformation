@@ -179,8 +179,6 @@
           "AppDeployBranch" : "master",
           "RoleDeployBranch" : "v0.12.0",
           "SitesDeployBranch" : "master",
-          "RoleDeployBranch" : "v0.12.0",
-          "SitesDeployBranch" : "master",
           "StackID" : { "Ref" : "StackID" },
           "InstanceType" : { "Ref" : "InstanceType"},
           "Environment" : {"Ref" : "appEnvironment"}
