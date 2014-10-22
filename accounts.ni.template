@@ -18,7 +18,8 @@
     "version" : {
       "stamp1"          : { "HOSTNAME" : "ani1001" },
       "stamp2"          : { "HOSTNAME" : "ani1002" },
-      "staging"         : { "HOSTNAME" : "ani3001" }
+      "staging"         : { "HOSTNAME" : "ani3001" },
+      "old"             : { "HOSTNAME" : "accountsni" }
     },
 
     "env" : {
