@@ -18,7 +18,8 @@
     "version" : {
       "stamp1"          : { "HOSTNAME" : "ais1001" },
       "stamp2"          : { "HOSTNAME" : "ais1002" },
-      "staging"         : { "HOSTNAME" : "ais3001" }
+      "staging"         : { "HOSTNAME" : "ais3001" },
+      "old"             : { "HOSTNAME" : "accountsis" }
     },
 
     "env" : {
