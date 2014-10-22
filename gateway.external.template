@@ -96,39 +96,10 @@
   },
 
   "Resources" : {
-    "DNSRecord" : {
-      "Type" : "AWS::Route53::RecordSet",
-      "Properties" : {
-        "HostedZoneName" : "bluekite.com.",
-        "Comment" : "DNS name for my instance.",
-        "Name" : { "Fn::Join" : [ "", ["api", { "Ref" : "StackID" } , { "Fn::FindInMap" : [ "env", { "Ref" : "Environment" }, "DOT" ]},".bluekite.com"]]},
-        "Type" : "A",
-        "TTL" : "300",
-        "ResourceRecords" : [ { "Fn::GetAtt" : [ "API", "PrivateIp" ] } ]
-      },
-      "DependsOn" : "API"
-    },
-
     "API" : {
       "Type" : "AWS::EC2::Instance",
       "Metadata" : {
-        "Comment" : "API Gateway NodeJs Application",
-        "AWS::CloudFormation::Init" : {
-          "configSets" : {
-            "default" : ["config_packages"]
-          },
-          "config_packages" : {
-            "packages" : {
-              "apt" : {
-                "git"                        : [],
-                "curl"                       : [],
-                "tmux"                       : [],
-                "build-essential"            : [],
-                "python-software-properties" : []
-              }
-            }
-          }
-        }
+        "Comment" : "API Gateway NodeJs Application"
       },
 
       "Properties" : {
@@ -259,10 +230,6 @@
     "ApiInstanceId" : {
       "Value" : { "Ref" : "API" },
       "Description" : "Instance Id of newly created instance"
-    },
-
-    "DomainName" : {
-      "Value" : { "Ref" : "DNSRecord" }
     }
   }
 }
