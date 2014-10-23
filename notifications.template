@@ -77,13 +77,26 @@
 
     "dbuser" : {
       "Type": "String",
-      "Description" : "Psql User"
+      "Description" : "Psql User",
+      "Default" : "stampdb"
     },
 
     "dbpass" : {
       "NoEcho": "true",
       "Type": "String",
       "Description" : "Psql password"
+    },
+
+    "rmquser" : {
+      "Type": "String",
+      "Description" : "RabbitMQ User",
+      "Default" : "stamp"
+    },
+
+    "rmqpass" : {
+      "NoEcho": "true",
+      "Type": "String",
+      "Description" : "RabbitMQ password"
     }
 
   },
@@ -101,10 +114,10 @@
     },
 
     "version" : {
-      "stamp1"          : { "HOSTNAME" : "not1001" },
-      "stamp2"          : { "HOSTNAME" : "not1002" },
-      "staging"         : { "HOSTNAME" : "not3001" },
-      "old"             : { "HOSTNAME" : "notifications" }
+      "stamp1"          : { "HOSTNAME" : "not1001", "RMQHOST" : "xlb.sjc.xoom.com", "RMQPORT" : "5671" },
+      "stamp2"          : { "HOSTNAME" : "not1002", "RMQHOST" : "xlb.sjc.xoom.com", "RMQPORT" : "5671" },  
+      "staging"         : { "HOSTNAME" : "not3001", "RMQHOST" : "xlb-stag.sjc.xoom.com", "RMQPORT" : "5672" },
+      "old"             : { "HOSTNAME" : "notifications", "RMQHOST" : "xlb-stag.sjc.xoom.com", "RMQPORT" : "5672" }
     },
 
     "env" : {
@@ -207,6 +220,10 @@
           "echo ", "database_password=", { "Ref" : "dbpass" },  ">> /etc/facter/facts.d/custom_facts.txt\n",
           "echo app_name=notifications >> /etc/facter/facts.d/custom_facts.txt\n",
           "echo custom_hostname=", { "Fn::FindInMap" : [ "version", { "Ref" : "Version" }, "HOSTNAME" ]}, ">> /etc/facter/facts.d/custom_facts.txt\n",
+          "echo rabbit_host_env=", { "Fn::FindInMap" : [ "version", { "Ref" : "Version" }, "RMQHOST" ]}, ">> /etc/facter/facts.d/custom_facts.txt\n",
+          "echo ", "rabbit_user_env=", { "Ref" : "rmqpass" },  ">> /etc/facter/facts.d/custom_facts.txt\n",
+          "echo ", "rabbit_pass_env=", { "Ref" : "rmquser" },  ">> /etc/facter/facts.d/custom_facts.txt\n",
+          "echo rabbit_port_env=", { "Fn::FindInMap" : [ "version", { "Ref" : "Version" }, "RMQPORT" ]}, ">> /etc/facter/facts.d/custom_facts.txt\n",
 
           "echo ", { "Fn::Join" : [ "" , ["events_host=events", { "Ref" : "StackID" }, { "Fn::FindInMap" : [ "env", { "Ref" : "Environment" }, "DOT" ]}, ".bluekite.com" ]]},      ">> /etc/facter/facts.d/custom_facts.txt\n",
           "echo ", { "Fn::Join" : [ "" , ["nagios_redis_host=redis", { "Ref" : "StackID" }, { "Fn::FindInMap" : [ "env", { "Ref" : "Environment" }, "DOT" ]}, ".bluekite.com" ]]},      ">> /etc/facter/facts.d/custom_facts.txt\n",
