@@ -11,7 +11,7 @@
             "MaxLength": "255",
             "AllowedPattern" : "[\\x20-\\x7E]*",
             "ConstraintDescription" : "can contain only ASCII characters.",
-            "Default": "stamp-"
+            "Default": "tbp_"
         },
         
         "Environment" : {
@@ -24,7 +24,7 @@
             "Description" : "WebServer EC2 instance type",
             "Type" : "String",
             "Default" : "m3.medium",
-            "AllowedValues" : [ "t2.micro","m1.small","m3.medium","m1.large","m1.xlarge","m2.xlarge","m2.2xlarge","m2.4xlarge","m3.xlarge","m3.2xlarge","c1.medium","c1.xlarge","cc1.4xlarge","cc2.8xlarge","cg1.4xlarge"],
+            "AllowedValues" : [ "t1.micro","m1.small","m3.medium","m1.large","m1.xlarge","m2.xlarge","m2.2xlarge","m2.4xlarge","m3.xlarge","m3.2xlarge","c1.medium","c1.xlarge","cc1.4xlarge","cc2.8xlarge","cg1.4xlarge"],
             "ConstraintDescription" : "must be a valid EC2 instance type."
         },
 
@@ -41,21 +41,25 @@
         },
 
         "PgHost" : {
+            "NoEcho" : "true",
             "Type" : "String",
             "Description" : "RDS Psql Endpoint"   
         },
 
         "PgPort" : {
+            "NoEcho": "true",
             "Type": "String",
             "Description" : "Psql Port"   
         },
 
         "PgDB" : {
+            "NoEcho": "true",
             "Type": "String",
             "Description" : "Psql DB"   
         },
 
         "PgUser" : {
+            "NoEcho": "true",
             "Type": "String",
             "Description" : "Psql User"   
         },
@@ -76,7 +80,7 @@
     "Mappings" : {
         "RegionMap" : {
             "sa-east-1"      : {"AMI" : "ami-d545e5c8" },
-            "us-west-1"      : {"AMI" : "ami-49ede60c" },
+            "us-west-1"      : {"AMI" : "ami-82b98bc7" },
             "ap-northeast-1" : {"AMI" : "ami-35bbd334" },
             "ap-southeast-1" : {"AMI" : "ami-605c0a32" },
             "ap-southeast-2" : {"AMI" : "ami-fb4bd5c1" },
@@ -94,6 +98,7 @@
     },
 
     "Resources" : {
+
       "IPAddress" : {
       "Type" : "AWS::EC2::EIP",
       "Properties" : {
@@ -109,6 +114,7 @@
         "Roles" : ["SendEmails"]
         }
       },
+
         "WebServerInstance" : {
             "Type" : "AWS::EC2::Instance",
             "Metadata" : {
@@ -185,12 +191,6 @@
                     " -c default",
                     " || error_exit 'Failed to run cfn-init'\n",
 
-<<<<<<< HEAD
-=======
-                    "# Install puppet via gems\n",
-                    "sudo gem install puppet --no-rdoc --no-ri > /tmp/gem-puppet.log 2>&1 || error_exit 'Failed install puppet gem'\n",
-
->>>>>>> 99cc89ea9f6b6c1780faef0333dfe19b85570582
                     "# Register Github fingerprints\n",
                     "ssh-keygen -f ~/.ssh/known_hosts -H -F github.com | grep -q found || ssh-keyscan -H github.com >> ~/.ssh/known_hosts\n",
 
@@ -198,22 +198,12 @@
                     "cp /home/ubuntu/.ssh/* /root/.ssh/\n",
 
                     "# Clone app repo to ubuntu user home\n",
-<<<<<<< HEAD
-                    "git clone git@github.com:blue-kite/bree.git /home/ubuntu/oauth > /tmp/git.log 2>&1 || error_exit 'Failed to clone repo'\n",
+                    "git clone git@github.com:blue-kite/bree.git -b ", {"Ref" : "DeployBranch"}, "  /home/ubuntu/oauth > /tmp/git.log 2>&1 || error_exit 'Failed to clone repo'\n",
 
                     "chown ubuntu:ubuntu -R /home/ubuntu/oauth\n",
 
-                    "# Creates pgpass file\n",
                     "echo ", {"Fn::Join" : [":" , [{ "Ref" : "PgHost" }, { "Ref" : "PgPort" }, { "Ref" : "PgDB" }, { "Ref" : "PgUser" }, { "Ref" : "PgPassword"} ]]}, ">> /home/ubuntu/.pgpass\n",
                     "chmod 600 /home/ubuntu/.pgpass\n",
-                    "chown ubuntu:ubuntu /home/ubuntu/.pgpass\n",
-
-                    "# Install postgresql-client-9.3\n",
-                    "wget --quiet -O - https://www.postgresql.org/media/keys/ACCC4CF8.asc | sudo apt-key add -\n",
-                    "sudo echo 'deb http://apt.postgresql.org/pub/repos/apt/ precise-pgdg main' >> /etc/apt/sources.list.d/postgresql.list\n",
-                    "# sudo sh -c /etc/apt/sources.list.d/postgresql.list\n",
-                    "sudo apt-get update\n",
-                    "sudo apt-get -y install postgresql-client-9.3\n",
 
                     "# Install puppet via gems\n",
                     "sudo gem install puppet --no-rdoc --no-ri > /tmp/gem-puppet.log 2>&1 || error_exit 'Failed install puppet gem'\n",
@@ -222,24 +212,11 @@
                     "sudo gem install librarian-puppet -v 1.0.3 --no-rdoc --no-ri > /tmp/gem-librarian-puppet.log 2>&1 || error_exit 'Failed install librarian puppet gem'\n",
 
                     "# Install application's dependencies via puppet\n",
-=======
-                    "git clone git@github.com:blue-kite/bree.git -b ", {"Ref" : "DeployBranch"}, "  /home/ubuntu/oauth > /tmp/git.log 2>&1 || error_exit 'Failed to clone repo'\n",
-
-                    "chown ubuntu:ubuntu -R /home/ubuntu/oauth\n",
-
-                    "# Install application's dependencies via puppet\n",
-                    "sudo gem install puppet || error_exit 'Failed to install gem puppet'\n",
-                    "sudo gem install librarian-puppet\n",
->>>>>>> 99cc89ea9f6b6c1780faef0333dfe19b85570582
                     "cd /home/ubuntu/oauth/puppet\n",
                     "export HOME=/home/ubuntu && librarian-puppet install --verbose > /tmp/librarian-puppet.log 2>&1 || error_exit 'failed to install puppet submodules'\n",
 
                     "cd /home/ubuntu/oauth\n",
-<<<<<<< HEAD
-                    "sudo puppet apply --verbose --debug --modulepath=./puppet/modules ./puppet/manifests/aws-",{"Ref":"Environment"},".pp > /tmp/puppet.log 2>&1 || error_exit 'failed to apply puppet manifests'\n",
-=======
                     "sudo puppet apply --verbose --modulepath=./puppet/modules ./puppet/manifests/aws-",{"Ref":"Environment"},".pp > /tmp/puppet.log 2>&1 || error_exit 'failed to apply puppet manifests'\n",
->>>>>>> 99cc89ea9f6b6c1780faef0333dfe19b85570582
 
                     "# Signal setup is complete\n",
                     "cfn-signal -e $? -r 'Completed configuration' '",
@@ -262,23 +239,6 @@
                 "Handle" : {"Ref" : "WebServerWaitHandle"},
                 "Timeout" : "600"
             }
-<<<<<<< HEAD
-=======
-        },
-
-        "WebServerSecurityGroup" : {
-            "Type" : "AWS::EC2::SecurityGroup",
-            "Properties" : {
-                "GroupDescription" : "Enable HTTP access via port 80, 443 and SSH access",
-                "SecurityGroupIngress" : [
-                    {"IpProtocol" : "tcp", "FromPort" : "80", "ToPort" : "80", "CidrIp" : "0.0.0.0/0"},
-                    {"IpProtocol" : "tcp", "FromPort" : "443", "ToPort" : "443", "CidrIp" : "0.0.0.0/0"},
-                    {"IpProtocol" : "tcp", "FromPort" : "22", "ToPort" : "22", "CidrIp" : "190.99.116.194/32"},
-                    {"IpProtocol" : "tcp", "FromPort" : "22", "ToPort" : "22", "CidrIp" : "186.151.60.250/32"},
-                    {"IpProtocol" : "tcp", "FromPort" : "22", "ToPort" : "22", "CidrIp" : "186.64.109.138/32"}
-                ]
-            }
->>>>>>> 99cc89ea9f6b6c1780faef0333dfe19b85570582
         }
     },
 
