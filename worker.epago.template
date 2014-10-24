@@ -1,7 +1,7 @@
 {
   "AWSTemplateFormatVersion" : "2010-09-09",
 
-  "Description" : "El Salvador Puntoxpress Hamster Worker Instance - filename:sv_worker_puntoxpress.template",
+  "Description" : "Epago Hamster Worker Instance - filename:worker.epago.template",
 
   "Parameters" : {
     "KeyName": {
@@ -17,15 +17,15 @@
     "InstanceType" : {
       "Description" : "WebServer EC2 instance type",
       "Type" : "String",
-      "Default" : "m3.medium",
+      "Default" : "t2.medium",
       "AllowedValues" : [ "t2.micro","t2.medium","m1.small","m3.medium","m1.large","m1.xlarge","m2.xlarge","m2.2xlarge","m2.4xlarge","m3.xlarge","m3.2xlarge","c1.medium","c1.xlarge","cc1.4xlarge","cc2.8xlarge","cg1.4xlarge"],
       "ConstraintDescription" : "must be a valid EC2 instance type."
     },
 
     "SubnetId" : {
       "Type" : "String",
-      "Description" : "El Salvador Accounts SubnetId in your Virtual Private Cloud (VPC)",
-      "Default": "subnet-"
+      "Description" : "Epago Accounts SubnetId in your Virtual Private Cloud (VPC)",
+      "Default": "subnet-14382852"
     },
 
     "StackID" : {
@@ -36,8 +36,8 @@
 
     "SecurityGroupId" : {
       "Type" : "String",
-      "Description" : "El Salvador Accounts SecurityGroupId your Virtual Private Cloud (VPC)",
-      "Default": "sg-"
+      "Description" : "Panama Accounts SecurityGroupId your Virtual Private Cloud (VPC)",
+      "Default": "sg-a3ad24c6"
     },
 
     "AppDeployBranch" : {
@@ -70,49 +70,48 @@
     }
   },
 
-    "Mappings" : {
-        "RegionMap" : {
-            "sa-east-1"      : {"AMI" : "ami-d545e5c8" },
-            "us-west-1"      : {"AMI" : "ami-49ede60c" },
-            "ap-northeast-1" : {"AMI" : "ami-35bbd334" },
-            "ap-southeast-1" : {"AMI" : "ami-605c0a32" },
-            "ap-southeast-2" : {"AMI" : "ami-fb4bd5c1" },
-            "eu-west-1"      : {"AMI" : "ami-d03dcaa7" },
-            "us-east-1"      : {"AMI" : "ami-0e07a566" },
-            "us-west-2"      : {"AMI" : "ami-8b6d2ebb" }
-        },
-
-        "version" : {
-          "stamp1"          : { "HOSTNAME" : "wpx1001" },
-          "stamp2"          : { "HOSTNAME" : "wpx1002" },
-          "staging"         : { "HOSTNAME" : "wpx3001" },
-          "old"             : { "HOSTNAME" : "workerpuntoxpress" }
-        },
-
-        "env" : {
-          "dev"            : { "ENV" : "development", "DOT" : ".dev" },
-          "qa"             : { "ENV" : "qa", "DOT" : ".qa" },
-          "sandbox"        : { "ENV" : "sandbox", "DOT" : ".sandbox"  },
-          "production"     : { "ENV" : "production", "DOT" : "" }
-        }
+  "Mappings" : {
+    "RegionMap" : {
+      "sa-east-1"      : {"AMI" : "ami-d545e5c8" },
+      "us-west-1"      : {"AMI" : "ami-49ede60c" },
+      "ap-northeast-1" : {"AMI" : "ami-35bbd334" },
+      "ap-southeast-1" : {"AMI" : "ami-605c0a32" },
+      "ap-southeast-2" : {"AMI" : "ami-fb4bd5c1" },
+      "eu-west-1"      : {"AMI" : "ami-d03dcaa7" },
+      "us-east-1"      : {"AMI" : "ami-0e07a566" },
+      "us-west-2"      : {"AMI" : "ami-8b6d2ebb" }
     },
 
-    "Resources" : {
+    "version" : {
+      "stamp1"          : { "HOSTNAME" : "wep1001" },
+      "stamp2"          : { "HOSTNAME" : "wep1002" },
+      "staging"         : { "HOSTNAME" : "wep3001" },
+      "old"             : { "HOSTNAME" : "workerepago" }
+    },
 
-        "DNSRecord" : {
-            "Type" : "AWS::Route53::RecordSet",
-            "Properties" : {
-                "HostedZoneName" : "bluekite.com.",
-                "Comment" : "DNS name for my instance.",
-                "Name" : {"Fn::Join" : ["", ["workerpuntoxpress", { "Ref" : "StackID" }, { "Fn::FindInMap" : [ "env", { "Ref" : "Environment" }, "DOT" ]},".bluekite.com."]]},
-                "Type" : "A",
-                "TTL" : "300",
-                "ResourceRecords" : [ { "Fn::GetAtt" : [ "SvWorkerPuntoxpressInstance", "PrivateIp" ] } ]
-            },
-            "DependsOn" : "SvWorkerPuntoxpressInstance"
+    "env" : {
+      "dev"            : { "ENV" : "development", "DOT" : ".dev" },
+      "qa"             : { "ENV" : "qa", "DOT" : ".qa" },
+      "sandbox"        : { "ENV" : "sandbox", "DOT" : ".sandbox"  },
+      "production"     : { "ENV" : "production", "DOT" : "" }
+    }
+  },
+
+  "Resources" : {
+    "DNSRecord" : {
+        "Type" : "AWS::Route53::RecordSet",
+        "Properties" : {
+            "HostedZoneName" : "bluekite.com.",
+            "Comment" : "DNS name for my instance.",
+            "Name" : {"Fn::Join" : ["", ["workerepago", { "Ref" : "StackID" }, { "Fn::FindInMap" : [ "env", { "Ref" : "Environment" }, "DOT" ]},".bluekite.com."]]},
+            "Type" : "A",
+            "TTL" : "300",
+            "ResourceRecords" : [ { "Fn::GetAtt" : [ "PaWorkerEpagoInstance", "PrivateIp" ] } ]
         },
+        "DependsOn" : "PaWorkerEpagoInstance"
+    },
 
-        "SvWorkerPuntoxpressInstance" : {
+        "PaWorkerEpagoInstance" : {
             "Type" : "AWS::EC2::Instance",
             "Metadata" : {
               "Comment" : "Catalog - Rails Aplication Instance"
@@ -125,21 +124,21 @@
                 "InstanceType" : { "Ref" : "InstanceType" },
                 "KeyName" : { "Ref" : "KeyName" },
                 "Tags" : [ {"Key" : "Application", "Value" : { "Ref" : "AWS::StackId"} },
-                           {"Key" : "Name", "Value" : { "Fn::Join" : [ ".", ["workerpuntoxpress", {"Ref" : "Environment"} ] ] } } ],
+                           {"Key" : "Name", "Value" : { "Fn::Join" : [ ".", ["workerepago", {"Ref" : "Environment"} ] ] } } ],
                 "UserData"       : { "Fn::Base64" : { "Fn::Join" : ["", [
                     "#!/bin/bash\n",
 
                     "# Helper function to notify of failed operation\n",
                     "function error_exit\n",
                     "{\n",
-                    "  cfn-signal -e 1 -r \"$1\" '", { "Ref" : "WorkerPuntoxpressWaitHandle" }, "'\n",
+                    "  cfn-signal -e 1 -r \"$1\" '", { "Ref" : "WorkerEpagoWaitHandle" }, "'\n",
                     "  exit 1\n",
                     "}\n",
 
                     "# Run Instance default configuration via CloudFormation::Init\n",
                     "cfn-init -v --region ", { "Ref" : "AWS::Region" },
                     "    -s ", { "Ref" : "AWS::StackId" },
-                    " -r SvWorkerPuntoxpressInstance",
+                    " -r PaWorkerEpagoInstance",
                     " -c default",
                     " || error_exit 'Failed to run cfn-init'\n",
 
@@ -150,16 +149,16 @@
                     "cp /home/ubuntu/.ssh/* /root/.ssh/\n",
 
                     "# Add FQDN on etc/environment\n",
-                    "echo ", { "Fn::Join" : [ "" , ["FQDN=workerpuntoxpress", { "Ref" : "StackID" }, { "Fn::FindInMap" : [ "env", { "Ref" : "Environment" }, "DOT" ]}, ".bluekite.com" ]]}, ">> /etc/environment\n",
+                    "echo ", { "Fn::Join" : [ "" , ["FQDN=workerepago", { "Ref" : "StackID" }, { "Fn::FindInMap" : [ "env", { "Ref" : "Environment" }, "DOT" ]}, ".bluekite.com" ]]}, ">> /etc/environment\n",
                     "echo ", "STACKID=", { "Ref" : "StackID" }, ">> /etc/environment\n",
-                    "echo ", { "Fn::Join" : [ "" , ["FACTER_queue_host=accounts", { "Ref" : "StackID" }, ".sv", { "Fn::FindInMap" : [ "env", { "Ref" : "Environment" }, "DOT" ]}, ".bluekite.com" ]]}, ">> /etc/environment\n",
+                    "echo ", { "Fn::Join" : [ "" , ["FACTER_queue_host=accounts", { "Ref" : "StackID" }, ".pa", { "Fn::FindInMap" : [ "env", { "Ref" : "Environment" }, "DOT" ]}, ".bluekite.com" ]]}, ">> /etc/environment\n",
 
                     "# Clone sites repo to ubuntu user home\n",
                     "git clone -b ", { "Ref" : "SitesDeployBranch" }, " git@github.com:blue-kite/xbp_puppet_sites.git /home/ubuntu/sites > /tmp/git.log 2>&1 || error_exit 'Failed to clone sites repo'\n",
 
                     "# Clone role app repo\n",
-                    "git clone -b ", { "Ref" : "RoleDeployBranch" }, " git@github.com:blue-kite/xbp_puppet_role_worker_puntoxpress.git /etc/puppet/modules/worker_puntoxpress > /tmp/git.log 2>&1 || error_exit 'Failed to clone role app repo'\n",
-                    "chown ubuntu:ubuntu -R /etc/puppet/modules/worker_puntoxpress\n",
+                    "git clone -b ", { "Ref" : "RoleDeployBranch" }, " git@github.com:blue-kite/xbp_puppet_role_worker_epago.git /etc/puppet/modules/worker_epago > /tmp/git.log 2>&1 || error_exit 'Failed to clone role app repo'\n",
+                    "chown ubuntu:ubuntu -R /etc/puppet/modules/worker_epago\n",
 
                     "#Installing Ruby\n",
                     "apt-get -y install libyaml-0-2\n",
@@ -175,19 +174,19 @@
                     "sudo gem install librarian-puppet --no-rdoc --no-ri > /tmp/gem-librarian-puppet.log 2>&1 || error_exit 'Failed install librarian puppet gem'\n",
 
                     "# Install application's dependencies via librarian puppet\n",
-                    "cd /etc/puppet/modules/worker_puntoxpress\n",
+                    "cd /etc/puppet/modules/worker_epago\n",
                     "sudo librarian-puppet install --clean --verbose --path=/etc/puppet/modules > /tmp/librarian-puppet.log 2>&1 || error_exit 'failed to install puppet submodules'\n",
 
                     "#setting my custom facts\n",
                     "mkdir -p /etc/facter/facts.d\n",
                     "touch /etc/facter/facts.d/custom_facts.txt\n",
-                    "echo ", { "Fn::Join" : [ "" , ["fqdn=workerpuntoxpress", { "Ref" : "StackID" }, { "Fn::FindInMap" : [ "env", { "Ref" : "Environment" }, "DOT" ]}, ".bluekite.com" ]]},        ">> /etc/facter/facts.d/custom_facts.txt\n",
+                    "echo ", { "Fn::Join" : [ "" , ["fqdn=workerepago", { "Ref" : "StackID" }, { "Fn::FindInMap" : [ "env", { "Ref" : "Environment" }, "DOT" ]}, ".bluekite.com" ]]},        ">> /etc/facter/facts.d/custom_facts.txt\n",
                     "echo ", { "Fn::Join" : [ "" , ["queue_host=queue", { "Ref" : "StackID" }, ".accounts", { "Fn::FindInMap" : [ "env", { "Ref" : "Environment" }, "DOT" ]}, ".bluekite.com" ]]},        ">> /etc/facter/facts.d/custom_facts.txt\n",
                     "echo ", "stackid=", { "Ref" : "StackID" },       ">> /etc/facter/facts.d/custom_facts.txt\n",
                     "echo ", "revision=", { "Ref" : "AppDeployBranch" }, ">> /etc/facter/facts.d/custom_facts.txt\n",
                     "echo ", { "Fn::Join" : [ "" , ["logserver_host=logs", { "Ref" : "StackID" }, { "Fn::FindInMap" : [ "env", { "Ref" : "Environment" }, "DOT" ]}, ".bluekite.com" ]]},        ">> /etc/facter/facts.d/custom_facts.txt\n",
                     "echo logserver_port=5001  >> /etc/facter/facts.d/custom_facts.txt\n",
-                    "echo app_name=workerpuntoxpress >> /etc/facter/facts.d/custom_facts.txt\n",
+                    "echo app_name=workerepago >> /etc/facter/facts.d/custom_facts.txt\n",
                     "echo custom_hostname=", { "Fn::FindInMap" : [ "version", { "Ref" : "Version" }, "HOSTNAME" ]}, ">> /etc/facter/facts.d/custom_facts.txt\n",
 
                     "echo ", { "Fn::Join" : [ "" , ["nagios_beanstalk_host=queue", { "Ref" : "StackID" }, ".accounts", { "Fn::FindInMap" : [ "env", { "Ref" : "Environment" }, "DOT" ]}, ".bluekite.com" ]]},      ">> /etc/facter/facts.d/custom_facts.txt\n",
@@ -206,32 +205,34 @@
 
                     "export LANG=en_US.UTF-8; sudo puppet apply --verbose --debug --environment=", { "Fn::FindInMap" : [ "env", { "Ref" : "Environment" }, "ENV" ]}, " /home/ubuntu/sites/site.pp > /tmp/puppet.log 2>&1 || error_exit 'failed to apply puppet manifests'\n",
 
-                    "# SET TIMEZONE to SV\n",
+                    "# SET TIMEZONE to PA\n",
                     "aptitude -y install ntp\n",
                     "service ntp restart\n",
-                    "echo \"America/El_Salvador\" > /etc/timezone\n",
+                    "echo \"America/Panama\" > /etc/timezone\n",
                     "dpkg-reconfigure -f noninteractive tzdata\n",
+
+                    "cd /opt/xoom/apps/worker/current && bundle exec rake airbrake:deploy\n",
 
                     "# Signal setup is complete\n",
                     "cfn-signal -e $? -r 'Completed configuration' '",
 
                     {
-                        "Ref" : "WorkerPuntoxpressWaitHandle"
+                        "Ref" : "WorkerEpagoWaitHandle"
                     },
                     "'\n"
                 ]]}}
             }
         },
 
-    "WorkerPuntoxpressWaitHandle" : {
+    "WorkerEpagoWaitHandle" : {
       "Type" : "AWS::CloudFormation::WaitConditionHandle"
     },
 
-    "WorkerPuntoxpressWaitCondition" : {
+    "WorkerEpagoWaitCondition" : {
       "Type" : "AWS::CloudFormation::WaitCondition",
-      "DependsOn" : "SvWorkerPuntoxpressInstance",
+      "DependsOn" : "PaWorkerEpagoInstance",
       "Properties" : {
-        "Handle" : {"Ref" : "WorkerPuntoxpressWaitHandle"},
+        "Handle" : {"Ref" : "WorkerEpagoWaitHandle"},
         "Timeout" : "2000"
       }
     }
@@ -239,12 +240,12 @@
 
   "Outputs" : {
     "InstanceId" : {
-      "Value" : { "Ref" : "SvWorkerPuntoxpressInstance" },
+      "Value" : { "Ref" : "PaWorkerEpagoInstance" },
       "Description" : "Instance Id of newly created instance"
     },
 
     "IPAddress" : {
-      "Value" : { "Fn::GetAtt" : [ "SvWorkerPuntoxpressInstance", "PrivateIp" ] },
+      "Value" : { "Fn::GetAtt" : [ "PaWorkerEpagoInstance", "PrivateIp" ] },
       "Description" : "Private IP address of instance"
     },
 
