@@ -221,8 +221,8 @@
           "echo app_name=notifications >> /etc/facter/facts.d/custom_facts.txt\n",
           "echo custom_hostname=", { "Fn::FindInMap" : [ "version", { "Ref" : "Version" }, "HOSTNAME" ]}, ">> /etc/facter/facts.d/custom_facts.txt\n",
           "echo rabbit_host_env=", { "Fn::FindInMap" : [ "version", { "Ref" : "Version" }, "RMQHOST" ]}, ">> /etc/facter/facts.d/custom_facts.txt\n",
-          "echo ", "rabbit_user_env=", { "Ref" : "rmqpass" },  ">> /etc/facter/facts.d/custom_facts.txt\n",
-          "echo ", "rabbit_pass_env=", { "Ref" : "rmquser" },  ">> /etc/facter/facts.d/custom_facts.txt\n",
+          "echo ", "rabbit_user_env=", { "Ref" : "rmquser" },  ">> /etc/facter/facts.d/custom_facts.txt\n",
+          "echo ", "rabbit_pass_env=", { "Ref" : "rmqpass" },  ">> /etc/facter/facts.d/custom_facts.txt\n",
           "echo rabbit_port_env=", { "Fn::FindInMap" : [ "version", { "Ref" : "Version" }, "RMQPORT" ]}, ">> /etc/facter/facts.d/custom_facts.txt\n",
 
           "echo ", { "Fn::Join" : [ "" , ["events_host=events", { "Ref" : "StackID" }, { "Fn::FindInMap" : [ "env", { "Ref" : "Environment" }, "DOT" ]}, ".bluekite.com" ]]},      ">> /etc/facter/facts.d/custom_facts.txt\n",
