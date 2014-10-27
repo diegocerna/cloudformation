@@ -67,102 +67,102 @@
     "PrivateSecurityGroup" : {
       "Type" : "String",
       "Description" : "Security Group ID for Private network",
-      "Default" : "sg-db6c68be"
+      "Default" : "sg-ec888589"
     },
 
     "MonitorsSecurityGroup" : {
       "Type" : "String",
       "Description" : "Security Group ID for Monitors",
-      "Default" : "sg-c86c68ad"
+      "Default" : "sg-02888567"
     },
 
     "LogstashSecurityGroup" : {
       "Type" : "String",
       "Description" : "Security Group ID for Logstash",
-      "Default" : "sg-da6c68bf"
+      "Default" : "sg-eb88858e"
     },
 
     "AccountsMXSecurityGroup" : {
       "Type" : "String",
       "Description" : "Security Group ID for Accounts Mexico",
-      "Default" : "sg-a56c68c0"
+      "Default" : "sg-e988858c"
     },
 
     "AccountsSVSecurityGroup" : {
       "Type" : "String",
       "Description" : "Security Group ID for Accounts El Salvador",
-      "Default" : "sg-c76c68a2"
+      "Default" : "sg-01888564"
     },
 
     "AccountsGTSecurityGroup" : {
       "Type" : "String",
       "Description" : "Security Group ID for Accounts Guatemala",
-      "Default" : "sg-a26c68c7"
+      "Default" : "sg-ef88858a"
     },
 
     "AccountsDOSecurityGroup" : {
       "Type" : "String",
       "Description" : "Security Group ID for Accounts Dominican Republic",
-      "Default" : "sg-d96c68bc"
+      "Default" : "sg-e888858d"
     },
 
     "AccountsNISecurityGroup" : {
       "Type" : "String",
       "Description" : "Security Group ID for Accounts Nicaragua",
-      "Default" : "sg-a76c68c2"
+      "Default" : "sg-ee88858b"
     },
 
     "AccountsPASecurityGroup" : {
       "Type" : "String",
       "Description" : "Security Group ID for Accounts Panama",
-      "Default" : "sg-d86c68bd"
+      "Default" : "sg-e3888586"
     },
 
     "PrivateSubnetId" : {
       "Type" : "String",
       "Description" : "Subnet id that the api belongs",
-      "Default" : "subnet-666b8d4d"
+      "Default" : "subnet-d511f3fe"
     },
 
     "gtSubnetID" : {
       "Type" : "String",
-      "Default" : "subnet-646b8d4f",
+      "Default" : "subnet-2e16f405",
       "Description" : "Subnet ID for GT worker"
     },
 
     "doSubnetID" : {
       "Type" : "String",
-      "Default" : "subnet-656b8d4e",
+      "Default" : "subnet-2f16f404",
       "Description" : "Subnet ID for DO worker"
     },
 
     "mxSubnetID" : {
       "Type" : "String",
-      "Default" : "subnet-606b8d4b",
+      "Default" : "subnet-2916f402",
       "Description" : "Subnet ID for MX worker"
     },
 
     "svSubnetID" : {
       "Type" : "String",
-      "Default" : "subnet-7e6b8d55",
+      "Default" : "subnet-2816f403",
       "Description" : "Subnet ID for SV worker"
     },
 
     "niSubnetID" : {
       "Type" : "String",
-      "Default" : "subnet-7e6b8d55",
+      "Default" : "subnet-2b16f400",
       "Description" : "Subnet ID for NI worker"
     },
 
     "ttSubnetID" : {
       "Type" : "String",
-      "Default" : "subnet-7f6b8d54",
+      "Default" : "subnet-d711f3fc",
       "Description" : "Subnet ID for TT worker"
     },
 
     "paSubnetID" : {
       "Type" : "String",
-      "Default" : "subnet-7e6b8d55",
+      "Default" : "subnet-d611f3fd",
       "Description" : "Subnet ID for PA worker"
     }
   },
