@@ -36,12 +36,12 @@
     "subnets" : {
       "stamp1"             : { "VPCSN" : "10.10.0.0/16", "PRIVATESN" : "10.10.22.0/23", "MANAGESN" : "10.10.82.0/24", "MANAGESN2" : "10.10.83.0/24", "WORKERSN1" : "10.10.24.0/27", "WORKERSN2" : "10.10.24.32/27", "WORKERSN3" : "10.10.24.64/27", "WORKERSN4" : "10.10.24.96/27", "WORKERSN5" : "10.10.24.128/27", "WORKERSN6" : "10.10.24.160/27", "WORKERSN7" : "10.10.24.192/27", "DBSN" : "10.10.3.0/24", "DBSN2" : "10.10.4.0/24", "PRIVATESN2" : "10.10.52.0/23", "WORKERSN101" : "10.10.54.0/27", "WORKERSN102" : "10.10.54.32/27", "WORKERSN103" : "10.10.54.64/27", "WORKERSN104" : "10.10.54.96/27", "WORKERSN105" : "10.10.54.128/27", "WORKERSN106" : "10.10.54.160/27", "WORKERSN107" : "10.10.54.192/27" },
       "stamp2"             : { "VPCSN" : "10.11.0.0/16", "PRIVATESN" : "10.11.22.0/23", "MANAGESN" : "10.11.82.0/24", "MANAGESN2" : "10.11.83.0/24", "WORKERSN1" : "10.11.24.0/27", "WORKERSN2" : "10.11.24.32/27", "WORKERSN3" : "10.11.24.64/27", "WORKERSN4" : "10.11.24.96/27", "WORKERSN5" : "10.11.24.128/27", "WORKERSN6" : "10.11.24.160/27", "WORKERSN7" : "10.11.24.192/27", "DBSN" : "10.11.3.0/24", "DBSN2" : "10.11.4.0/24", "PRIVATESN2" : "10.11.52.0/23", "WORKERSN101" : "10.11.54.0/27", "WORKERSN102" : "10.11.54.32/27", "WORKERSN103" : "10.11.54.64/27", "WORKERSN104" : "10.11.54.96/27", "WORKERSN105" : "10.11.54.128/27", "WORKERSN106" : "10.11.54.160/27", "WORKERSN107" : "10.11.54.192/27" },
-      "staging"             : { "VPCSN" : "10.20.0.0/16", "PRIVATESN" : "10.20.22.0/23", "MANAGESN" : "10.20.82.0/24", "MANAGESN2" : "10.20.83.0/24", "WORKERSN1" : "10.20.24.0/27", "WORKERSN2" : "10.20.24.32/27", "WORKERSN3" : "10.20.24.64/27", "WORKERSN4" : "10.20.24.96/27", "WORKERSN5" : "10.20.24.128/27", "WORKERSN6" : "10.20.24.160/27", "WORKERSN7" : "10.20.24.192/27", "DBSN" : "10.20.3.0/24", "DBSN2" : "10.20.4.0/24", "PRIVATESN2" : "10.20.52.0/23", "WORKERSN101" : "10.20.54.0/27", "WORKERSN102" : "10.20.54.32/27", "WORKERSN103" : "10.20.54.64/27", "WORKERSN104" : "10.20.54.96/27", "WORKERSN105" : "10.20.54.128/27", "WORKERSN106" : "10.20.54.160/27", "WORKERSN107" : "10.20.54.192/27" }
+      "staging"             : { "VPCSN" : "10.30.0.0/16", "PRIVATESN" : "10.30.22.0/23", "MANAGESN" : "10.30.82.0/24", "MANAGESN2" : "10.30.83.0/24", "WORKERSN1" : "10.30.24.0/27", "WORKERSN2" : "10.30.24.32/27", "WORKERSN3" : "10.30.24.64/27", "WORKERSN4" : "10.30.24.96/27", "WORKERSN5" : "10.30.24.128/27", "WORKERSN6" : "10.30.24.160/27", "WORKERSN7" : "10.30.24.192/27", "DBSN" : "10.30.3.0/24", "DBSN2" : "10.30.4.0/24", "PRIVATESN2" : "10.30.52.0/23", "WORKERSN101" : "10.30.54.0/27", "WORKERSN102" : "10.30.54.32/27", "WORKERSN103" : "10.30.54.64/27", "WORKERSN104" : "10.30.54.96/27", "WORKERSN105" : "10.30.54.128/27", "WORKERSN106" : "10.30.54.160/27", "WORKERSN107" : "10.30.54.192/27" }
     },
 
     "DATACENTER" : {
-      "sjc"                : { "EPVPN" : "205.189.102.230", "PUBSUBNET" : "205.189.102.0/24", "SBVPN" : "205.189.102.230/32", "DCSUBNET" : "10.7.0.0/16", "MGTSUBNET" : "10.7.82.0/24" },
-      "atl"                : { "EPVPN" : "205.189.103.230", "PUBSUBNET" : "205.189.103.0/24", "SBVPN" : "205.189.103.230/32", "DCSUBNET" : "10.5.0.0/16", "MGTSUBNET" : "10.5.82.0/24" }
+      "sjc"                : { "EPVPN" : "205.189.102.230", "PUBSUBNET" : "205.189.102.0/24", "SBVPN" : "205.189.102.230/32", "DCSUBNET" : "10.7.0.0/16", "MGTSUBNET" : "10.7.82.0/24", "SUBNET24" : "10.7.24.0/24", "TAG" : "production" },
+      "atl"                : { "EPVPN" : "205.189.103.230", "PUBSUBNET" : "205.189.103.0/24", "SBVPN" : "205.189.103.230/32", "DCSUBNET" : "10.5.0.0/16", "MGTSUBNET" : "10.5.82.0/24", "SUBNET24" : "10.5.24.0/24", "TAG" : "staging" }
     },
 
     "dot" : {
@@ -92,7 +92,7 @@
     }
   },
   "Resources": {
-    "vpc": {                      
+    "vpc": {
       "Type": "AWS::EC2::VPC",
       "Properties": {
         "CidrBlock": { "Fn::FindInMap" : [ "subnets", { "Ref" : "Version" }, "VPCSN" ]},
@@ -105,17 +105,17 @@
             "Value": "STAMP"
           },
           {
-            "Key": "Environment",   
-            "Value": { "Ref" : "Environment" }
+            "Key": "Environment",
+            "Value": { "Fn::FindInMap" : [ "DATACENTER", { "Ref" : "Provider" }, "TAG" ]}
           },
           {
-            "Key": "Name",            
-            "Value": { "Fn::Join" : [ " ", ["STAMP VPC", { "Ref" : "Environment"} ] ] }
+            "Key": "Name",
+            "Value": { "Fn::Join" : [ " ", ["STAMP VPC", { "Fn::FindInMap" : [ "DATACENTER", { "Ref" : "Provider" }, "TAG" ]} ] ] }
           }
         ]
       }
     },
-    
+
     "subnetPrivateApis1": {
       "Type": "AWS::EC2::Subnet",
       "Properties": {
@@ -127,7 +127,7 @@
         "Tags": [
           {
             "Key": "Name",
-            "Value": { "Fn::Join" : [ " ", ["Private APIs AZ1", { "Ref" : "Environment"} ] ] }
+            "Value": { "Fn::Join" : [ " ", ["Private APIs AZ1", { "Fn::FindInMap" : [ "DATACENTER", { "Ref" : "Provider" }, "TAG" ]} ] ] }
           },
           {
             "Key": "Application",
@@ -152,7 +152,7 @@
         "Tags": [
           {
             "Key": "Name",
-            "Value": { "Fn::Join" : [ " ", ["Private APIs AZ2", { "Ref" : "Environment"} ] ] }
+            "Value": { "Fn::Join" : [ " ", ["Private APIs AZ2", { "Fn::FindInMap" : [ "DATACENTER", { "Ref" : "Provider" }, "TAG" ]} ] ] }
           },
           {
             "Key": "Application",
@@ -177,7 +177,7 @@
         "Tags": [
           {
             "Key": "Name",
-            "Value": { "Fn::Join" : [ " ", ["Workers Subnet Pronet AZ1", { "Ref" : "Environment"} ] ] }
+            "Value": { "Fn::Join" : [ " ", ["Workers Subnet Pronet AZ1", { "Fn::FindInMap" : [ "DATACENTER", { "Ref" : "Provider" }, "TAG" ]} ] ] }
           },
           {
             "Key": "Application",
@@ -202,7 +202,7 @@
         "Tags": [
           {
             "Key": "Name",
-            "Value": { "Fn::Join" : [ " ", ["Workers Subnet Red Efectiva AZ1", { "Ref" : "Environment"} ] ] }
+            "Value": { "Fn::Join" : [ " ", ["Workers Subnet Red Efectiva AZ1", { "Fn::FindInMap" : [ "DATACENTER", { "Ref" : "Provider" }, "TAG" ]} ] ] }
           },
           {
             "Key": "Application",
@@ -227,7 +227,7 @@
         "Tags": [
           {
             "Key": "Name",
-            "Value": { "Fn::Join" : [ " ", ["Workers Subnet PuntoXpress AZ1", { "Ref" : "Environment"} ] ] }
+            "Value": { "Fn::Join" : [ " ", ["Workers Subnet PuntoXpress AZ1", { "Fn::FindInMap" : [ "DATACENTER", { "Ref" : "Provider" }, "TAG" ]} ] ] }
           },
           {
             "Key": "Application",
@@ -252,7 +252,7 @@
         "Tags": [
           {
             "Key": "Name",
-            "Value": { "Fn::Join" : [ " ", ["Workers Subnet PuntoFacil AZ1", { "Ref" : "Environment"} ] ] }
+            "Value": { "Fn::Join" : [ " ", ["Workers Subnet PuntoFacil AZ1", { "Fn::FindInMap" : [ "DATACENTER", { "Ref" : "Provider" }, "TAG" ]} ] ] }
           },
           {
             "Key": "Application",
@@ -277,7 +277,7 @@
         "Tags": [
           {
             "Key": "Name",
-            "Value": { "Fn::Join" : [ " ", ["Workers Subnet Tpago AZ1", { "Ref" : "Environment"} ] ] }
+            "Value": { "Fn::Join" : [ " ", ["Workers Subnet Tpago AZ1", { "Fn::FindInMap" : [ "DATACENTER", { "Ref" : "Provider" }, "TAG" ]} ] ] }
           },
           {
             "Key": "Application",
@@ -302,7 +302,7 @@
         "Tags": [
           {
             "Key": "Name",
-            "Value": { "Fn::Join" : [ " ", ["Workers Subnet Epago AZ1", { "Ref" : "Environment"} ] ] }
+            "Value": { "Fn::Join" : [ " ", ["Workers Subnet Epago AZ1", { "Fn::FindInMap" : [ "DATACENTER", { "Ref" : "Provider" }, "TAG" ]} ] ] }
           },
           {
             "Key": "Application",
@@ -327,7 +327,7 @@
         "Tags": [
           {
             "Key": "Name",
-            "Value": { "Fn::Join" : [ " ", ["Workers Subnet TransferTo AZ1", { "Ref" : "Environment"} ] ] }
+            "Value": { "Fn::Join" : [ " ", ["Workers Subnet TransferTo AZ1", { "Fn::FindInMap" : [ "DATACENTER", { "Ref" : "Provider" }, "TAG" ]} ] ] }
           },
           {
             "Key": "Application",
@@ -352,7 +352,7 @@
         "Tags": [
           {
             "Key": "Name",
-            "Value": { "Fn::Join" : [ " ", ["Workers Subnet Pronet AZ2", { "Ref" : "Environment"} ] ] }
+            "Value": { "Fn::Join" : [ " ", ["Workers Subnet Pronet AZ2", { "Fn::FindInMap" : [ "DATACENTER", { "Ref" : "Provider" }, "TAG" ]} ] ] }
           },
           {
             "Key": "Application",
@@ -377,7 +377,7 @@
         "Tags": [
           {
             "Key": "Name",
-            "Value": { "Fn::Join" : [ " ", ["Workers Subnet Red Efectiva AZ2", { "Ref" : "Environment"} ] ] }
+            "Value": { "Fn::Join" : [ " ", ["Workers Subnet Red Efectiva AZ2", { "Fn::FindInMap" : [ "DATACENTER", { "Ref" : "Provider" }, "TAG" ]} ] ] }
           },
           {
             "Key": "Application",
@@ -402,7 +402,7 @@
         "Tags": [
           {
             "Key": "Name",
-            "Value": { "Fn::Join" : [ " ", ["Workers Subnet PuntoXpress AZ2", { "Ref" : "Environment"} ] ] }
+            "Value": { "Fn::Join" : [ " ", ["Workers Subnet PuntoXpress AZ2", { "Fn::FindInMap" : [ "DATACENTER", { "Ref" : "Provider" }, "TAG" ]} ] ] }
           },
           {
             "Key": "Application",
@@ -427,7 +427,7 @@
         "Tags": [
           {
             "Key": "Name",
-            "Value": { "Fn::Join" : [ " ", ["Workers Subnet PuntoFacil AZ2", { "Ref" : "Environment"} ] ] }
+            "Value": { "Fn::Join" : [ " ", ["Workers Subnet PuntoFacil AZ2", { "Fn::FindInMap" : [ "DATACENTER", { "Ref" : "Provider" }, "TAG" ]} ] ] }
           },
           {
             "Key": "Application",
@@ -452,7 +452,7 @@
         "Tags": [
           {
             "Key": "Name",
-            "Value": { "Fn::Join" : [ " ", ["Workers Subnet Tpago AZ2", { "Ref" : "Environment"} ] ] }
+            "Value": { "Fn::Join" : [ " ", ["Workers Subnet Tpago AZ2", { "Fn::FindInMap" : [ "DATACENTER", { "Ref" : "Provider" }, "TAG" ]} ] ] }
           },
           {
             "Key": "Application",
@@ -477,7 +477,7 @@
         "Tags": [
           {
             "Key": "Name",
-            "Value": { "Fn::Join" : [ " ", ["Workers Subnet Epago AZ2", { "Ref" : "Environment"} ] ] }
+            "Value": { "Fn::Join" : [ " ", ["Workers Subnet Epago AZ2", { "Fn::FindInMap" : [ "DATACENTER", { "Ref" : "Provider" }, "TAG" ]} ] ] }
           },
           {
             "Key": "Application",
@@ -502,7 +502,7 @@
         "Tags": [
           {
             "Key": "Name",
-            "Value": { "Fn::Join" : [ " ", ["Workers Subnet AZ2", { "Ref" : "Environment"} ] ] }
+            "Value": { "Fn::Join" : [ " ", ["Workers Subnet AZ2", { "Fn::FindInMap" : [ "DATACENTER", { "Ref" : "Provider" }, "TAG" ]} ] ] }
           },
           {
             "Key": "Application",
@@ -515,7 +515,7 @@
         ]
       }
     },
- 
+
     "subnetManage1": {
       "Type": "AWS::EC2::Subnet",
       "Properties": {
@@ -527,7 +527,7 @@
         "Tags": [
           {
             "Key": "Name",
-            "Value": { "Fn::Join" : [ " ", ["Management Subnet AZ1", { "Ref" : "Environment"} ] ] }
+            "Value": { "Fn::Join" : [ " ", ["Management Subnet AZ1", { "Fn::FindInMap" : [ "DATACENTER", { "Ref" : "Provider" }, "TAG" ]} ] ] }
           },
           {
             "Key": "Application",
@@ -552,7 +552,7 @@
         "Tags": [
           {
             "Key": "Name",
-            "Value": { "Fn::Join" : [ " ", ["Management Subnet AZ2", { "Ref" : "Environment"} ] ] }
+            "Value": { "Fn::Join" : [ " ", ["Management Subnet AZ2", { "Fn::FindInMap" : [ "DATACENTER", { "Ref" : "Provider" }, "TAG" ]} ] ] }
           },
           {
             "Key": "Application",
@@ -577,7 +577,7 @@
         "Tags": [
           {
             "Key": "Name",
-            "Value": { "Fn::Join" : [ " ", ["DataBase Subnet AZ1", { "Ref" : "Environment"} ] ] }
+            "Value": { "Fn::Join" : [ " ", ["DataBase Subnet AZ1", { "Fn::FindInMap" : [ "DATACENTER", { "Ref" : "Provider" }, "TAG" ]} ] ] }
           },
           {
             "Key": "Application",
@@ -602,7 +602,7 @@
         "Tags": [
           {
             "Key": "Name",
-            "Value": { "Fn::Join" : [ " ", ["DataBase Subnet AZ2", { "Ref" : "Environment"} ] ] }
+            "Value": { "Fn::Join" : [ " ", ["DataBase Subnet AZ2", { "Fn::FindInMap" : [ "DATACENTER", { "Ref" : "Provider" }, "TAG" ]} ] ] }
           },
           {
             "Key": "Application",
@@ -749,7 +749,7 @@
           "Tags":[
             {
             "Key": "Name",
-            "Value": { "Fn::Join" : [ " ", ["Monitors SG", { "Ref" : "Environment"} ] ] }
+            "Value": { "Fn::Join" : [ " ", ["Monitors SG", { "Fn::FindInMap" : [ "DATACENTER", { "Ref" : "Provider" }, "TAG" ]} ] ] }
             }
           ],
 
@@ -804,7 +804,7 @@
           "Tags":[
             {
             "Key": "Name",
-            "Value": { "Fn::Join" : [ " ", ["Internal SG", { "Ref" : "Environment"} ] ] }
+            "Value": { "Fn::Join" : [ " ", ["Internal SG", { "Fn::FindInMap" : [ "DATACENTER", { "Ref" : "Provider" }, "TAG" ]} ] ] }
             }
           ],
 
@@ -883,7 +883,7 @@
           "Tags":[
             {
             "Key": "Name",
-            "Value": { "Fn::Join" : [ " ", ["mgt-inbound", { "Ref" : "Environment"} ] ] }
+            "Value": { "Fn::Join" : [ " ", ["mgt-inbound", { "Fn::FindInMap" : [ "DATACENTER", { "Ref" : "Provider" }, "TAG" ]} ] ] }
             }
           ],
 
@@ -968,7 +968,7 @@
           "Tags":[
             {
             "Key": "Name",
-            "Value": { "Fn::Join" : [ " ", ["mgt-beta", { "Ref" : "Environment"} ] ] }
+            "Value": { "Fn::Join" : [ " ", ["mgt-beta", { "Fn::FindInMap" : [ "DATACENTER", { "Ref" : "Provider" }, "TAG" ]} ] ] }
             }
           ],
 
@@ -983,7 +983,7 @@
             "IpProtocol": "tcp",
             "FromPort": "53",
             "ToPort": "53",
-            "CidrIp": "10.7.24.0/24"
+            "CidrIp": { "Fn::FindInMap" : [ "DATACENTER", { "Ref" : "Provider" }, "SUBNET24" ]}
           },
           {
             "IpProtocol": "udp",
@@ -995,7 +995,7 @@
             "IpProtocol": "udp",
             "FromPort": "53",
             "ToPort": "53",
-            "CidrIp": "10.7.24.0/24"
+            "CidrIp": { "Fn::FindInMap" : [ "DATACENTER", { "Ref" : "Provider" }, "SUBNET24" ]}
           }
         ],
         "SecurityGroupEgress": [
@@ -1017,7 +1017,7 @@
           "Tags":[
             {
             "Key": "Name",
-            "Value": { "Fn::Join" : [ " ", ["mgt-http", { "Ref" : "Environment"} ] ] }
+            "Value": { "Fn::Join" : [ " ", ["mgt-http", { "Fn::FindInMap" : [ "DATACENTER", { "Ref" : "Provider" }, "TAG" ]} ] ] }
             }
           ],
 
@@ -1066,7 +1066,7 @@
           "Tags":[
             {
             "Key": "Name",
-            "Value": { "Fn::Join" : [ " ", ["mgt-ssh-from", { "Ref" : "Environment"} ] ] }
+            "Value": { "Fn::Join" : [ " ", ["mgt-ssh-from", { "Fn::FindInMap" : [ "DATACENTER", { "Ref" : "Provider" }, "TAG" ]} ] ] }
             }
           ],
 
@@ -1097,7 +1097,7 @@
           "Tags":[
             {
             "Key": "Name",
-            "Value": { "Fn::Join" : [ " ", ["Cassandra SG", { "Ref" : "Environment"} ] ] }
+            "Value": { "Fn::Join" : [ " ", ["Cassandra SG", { "Fn::FindInMap" : [ "DATACENTER", { "Ref" : "Provider" }, "TAG" ]} ] ] }
             }
           ],
         "SecurityGroupEgress": [
@@ -1119,7 +1119,7 @@
           "Tags":[
             {
             "Key": "Name",
-            "Value": { "Fn::Join" : [ " ", ["Elasticache SG", { "Ref" : "Environment"} ] ] }
+            "Value": { "Fn::Join" : [ " ", ["Elasticache SG", { "Fn::FindInMap" : [ "DATACENTER", { "Ref" : "Provider" }, "TAG" ]} ] ] }
             }
           ],
         "SecurityGroupEgress": [
@@ -1141,7 +1141,7 @@
           "Tags":[
             {
             "Key": "Name",
-            "Value": { "Fn::Join" : [ " ", ["RDS SG", { "Ref" : "Environment"} ] ] }
+            "Value": { "Fn::Join" : [ " ", ["RDS SG", { "Fn::FindInMap" : [ "DATACENTER", { "Ref" : "Provider" }, "TAG" ]} ] ] }
             }
           ],
         "SecurityGroupEgress": [
@@ -1163,7 +1163,7 @@
           "Tags":[
             {
             "Key": "Name",
-            "Value": { "Fn::Join" : [ " ", ["ElasticSearch SG", { "Ref" : "Environment"} ] ] }
+            "Value": { "Fn::Join" : [ " ", ["ElasticSearch SG", { "Fn::FindInMap" : [ "DATACENTER", { "Ref" : "Provider" }, "TAG" ]} ] ] }
             }
           ],
         "SecurityGroupEgress": [
@@ -1185,7 +1185,7 @@
           "Tags":[
             {
             "Key": "Name",
-            "Value": { "Fn::Join" : [ " ", ["Beanstalkd SG", { "Ref" : "Environment"} ] ] }
+            "Value": { "Fn::Join" : [ " ", ["Beanstalkd SG", { "Fn::FindInMap" : [ "DATACENTER", { "Ref" : "Provider" }, "TAG" ]} ] ] }
             }
           ],
         "SecurityGroupEgress": [
@@ -1209,10 +1209,10 @@
           "Tags":[
             {
             "Key": "Name",
-            "Value": { "Fn::Join" : [ " ", ["Private Apis SG", { "Ref" : "Environment"} ] ] }
+            "Value": { "Fn::Join" : [ " ", ["Private Apis SG", { "Fn::FindInMap" : [ "DATACENTER", { "Ref" : "Provider" }, "TAG" ]} ] ] }
             }
           ],
-              
+
         "SecurityGroupIngress": [
           {
             "IpProtocol": "icmp",
@@ -1284,10 +1284,10 @@
           "Tags":[
             {
             "Key": "Name",
-            "Value": { "Fn::Join" : [ " ", ["Logstash SG", { "Ref" : "Environment"} ] ] }
+            "Value": { "Fn::Join" : [ " ", ["Logstash SG", { "Fn::FindInMap" : [ "DATACENTER", { "Ref" : "Provider" }, "TAG" ]} ] ] }
             }
           ],
-                
+
         "SecurityGroupIngress": [
           {
             "IpProtocol": "icmp",
@@ -1353,11 +1353,11 @@
           "Tags":[
             {
             "Key": "Name",
-            "Value": { "Fn::Join" : [ " ", ["Guatemala Accounts Application SG", { "Ref" : "Environment"} ] ] }
+            "Value": { "Fn::Join" : [ " ", ["Guatemala Accounts Application SG", { "Fn::FindInMap" : [ "DATACENTER", { "Ref" : "Provider" }, "TAG" ]} ] ] }
             }
           ],
-                
-         "SecurityGroupIngress": [   
+
+         "SecurityGroupIngress": [
           {
             "IpProtocol": "icmp",
             "FromPort": "-1",
@@ -1405,15 +1405,15 @@
           "GroupDescription": "Dominican Republic accounts applications",
           "VpcId": {
             "Ref": "vpc"
-            },    
+            },
             "Tags":[
               {
               "Key": "Name",
-              "Value": { "Fn::Join" : [ " ", ["Dominican Republic Application SG", { "Ref" : "Environment"} ] ] }
+              "Value": { "Fn::Join" : [ " ", ["Dominican Republic Application SG", { "Fn::FindInMap" : [ "DATACENTER", { "Ref" : "Provider" }, "TAG" ]} ] ] }
               }
             ],
-                   
-           "SecurityGroupIngress": [   
+
+           "SecurityGroupIngress": [
             {
               "IpProtocol": "icmp",
               "FromPort": "-1",
@@ -1461,15 +1461,15 @@
           "GroupDescription": "Mexico accounts applications",
           "VpcId": {
             "Ref": "vpc"
-            },    
+            },
             "Tags":[
               {
               "Key": "Name",
-              "Value": { "Fn::Join" : [ " ", ["Mexico Application SG", { "Ref" : "Environment"} ] ] }
+              "Value": { "Fn::Join" : [ " ", ["Mexico Application SG", { "Fn::FindInMap" : [ "DATACENTER", { "Ref" : "Provider" }, "TAG" ]} ] ] }
               }
             ],
-                   
-           "SecurityGroupIngress": [   
+
+           "SecurityGroupIngress": [
             {
               "IpProtocol": "icmp",
               "FromPort": "-1",
@@ -1522,10 +1522,10 @@
           "Tags":[
             {
             "Key": "Name",
-            "Value": { "Fn::Join" : [ " ", ["Iceland Accounts Application SG", { "Ref" : "Environment"} ] ] }
+            "Value": { "Fn::Join" : [ " ", ["Iceland Accounts Application SG", { "Fn::FindInMap" : [ "DATACENTER", { "Ref" : "Provider" }, "TAG" ]} ] ] }
             }
           ],
-                
+
         "SecurityGroupIngress": [
           {
             "IpProtocol": "icmp",
@@ -1578,11 +1578,11 @@
           "Tags":[
             {
             "Key": "Name",
-            "Value": { "Fn::Join" : [ " ", ["El Salvador Accounts Application SG", { "Ref" : "Environment"} ] ] }
+            "Value": { "Fn::Join" : [ " ", ["El Salvador Accounts Application SG", { "Fn::FindInMap" : [ "DATACENTER", { "Ref" : "Provider" }, "TAG" ]} ] ] }
             }
           ],
-                
-         "SecurityGroupIngress": [   
+
+         "SecurityGroupIngress": [
           {
             "IpProtocol": "icmp",
             "FromPort": "-1",
@@ -1647,11 +1647,11 @@
           "Tags":[
             {
             "Key": "Name",
-            "Value": { "Fn::Join" : [ " ", ["Nicaragua Accounts Application SG", { "Ref" : "Environment"} ] ] }
+            "Value": { "Fn::Join" : [ " ", ["Nicaragua Accounts Application SG", { "Fn::FindInMap" : [ "DATACENTER", { "Ref" : "Provider" }, "TAG" ]} ] ] }
             }
           ],
-                
-         "SecurityGroupIngress": [   
+
+         "SecurityGroupIngress": [
           {
             "IpProtocol": "icmp",
             "FromPort": "-1",
@@ -1704,11 +1704,11 @@
           "Tags":[
             {
             "Key": "Name",
-            "Value": { "Fn::Join" : [ " ", ["Panama Accounts Application SG", { "Ref" : "Environment"} ] ] }
+            "Value": { "Fn::Join" : [ " ", ["Panama Accounts Application SG", { "Fn::FindInMap" : [ "DATACENTER", { "Ref" : "Provider" }, "TAG" ]} ] ] }
             }
           ],
-                
-         "SecurityGroupIngress": [   
+
+         "SecurityGroupIngress": [
           {
             "IpProtocol": "icmp",
             "FromPort": "-1",
@@ -2008,206 +2008,7 @@
         }
       }
     },
-    "ingress14": {
-      "Type": "AWS::EC2::SecurityGroupIngress",
-      "Properties": {
-        "GroupId": {
-          "Ref": "sgMonitors"
-        },
-        "IpProtocol": "tcp",
-        "FromPort": "22",
-        "ToPort": "22",
-        "SourceSecurityGroupId": {
-          "Ref": "sgMGTInbound"
-        },
-        "SourceSecurityGroupOwnerId": "243238936187"
-      }
-    },
-    "ingress15": {
-      "Type": "AWS::EC2::SecurityGroupIngress",
-      "Properties": {
-        "GroupId": {
-          "Ref": "sgPrivateApis"
-        },
-        "IpProtocol": "tcp",
-        "FromPort": "22",
-        "ToPort": "22",
-        "SourceSecurityGroupId": {
-          "Ref": "sgMGTInbound"
-        },
-        "SourceSecurityGroupOwnerId": "243238936187"
-      }
-    },
-
-    "ingress20": {
-      "Type": "AWS::EC2::SecurityGroupIngress",
-      "Properties": {
-        "GroupId": {
-          "Ref": "sgMonitors"
-        },
-        "IpProtocol": "tcp",
-        "FromPort": "22",
-        "ToPort": "22",
-        "SourceSecurityGroupId": {
-          "Ref": "sgMGTInbound"
-        },
-        "SourceSecurityGroupOwnerId": "243238936187"
-      }
-    },
-
-    "ingress21": {
-      "Type": "AWS::EC2::SecurityGroupIngress",
-      "Properties": {
-        "GroupId": {
-          "Ref": "sgLogstash"
-        },
-        "IpProtocol": "tcp",
-        "FromPort": "22",
-        "ToPort": "22",
-        "SourceSecurityGroupId": {
-          "Ref": "sgMGTInbound"
-        },
-        "SourceSecurityGroupOwnerId": "243238936187"
-      }
-    },
-
-    "ingress23": {
-      "Type": "AWS::EC2::SecurityGroupIngress",
-      "Properties": {
-        "GroupId": {
-          "Ref": "sgPrivateApis"
-        },
-        "IpProtocol": "tcp",
-        "FromPort": "22",
-        "ToPort": "22",
-        "SourceSecurityGroupId": {
-          "Ref": "sgMGTInbound"
-        },
-        "SourceSecurityGroupOwnerId": "243238936187"
-      }
-    },
-    "ingress24": {
-      "Type": "AWS::EC2::SecurityGroupIngress",
-      "Properties": {
-        "GroupId": {
-          "Ref": "sgGTAccounts"
-        },
-        "IpProtocol": "tcp",
-        "FromPort": "22",
-        "ToPort": "22",
-        "SourceSecurityGroupId": {
-          "Ref": "sgMGTInbound"
-        },
-        "SourceSecurityGroupOwnerId": "243238936187"
-      }
-    },
-    "ingress25": {
-      "Type": "AWS::EC2::SecurityGroupIngress",
-      "Properties": {
-        "GroupId": {
-          "Ref": "sgISAccounts"
-        },
-        "IpProtocol": "tcp",
-        "FromPort": "22",
-        "ToPort": "22",
-        "SourceSecurityGroupId": {
-          "Ref": "sgMGTInbound"
-        },
-        "SourceSecurityGroupOwnerId": "243238936187"
-      }
-    },
-    "ingress27": {
-      "Type": "AWS::EC2::SecurityGroupIngress",
-      "Properties": {
-        "GroupId": {
-          "Ref": "sgDOAccounts"
-        },
-        "IpProtocol": "tcp",
-        "FromPort": "22",
-        "ToPort": "22",
-        "SourceSecurityGroupId": {
-          "Ref": "sgMGTInbound"
-        },
-        "SourceSecurityGroupOwnerId": "243238936187"
-      }
-    },
-    "ingress28": {
-      "Type": "AWS::EC2::SecurityGroupIngress",
-      "Properties": {
-        "GroupId": {
-          "Ref": "sgMXAccounts"
-        },
-        "IpProtocol": "tcp",
-        "FromPort": "22",
-        "ToPort": "22",
-        "SourceSecurityGroupId": {
-          "Ref": "sgMGTInbound"
-        },
-        "SourceSecurityGroupOwnerId": "243238936187"
-      }
-    },
-    "ingress29": {
-      "Type": "AWS::EC2::SecurityGroupIngress",
-      "Properties": {
-        "GroupId": {
-          "Ref": "sgSVAccounts"
-        },
-        "IpProtocol": "tcp",
-        "FromPort": "22",
-        "ToPort": "22",
-        "SourceSecurityGroupId": {
-          "Ref": "sgMGTInbound"
-        },
-        "SourceSecurityGroupOwnerId": "243238936187"
-      }
-    },
-    "ingress30": {
-      "Type": "AWS::EC2::SecurityGroupIngress",
-      "Properties": {
-        "GroupId": {
-          "Ref": "sgNIAccounts"
-        },
-        "IpProtocol": "tcp",
-        "FromPort": "22",
-        "ToPort": "22",
-        "SourceSecurityGroupId": {
-          "Ref": "sgMGTInbound"
-        },
-        "SourceSecurityGroupOwnerId": "243238936187"
-      }
-    },
-    "ingress31": {
-      "Type": "AWS::EC2::SecurityGroupIngress",
-      "Properties": {
-        "GroupId": {
-          "Ref": "sgPAAccounts"
-        },
-        "IpProtocol": "tcp",
-        "FromPort": "22",
-        "ToPort": "22",
-        "SourceSecurityGroupId": {
-          "Ref": "sgMGTInbound"
-        },
-        "SourceSecurityGroupOwnerId": "243238936187"
-      }
-    },
-    "ingress32": {
-      "Type": "AWS::EC2::SecurityGroupIngress",
-      "Properties": {
-        "GroupId": {
-          "Ref": "sgMGTInbound"
-        },
-        "IpProtocol": "tcp",
-        "FromPort": "22",
-        "ToPort": "22",
-        "SourceSecurityGroupId": {
-          "Ref": "sgMGTInbound"
-        },
-        "SourceSecurityGroupOwnerId": "243238936187"
-      }
-    },
-
-"ingress14": {
+        "ingress14": {
       "Type": "AWS::EC2::SecurityGroupIngress",
       "Properties": {
         "GroupId": {
@@ -2885,7 +2686,6 @@
         "SourceSecurityGroupOwnerId": "243238936187"
       }
     },
-
     "ingress65": {
       "Type": "AWS::EC2::SecurityGroupIngress",
       "Properties": {
@@ -3078,6 +2878,36 @@
         "IpProtocol": "tcp",
         "FromPort": "6556",
         "ToPort": "6556",
+        "SourceSecurityGroupId": {
+          "Ref": "sgMGTInbound"
+        },
+        "SourceSecurityGroupOwnerId": "243238936187"
+      }
+    },
+    "ingress78": {
+      "Type": "AWS::EC2::SecurityGroupIngress",
+      "Properties": {
+        "GroupId": {
+          "Ref": "sgbeanstalkd"
+        },
+        "IpProtocol": "tcp",
+        "FromPort": "22",
+        "ToPort": "22",
+        "SourceSecurityGroupId": {
+          "Ref": "sgbeanstalkd"
+        },
+        "SourceSecurityGroupOwnerId": "243238936187"
+      }
+    },
+    "ingress79": {
+      "Type": "AWS::EC2::SecurityGroupIngress",
+      "Properties": {
+        "GroupId": {
+          "Ref": "sgbeanstalkd"
+        },
+        "IpProtocol": "tcp",
+        "FromPort": "22",
+        "ToPort": "22",
         "SourceSecurityGroupId": {
           "Ref": "sgMGTInbound"
         },
