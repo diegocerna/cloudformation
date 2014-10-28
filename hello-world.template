@@ -227,7 +227,7 @@
             "DependsOn" : "HelloWorldInstance",
             "Properties" : {
                 "Handle" : {"Ref" : "WebServerWaitHandle"},
-                "Timeout" : "1200"
+                "Timeout" : "3000"
             }
         }
     },

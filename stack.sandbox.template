@@ -345,22 +345,6 @@
       }
     },
 
-    "Forrest" : {
-      "Type" : "AWS::CloudFormation::Stack",
-      "Properties" : {
-        "TemplateURL" : "https://s3-us-west-2.amazonaws.com/pruebastack/forrest.template",
-"KeyName" : { "Ref" : "KeyName" },
-          "Version" : { "Ref" : "Version" },
-          "SubnetId" : { "Ref" : "PrivateSubnetId" },
-          "SG" : { "Ref" : "PrivateSecurityGroup" },
-          "DeployBranch" : "master",
-          "StackID" : { "Ref" : "StackID" },
-          "InstanceType" : { "Ref" : "InstanceType"},
-          "Environment" : { "Ref" : "appEnvironment" }
-        }
-      }
-    },
-
     "monitors" : {
       "Type" : "AWS::CloudFormation::Stack",
       "Properties" : {
