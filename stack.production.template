@@ -260,6 +260,7 @@
           "RoleDeployBranch" : "v0.12.0",
           "SitesDeployBranch" : "master",
           "StackID" : { "Ref" : "StackID" },
+          "StackIDDB" : { "Ref" : "StackIDDB" },
           "InstanceType" : { "Ref" : "InstanceType"},
           "Environment" : { "Ref" : "appEnvironment" }
         }
