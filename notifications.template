@@ -227,6 +227,7 @@
 
           "echo ", { "Fn::Join" : [ "" , ["events_host=events", { "Ref" : "StackID" }, { "Fn::FindInMap" : [ "env", { "Ref" : "Environment" }, "DOT" ]}, ".bluekite.com" ]]},      ">> /etc/facter/facts.d/custom_facts.txt\n",
           "echo ", { "Fn::Join" : [ "" , ["nagios_redis_host=redis", { "Ref" : "StackID" }, { "Fn::FindInMap" : [ "env", { "Ref" : "Environment" }, "DOT" ]}, ".bluekite.com" ]]},      ">> /etc/facter/facts.d/custom_facts.txt\n",
+          "echo ", { "Fn::Join" : [ "" , ["internal_gateway_host=gw", { "Ref" : "StackID" }, { "Fn::FindInMap" : [ "env", { "Ref" : "Environment" }, "DOT" ]}, ".bluekite.com" ]]},      ">> /etc/facter/facts.d/custom_facts.txt\n",
 
           "# Clone role hostname repo\n",
           "git clone git@github.com:victormarroquin/Puppet-HostName.git /etc/puppet/modules/hosts > /tmp/git.log 2>&1 || error_exit 'Failed to clone hostname repo'\n",
