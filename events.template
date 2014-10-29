@@ -15,12 +15,6 @@
       "Default" : "stamp-prod"
     },
 
-    "DeployBranch" : {
-      "Type" : "String",
-      "Description" : "Wich branch you want to use as source",
-      "Default" : "master"
-    },
-
     "StackID" : {
       "Type" : "String",
       "Description" : "Stack ID name",
