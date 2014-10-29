@@ -445,6 +445,7 @@
           "RoleDeployBranch" : "master",
           "SitesDeployBranch" : "feature/0.14.0",
           "StackID" : { "Ref" : "StackID" },
+          "StackIDDB" : { "Ref" : "StackIDDB" },
           "InstanceType" : { "Ref" : "InstanceType"},
           "Environment" : { "Ref" : "appEnvironment" }
         }
