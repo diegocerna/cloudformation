@@ -36,6 +36,7 @@
     "subnets" : {
       "stamp1"             : { "VPCSN" : "10.10.0.0/16", "PRIVATESN" : "10.10.22.0/23", "MANAGESN" : "10.10.82.0/24", "MANAGESN2" : "10.10.83.0/24", "WORKERSN1" : "10.10.24.0/27", "WORKERSN2" : "10.10.24.32/27", "WORKERSN3" : "10.10.24.64/27", "WORKERSN4" : "10.10.24.96/27", "WORKERSN5" : "10.10.24.128/27", "WORKERSN6" : "10.10.24.160/27", "WORKERSN7" : "10.10.24.192/27", "DBSN" : "10.10.3.0/24", "DBSN2" : "10.10.4.0/24", "PRIVATESN2" : "10.10.52.0/23", "WORKERSN101" : "10.10.54.0/27", "WORKERSN102" : "10.10.54.32/27", "WORKERSN103" : "10.10.54.64/27", "WORKERSN104" : "10.10.54.96/27", "WORKERSN105" : "10.10.54.128/27", "WORKERSN106" : "10.10.54.160/27", "WORKERSN107" : "10.10.54.192/27" },
       "stamp2"             : { "VPCSN" : "10.11.0.0/16", "PRIVATESN" : "10.11.22.0/23", "MANAGESN" : "10.11.82.0/24", "MANAGESN2" : "10.11.83.0/24", "WORKERSN1" : "10.11.24.0/27", "WORKERSN2" : "10.11.24.32/27", "WORKERSN3" : "10.11.24.64/27", "WORKERSN4" : "10.11.24.96/27", "WORKERSN5" : "10.11.24.128/27", "WORKERSN6" : "10.11.24.160/27", "WORKERSN7" : "10.11.24.192/27", "DBSN" : "10.11.3.0/24", "DBSN2" : "10.11.4.0/24", "PRIVATESN2" : "10.11.52.0/23", "WORKERSN101" : "10.11.54.0/27", "WORKERSN102" : "10.11.54.32/27", "WORKERSN103" : "10.11.54.64/27", "WORKERSN104" : "10.11.54.96/27", "WORKERSN105" : "10.11.54.128/27", "WORKERSN106" : "10.11.54.160/27", "WORKERSN107" : "10.11.54.192/27" },
+      "sandbox"             : { "VPCSN" : "10.40.0.0/16", "PRIVATESN" : "10.40.22.0/23", "MANAGESN" : "10.40.82.0/24", "MANAGESN2" : "10.40.83.0/24", "WORKERSN1" : "10.40.24.0/27", "WORKERSN2" : "10.40.24.32/27", "WORKERSN3" : "10.40.24.64/27", "WORKERSN4" : "10.40.24.96/27", "WORKERSN5" : "10.40.24.128/27", "WORKERSN6" : "10.40.24.160/27", "WORKERSN7" : "10.40.24.192/27", "DBSN" : "10.40.3.0/24", "DBSN2" : "10.40.4.0/24", "PRIVATESN2" : "10.40.52.0/23", "WORKERSN101" : "10.40.54.0/27", "WORKERSN102" : "10.40.54.32/27", "WORKERSN103" : "10.40.54.64/27", "WORKERSN104" : "10.40.54.96/27", "WORKERSN105" : "10.40.54.128/27", "WORKERSN106" : "10.40.54.160/27", "WORKERSN107" : "10.40.54.192/27" },
       "staging"             : { "VPCSN" : "10.30.0.0/16", "PRIVATESN" : "10.30.22.0/23", "MANAGESN" : "10.30.82.0/24", "MANAGESN2" : "10.30.83.0/24", "WORKERSN1" : "10.30.24.0/27", "WORKERSN2" : "10.30.24.32/27", "WORKERSN3" : "10.30.24.64/27", "WORKERSN4" : "10.30.24.96/27", "WORKERSN5" : "10.30.24.128/27", "WORKERSN6" : "10.30.24.160/27", "WORKERSN7" : "10.30.24.192/27", "DBSN" : "10.30.3.0/24", "DBSN2" : "10.30.4.0/24", "PRIVATESN2" : "10.30.52.0/23", "WORKERSN101" : "10.30.54.0/27", "WORKERSN102" : "10.30.54.32/27", "WORKERSN103" : "10.30.54.64/27", "WORKERSN104" : "10.30.54.96/27", "WORKERSN105" : "10.30.54.128/27", "WORKERSN106" : "10.30.54.160/27", "WORKERSN107" : "10.30.54.192/27" }
     },
 
@@ -934,6 +935,48 @@
             "IpProtocol": "tcp",
             "FromPort": "53",
             "ToPort": "53",
+            "CidrIp": "10.1.24.0/24"
+          },
+          {
+            "IpProtocol": "tcp",
+            "FromPort": "53",
+            "ToPort": "53",
+            "CidrIp": "10.5.24.0/24"
+          },
+          {
+            "IpProtocol": "tcp",
+            "FromPort": "53",
+            "ToPort": "53",
+            "CidrIp": "10.7.24.0/24"
+          },
+          {
+            "IpProtocol": "tcp",
+            "FromPort": "53",
+            "ToPort": "53",
+            "CidrIp": "10.5.82.0/24"
+          },
+          {
+            "IpProtocol": "tcp",
+            "FromPort": "53",
+            "ToPort": "53",
+            "CidrIp": "10.7.82.0/24"
+          },
+          {
+            "IpProtocol": "tcp",
+            "FromPort": "53",
+            "ToPort": "53",
+            "CidrIp": { "Fn::FindInMap" : [ "subnets", { "Ref" : "Version" }, "VPCSN" ]}
+          },
+          {
+            "IpProtocol": "tcp",
+            "FromPort": "6557",
+            "ToPort": "6558",
+            "CidrIp": { "Fn::FindInMap" : [ "subnets", { "Ref" : "Version" }, "VPCSN" ]}
+          },
+          {
+            "IpProtocol": "tcp",
+            "FromPort": "53",
+            "ToPort": "53",
             "CidrIp": { "Fn::FindInMap" : [ "DATACENTER", { "Ref" : "Provider" }, "MGTSUBNET" ]}
           },
           {
@@ -941,6 +984,42 @@
             "FromPort": "53",
             "ToPort": "53",
             "CidrIp": "10.1.82.0/24"
+          },
+          {
+            "IpProtocol": "udp",
+            "FromPort": "53",
+            "ToPort": "53",
+            "CidrIp": "10.1.24.0/24"
+          },
+          {
+            "IpProtocol": "udp",
+            "FromPort": "53",
+            "ToPort": "53",
+            "CidrIp": "10.5.24.0/24"
+          },
+          {
+            "IpProtocol": "udp",
+            "FromPort": "53",
+            "ToPort": "53",
+            "CidrIp": "10.7.24.0/24"
+          },
+          {
+            "IpProtocol": "udp",
+            "FromPort": "53",
+            "ToPort": "53",
+            "CidrIp": "10.5.82.0/24"
+          },
+          {
+            "IpProtocol": "udp",
+            "FromPort": "53",
+            "ToPort": "53",
+            "CidrIp": "10.7.82.0/24"
+          },
+          {
+            "IpProtocol": "udp",
+            "FromPort": "53",
+            "ToPort": "53",
+            "CidrIp": { "Fn::FindInMap" : [ "subnets", { "Ref" : "Version" }, "VPCSN" ]}
           },
           {
             "IpProtocol": "udp",
@@ -2008,7 +2087,7 @@
         }
       }
     },
-        "ingress14": {
+    "ingress1": {
       "Type": "AWS::EC2::SecurityGroupIngress",
       "Properties": {
         "GroupId": {
@@ -2023,7 +2102,7 @@
         "SourceSecurityGroupOwnerId": "243238936187"
       }
     },
-    "ingress15": {
+    "ingress2": {
       "Type": "AWS::EC2::SecurityGroupIngress",
       "Properties": {
         "GroupId": {
@@ -2039,23 +2118,7 @@
       }
     },
 
-    "ingress20": {
-      "Type": "AWS::EC2::SecurityGroupIngress",
-      "Properties": {
-        "GroupId": {
-          "Ref": "sgMonitors"
-        },
-        "IpProtocol": "tcp",
-        "FromPort": "22",
-        "ToPort": "22",
-        "SourceSecurityGroupId": {
-          "Ref": "sgMGTInbound"
-        },
-        "SourceSecurityGroupOwnerId": "243238936187"
-      }
-    },
-
-    "ingress21": {
+    "ingress3": {
       "Type": "AWS::EC2::SecurityGroupIngress",
       "Properties": {
         "GroupId": {
@@ -2071,22 +2134,7 @@
       }
     },
 
-    "ingress23": {
-      "Type": "AWS::EC2::SecurityGroupIngress",
-      "Properties": {
-        "GroupId": {
-          "Ref": "sgPrivateApis"
-        },
-        "IpProtocol": "tcp",
-        "FromPort": "22",
-        "ToPort": "22",
-        "SourceSecurityGroupId": {
-          "Ref": "sgMGTInbound"
-        },
-        "SourceSecurityGroupOwnerId": "243238936187"
-      }
-    },
-    "ingress24": {
+    "ingress4": {
       "Type": "AWS::EC2::SecurityGroupIngress",
       "Properties": {
         "GroupId": {
@@ -2101,7 +2149,7 @@
         "SourceSecurityGroupOwnerId": "243238936187"
       }
     },
-    "ingress25": {
+    "ingress5": {
       "Type": "AWS::EC2::SecurityGroupIngress",
       "Properties": {
         "GroupId": {
@@ -2116,7 +2164,7 @@
         "SourceSecurityGroupOwnerId": "243238936187"
       }
     },
-    "ingress27": {
+    "ingress6": {
       "Type": "AWS::EC2::SecurityGroupIngress",
       "Properties": {
         "GroupId": {
@@ -2131,7 +2179,7 @@
         "SourceSecurityGroupOwnerId": "243238936187"
       }
     },
-    "ingress28": {
+    "ingress7": {
       "Type": "AWS::EC2::SecurityGroupIngress",
       "Properties": {
         "GroupId": {
@@ -2146,7 +2194,7 @@
         "SourceSecurityGroupOwnerId": "243238936187"
       }
     },
-    "ingress29": {
+    "ingress8": {
       "Type": "AWS::EC2::SecurityGroupIngress",
       "Properties": {
         "GroupId": {
@@ -2161,7 +2209,7 @@
         "SourceSecurityGroupOwnerId": "243238936187"
       }
     },
-    "ingress30": {
+    "ingress9": {
       "Type": "AWS::EC2::SecurityGroupIngress",
       "Properties": {
         "GroupId": {
@@ -2176,7 +2224,7 @@
         "SourceSecurityGroupOwnerId": "243238936187"
       }
     },
-    "ingress31": {
+    "ingress10": {
       "Type": "AWS::EC2::SecurityGroupIngress",
       "Properties": {
         "GroupId": {
@@ -2191,7 +2239,7 @@
         "SourceSecurityGroupOwnerId": "243238936187"
       }
     },
-    "ingress32": {
+    "ingress11": {
       "Type": "AWS::EC2::SecurityGroupIngress",
       "Properties": {
         "GroupId": {
@@ -2206,7 +2254,7 @@
         "SourceSecurityGroupOwnerId": "243238936187"
       }
     },
-    "ingress33": {
+    "ingress12": {
       "Type": "AWS::EC2::SecurityGroupIngress",
       "Properties": {
         "GroupId": {
@@ -2221,7 +2269,7 @@
         "SourceSecurityGroupOwnerId": "243238936187"
       }
     },
-    "ingress34": {
+    "ingress13": {
       "Type": "AWS::EC2::SecurityGroupIngress",
       "Properties": {
         "GroupId": {
@@ -2236,7 +2284,7 @@
         "SourceSecurityGroupOwnerId": "243238936187"
       }
     },
-    "ingress35": {
+    "ingress14": {
       "Type": "AWS::EC2::SecurityGroupIngress",
       "Properties": {
         "GroupId": {
@@ -2251,7 +2299,7 @@
         "SourceSecurityGroupOwnerId": "243238936187"
       }
     },
-    "ingress36": {
+    "ingress15": {
       "Type": "AWS::EC2::SecurityGroupIngress",
       "Properties": {
         "GroupId": {
@@ -2266,7 +2314,7 @@
         "SourceSecurityGroupOwnerId": "243238936187"
       }
     },
-    "ingress37": {
+    "ingress16": {
       "Type": "AWS::EC2::SecurityGroupIngress",
       "Properties": {
         "GroupId": {
@@ -2281,7 +2329,7 @@
         "SourceSecurityGroupOwnerId": "243238936187"
       }
     },
-    "ingress38": {
+    "ingress17": {
       "Type": "AWS::EC2::SecurityGroupIngress",
       "Properties": {
         "GroupId": {
@@ -2296,7 +2344,7 @@
         "SourceSecurityGroupOwnerId": "243238936187"
       }
     },
-    "ingress39": {
+    "ingress18": {
       "Type": "AWS::EC2::SecurityGroupIngress",
       "Properties": {
         "GroupId": {
@@ -2311,7 +2359,7 @@
         "SourceSecurityGroupOwnerId": "243238936187"
       }
     },
-    "ingress40": {
+    "ingress19": {
       "Type": "AWS::EC2::SecurityGroupIngress",
       "Properties": {
         "GroupId": {
@@ -2326,7 +2374,7 @@
         "SourceSecurityGroupOwnerId": "243238936187"
       }
     },
-    "ingress41": {
+    "ingress20": {
       "Type": "AWS::EC2::SecurityGroupIngress",
       "Properties": {
         "GroupId": {
@@ -2341,7 +2389,7 @@
         "SourceSecurityGroupOwnerId": "243238936187"
       }
     },
-    "ingress42": {
+    "ingress21": {
       "Type": "AWS::EC2::SecurityGroupIngress",
       "Properties": {
         "GroupId": {
@@ -2356,7 +2404,7 @@
         "SourceSecurityGroupOwnerId": "243238936187"
       }
     },
-    "ingress43": {
+    "ingress22": {
       "Type": "AWS::EC2::SecurityGroupIngress",
       "Properties": {
         "GroupId": {
@@ -2371,7 +2419,7 @@
         "SourceSecurityGroupOwnerId": "243238936187"
       }
     },
-    "ingress44": {
+    "ingress23": {
       "Type": "AWS::EC2::SecurityGroupIngress",
       "Properties": {
         "GroupId": {
@@ -2386,7 +2434,7 @@
         "SourceSecurityGroupOwnerId": "243238936187"
       }
     },
-    "ingress45": {
+    "ingress24": {
       "Type": "AWS::EC2::SecurityGroupIngress",
       "Properties": {
         "GroupId": {
@@ -2401,7 +2449,7 @@
         "SourceSecurityGroupOwnerId": "243238936187"
       }
     },
-    "ingress46": {
+    "ingress25": {
       "Type": "AWS::EC2::SecurityGroupIngress",
       "Properties": {
         "GroupId": {
@@ -2416,7 +2464,7 @@
         "SourceSecurityGroupOwnerId": "243238936187"
       }
     },
-    "ingress47": {
+    "ingress26": {
       "Type": "AWS::EC2::SecurityGroupIngress",
       "Properties": {
         "GroupId": {
@@ -2431,7 +2479,7 @@
         "SourceSecurityGroupOwnerId": "243238936187"
       }
     },
-    "ingress48": {
+    "ingress27": {
       "Type": "AWS::EC2::SecurityGroupIngress",
       "Properties": {
         "GroupId": {
@@ -2446,7 +2494,7 @@
         "SourceSecurityGroupOwnerId": "243238936187"
       }
     },
-    "ingress49": {
+    "ingress28": {
       "Type": "AWS::EC2::SecurityGroupIngress",
       "Properties": {
         "GroupId": {
@@ -2461,7 +2509,7 @@
         "SourceSecurityGroupOwnerId": "243238936187"
       }
     },
-    "ingress50": {
+    "ingress29": {
       "Type": "AWS::EC2::SecurityGroupIngress",
       "Properties": {
         "GroupId": {
@@ -2476,7 +2524,7 @@
         "SourceSecurityGroupOwnerId": "243238936187"
       }
     },
-    "ingress51": {
+    "ingress30": {
       "Type": "AWS::EC2::SecurityGroupIngress",
       "Properties": {
         "GroupId": {
@@ -2491,7 +2539,7 @@
         "SourceSecurityGroupOwnerId": "243238936187"
       }
     },
-    "ingress52": {
+    "ingress31": {
       "Type": "AWS::EC2::SecurityGroupIngress",
       "Properties": {
         "GroupId": {
@@ -2506,7 +2554,7 @@
         "SourceSecurityGroupOwnerId": "243238936187"
       }
     },
-    "ingress53": {
+    "ingress32": {
       "Type": "AWS::EC2::SecurityGroupIngress",
       "Properties": {
         "GroupId": {
@@ -2521,7 +2569,7 @@
         "SourceSecurityGroupOwnerId": "243238936187"
       }
     },
-    "ingress54": {
+    "ingress33": {
       "Type": "AWS::EC2::SecurityGroupIngress",
       "Properties": {
         "GroupId": {
@@ -2536,7 +2584,7 @@
         "SourceSecurityGroupOwnerId": "243238936187"
       }
     },
-    "ingress55": {
+    "ingress34": {
       "Type": "AWS::EC2::SecurityGroupIngress",
       "Properties": {
         "GroupId": {
@@ -2551,7 +2599,7 @@
         "SourceSecurityGroupOwnerId": "243238936187"
       }
     },
-    "ingress56": {
+    "ingress35": {
       "Type": "AWS::EC2::SecurityGroupIngress",
       "Properties": {
         "GroupId": {
@@ -2566,7 +2614,7 @@
         "SourceSecurityGroupOwnerId": "243238936187"
       }
     },
-    "ingress57": {
+    "ingress36": {
       "Type": "AWS::EC2::SecurityGroupIngress",
       "Properties": {
         "GroupId": {
@@ -2575,6 +2623,308 @@
         "IpProtocol": "tcp",
         "FromPort": "22",
         "ToPort": "22",
+        "SourceSecurityGroupId": {
+          "Ref": "sgMGTInbound"
+        },
+        "SourceSecurityGroupOwnerId": "243238936187"
+      }
+    },
+    "ingress37": {
+      "Type": "AWS::EC2::SecurityGroupIngress",
+      "Properties": {
+        "GroupId": {
+          "Ref": "sgElasticacheSG"
+        },
+        "IpProtocol": "tcp",
+        "FromPort": "6379",
+        "ToPort": "6379",
+        "SourceSecurityGroupId": {
+          "Ref": "sgPrivateApis"
+        },
+        "SourceSecurityGroupOwnerId": "243238936187"
+      }
+    },
+    "ingress38": {
+      "Type": "AWS::EC2::SecurityGroupIngress",
+      "Properties": {
+        "GroupId": {
+          "Ref": "sgElasticacheSG"
+        },
+        "IpProtocol": "tcp",
+        "FromPort": "6379",
+        "ToPort": "6379",
+        "SourceSecurityGroupId": {
+          "Ref": "sgGTAccounts"
+        },
+        "SourceSecurityGroupOwnerId": "243238936187"
+      }
+    },
+    "ingress39": {
+      "Type": "AWS::EC2::SecurityGroupIngress",
+      "Properties": {
+        "GroupId": {
+          "Ref": "sgElasticacheSG"
+        },
+        "IpProtocol": "tcp",
+        "FromPort": "6379",
+        "ToPort": "6379",
+        "SourceSecurityGroupId": {
+          "Ref": "sgDOAccounts"
+        },
+        "SourceSecurityGroupOwnerId": "243238936187"
+      }
+    },
+    "ingress40": {
+      "Type": "AWS::EC2::SecurityGroupIngress",
+      "Properties": {
+        "GroupId": {
+          "Ref": "sgElasticacheSG"
+        },
+        "IpProtocol": "tcp",
+        "FromPort": "6379",
+        "ToPort": "6379",
+        "SourceSecurityGroupId": {
+          "Ref": "sgMXAccounts"
+        },
+        "SourceSecurityGroupOwnerId": "243238936187"
+      }
+    },
+    "ingress41": {
+      "Type": "AWS::EC2::SecurityGroupIngress",
+      "Properties": {
+        "GroupId": {
+          "Ref": "sgElasticacheSG"
+        },
+        "IpProtocol": "tcp",
+        "FromPort": "6379",
+        "ToPort": "6379",
+        "SourceSecurityGroupId": {
+          "Ref": "sgSVAccounts"
+        },
+        "SourceSecurityGroupOwnerId": "243238936187"
+      }
+    },
+    "ingress42": {
+      "Type": "AWS::EC2::SecurityGroupIngress",
+      "Properties": {
+        "GroupId": {
+          "Ref": "sgElasticacheSG"
+        },
+        "IpProtocol": "tcp",
+        "FromPort": "6379",
+        "ToPort": "6379",
+        "SourceSecurityGroupId": {
+          "Ref": "sgNIAccounts"
+        },
+        "SourceSecurityGroupOwnerId": "243238936187"
+      }
+    },
+    "ingress43": {
+      "Type": "AWS::EC2::SecurityGroupIngress",
+      "Properties": {
+        "GroupId": {
+          "Ref": "sgElasticacheSG"
+        },
+        "IpProtocol": "tcp",
+        "FromPort": "6379",
+        "ToPort": "6379",
+        "SourceSecurityGroupId": {
+          "Ref": "sgMonitors"
+        },
+        "SourceSecurityGroupOwnerId": "243238936187"
+      }
+    },
+    "ingress44": {
+      "Type": "AWS::EC2::SecurityGroupIngress",
+      "Properties": {
+        "GroupId": {
+          "Ref": "sgMonitors"
+        },
+        "IpProtocol": "tcp",
+        "FromPort": "6556",
+        "ToPort": "6556",
+        "SourceSecurityGroupId": {
+          "Ref": "sgMGTInbound"
+        },
+        "SourceSecurityGroupOwnerId": "243238936187"
+      }
+    },
+    "ingress45": {
+      "Type": "AWS::EC2::SecurityGroupIngress",
+      "Properties": {
+        "GroupId": {
+          "Ref": "sgPrivateApis"
+        },
+        "IpProtocol": "tcp",
+        "FromPort": "6556",
+        "ToPort": "6556",
+        "SourceSecurityGroupId": {
+          "Ref": "sgMGTInbound"
+        },
+        "SourceSecurityGroupOwnerId": "243238936187"
+      }
+    },
+
+    "ingress46": {
+      "Type": "AWS::EC2::SecurityGroupIngress",
+      "Properties": {
+        "GroupId": {
+          "Ref": "sgLogstash"
+        },
+        "IpProtocol": "tcp",
+        "FromPort": "6556",
+        "ToPort": "6556",
+        "SourceSecurityGroupId": {
+          "Ref": "sgMGTInbound"
+        },
+        "SourceSecurityGroupOwnerId": "243238936187"
+      }
+    },
+
+    "ingress47": {
+      "Type": "AWS::EC2::SecurityGroupIngress",
+      "Properties": {
+        "GroupId": {
+          "Ref": "sgGTAccounts"
+        },
+        "IpProtocol": "tcp",
+        "FromPort": "6556",
+        "ToPort": "6556",
+        "SourceSecurityGroupId": {
+          "Ref": "sgMGTInbound"
+        },
+        "SourceSecurityGroupOwnerId": "243238936187"
+      }
+    },
+    "ingress48": {
+      "Type": "AWS::EC2::SecurityGroupIngress",
+      "Properties": {
+        "GroupId": {
+          "Ref": "sgISAccounts"
+        },
+        "IpProtocol": "tcp",
+        "FromPort": "6556",
+        "ToPort": "6556",
+        "SourceSecurityGroupId": {
+          "Ref": "sgMGTInbound"
+        },
+        "SourceSecurityGroupOwnerId": "243238936187"
+      }
+    },
+    "ingress49": {
+      "Type": "AWS::EC2::SecurityGroupIngress",
+      "Properties": {
+        "GroupId": {
+          "Ref": "sgDOAccounts"
+        },
+        "IpProtocol": "tcp",
+        "FromPort": "6556",
+        "ToPort": "6556",
+        "SourceSecurityGroupId": {
+          "Ref": "sgMGTInbound"
+        },
+        "SourceSecurityGroupOwnerId": "243238936187"
+      }
+    },
+    "ingress50": {
+      "Type": "AWS::EC2::SecurityGroupIngress",
+      "Properties": {
+        "GroupId": {
+          "Ref": "sgMXAccounts"
+        },
+        "IpProtocol": "tcp",
+        "FromPort": "6556",
+        "ToPort": "6556",
+        "SourceSecurityGroupId": {
+          "Ref": "sgMGTInbound"
+        },
+        "SourceSecurityGroupOwnerId": "243238936187"
+      }
+    },
+    "ingress51": {
+      "Type": "AWS::EC2::SecurityGroupIngress",
+      "Properties": {
+        "GroupId": {
+          "Ref": "sgSVAccounts"
+        },
+        "IpProtocol": "tcp",
+        "FromPort": "6556",
+        "ToPort": "6556",
+        "SourceSecurityGroupId": {
+          "Ref": "sgMGTInbound"
+        },
+        "SourceSecurityGroupOwnerId": "243238936187"
+      }
+    },
+    "ingress52": {
+      "Type": "AWS::EC2::SecurityGroupIngress",
+      "Properties": {
+        "GroupId": {
+          "Ref": "sgNIAccounts"
+        },
+        "IpProtocol": "tcp",
+        "FromPort": "6556",
+        "ToPort": "6556",
+        "SourceSecurityGroupId": {
+          "Ref": "sgMGTInbound"
+        },
+        "SourceSecurityGroupOwnerId": "243238936187"
+      }
+    },
+    "ingress53": {
+      "Type": "AWS::EC2::SecurityGroupIngress",
+      "Properties": {
+        "GroupId": {
+          "Ref": "sgPAAccounts"
+        },
+        "IpProtocol": "tcp",
+        "FromPort": "6556",
+        "ToPort": "6556",
+        "SourceSecurityGroupId": {
+          "Ref": "sgMGTInbound"
+        },
+        "SourceSecurityGroupOwnerId": "243238936187"
+      }
+    },
+    "ingress55": {
+      "Type": "AWS::EC2::SecurityGroupIngress",
+      "Properties": {
+        "GroupId": {
+          "Ref": "sgbeanstalkd"
+        },
+        "IpProtocol": "tcp",
+        "FromPort": "22",
+        "ToPort": "22",
+        "SourceSecurityGroupId": {
+          "Ref": "sgbeanstalkd"
+        },
+        "SourceSecurityGroupOwnerId": "243238936187"
+      }
+    },
+    "ingress56": {
+      "Type": "AWS::EC2::SecurityGroupIngress",
+      "Properties": {
+        "GroupId": {
+          "Ref": "sgbeanstalkd"
+        },
+        "IpProtocol": "tcp",
+        "FromPort": "22",
+        "ToPort": "22",
+        "SourceSecurityGroupId": {
+          "Ref": "sgMGTInbound"
+        },
+        "SourceSecurityGroupOwnerId": "243238936187"
+      }
+    },
+    "ingress57": {
+      "Type": "AWS::EC2::SecurityGroupIngress",
+      "Properties": {
+        "GroupId": {
+          "Ref": "sgElasticSearch"
+        },
+        "IpProtocol": "tcp",
+        "FromPort": "9200",
+        "ToPort": "9200",
         "SourceSecurityGroupId": {
           "Ref": "sgMGTInbound"
         },
@@ -2591,7 +2941,7 @@
         "FromPort": "6379",
         "ToPort": "6379",
         "SourceSecurityGroupId": {
-          "Ref": "sgPrivateApis"
+          "Ref": "sgMGTInbound"
         },
         "SourceSecurityGroupOwnerId": "243238936187"
       }
@@ -2600,13 +2950,13 @@
       "Type": "AWS::EC2::SecurityGroupIngress",
       "Properties": {
         "GroupId": {
-          "Ref": "sgElasticacheSG"
+          "Ref": "sgbeanstalkd"
         },
         "IpProtocol": "tcp",
-        "FromPort": "6379",
-        "ToPort": "6379",
+        "FromPort": "11300",
+        "ToPort": "11300",
         "SourceSecurityGroupId": {
-          "Ref": "sgGTAccounts"
+          "Ref": "sgMGTInbound"
         },
         "SourceSecurityGroupOwnerId": "243238936187"
       }
@@ -2615,13 +2965,13 @@
       "Type": "AWS::EC2::SecurityGroupIngress",
       "Properties": {
         "GroupId": {
-          "Ref": "sgElasticacheSG"
+          "Ref": "sgRds"
         },
         "IpProtocol": "tcp",
-        "FromPort": "6379",
-        "ToPort": "6379",
+        "FromPort": "5432",
+        "ToPort": "5432",
         "SourceSecurityGroupId": {
-          "Ref": "sgDOAccounts"
+          "Ref": "sgMGTInbound"
         },
         "SourceSecurityGroupOwnerId": "243238936187"
       }
@@ -2630,13 +2980,13 @@
       "Type": "AWS::EC2::SecurityGroupIngress",
       "Properties": {
         "GroupId": {
-          "Ref": "sgElasticacheSG"
+          "Ref": "sgcassandra"
         },
         "IpProtocol": "tcp",
-        "FromPort": "6379",
-        "ToPort": "6379",
+        "FromPort": "9160",
+        "ToPort": "9160",
         "SourceSecurityGroupId": {
-          "Ref": "sgMXAccounts"
+          "Ref": "sgMGTInbound"
         },
         "SourceSecurityGroupOwnerId": "243238936187"
       }
@@ -2645,13 +2995,13 @@
       "Type": "AWS::EC2::SecurityGroupIngress",
       "Properties": {
         "GroupId": {
-          "Ref": "sgElasticacheSG"
+          "Ref": "sgMonitors"
         },
         "IpProtocol": "tcp",
-        "FromPort": "6379",
-        "ToPort": "6379",
+        "FromPort": "5666",
+        "ToPort": "5666",
         "SourceSecurityGroupId": {
-          "Ref": "sgSVAccounts"
+          "Ref": "sgMGTInbound"
         },
         "SourceSecurityGroupOwnerId": "243238936187"
       }
@@ -2660,41 +3010,43 @@
       "Type": "AWS::EC2::SecurityGroupIngress",
       "Properties": {
         "GroupId": {
-          "Ref": "sgElasticacheSG"
+          "Ref": "sgPrivateApis"
         },
         "IpProtocol": "tcp",
-        "FromPort": "6379",
-        "ToPort": "6379",
+        "FromPort": "5666",
+        "ToPort": "5666",
         "SourceSecurityGroupId": {
-          "Ref": "sgNIAccounts"
+          "Ref": "sgMGTInbound"
         },
         "SourceSecurityGroupOwnerId": "243238936187"
       }
     },
+
     "ingress64": {
       "Type": "AWS::EC2::SecurityGroupIngress",
       "Properties": {
         "GroupId": {
-          "Ref": "sgElasticacheSG"
+          "Ref": "sgLogstash"
         },
         "IpProtocol": "tcp",
-        "FromPort": "6379",
-        "ToPort": "6379",
+        "FromPort": "5666",
+        "ToPort": "5666",
         "SourceSecurityGroupId": {
-          "Ref": "sgMonitors"
+          "Ref": "sgMGTInbound"
         },
         "SourceSecurityGroupOwnerId": "243238936187"
       }
     },
+
     "ingress65": {
       "Type": "AWS::EC2::SecurityGroupIngress",
       "Properties": {
         "GroupId": {
-          "Ref": "sgMonitors"
+          "Ref": "sgGTAccounts"
         },
         "IpProtocol": "tcp",
-        "FromPort": "6556",
-        "ToPort": "6556",
+        "FromPort": "5666",
+        "ToPort": "5666",
         "SourceSecurityGroupId": {
           "Ref": "sgMGTInbound"
         },
@@ -2705,59 +3057,56 @@
       "Type": "AWS::EC2::SecurityGroupIngress",
       "Properties": {
         "GroupId": {
-          "Ref": "sgPrivateApis"
+          "Ref": "sgISAccounts"
         },
         "IpProtocol": "tcp",
-        "FromPort": "6556",
-        "ToPort": "6556",
+        "FromPort": "5666",
+        "ToPort": "5666",
         "SourceSecurityGroupId": {
           "Ref": "sgMGTInbound"
         },
         "SourceSecurityGroupOwnerId": "243238936187"
       }
     },
-
     "ingress67": {
       "Type": "AWS::EC2::SecurityGroupIngress",
       "Properties": {
         "GroupId": {
-          "Ref": "sgMonitors"
+          "Ref": "sgDOAccounts"
         },
         "IpProtocol": "tcp",
-        "FromPort": "6556",
-        "ToPort": "6556",
+        "FromPort": "5666",
+        "ToPort": "5666",
         "SourceSecurityGroupId": {
           "Ref": "sgMGTInbound"
         },
         "SourceSecurityGroupOwnerId": "243238936187"
       }
     },
-
     "ingress68": {
       "Type": "AWS::EC2::SecurityGroupIngress",
       "Properties": {
         "GroupId": {
-          "Ref": "sgLogstash"
+          "Ref": "sgMXAccounts"
         },
         "IpProtocol": "tcp",
-        "FromPort": "6556",
-        "ToPort": "6556",
+        "FromPort": "5666",
+        "ToPort": "5666",
         "SourceSecurityGroupId": {
           "Ref": "sgMGTInbound"
         },
         "SourceSecurityGroupOwnerId": "243238936187"
       }
     },
-
     "ingress69": {
       "Type": "AWS::EC2::SecurityGroupIngress",
       "Properties": {
         "GroupId": {
-          "Ref": "sgPrivateApis"
+          "Ref": "sgSVAccounts"
         },
         "IpProtocol": "tcp",
-        "FromPort": "6556",
-        "ToPort": "6556",
+        "FromPort": "5666",
+        "ToPort": "5666",
         "SourceSecurityGroupId": {
           "Ref": "sgMGTInbound"
         },
@@ -2768,11 +3117,11 @@
       "Type": "AWS::EC2::SecurityGroupIngress",
       "Properties": {
         "GroupId": {
-          "Ref": "sgGTAccounts"
+          "Ref": "sgNIAccounts"
         },
         "IpProtocol": "tcp",
-        "FromPort": "6556",
-        "ToPort": "6556",
+        "FromPort": "5666",
+        "ToPort": "5666",
         "SourceSecurityGroupId": {
           "Ref": "sgMGTInbound"
         },
@@ -2783,131 +3132,11 @@
       "Type": "AWS::EC2::SecurityGroupIngress",
       "Properties": {
         "GroupId": {
-          "Ref": "sgISAccounts"
-        },
-        "IpProtocol": "tcp",
-        "FromPort": "6556",
-        "ToPort": "6556",
-        "SourceSecurityGroupId": {
-          "Ref": "sgMGTInbound"
-        },
-        "SourceSecurityGroupOwnerId": "243238936187"
-      }
-    },
-    "ingress72": {
-      "Type": "AWS::EC2::SecurityGroupIngress",
-      "Properties": {
-        "GroupId": {
-          "Ref": "sgDOAccounts"
-        },
-        "IpProtocol": "tcp",
-        "FromPort": "6556",
-        "ToPort": "6556",
-        "SourceSecurityGroupId": {
-          "Ref": "sgMGTInbound"
-        },
-        "SourceSecurityGroupOwnerId": "243238936187"
-      }
-    },
-    "ingress73": {
-      "Type": "AWS::EC2::SecurityGroupIngress",
-      "Properties": {
-        "GroupId": {
-          "Ref": "sgMXAccounts"
-        },
-        "IpProtocol": "tcp",
-        "FromPort": "6556",
-        "ToPort": "6556",
-        "SourceSecurityGroupId": {
-          "Ref": "sgMGTInbound"
-        },
-        "SourceSecurityGroupOwnerId": "243238936187"
-      }
-    },
-    "ingress74": {
-      "Type": "AWS::EC2::SecurityGroupIngress",
-      "Properties": {
-        "GroupId": {
-          "Ref": "sgSVAccounts"
-        },
-        "IpProtocol": "tcp",
-        "FromPort": "6556",
-        "ToPort": "6556",
-        "SourceSecurityGroupId": {
-          "Ref": "sgMGTInbound"
-        },
-        "SourceSecurityGroupOwnerId": "243238936187"
-      }
-    },
-    "ingress75": {
-      "Type": "AWS::EC2::SecurityGroupIngress",
-      "Properties": {
-        "GroupId": {
-          "Ref": "sgNIAccounts"
-        },
-        "IpProtocol": "tcp",
-        "FromPort": "6556",
-        "ToPort": "6556",
-        "SourceSecurityGroupId": {
-          "Ref": "sgMGTInbound"
-        },
-        "SourceSecurityGroupOwnerId": "243238936187"
-      }
-    },
-    "ingress76": {
-      "Type": "AWS::EC2::SecurityGroupIngress",
-      "Properties": {
-        "GroupId": {
           "Ref": "sgPAAccounts"
         },
         "IpProtocol": "tcp",
-        "FromPort": "6556",
-        "ToPort": "6556",
-        "SourceSecurityGroupId": {
-          "Ref": "sgMGTInbound"
-        },
-        "SourceSecurityGroupOwnerId": "243238936187"
-      }
-    },
-    "ingress77": {
-      "Type": "AWS::EC2::SecurityGroupIngress",
-      "Properties": {
-        "GroupId": {
-          "Ref": "sgMGTInbound"
-        },
-        "IpProtocol": "tcp",
-        "FromPort": "6556",
-        "ToPort": "6556",
-        "SourceSecurityGroupId": {
-          "Ref": "sgMGTInbound"
-        },
-        "SourceSecurityGroupOwnerId": "243238936187"
-      }
-    },
-    "ingress78": {
-      "Type": "AWS::EC2::SecurityGroupIngress",
-      "Properties": {
-        "GroupId": {
-          "Ref": "sgbeanstalkd"
-        },
-        "IpProtocol": "tcp",
-        "FromPort": "22",
-        "ToPort": "22",
-        "SourceSecurityGroupId": {
-          "Ref": "sgbeanstalkd"
-        },
-        "SourceSecurityGroupOwnerId": "243238936187"
-      }
-    },
-    "ingress79": {
-      "Type": "AWS::EC2::SecurityGroupIngress",
-      "Properties": {
-        "GroupId": {
-          "Ref": "sgbeanstalkd"
-        },
-        "IpProtocol": "tcp",
-        "FromPort": "22",
-        "ToPort": "22",
+        "FromPort": "5666",
+        "ToPort": "5666",
         "SourceSecurityGroupId": {
           "Ref": "sgMGTInbound"
         },
