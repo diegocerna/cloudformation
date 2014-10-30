@@ -41,8 +41,8 @@
     },
 
     "DATACENTER" : {
-      "sjc"                : { "EPVPN" : "205.189.102.230", "PUBSUBNET" : "205.189.102.0/24", "SBVPN" : "205.189.102.230/32", "DCSUBNET" : "10.7.0.0/16", "MGTSUBNET" : "10.7.82.0/24", "SUBNET24" : "10.7.24.0/24", "TAG" : "production" },
-      "atl"                : { "EPVPN" : "205.189.103.230", "PUBSUBNET" : "205.189.103.0/24", "SBVPN" : "205.189.103.230/32", "DCSUBNET" : "10.5.0.0/16", "MGTSUBNET" : "10.5.82.0/24", "SUBNET24" : "10.5.24.0/24", "TAG" : "staging" }
+      "sjc"                : { "EPVPN" : "205.189.102.230", "PUBSUBNET" : "205.189.102.0/24", "SBVPN" : "205.189.102.230/32", "DCSUBNET" : "10.7.0.0/16", "MGTSUBNET" : "10.7.82.0/24", "SUBNET24" : "10.7.24.0/24", "TAG" : "production", "XSFDOMAIN" : "pdx.xoom.com", "DNS1" : "10.10.82.10", "DNS2" : "10.10.83.10" },
+      "atl"                : { "EPVPN" : "205.189.103.230", "PUBSUBNET" : "205.189.103.0/24", "SBVPN" : "205.189.103.230/32", "DCSUBNET" : "10.5.0.0/16", "MGTSUBNET" : "10.5.82.0/24", "SUBNET24" : "10.5.24.0/24", "TAG" : "staging", "XSFDOMAIN" : "iad.xoom.com", "DNS1" : "10.30.82.10", "DNS2" : "10.30.83.10" }
     },
 
     "dot" : {
@@ -667,6 +667,16 @@
         "DomainName": { "Fn::FindInMap" : [ "DnsRegion", { "Ref" : "AWS::Region" }, "ZONE" ]},
         "DomainNameServers": [
           "AmazonProvidedDNS"
+        ]
+      }
+    },
+
+    "doptStampXSF": {
+      "Type": "AWS::EC2::DHCPOptions",
+      "Properties": {
+        "DomainName": { "Fn::FindInMap" : [ "DATACENTER", { "Ref" : "Provider" }, "XSFDOMAIN" ]},
+        "DomainNameServers": [
+          { "Fn::FindInMap" : [ "DATACENTER", { "Ref" : "Provider" }, "DNS1" ]}, { "Fn::FindInMap" : [ "DATACENTER", { "Ref" : "Provider" }, "DNS2" ]}
         ]
       }
     },
@@ -2123,6 +2133,17 @@
         }
       },
       "DependsOn": "gw4"
+    },
+    "dchpassoc1": {
+      "Type": "AWS::EC2::VPCDHCPOptionsAssociation",
+      "Properties": {
+        "VpcId": {
+          "Ref": "vpc"
+        },
+        "DhcpOptionsId": {
+          "Ref": "doptStampXSF"
+        }
+      }
     },
     "dchpassoc2": {
       "Type": "AWS::EC2::VPCDHCPOptionsAssociation",
