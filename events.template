@@ -24,7 +24,7 @@
     "StackIDDB" : {
         "Type" : "String",
         "Description" : "Stack ID name for DataBase",
-        "Default" : "-"
+        "Default" : ""
     },
 
     "SecurityGroupId" : {
