@@ -118,7 +118,7 @@
         "InstanceType" : {"Ref" : "InstanceType"},
         "SecurityGroupIds" : [{"Ref" : "SG"}],
         "SubnetId" : {"Ref" : "SubnetId"},
-        "Tags" : [ {"Key" : "Name", "Value" : {"Fn::Join" : [".", ["Forrest", {"Ref" : "Environment"}]]} } ],
+        "Tags" : [ {"Key" : "Name", "Value" : {"Fn::Join" : ["", ["Forrest", { "Ref" : "StackID" } , {"Ref" : "Environment"}]]} } ],
         "UserData"       : { "Fn::Base64" : { "Fn::Join" : ["", [
           "#!/bin/bash\n",
 
