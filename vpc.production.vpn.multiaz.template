@@ -947,12 +947,6 @@
             "IpProtocol": "tcp",
             "FromPort": "53",
             "ToPort": "53",
-            "CidrIp": "10.1.82.0/24"
-          },
-          {
-            "IpProtocol": "tcp",
-            "FromPort": "53",
-            "ToPort": "53",
             "CidrIp": "10.1.24.0/24"
           },
           {
@@ -993,15 +987,51 @@
           },
           {
             "IpProtocol": "tcp",
-            "FromPort": "53",
-            "ToPort": "53",
-            "CidrIp": { "Fn::FindInMap" : [ "DATACENTER", { "Ref" : "Provider" }, "MGTSUBNET" ]}
+            "FromPort": "2003",
+            "ToPort": "2003",
+            "CidrIp": { "Fn::FindInMap" : [ "subnets", { "Ref" : "Version" }, "MANAGESN" ]}
           },
           {
-            "IpProtocol": "udp",
-            "FromPort": "53",
-            "ToPort": "53",
-            "CidrIp": "10.1.82.0/24"
+            "IpProtocol": "tcp",
+            "FromPort": "2003",
+            "ToPort": "2003",
+            "CidrIp": { "Fn::FindInMap" : [ "subnets", { "Ref" : "Version" }, "MANAGESN2" ]}
+          },
+          {
+            "IpProtocol": "tcp",
+            "FromPort": "3000",
+            "ToPort": "3000",
+            "CidrIp": { "Fn::FindInMap" : [ "subnets", { "Ref" : "Version" }, "MANAGESN" ]}
+          },
+          {
+            "IpProtocol": "tcp",
+            "FromPort": "3000",
+            "ToPort": "3000",
+            "CidrIp": { "Fn::FindInMap" : [ "subnets", { "Ref" : "Version" }, "MANAGESN2" ]}
+          },
+          {
+            "IpProtocol": "tcp",
+            "FromPort": "80",
+            "ToPort": "80",
+            "CidrIp": "10.1.0.0/16"
+          },
+          {
+            "IpProtocol": "tcp",
+            "FromPort": "443",
+            "ToPort": "443",
+            "CidrIp": "10.1.0.0/16"
+          },
+          {
+            "IpProtocol": "tcp",
+            "FromPort": "8080",
+            "ToPort": "8080",
+            "CidrIp": "10.1.0.0/16"
+          },
+          {
+            "IpProtocol": "tcp",
+            "FromPort": "9200",
+            "ToPort": "9200",
+            "CidrIp": "10.1.0.0/16"
           },
           {
             "IpProtocol": "udp",
