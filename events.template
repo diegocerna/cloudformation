@@ -21,6 +21,12 @@
       "Default" : ""
     },
 
+    "StackIDDB" : {
+        "Type" : "String",
+        "Description" : "Stack ID name for DataBase",
+        "Default" : "-"
+    },
+
     "SecurityGroupId" : {
       "Type" : "String",
       "Default" : "sg-a1ad24c4",
@@ -180,11 +186,11 @@
           "echo app_name=events >> /etc/facter/facts.d/custom_facts.txt\n",
           "echo custom_hostname=", { "Fn::FindInMap" : [ "version", { "Ref" : "Version" }, "HOSTNAME" ]}, ">> /etc/facter/facts.d/custom_facts.txt\n",
 
-          "echo ", { "Fn::Join" : [ "" , ["nagios_redis_host=redis", { "Ref" : "StackID" }, { "Fn::FindInMap" : [ "env", { "Ref" : "Environment" }, "DOT" ]}, ".bluekite.com" ]]},      ">> /etc/facter/facts.d/custom_facts.txt\n",
+          "echo ", { "Fn::Join" : [ "" , ["nagios_redis_host=redis", { "Ref" : "StackIDDB" }, { "Fn::FindInMap" : [ "env", { "Ref" : "Environment" }, "DOT" ]}, ".bluekite.com" ]]},      ">> /etc/facter/facts.d/custom_facts.txt\n",
 
-          "echo ", { "Fn::Join" : [ "" , ["cassandra_host=eventsdb", { "Ref" : "StackID" }, { "Fn::FindInMap" : [ "env", { "Ref" : "Environment" }, "DOT" ]}, ".bluekite.com" ]]},      ">> /etc/facter/facts.d/custom_facts.txt\n",
+          "echo ", { "Fn::Join" : [ "" , ["cassandra_host=eventsdb", { "Ref" : "StackIDDB" }, { "Fn::FindInMap" : [ "env", { "Ref" : "Environment" }, "DOT" ]}, ".bluekite.com" ]]},      ">> /etc/facter/facts.d/custom_facts.txt\n",
 
-          "echo ", { "Fn::Join" : [ "" , ["notifications_host=notifications", { "Ref" : "StackID" }, { "Fn::FindInMap" : [ "env", { "Ref" : "Environment" }, "DOT" ]}, ".bluekite.com" ]]},      ">> /etc/facter/facts.d/custom_facts.txt\n",
+          "echo ", { "Fn::Join" : [ "" , ["notifications_host=notifications", { "Ref" : "StackIDDB" }, { "Fn::FindInMap" : [ "env", { "Ref" : "Environment" }, "DOT" ]}, ".bluekite.com" ]]},      ">> /etc/facter/facts.d/custom_facts.txt\n",
 
           "# Clone role hostname repo\n",
           "git clone git@github.com:victormarroquin/Puppet-HostName.git /etc/puppet/modules/hosts > /tmp/git.log 2>&1 || error_exit 'Failed to clone hostname repo'\n",
