@@ -34,6 +34,12 @@
         "Default" : "-"
     },
 
+    "StackIDDB" : {
+      "Type" : "String",
+      "Description" : "Stack ID name for DataBase",
+      "Default" : ""
+    },
+
     "SecurityGroupId" : {
       "Type" : "String",
       "Description" : "Mexico SecurityGroupId your Virtual Private Cloud (VPC)",
@@ -190,7 +196,7 @@
                     "echo app_name=workerredefectiva >> /etc/facter/facts.d/custom_facts.txt\n",
                     "echo custom_hostname=", { "Fn::FindInMap" : [ "version", { "Ref" : "Version" }, "HOSTNAME" ]}, ">> /etc/facter/facts.d/custom_facts.txt\n",
 
-                    "echo ", { "Fn::Join" : [ "" , ["nagios_beanstalk_host=queue", { "Ref" : "StackID" }, ".accounts", { "Fn::FindInMap" : [ "env", { "Ref" : "Environment" }, "DOT" ]}, ".bluekite.com" ]]},      ">> /etc/facter/facts.d/custom_facts.txt\n",
+                    "echo ", { "Fn::Join" : [ "" , ["nagios_beanstalk_host=queue", { "Ref" : "StackIDDB" }, ".accounts", { "Fn::FindInMap" : [ "env", { "Ref" : "Environment" }, "DOT" ]}, ".bluekite.com" ]]},      ">> /etc/facter/facts.d/custom_facts.txt\n",
 
 
                     "# Clone role hostname repo\n",
