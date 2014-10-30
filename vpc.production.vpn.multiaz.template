@@ -899,6 +899,24 @@
             "IpProtocol": "icmp",
             "FromPort": "-1",
             "ToPort": "-1",
+            "CidrIp": "10.1.0.0/16"
+          },
+          {
+            "IpProtocol": "icmp",
+            "FromPort": "-1",
+            "ToPort": "-1",
+            "CidrIp": "10.5.0.0/16"
+          },
+          {
+            "IpProtocol": "icmp",
+            "FromPort": "-1",
+            "ToPort": "-1",
+            "CidrIp": "10.7.0.0/16"
+          },
+          {
+            "IpProtocol": "icmp",
+            "FromPort": "-1",
+            "ToPort": "-1",
             "CidrIp": { "Fn::FindInMap" : [ "DATACENTER", { "Ref" : "Provider" }, "DCSUBNET" ]}
           },
           {
