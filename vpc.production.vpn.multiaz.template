@@ -34,8 +34,8 @@
   "Mappings" : {
 
     "subnets" : {
-      "stamp1"             : { "VPCSN" : "10.10.0.0/16", "PRIVATESN" : "10.10.22.0/23", "MANAGESN" : "10.10.82.0/24", "MANAGESN2" : "10.10.83.0/24", "WORKERSN1" : "10.10.24.0/27", "WORKERSN2" : "10.10.24.32/27", "WORKERSN3" : "10.10.24.64/27", "WORKERSN4" : "10.10.24.96/27", "WORKERSN5" : "10.10.24.128/27", "WORKERSN6" : "10.10.24.160/27", "WORKERSN7" : "10.10.24.192/27", "DBSN" : "10.10.3.0/24", "DBSN2" : "10.10.4.0/24", "PRIVATESN2" : "10.10.52.0/23", "WORKERSN101" : "10.10.54.0/27", "WORKERSN102" : "10.10.54.32/27", "WORKERSN103" : "10.10.54.64/27", "WORKERSN104" : "10.10.54.96/27", "WORKERSN105" : "10.10.54.128/27", "WORKERSN106" : "10.10.54.160/27", "WORKERSN107" : "10.10.54.192/27" },
-      "stamp2"             : { "VPCSN" : "10.11.0.0/16", "PRIVATESN" : "10.11.22.0/23", "MANAGESN" : "10.11.82.0/24", "MANAGESN2" : "10.11.83.0/24", "WORKERSN1" : "10.11.24.0/27", "WORKERSN2" : "10.11.24.32/27", "WORKERSN3" : "10.11.24.64/27", "WORKERSN4" : "10.11.24.96/27", "WORKERSN5" : "10.11.24.128/27", "WORKERSN6" : "10.11.24.160/27", "WORKERSN7" : "10.11.24.192/27", "DBSN" : "10.11.3.0/24", "DBSN2" : "10.11.4.0/24", "PRIVATESN2" : "10.11.52.0/23", "WORKERSN101" : "10.11.54.0/27", "WORKERSN102" : "10.11.54.32/27", "WORKERSN103" : "10.11.54.64/27", "WORKERSN104" : "10.11.54.96/27", "WORKERSN105" : "10.11.54.128/27", "WORKERSN106" : "10.11.54.160/27", "WORKERSN107" : "10.11.54.192/27" },
+      "stamp1"             : { "VPCSN" : "10.10.0.0/16", "PRIVATESN" : "10.10.22.0/23", "MANAGESN" : "10.10.82.0/24", "MANAGESN2" : "10.10.83.0/24", "WORKERSN1" : "10.10.24.0/27", "WORKERSN2" : "10.10.24.32/27", "WORKERSN3" : "10.10.24.64/27", "WORKERSN4" : "10.10.24.96/27", "WORKERSN5" : "10.10.24.128/27", "WORKERSN6" : "10.10.24.160/27", "WORKERSN7" : "10.10.24.192/27", "DBSN" : "10.10.3.0/24", "DBSN2" : "10.10.4.0/24", "PRIVATESN2" : "10.10.52.0/23", "WORKERSN101" : "10.10.54.0/27", "WORKERSN102" : "10.10.54.32/27", "WORKERSN103" : "10.10.54.64/27", "WORKERSN104" : "10.10.54.96/27", "WORKERSN105" : "10.10.54.128/27", "WORKERSN106" : "10.10.54.160/27", "WORKERSN107" : "10.10.54.192/27", "OAUTHSN" : "10.10.5.0/24", "OAUTHSN2" : "10.10.6.0/24" },
+      "stamp2"             : { "VPCSN" : "10.11.0.0/16", "PRIVATESN" : "10.11.22.0/23", "MANAGESN" : "10.11.82.0/24", "MANAGESN2" : "10.11.83.0/24", "WORKERSN1" : "10.11.24.0/27", "WORKERSN2" : "10.11.24.32/27", "WORKERSN3" : "10.11.24.64/27", "WORKERSN4" : "10.11.24.96/27", "WORKERSN5" : "10.11.24.128/27", "WORKERSN6" : "10.11.24.160/27", "WORKERSN7" : "10.11.24.192/27", "DBSN" : "10.11.3.0/24", "DBSN2" : "10.11.4.0/24", "PRIVATESN2" : "10.11.52.0/23", "WORKERSN101" : "10.11.54.0/27", "WORKERSN102" : "10.11.54.32/27", "WORKERSN103" : "10.11.54.64/27", "WORKERSN104" : "10.11.54.96/27", "WORKERSN105" : "10.11.54.128/27", "WORKERSN106" : "10.11.54.160/27", "WORKERSN107" : "10.11.54.192/27", "OAUTHSN" : "10.11.5.0/24", "OAUTHSN2" : "10.11.6.0/24" },
       "sandbox"             : { "VPCSN" : "10.40.0.0/16", "PRIVATESN" : "10.40.22.0/23", "MANAGESN" : "10.40.82.0/24", "MANAGESN2" : "10.40.83.0/24", "WORKERSN1" : "10.40.24.0/27", "WORKERSN2" : "10.40.24.32/27", "WORKERSN3" : "10.40.24.64/27", "WORKERSN4" : "10.40.24.96/27", "WORKERSN5" : "10.40.24.128/27", "WORKERSN6" : "10.40.24.160/27", "WORKERSN7" : "10.40.24.192/27", "DBSN" : "10.40.3.0/24", "DBSN2" : "10.40.4.0/24", "PRIVATESN2" : "10.40.52.0/23", "WORKERSN101" : "10.40.54.0/27", "WORKERSN102" : "10.40.54.32/27", "WORKERSN103" : "10.40.54.64/27", "WORKERSN104" : "10.40.54.96/27", "WORKERSN105" : "10.40.54.128/27", "WORKERSN106" : "10.40.54.160/27", "WORKERSN107" : "10.40.54.192/27" },
       "staging"             : { "VPCSN" : "10.30.0.0/16", "PRIVATESN" : "10.30.22.0/23", "MANAGESN" : "10.30.82.0/24", "MANAGESN2" : "10.30.83.0/24", "WORKERSN1" : "10.30.24.0/27", "WORKERSN2" : "10.30.24.32/27", "WORKERSN3" : "10.30.24.64/27", "WORKERSN4" : "10.30.24.96/27", "WORKERSN5" : "10.30.24.128/27", "WORKERSN6" : "10.30.24.160/27", "WORKERSN7" : "10.30.24.192/27", "DBSN" : "10.30.3.0/24", "DBSN2" : "10.30.4.0/24", "PRIVATESN2" : "10.30.52.0/23", "WORKERSN101" : "10.30.54.0/27", "WORKERSN102" : "10.30.54.32/27", "WORKERSN103" : "10.30.54.64/27", "WORKERSN104" : "10.30.54.96/27", "WORKERSN105" : "10.30.54.128/27", "WORKERSN106" : "10.30.54.160/27", "WORKERSN107" : "10.30.54.192/27" }
     },
@@ -92,6 +92,11 @@
       "ap-southeast-2"     : { "ZONE" : "ap-southeast-2.compute.internal" }
     }
   },
+
+  "Conditions" : {
+    "CreateProdResources" : {"Fn::Equals" : [{"Ref" : "Provider"}, "sjc"]}
+  },
+
   "Resources": {
     "vpc": {
       "Type": "AWS::EC2::VPC",
@@ -617,6 +622,58 @@
       }
     },
 
+    "subnetOauth": {
+      "Type": "AWS::EC2::Subnet",
+      "Condition" : "CreateProdResources",
+      "Properties": {
+        "CidrBlock": { "Fn::FindInMap" : [ "subnets", { "Ref" : "Version" }, "OAUTHSN" ]},
+        "AvailabilityZone": { "Fn::FindInMap" : [ "subnetZone1", { "Ref" : "AWS::Region" }, "ZONE" ]},
+        "VpcId": {
+          "Ref": "vpc"
+        },
+        "Tags": [
+          {
+            "Key": "Name",
+            "Value": { "Fn::Join" : [ " ", ["DataBase Subnet AZ1", { "Fn::FindInMap" : [ "DATACENTER", { "Ref" : "Provider" }, "TAG" ]} ] ] }
+          },
+          {
+            "Key": "Application",
+            "Value": "Stamp Api"
+          },
+          {
+            "Key": "Environment",
+            "Value": { "Ref" : "Environment" }
+          }
+        ]
+      }
+    },
+
+    "subnetOauth2": {
+      "Type": "AWS::EC2::Subnet",
+      "Condition" : "CreateProdResources",
+      "Properties": {
+        "CidrBlock": { "Fn::FindInMap" : [ "subnets", { "Ref" : "Version" }, "OAUTHSN2" ]},
+        "AvailabilityZone": { "Fn::FindInMap" : [ "subnetZone2", { "Ref" : "AWS::Region" }, "ZONE" ]},
+        "VpcId": {
+          "Ref": "vpc"
+        },
+        "Tags": [
+          {
+            "Key": "Name",
+            "Value": { "Fn::Join" : [ " ", ["DataBase Subnet AZ2", { "Fn::FindInMap" : [ "DATACENTER", { "Ref" : "Provider" }, "TAG" ]} ] ] }
+          },
+          {
+            "Key": "Application",
+            "Value": "Stamp Api"
+          },
+          {
+            "Key": "Environment",
+            "Value": { "Ref" : "Environment" }
+          }
+        ]
+      }
+    },
+
     "cgwStampApi": {
       "Type": "AWS::EC2::CustomerGateway",
       "Properties": {
@@ -661,32 +718,12 @@
       }
     },
 
-    "doptStampApi": {
-      "Type": "AWS::EC2::DHCPOptions",
-      "Properties": {
-        "DomainName": { "Fn::FindInMap" : [ "DnsRegion", { "Ref" : "AWS::Region" }, "ZONE" ]},
-        "DomainNameServers": [
-          "AmazonProvidedDNS"
-        ]
-      }
-    },
-
     "doptStampXSF": {
       "Type": "AWS::EC2::DHCPOptions",
       "Properties": {
         "DomainName": { "Fn::FindInMap" : [ "DATACENTER", { "Ref" : "Provider" }, "XSFDOMAIN" ]},
         "DomainNameServers": [
           { "Fn::FindInMap" : [ "DATACENTER", { "Ref" : "Provider" }, "DNS1" ]}, { "Fn::FindInMap" : [ "DATACENTER", { "Ref" : "Provider" }, "DNS2" ]}
-        ]
-      }
-    },
-
-    "doptStampApiBluekite": {
-      "Type": "AWS::EC2::DHCPOptions",
-      "Properties": {
-        "DomainName": "bluekite.com",
-        "DomainNameServers": [
-          "AmazonProvidedDNS"
         ]
       }
     },
@@ -2121,6 +2158,31 @@
         }
       }
     },
+
+    "subnetroute23": {
+      "Type": "AWS::EC2::SubnetRouteTableAssociation",
+      "Condition" : "CreateProdResources",
+      "Properties": {
+        "RouteTableId": {
+          "Ref": "rtbPrivateSubnets"
+        },
+        "SubnetId": {
+          "Ref": "subnetOauth"
+        }
+      }
+    },
+    "subnetroute24": {
+      "Type": "AWS::EC2::SubnetRouteTableAssociation",
+      "Condition" : "CreateProdResources",
+      "Properties": {
+        "RouteTableId": {
+          "Ref": "rtbPrivateSubnets"
+        },
+        "SubnetId": {
+          "Ref": "subnetOauth2"
+        }
+      }
+    },
     "route9": {
       "Type": "AWS::EC2::Route",
       "Properties": {
@@ -2142,17 +2204,6 @@
         },
         "DhcpOptionsId": {
           "Ref": "doptStampXSF"
-        }
-      }
-    },
-    "dchpassoc2": {
-      "Type": "AWS::EC2::VPCDHCPOptionsAssociation",
-      "Properties": {
-        "VpcId": {
-          "Ref": "vpc"
-        },
-        "DhcpOptionsId": {
-          "Ref": "doptStampApi"
         }
       }
     },
