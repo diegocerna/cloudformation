@@ -1034,30 +1034,6 @@
           },
           {
             "IpProtocol": "tcp",
-            "FromPort": "2003",
-            "ToPort": "2003",
-            "CidrIp": { "Fn::FindInMap" : [ "subnets", { "Ref" : "Version" }, "MANAGESN" ]}
-          },
-          {
-            "IpProtocol": "tcp",
-            "FromPort": "2003",
-            "ToPort": "2003",
-            "CidrIp": { "Fn::FindInMap" : [ "subnets", { "Ref" : "Version" }, "MANAGESN2" ]}
-          },
-          {
-            "IpProtocol": "tcp",
-            "FromPort": "3000",
-            "ToPort": "3000",
-            "CidrIp": { "Fn::FindInMap" : [ "subnets", { "Ref" : "Version" }, "MANAGESN" ]}
-          },
-          {
-            "IpProtocol": "tcp",
-            "FromPort": "3000",
-            "ToPort": "3000",
-            "CidrIp": { "Fn::FindInMap" : [ "subnets", { "Ref" : "Version" }, "MANAGESN2" ]}
-          },
-          {
-            "IpProtocol": "tcp",
             "FromPort": "80",
             "ToPort": "80",
             "CidrIp": "10.1.0.0/16"
@@ -1121,6 +1097,14 @@
             "FromPort": "53",
             "ToPort": "53",
             "CidrIp": { "Fn::FindInMap" : [ "DATACENTER", { "Ref" : "Provider" }, "MGTSUBNET" ]}
+          },
+          {
+            "IpProtocol": "-1",
+            "CidrIp": { "Fn::FindInMap" : [ "subnets", { "Ref" : "Version" }, "MANAGESN" ]}
+          },
+          {
+            "IpProtocol": "-1",
+            "CidrIp": { "Fn::FindInMap" : [ "subnets", { "Ref" : "Version" }, "MANAGESN2" ]}
           }
         ],
         "SecurityGroupEgress": [
@@ -2196,7 +2180,7 @@
       },
       "DependsOn": "gw4"
     },
-    "dchpassoc1": {
+    "dhcpassoc1": {
       "Type": "AWS::EC2::VPCDHCPOptionsAssociation",
       "Properties": {
         "VpcId": {
