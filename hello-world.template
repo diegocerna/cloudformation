@@ -35,12 +35,6 @@
             "Default": "sg-"
         },
 
-        "HostedZone" : {
-            "Type" : "String",
-            "Description" : "The DNS name of an existing Amazon Route 53 hosted zone",
-            "Default" : "bluekite.com"
-        },
-
         "AppDeployBranch" : {
           "Type" : "String",
           "Description" : "Git branch where to deploy the code from.",
@@ -132,7 +126,7 @@
                 "InstanceType" : { "Ref" : "InstanceType" },
                 "KeyName" : { "Ref" : "KeyName" },
                 "Tags" : [ {"Key" : "Application", "Value" : { "Ref" : "AWS::StackId"} },
-                           {"Key" : "Name", "Value" : { "Fn::Join" : [ "", ["hello-world.test", { "Ref" : "StackID" } , { "Ref" : "Environment"} ] ] } } ],
+                           {"Key" : "Name", "Value" : { "Fn::Join" : [ "", ["hello-world", { "Ref" : "StackID" } , { "Ref" : "Environment"} ] ] } } ],
                 "UserData"       : { "Fn::Base64" : { "Fn::Join" : ["", [
                     "#!/bin/bash\n",
 
