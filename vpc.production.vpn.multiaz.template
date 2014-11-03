@@ -64,7 +64,7 @@
     "subnetZone1" : {
       "us-east-1"          : { "ZONE" : "us-east-1a" },
       "us-west-1"          : { "ZONE" : "us-west-1b" },
-      "us-west-2"          : { "ZONE" : "us-west-2a" },
+      "us-west-2"          : { "ZONE" : "us-west-2c" },
       "eu-west-1"          : { "ZONE" : "eu-west-1a" },
       "ap-southeast-1"     : { "ZONE" : "ap-southeast-1a" },
       "ap-northeast-1"     : { "ZONE" : "ap-northeast-1a" },
