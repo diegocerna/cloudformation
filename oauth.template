@@ -1,233 +1,193 @@
 {
-    "AWSTemplateFormatVersion" : "2010-09-09",
-
-    "Description" : "Configure Oauth Node.js Application - filename:oauth.template",
-
-    "Parameters" : {
-        "KeyName": {
-            "Description" : "Name of an existing EC2 KeyPair to enable SSH access to the instance",
-            "Type": "String",
-            "MinLength": "1",
-            "MaxLength": "255",
-            "AllowedPattern" : "[\\x20-\\x7E]*",
-            "ConstraintDescription" : "can contain only ASCII characters.",
-            "Default": "stamp-"
-        },
+  "AWSTemplateFormatVersion" : "2010-09-09",
+  
+  "Description" : "Configure Oauth Node.js Application - filename:oauth-no_dns.template",
+  
+  "Parameters" : {
+    "KeyName": {
+      "Description" : "Name of an existing EC2 KeyPair to enable SSH access to the instance",
+      "Type": "String",
+      "MinLength": "1",
+      "MaxLength": "255",
+      "AllowedPattern" : "[\\x20-\\x7E]*",
+      "ConstraintDescription" : "can contain only ASCII characters.",
+      "Default": "tbp-"
+    },
         
-        "Environment" : {
-            "Description" : "Environment for the Url",
-            "Type" : "String",
-            "Default" : ""
-        },
-
-        "InstanceType" : {
-            "Description" : "WebServer EC2 instance type",
-            "Type" : "String",
-            "Default" : "m3.medium",
-            "AllowedValues" : [ "t2.micro","m1.small","m3.medium","m1.large","m1.xlarge","m2.xlarge","m2.2xlarge","m2.4xlarge","m3.xlarge","m3.2xlarge","c1.medium","c1.xlarge","cc1.4xlarge","cc2.8xlarge","cg1.4xlarge"],
-            "ConstraintDescription" : "must be a valid EC2 instance type."
-        },
-
-        "PgKey" : {
-            "NoEcho": "true",
-            "Type": "String",
-            "Description" : "Password for created .pgpass file",   
-        },
-
-        "DeployBranch" : {
-            "Type" : "String",
-            "Description" : "Git branch where to deploy the code from.",
-            "Default" : ""
-        }
+    "Environment" : {
+      "Description" : "Environment for the Url",
+      "Type" : "String",
+      "Default" : ""
     },
 
-    "Mappings" : {
-        "RegionMap" : {
-            "sa-east-1"      : {"AMI" : "ami-d545e5c8" },
-            "us-west-1"      : {"AMI" : "ami-49ede60c" },
-            "ap-northeast-1" : {"AMI" : "ami-35bbd334" },
-            "ap-southeast-1" : {"AMI" : "ami-605c0a32" },
-            "ap-southeast-2" : {"AMI" : "ami-fb4bd5c1" },
-            "eu-west-1"      : {"AMI" : "ami-d03dcaa7" },
-            "us-east-1"      : {"AMI" : "ami-cdc2fda4" },
-            "us-west-2"      : {"AMI" : "ami-9a9dfdaa" }
-        },
-        
-        "env" : {
-          "dev"            : { "ENV" : "staging", "DOT" : ".dev" },
-          "qa"             : { "ENV" : "qa", "DOT" : ".qa" },
-          "sandbox"        : { "ENV" : "sandbox", "DOT" : ".sandbox"  },
-          "production"     : { "ENV" : "production", "DOT" : "" }
-        }
+    "Zone" : {
+      "Description" : "Value to add the instance to az1 or az2",
+      "Type" : "String",
+      "AllowedValues" : [ "az1","az2"],
+      "Default" : "az1"
     },
 
-    "Resources" : {
-        "InstanceProfile" : {
-            "Type" : "AWS::IAM::InstanceProfile",
-            "Properties" : {
-                "Path" : "/",
-                "Roles" : ["SendEmails"]
-            }
-        },
+    "InstanceType" : {
+      "Description" : "WebServer EC2 instance type",
+      "Type" : "String",
+      "Default" : "m3.medium",
+      "AllowedValues" : [ "t1.micro","m1.small","m3.medium","m1.large","m1.xlarge","m2.xlarge","m2.2xlarge","m2.4xlarge","m3.xlarge","m3.2xlarge","c1.medium","c1.xlarge","cc1.4xlarge","cc2.8xlarge","cg1.4xlarge"],
+      "ConstraintDescription" : "must be a valid EC2 instance type."
+    },
 
-        "DNSRecord" : {
-            "Type" : "AWS::Route53::RecordSet",
-            "Properties" : {
-                "HostedZoneName" : "bluekite.com.",
-                "Comment" : "DNS name for my instance.",
-                "Name" : { "Fn::Join" : ["", ["oauth",{ "Fn::FindInMap" : [ "env", { "Ref" : "Environment" }, "DOT" ]},".bluekite.com."]]},
-                "Type" : "CNAME",
-                "TTL" : "900",
-                "ResourceRecords" : [ { "Fn::GetAtt" : [ "WebServerInstance", "PublicDnsName" ] } ]
-            },
-            "DependsOn" : "WebServerInstance"
-        },
+    "SecurityGroupId" : {
+      "Type" : "String",
+      "Description" : "SecurityGroupId of an existing subnet in your Virtual Private Cloud (VPC)",
+      "Default": "sg-"
+    },
 
-        "WebServerInstance" : {
-            "Type" : "AWS::EC2::Instance",
-            "Metadata" : {
-                "Comment" : "Oauth NodeJS Application",
-                "AWS::CloudFormation::Init" : {
-                    "configSets" : {
-                        "default" : ["config_credentials", "config_packages"]
-                    },
-                    "config_credentials" : {
-                        "files" : {
-                            "/home/ubuntu/.ssh/id_rsa" : {
-                                "source" : "https://s3.amazonaws.com/redtail/redtail_rsa",
-                                "mode" : "600",
-                                "owner" : "ubuntu",
-                                "group" : "ubuntu"
-                            },
-                            "/home/ubuntu/.ssh/id_rsa.pub" : {
-                                "source" : "https://s3.amazonaws.com/redtail/redtail_rsa.pub",
-                                "mode" : "600",
-                                "owner" : "ubuntu",
-                                "group" : "ubuntu"
-                            },
-                            "/home/ubuntu/.ssh/config" : {
-                                "mode" : "600",
-                                "owner" : "ubuntu",
-                                "group" : "ubuntu",
-                                "content" : { "Fn::Join" : ["", [
-                                    "Host github.com\n",
-                                    "\tStrictHostKeyChecking no\n",
-                                    "\tUser git\n",
-                                    "\tPreferredAuthentications publickey\n",
-                                    "\tIdentityFile ~/.ssh/id_rsa\n"
-                                ]]}
-                            }
-                        }
-                    },
-                    "config_packages" : {
-                        "packages" : {
-                            "apt" : {
-                                "git"             : [],
-                                "curl"            : [],
-                                "tmux"            : [],
-                                "build-essential" : [],
-                                "python-software-properties" : []
-                            }
-                        }
-                    }
-                }
-            },
+    "SubnetId" : {
+      "Type" : "String",
+      "Description" : "SubnetId of an existing subnet in your Virtual Private Cloud (VPC)",
+      "Default": "subnet-"
+    },
 
-            "Properties" : {
-                "ImageId" : { "Fn::FindInMap" : [ "RegionMap", { "Ref" : "AWS::Region" }, "AMI" ]},
-                "SecurityGroupIds" : [ {"Ref" : "WebServerSecurityGroup"} ],
-                "InstanceType" : { "Ref" : "InstanceType" },
-                "KeyName" : { "Ref" : "KeyName" },
-                "IamInstanceProfile" : {"Ref" : "InstanceProfile"},
-                "Tags" : [ {"Key" : "Application", "Value" : { "Ref" : "AWS::StackId"} },
-                           {"Key" : "Name", "Value" : { "Fn::Join" : ["-", ["oauth",{"Ref":"Environment"} ]]}}],
-                           "UserData"       : { "Fn::Base64" : { "Fn::Join" : ["", [
-                    "#!/bin/bash\n",
+    "DeployBranch" : {
+      "Type" : "String",
+      "Description" : "Git branch where to deploy the code from.",
+      "Default" : ""
+    }
+},
 
-                    "# Helper function to notify of failed operation\n",
-                    "function error_exit\n",
-                    "{\n",
-                    "  cfn-signal -e 1 -r \"$1\" '", { "Ref" : "WebServerWaitHandle" }, "'\n",
-                    "  exit 1\n",
-                    "}\n",
+  "Mappings" : {
+    "RegionMap" : {
+      "sa-east-1"      : {"AMI" : "ami-d545e5c8" },
+      "us-west-1"      : {"AMI" : "ami-82b98bc7" },
+      "ap-northeast-1" : {"AMI" : "ami-35bbd334" },
+      "ap-southeast-1" : {"AMI" : "ami-605c0a32" },
+      "ap-southeast-2" : {"AMI" : "ami-fb4bd5c1" },
+      "eu-west-1"      : {"AMI" : "ami-d03dcaa7" },
+      "us-east-1"      : {"AMI" : "ami-0e07a566" },
+      "us-west-2"      : {"AMI" : "ami-8b6d2ebb" }
+    },
 
-                    "# Run Instance default configuration via CloudFormation::Init\n",
-                    "cfn-init -v --region ", { "Ref" : "AWS::Region" },
-                    "    -s ", { "Ref" : "AWS::StackId" },
-                    " -r WebServerInstance",
-                    " -c default",
-                    " || error_exit 'Failed to run cfn-init'\n",
+    "dot" : {
+      "test"           : { "DOT" : ".test" },
+      "dev"            : { "DOT" : ".dev" },
+      "qa"             : { "DOT" : ".qa" },
+      "sandbox"        : { "DOT" : ".sandbox" },
+      "production"     : { "DOT" : "" }
+    },
 
-                    "# Register Github fingerprints\n",
-                    "ssh-keygen -f ~/.ssh/known_hosts -H -F github.com | grep -q found || ssh-keyscan -H github.com >> ~/.ssh/known_hosts\n",
+    "Zone" : {
+      "az1"            : { "ZONE" : "10.10.5.6", "HOSTNAME" : "ouh1001" },
+      "az2"            : { "ZONE" : "10.10.6.6", "HOSTNAME" : "ouh1002" }
+    }
+  },
 
-                    "# Copy credentials to root user\n",
-                    "cp /home/ubuntu/.ssh/* /root/.ssh/\n",
+  "Resources" : {
 
-                    "# Clone app repo to ubuntu user home\n",
-                    "git clone git@github.com:blue-kite/bree.git /home/ubuntu/oauth > /tmp/git.log 2>&1 || error_exit 'Failed to clone repo'\n",
+    "InstanceProfile" : {
+      "Type" : "AWS::IAM::InstanceProfile",
+      "Properties" : {
+      "Path" : "/",
+      "Roles" : ["SendEmails"]
+      }
+    },
 
-                    "chown ubuntu:ubuntu -R /home/ubuntu/oauth\n",
+    "WebServerInstance" : {
+      "Type" : "AWS::EC2::Instance",
+      "Metadata" : {
+        "Comment" : "Oauth NodeJS Application"
+    },
+      "Properties" : {
+        "ImageId" : { "Fn::FindInMap" : [ "RegionMap", { "Ref" : "AWS::Region" }, "AMI" ]},
+        "SecurityGroupIds" : [ {"Ref" : "SecurityGroupId"} ],
+        "InstanceType" : { "Ref" : "InstanceType" },
+        "SubnetId" : { "Ref" : "SubnetId" },
+        "PrivateIpAddress" : { "Fn::FindInMap" : [ "Zone", { "Ref" : "Zone" }, "ZONE" ]},
+        "KeyName" : { "Ref" : "KeyName" },
+        "IamInstanceProfile" : {"Ref" : "InstanceProfile"},
+        "Tags" : [ {"Key" : "Application", "Value" : { "Ref" : "AWS::StackId"} },
+          {"Key" : "Name", "Value" : { "Fn::Join" : ["-", ["oauth",{"Ref":"Zone"},{"Ref":"Environment"} ]]}}],
+        "UserData" : { "Fn::Base64" : { "Fn::Join" : ["", [
+                      "#!/bin/bash\n",
 
-                    "# Install puppet via gems\n",
-                    "sudo gem install puppet --no-rdoc --no-ri > /tmp/gem-puppet.log 2>&1 || error_exit 'Failed install puppet gem'\n",
+          "# Helper function to notify of failed operation\n",
+          "function error_exit\n",
+          "{\n",
+          "  cfn-signal -e 1 -r \"$1\" '", { "Ref" : "WebServerWaitHandle" }, "'\n",
+          "  exit 1\n",
+          "}\n",
 
-                    "# Install Librarian Ruby\n",
-                    "sudo gem install librarian-puppet -v 1.0.3 --no-rdoc --no-ri > /tmp/gem-librarian-puppet.log 2>&1 || error_exit 'Failed install librarian puppet gem'\n",
+          "# Run Instance default configuration via CloudFormation::Init\n",
+          "cfn-init -v --region ", { "Ref" : "AWS::Region" },
+          "    -s ", { "Ref" : "AWS::StackId" },
+          " -r WebServerInstance",
+          " -c default",
+          " || error_exit 'Failed to run cfn-init'\n",
 
-                    "# Install application's dependencies via puppet\n",
-                    "cd /home/ubuntu/oauth/puppet\n",
-                    "export HOME=/home/ubuntu && librarian-puppet install --verbose > /tmp/librarian-puppet.log 2>&1 || error_exit 'failed to install puppet submodules'\n",
+          "# Register Github fingerprints\n",
+          "ssh-keygen -f ~/.ssh/known_hosts -H -F github.com | grep -q found || ssh-keyscan -H github.com >> ~/.ssh/known_hosts\n",
 
-                    "cd /home/ubuntu/oauth\n",
-                    "sudo puppet apply --verbose --debug --modulepath=./puppet/modules ./puppet/manifests/aws-",{"Ref":"Environment"},".pp > /tmp/puppet.log 2>&1 || error_exit 'failed to apply puppet manifests'\n",
+          "# Copy credentials to root user\n",
+          "cp /home/ubuntu/.ssh/* /root/.ssh/\n",
 
-                    "# Signal setup is complete\n",
-                    "cfn-signal -e $? -r 'Completed configuration' '",
-                    {
-                        "Ref" : "WebServerWaitHandle"
-                    },
-                    "'\n"
-                ]]}}
-            }
-        },
+          "# Clone app repo to ubuntu user home\n",
+          "git clone git@github.com:blue-kite/bree.git -b ", {"Ref" : "DeployBranch"}, "  /home/ubuntu/oauth > /tmp/git.log 2>&1 || error_exit 'Failed to clone repo'\n",
+          "chown ubuntu:ubuntu -R /home/ubuntu/oauth\n",
 
-        "WebServerWaitHandle" : {
-            "Type" : "AWS::CloudFormation::WaitConditionHandle"
-        },
+          "#Installing Ruby\n",
+          "apt-get -y install libyaml-0-2\n",
+          "apt-get -y install ruby1.9.3\n",
+          "update-alternatives --set ruby /usr/bin/ruby1.9.1\n",
+          "apt-get -y install rubygems\n",
+          "update-alternatives --set gem /usr/bin/gem1.9.1\n",
 
-        "WebServerWaitCondition" : {
-            "Type" : "AWS::CloudFormation::WaitCondition",
-            "DependsOn" : "WebServerInstance",
-            "Properties" : {
-                "Handle" : {"Ref" : "WebServerWaitHandle"},
-                "Timeout" : "600"
-            }
-        },
+          "# Install puppet via gems\n",
+          "sudo gem install puppet --no-rdoc --no-ri > /tmp/gem-puppet.log 2>&1 || error_exit 'Failed install puppet gem'\n",
 
-        "WebServerSecurityGroup" : {
-            "Type" : "AWS::EC2::SecurityGroup",
-            "Properties" : {
-                "GroupDescription" : "Enable HTTP access via port 80, 443 and SSH access",
-                "SecurityGroupIngress" : [
-                    {"IpProtocol" : "tcp", "FromPort" : "80", "ToPort" : "80", "CidrIp" : "0.0.0.0/0"},
-                    {"IpProtocol" : "tcp", "FromPort" : "443", "ToPort" : "443", "CidrIp" : "0.0.0.0/0"},
-                    {"IpProtocol" : "tcp", "FromPort" : "22", "ToPort" : "22", "CidrIp" : "190.99.116.194/32"},
-                    {"IpProtocol" : "tcp", "FromPort" : "22", "ToPort" : "22", "CidrIp" : "186.151.60.250/32"},
-                    {"IpProtocol" : "tcp", "FromPort" : "22", "ToPort" : "22", "CidrIp" : "186.64.109.138/32"}
-                ]
-            }
+          "# Install Librarian Ruby\n",
+          "sudo gem install librarian-puppet --no-rdoc --no-ri > /tmp/gem-librarian-puppet.log 2>&1 || error_exit 'Failed install librarian puppet gem'\n",
+
+          "#setting my custom facts\n",
+          "mkdir -p /etc/facter/facts.d\n",
+          "touch /etc/facter/facts.d/custom_facts.txt\n",
+          "echo custom_hostname=", { "Fn::FindInMap" : [ "version", { "Ref" : "Zone" }, "HOSTNAME" ]}, ">> /etc/facter/facts.d/custom_facts.txt\n",
+
+          "# Install application's dependencies via puppet\n",
+          "cd /home/ubuntu/oauth/puppet\n",
+          "export HOME=/home/ubuntu && librarian-puppet install --verbose > /tmp/librarian-puppet.log 2>&1 || error_exit 'failed to install puppet submodules'\n",
+
+          "# Clone role hostname repo\n",
+          "git clone git@github.com:victormarroquin/Puppet-HostName.git /etc/puppet/modules/hosts > /tmp/git.log 2>&1 || error_exit 'Failed to clone hostname repo'\n",
+
+          "cd /home/ubuntu/oauth\n",
+          "sudo puppet apply --verbose --modulepath=./puppet/modules ./puppet/manifests/aws-",{"Ref":"Environment"},".pp > /tmp/puppet.log 2>&1 || error_exit 'failed to apply puppet manifests'\n",
+
+          "# Signal setup is complete\n",
+          "cfn-signal -e $? -r 'Completed configuration' '",
+          {
+            "Ref" : "WebServerWaitHandle"
+          },
+          "'\n"
+        ]]}}
+      }
+    },
+
+      "WebServerWaitHandle" : {
+        "Type" : "AWS::CloudFormation::WaitConditionHandle"
+      },
+
+      "WebServerWaitCondition" : {
+        "Type" : "AWS::CloudFormation::WaitCondition",
+        "DependsOn" : "WebServerInstance",
+        "Properties" : {
+          "Handle" : {"Ref" : "WebServerWaitHandle"},
+          "Timeout" : "1500"
         }
+      }
     },
 
     "Outputs" : {
-        "InstanceId" : {
-            "Value" : { "Ref" : "WebServerInstance" },
-            "Description" : "Instance Id of newly created instance"
-        },
-
-        "DomainName" : {
-            "Value" : { "Ref" : "DNSRecord" }
-        }
+      "InstanceId" : {
+        "Value" : { "Ref" : "WebServerInstance" },
+        "Description" : "Instance Id of newly created instance"
     }
+  }
 }
