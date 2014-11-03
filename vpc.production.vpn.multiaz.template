@@ -9,18 +9,6 @@
       "Description" : "XSF PublicIP for VPN connection - SJC or ATL"
     },
 
-    "StackID" : {
-      "Type" : "String",
-      "Description" : "Stack ID name",
-      "Default" : "-"
-    },
-
-    "StackIDDB" : {
-      "Type" : "String",
-      "Description" : "Stack ID name for DataBase",
-      "Default" : "-"
-    },
-
     "Version" : {
       "Type" : "String",
       "Description" : "stamp1 for current version, stamp2 for disaster recovery and staging for staging production"
@@ -634,7 +622,7 @@
         "Tags": [
           {
             "Key": "Name",
-            "Value": { "Fn::Join" : [ " ", ["DataBase Subnet AZ1", { "Fn::FindInMap" : [ "DATACENTER", { "Ref" : "Provider" }, "TAG" ]} ] ] }
+            "Value": { "Fn::Join" : [ " ", ["Oauth Subnet AZ1", { "Fn::FindInMap" : [ "DATACENTER", { "Ref" : "Provider" }, "TAG" ]} ] ] }
           },
           {
             "Key": "Application",
@@ -660,7 +648,7 @@
         "Tags": [
           {
             "Key": "Name",
-            "Value": { "Fn::Join" : [ " ", ["DataBase Subnet AZ2", { "Fn::FindInMap" : [ "DATACENTER", { "Ref" : "Provider" }, "TAG" ]} ] ] }
+            "Value": { "Fn::Join" : [ " ", ["Oauth Subnet AZ2", { "Fn::FindInMap" : [ "DATACENTER", { "Ref" : "Provider" }, "TAG" ]} ] ] }
           },
           {
             "Key": "Application",
