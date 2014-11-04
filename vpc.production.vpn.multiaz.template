@@ -1431,7 +1431,7 @@
           "Tags":[
             {
             "Key": "Name",
-            "Value": { "Fn::Join" : [ " ", ["Private Apis SG", { "Fn::FindInMap" : [ "DATACENTER", { "Ref" : "Provider" }, "TAG" ]} ] ] }
+            "Value": { "Fn::Join" : [ " ", ["Oauth Test SG", { "Fn::FindInMap" : [ "DATACENTER", { "Ref" : "Provider" }, "TAG" ]} ] ] }
             }
           ],
 
