@@ -37,7 +37,7 @@
 
     "SecurityGroupIds" : {
       "Type" : "CommaDelimitedList",
-      "Description" : "SecurityGroupId of an existing subnet in your Virtual Private Cloud (VPC)"
+      "Description" : "SecurityGroupIds of an existing subnet in your Virtual Private Cloud (VPC)"
     }
 },
 
