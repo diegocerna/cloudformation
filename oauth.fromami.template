@@ -35,8 +35,8 @@
       "ConstraintDescription" : "must be a valid EC2 instance type."
     },
 
-    "SecurityGroupId" : {
-      "Type" : "String",
+    "SecurityGroupIds" : {
+      "Type" : "CommaDelimitedList",
       "Description" : "SecurityGroupId of an existing subnet in your Virtual Private Cloud (VPC)"
     }
 },
@@ -84,7 +84,7 @@
     },
       "Properties" : {
         "ImageId" : { "Fn::FindInMap" : [ "RegionMap", { "Ref" : "AWS::Region" }, "AMI" ]},
-        "SecurityGroupIds" : [ {"Ref" : "SecurityGroupId"} ],
+        "SecurityGroupIds" : [ {"Ref" : "SecurityGroupIds"} ],
         "InstanceType" : { "Ref" : "InstanceType" },
         "SubnetId" : { "Fn::FindInMap" : [ "Zone", { "Ref" : "Zone" }, "SUBNET" ]},
         "PrivateIpAddress" : { "Fn::FindInMap" : [ "Zone", { "Ref" : "Zone" }, "ZONE" ]},
