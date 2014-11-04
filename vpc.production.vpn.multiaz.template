@@ -1420,6 +1420,7 @@
 
     "sgOauthTest": {
       "Type": "AWS::EC2::SecurityGroup",
+      "Condition" : "CreateProdResources",
       "DependsOn": "sgMGTInbound",
       "Properties": {
         "GroupDescription": "Private APIs",
