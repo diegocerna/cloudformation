@@ -37,8 +37,7 @@
 
     "SecurityGroupId" : {
       "Type" : "String",
-      "Description" : "SecurityGroupId of an existing subnet in your Virtual Private Cloud (VPC)",
-      "Default": { "Ref": "sgOauthTest" 
+      "Description" : "SecurityGroupId of an existing subnet in your Virtual Private Cloud (VPC)"
     }
 },
 
