@@ -1423,7 +1423,7 @@
       "Condition" : "CreateProdResources",
       "DependsOn": "sgMGTInbound",
       "Properties": {
-        "GroupDescription": "Private APIs",
+        "GroupDescription": "Oauth availability for non-prod",
         "VpcId": {
           "Ref": "vpc"
           },
