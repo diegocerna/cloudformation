@@ -1343,6 +1343,30 @@
       }
     },
 
+    "sgOauthDB": {
+      "Type": "AWS::EC2::SecurityGroup",
+      "Condition" : "CreateProdResources",
+      "DependsOn": "sgOauthTest",
+      "Properties": {
+        "GroupDescription": "Oauth Data Base SG",
+        "VpcId": {
+          "Ref": "vpc"
+          },
+          "Tags":[
+            {
+            "Key": "Name",
+            "Value": { "Fn::Join" : [ " ", ["Oauth Data Base SG", { "Fn::FindInMap" : [ "DATACENTER", { "Ref" : "Provider" }, "TAG" ]} ] ] }
+            }
+          ],
+        "SecurityGroupEgress": [
+          {
+            "IpProtocol": "-1",
+            "CidrIp": "0.0.0.0/0"
+          }
+        ]
+      }
+    },
+
     "sgPrivateApis": {
       "Type": "AWS::EC2::SecurityGroup",
       "DependsOn": "sgMGTInbound",
@@ -1378,7 +1402,19 @@
             "ToPort": "80",
             "CidrIp": { "Fn::FindInMap" : [ "subnets", { "Ref" : "Version" }, "VPCSN" ]}
           },
-                    {
+          {
+            "IpProtocol": "tcp",
+            "FromPort": "80",
+            "ToPort": "80",
+            "CidrIp": "10.1.0.0/16"
+          },
+          {
+            "IpProtocol": "tcp",
+            "FromPort": "80",
+            "ToPort": "80",
+            "CidrIp": "10.9.32.0/21"
+          },
+          {
             "IpProtocol": "tcp",
             "FromPort": "5671",
             "ToPort": "5671",
@@ -3306,6 +3342,21 @@
         "ToPort": "5666",
         "SourceSecurityGroupId": {
           "Ref": "sgMGTInbound"
+        },
+        "SourceSecurityGroupOwnerId": "243238936187"
+      }
+    },
+    "ingress72": {
+      "Type": "AWS::EC2::SecurityGroupIngress",
+      "Properties": {
+        "GroupId": {
+          "Ref": "sgOauthDB"
+        },
+        "IpProtocol": "tcp",
+        "FromPort": "5432",
+        "ToPort": "5432",
+        "SourceSecurityGroupId": {
+          "Ref": "sgOauthTest"
         },
         "SourceSecurityGroupOwnerId": "243238936187"
       }
