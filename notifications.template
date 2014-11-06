@@ -115,7 +115,7 @@
     "version" : {
       "stamp1"         : { "HOSTNAME" : "not1001", "RMQHOST" : "xlb.sjc.xoom.com", "RMQPORT" : "5671" },
       "stamp2"         : { "HOSTNAME" : "not1002", "RMQHOST" : "xlb.sjc.xoom.com", "RMQPORT" : "5671" },
-      "staging"        : { "HOSTNAME" : "not3001", "RMQHOST" : "xlb-stag.sjc.xoom.com", "RMQPORT" : "5672" },
+      "staging"        : { "HOSTNAME" : "not3001", "RMQHOST" : "st1xlb.atl.xoom.com", "RMQPORT" : "5671" },
       "old"            : { "HOSTNAME" : "notifications", "RMQHOST" : "xlb-stag.sjc.xoom.com", "RMQPORT" : "5672" }
     },
 
