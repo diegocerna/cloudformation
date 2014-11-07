@@ -11,7 +11,7 @@
       "MaxLength"             : "255",
       "AllowedPattern"        : "[\\x20-\\x7E]*",
       "ConstraintDescription" : "can contain only ASCII characters.",
-      "Default"               : "stamp-qa"
+      "Default"               : "stamp-staging"
     },
 
     "InstanceType"            : {
@@ -25,55 +25,55 @@
     "SubnetIdAz1"        : {
       "Type"          : "String",
       "Description"   : "SubnetId of an existing subnet in your Virtual Private Cloud (VPC)",
-      "Default"       : "subnet-4fd72416"
+      "Default"       : "subnet-2a16f401"
     },
 
     "SubnetIdAz2"        : {
       "Type"          : "String",
       "Description"   : "SubnetId of an existing subnet in your Virtual Private Cloud (VPC)",
-      "Default"       : "subnet-f334e584"
+      "Default"       : "subnet-d11cbca6"
     },
 
     "RDSSecurityGroupId" : {
       "Type"          : "String",
       "Description"   : "SecurityGroupId of an existing subnet in your Virtual Private Cloud (VPC)",
-      "Default"       : "sg-f970569c"
+      "Default"       : "sg-06888563"
     },
 
     "BeanstalkdSecurityGroupId" : {
       "Type"          : "String",
       "Description"   : "SecurityGroupId of an existing subnet in your Virtual Private Cloud (VPC)",
-      "Default"       : "sg-927157f7"
+      "Default"       : "sg-05888560"
     },
 
     "CassandraSecurityGroupId" : {
       "Type"          : "String",
       "Description"   : "SecurityGroupId of an existing subnet in your Virtual Private Cloud (VPC)",
-      "Default"       : "sg-e6715783"
+      "Default"       : "sg-12888577"
     },
 
     "ElasticSearchSecurityGroupId" : {
       "Type"          : "String",
       "Description"   : "SecurityGroupId of an existing subnet in your Virtual Private Cloud (VPC)",
-      "Default"       : "sg-77715712"
+      "Default"       : "sg-0f88856a"
     },
 
     "ElastiCacheSecurityGroup" : {
       "Type"          : "String",
       "Description"   : "Virtual Private Cloud (VPC) security group id for Elasticache",
-      "Default"       : "sg-9f8ab4fa"
+      "Default"       : "sg-04888561"
     },
 
     "PrivateAPIsSecurityGroupId" : {
       "Type"          : "String",
       "Description"   : "SecurityGroupId of an existing subnet in your Virtual Private Cloud (VPC)",
-      "Default"       : "sg-26632a43"
+      "Default"       : "sg-ec888589"
     },
 
     "StackID"       : {
       "Type"        : "String",
       "Description" : "Stack ID name",
-      "Default"     : "-"
+      "Default"     : "-staging"
     },
 
     "DeployBranch"  : {
@@ -82,10 +82,22 @@
       "Default"     : "master"
     },
 
+    "SitesDeployBranch"  : {
+      "Type"        : "String",
+      "Description" : "Git branch where to deploy the code from.",
+      "Default"     : "feature/0.14.0"
+    },
+
+    "RoleDeployBranch"  : {
+      "Type"        : "String",
+      "Description" : "Git branch where to deploy the code from.",
+      "Default"     : "master"
+    },
+
     "Environment"   : {
       "Type"        : "String",
       "Description" : "Application's environment.",
-      "Default"     : "dev"
+      "Default"     : "production"
     },
     "dbuser"   : {
       "Type"        : "String",
@@ -176,7 +188,8 @@
           "SecurityGroupId"             : { "Ref"  : "BeanstalkdSecurityGroupId" },
           "PrivateAPIsSecurityGroupId"  : { "Ref"  : "PrivateAPIsSecurityGroupId" },
           "StackID"                     : { "Ref"  : "StackID" },
-          "DeployBranch"                : { "Ref"  : "DeployBranch" },
+          "RoleDeployBranch"            : { "Ref"  : "RoleDeployBranch" },
+          "SitesDeployBranch"           : { "Ref"  : "SitesDeployBranch" },
           "Environment"                 : { "Ref"  : "Environment" }
         }
       }

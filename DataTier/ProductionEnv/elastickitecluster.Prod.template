@@ -183,6 +183,8 @@
                                      { "Fn::Join" : [ "", [{ "Ref" : "ApplicationTag" }, "-emaster2", { "Ref" : "StackID" }, { "Fn::FindInMap" : [ "dot", { "Ref" : "Environment" }, "DOT" ]}, ".bluekite.com"]]}, ":",
                                      { "Fn::Join" : [ "", [{ "Ref" : "ApplicationTag" }, "-emaster3", { "Ref" : "StackID" }, { "Fn::FindInMap" : [ "dot", { "Ref" : "Environment" }, "DOT" ]}, ".bluekite.com"]]}, ">> /etc/facter/facts.d/custom_facts.txt\n",
             "echo ", "env=",         { "Ref" : "Environment" },    ">> /etc/facter/facts.d/custom_facts.txt\n",
+            "echo custom_hostname=eem1001 >> /etc/facter/facts.d/custom_facts.txt\n",
+
 
             "# Clone role hostname repo\n",
             "git clone git@github.com:victormarroquin/Puppet-HostName.git /etc/puppet/modules/hosts > /tmp/git.log 2>&1 || error_exit 'Failed to clone hostname repo'\n",
@@ -302,6 +304,7 @@
                                      { "Fn::Join" : [ "", [{ "Ref" : "ApplicationTag" }, "-emaster2", { "Ref" : "StackID" }, { "Fn::FindInMap" : [ "dot", { "Ref" : "Environment" }, "DOT" ]}, ".bluekite.com"]]}, ":",
                                      { "Fn::Join" : [ "", [{ "Ref" : "ApplicationTag" }, "-emaster3", { "Ref" : "StackID" }, { "Fn::FindInMap" : [ "dot", { "Ref" : "Environment" }, "DOT" ]}, ".bluekite.com"]]}, ">> /etc/facter/facts.d/custom_facts.txt\n",
             "echo ", "env=",         { "Ref" : "Environment" },    ">> /etc/facter/facts.d/custom_facts.txt\n",
+            "echo custom_hostname=eem1002 >> /etc/facter/facts.d/custom_facts.txt\n",
 
             "# Clone role hostname repo\n",
             "git clone git@github.com:victormarroquin/Puppet-HostName.git /etc/puppet/modules/hosts > /tmp/git.log 2>&1 || error_exit 'Failed to clone hostname repo'\n",
@@ -421,6 +424,7 @@
                                      { "Fn::Join" : [ "", [{ "Ref" : "ApplicationTag" }, "-emaster2", { "Ref" : "StackID" }, { "Fn::FindInMap" : [ "dot", { "Ref" : "Environment" }, "DOT" ]}, ".bluekite.com"]]}, ":",
                                      { "Fn::Join" : [ "", [{ "Ref" : "ApplicationTag" }, "-emaster3", { "Ref" : "StackID" }, { "Fn::FindInMap" : [ "dot", { "Ref" : "Environment" }, "DOT" ]}, ".bluekite.com"]]},  ">> /etc/facter/facts.d/custom_facts.txt\n",
             "echo ", "env=",         { "Ref" : "Environment" },    ">> /etc/facter/facts.d/custom_facts.txt\n",
+            "echo custom_hostname=eem1003 >> /etc/facter/facts.d/custom_facts.txt\n",
 
             "# Clone role hostname repo\n",
             "git clone git@github.com:victormarroquin/Puppet-HostName.git /etc/puppet/modules/hosts > /tmp/git.log 2>&1 || error_exit 'Failed to clone hostname repo'\n",
@@ -542,6 +546,7 @@
                                      { "Fn::Join" : [ "", [{ "Ref" : "ApplicationTag" }, "-emaster2", { "Ref" : "StackID" }, { "Fn::FindInMap" : [ "dot", { "Ref" : "Environment" }, "DOT" ]}, ".bluekite.com"]]}, ":",
                                      { "Fn::Join" : [ "", [{ "Ref" : "ApplicationTag" }, "-emaster3", { "Ref" : "StackID" }, { "Fn::FindInMap" : [ "dot", { "Ref" : "Environment" }, "DOT" ]}, ".bluekite.com"]]},  ">> /etc/facter/facts.d/custom_facts.txt\n",
             "echo ", "env=",         { "Ref" : "Environment" },    ">> /etc/facter/facts.d/custom_facts.txt\n",
+            "echo custom_hostname=een1001 >> /etc/facter/facts.d/custom_facts.txt\n",
 
             "# Clone role hostname repo\n",
             "git clone git@github.com:victormarroquin/Puppet-HostName.git /etc/puppet/modules/hosts > /tmp/git.log 2>&1 || error_exit 'Failed to clone hostname repo'\n",
@@ -661,6 +666,7 @@
                                      { "Fn::Join" : [ "", [{ "Ref" : "ApplicationTag" }, "-emaster2", { "Ref" : "StackID" }, { "Fn::FindInMap" : [ "dot", { "Ref" : "Environment" }, "DOT" ]}, ".bluekite.com"]]}, ":",
                                      { "Fn::Join" : [ "", [{ "Ref" : "ApplicationTag" }, "-emaster3", { "Ref" : "StackID" }, { "Fn::FindInMap" : [ "dot", { "Ref" : "Environment" }, "DOT" ]}, ".bluekite.com"]]}, ">> /etc/facter/facts.d/custom_facts.txt\n",
             "echo ", "env=",         { "Ref" : "Environment" },    ">> /etc/facter/facts.d/custom_facts.txt\n",
+            "echo custom_hostname=een1002 >> /etc/facter/facts.d/custom_facts.txt\n",
 
             "# Clone role hostname repo\n",
             "git clone git@github.com:victormarroquin/Puppet-HostName.git /etc/puppet/modules/hosts > /tmp/git.log 2>&1 || error_exit 'Failed to clone hostname repo'\n",
@@ -780,6 +786,7 @@
                                      { "Fn::Join" : [ "", [{ "Ref" : "ApplicationTag" }, "-emaster2", { "Ref" : "StackID" }, { "Fn::FindInMap" : [ "dot", { "Ref" : "Environment" }, "DOT" ]}, ".bluekite.com"]]}, ":",
                                      { "Fn::Join" : [ "", [{ "Ref" : "ApplicationTag" }, "-emaster3", { "Ref" : "StackID" }, { "Fn::FindInMap" : [ "dot", { "Ref" : "Environment" }, "DOT" ]}, ".bluekite.com"]]},  ">> /etc/facter/facts.d/custom_facts.txt\n",
             "echo ", "env=",         { "Ref" : "Environment" },    ">> /etc/facter/facts.d/custom_facts.txt\n",
+            "echo custom_hostname=een1003 >> /etc/facter/facts.d/custom_facts.txt\n",
 
             "# Clone role hostname repo\n",
             "git clone git@github.com:victormarroquin/Puppet-HostName.git /etc/puppet/modules/hosts > /tmp/git.log 2>&1 || error_exit 'Failed to clone hostname repo'\n",
@@ -899,6 +906,7 @@
                                      { "Fn::Join" : [ "", [{ "Ref" : "ApplicationTag" }, "-emaster2", { "Ref" : "StackID" }, { "Fn::FindInMap" : [ "dot", { "Ref" : "Environment" }, "DOT" ]}, ".bluekite.com"]]}, ":",
                                      { "Fn::Join" : [ "", [{ "Ref" : "ApplicationTag" }, "-emaster3", { "Ref" : "StackID" }, { "Fn::FindInMap" : [ "dot", { "Ref" : "Environment" }, "DOT" ]}, ".bluekite.com"]]}, ">> /etc/facter/facts.d/custom_facts.txt\n",
             "echo ", "env=",         { "Ref" : "Environment" },    ">> /etc/facter/facts.d/custom_facts.txt\n",
+            "echo custom_hostname=een1004 >> /etc/facter/facts.d/custom_facts.txt\n",
 
             "# Clone role hostname repo\n",
             "git clone git@github.com:victormarroquin/Puppet-HostName.git /etc/puppet/modules/hosts > /tmp/git.log 2>&1 || error_exit 'Failed to clone hostname repo'\n",
@@ -951,6 +959,7 @@
       "Type": "AWS::ElasticLoadBalancing::LoadBalancer",
       "Properties": {
         "Scheme": "internal",
+        "CrossZone": true,
         "Subnets": [
           { "Ref" : "SubnetIdAz1" },
           { "Ref" : "SubnetIdAz2" }

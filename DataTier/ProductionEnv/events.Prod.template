@@ -182,6 +182,7 @@
             "echo ", "seeds=",       { "Fn::Join" : [ "", [{ "Ref" : "ApplicationTag" }, "-", { "Ref" : "NodeType" }, "1", { "Ref" : "StackID" }, { "Fn::FindInMap" : [ "dot", { "Ref" : "Environment" }, "DOT" ]},".bluekite.com,"]]},
                                      { "Fn::Join" : [ "", [{ "Ref" : "ApplicationTag" }, "-", { "Ref" : "NodeType" }, "2", { "Ref" : "StackID" }, { "Fn::FindInMap" : [ "dot", { "Ref" : "Environment" }, "DOT" ]},".bluekite.com"]]},  ">> /etc/facter/facts.d/custom_facts.txt\n",
             "echo ", "env=",         { "Ref" : "Environment" },    ">> /etc/facter/facts.d/custom_facts.txt\n",
+            "echo custom_hostname=ecn1001 >> /etc/facter/facts.d/custom_facts.txt\n",
 
             "# Clone role hostname repo\n",
             "git clone git@github.com:victormarroquin/Puppet-HostName.git /etc/puppet/modules/hosts > /tmp/git.log 2>&1 || error_exit 'Failed to clone hostname repo'\n",
@@ -194,13 +195,14 @@
             "cd /home/ubuntu/cassandra_server\n",
             "export LANG=en_US.UTF-8; sudo puppet apply --verbose --modulepath=puppet/modules puppet/manifests/site.pp > /tmp/puppet.log 2>&1 || error_exit 'failed to apply puppet manifests'\n",
 
-            "sleep 90; rm -rf /var/lib/cassandra/data/*\n",
-            "sudo service cassandra restart\n",
+            "sleep 60; sudo service cassandra stop\n",
+            "sleep 30; sudo rm -rf /var/lib/cassandra/data/*\n",
+            "sleep 30; sudo service cassandra start\n",
 
             "#load the initial data structure\n",
-            "cd /home/ubuntu/cassandra_server/puppet/scripts\n",
-            "sleep 90; cqlsh -f cassandra_cql_setup.txt > /tmp/datastructureload.log 2>&1 || error_exit 'failed to load the data structure'\n",
-            "# Signal setup is complete\n",
+            "#cd /home/ubuntu/cassandra_server/puppet/scripts\n",
+            "#sleep 300; cqlsh -f cassandra_cql_setup.txt > /tmp/datastructureload.log 2>&1 || error_exit 'failed to load the data structure'\n",
+            "#Signal setup is complete\n",
             "cfn-signal -e $? -r 'Completed configuration' '",
             {
               "Ref" : "CassandraWaitHandleC1"
@@ -307,6 +309,7 @@
             "echo ", "seeds=",       { "Fn::Join" : [ "", [{ "Ref" : "ApplicationTag" }, "-", { "Ref" : "NodeType" }, "1", { "Ref" : "StackID" }, { "Fn::FindInMap" : [ "dot", { "Ref" : "Environment" }, "DOT" ]},".bluekite.com,"]]},
                                      { "Fn::Join" : [ "", [{ "Ref" : "ApplicationTag" }, "-", { "Ref" : "NodeType" }, "2", { "Ref" : "StackID" }, { "Fn::FindInMap" : [ "dot", { "Ref" : "Environment" }, "DOT" ]},".bluekite.com"]]},  ">> /etc/facter/facts.d/custom_facts.txt\n",
             "echo ", "env=",         { "Ref" : "Environment" },    ">> /etc/facter/facts.d/custom_facts.txt\n",
+            "echo custom_hostname=ecn1002 >> /etc/facter/facts.d/custom_facts.txt\n",
 
             "# Clone role hostname repo\n",
             "git clone git@github.com:victormarroquin/Puppet-HostName.git /etc/puppet/modules/hosts > /tmp/git.log 2>&1 || error_exit 'Failed to clone hostname repo'\n",
@@ -319,12 +322,13 @@
             "cd /home/ubuntu/cassandra_server\n",
             "export LANG=en_US.UTF-8; sudo puppet apply --verbose --modulepath=puppet/modules puppet/manifests/site.pp > /tmp/puppet.log 2>&1 || error_exit 'failed to apply puppet manifests'\n",
 
-            "sleep 90; rm -rf /var/lib/cassandra/data/*\n",
-            "sudo service cassandra restart\n",
+            "sleep 60; sudo service cassandra stop\n",
+            "sleep 30; sudo rm -rf /var/lib/cassandra/data/*\n",
+            "sleep 30; sudo service cassandra start\n",
 
             "#load the initial data structure\n",
-            "cd /home/ubuntu/cassandra_server/puppet/scripts\n",
-            "sleep 90; cqlsh -f cassandra_cql_setup.txt > /tmp/datastructureload.log 2>&1 || error_exit 'failed to load the data structure'\n",
+            "#cd /home/ubuntu/cassandra_server/puppet/scripts\n",
+            "#sleep 180; cqlsh -f cassandra_cql_setup.txt > /tmp/datastructureload.log 2>&1 || error_exit 'failed to load the data structure'\n",
             "# Signal setup is complete\n",
             "cfn-signal -e $? -r 'Completed configuration' '",
             {
@@ -432,6 +436,7 @@
             "echo ", "seeds=",       { "Fn::Join" : [ "", [{ "Ref" : "ApplicationTag" }, "-", { "Ref" : "NodeType" }, "1", { "Ref" : "StackID" }, { "Fn::FindInMap" : [ "dot", { "Ref" : "Environment" }, "DOT" ]},".bluekite.com,"]]},
                                      { "Fn::Join" : [ "", [{ "Ref" : "ApplicationTag" }, "-", { "Ref" : "NodeType" }, "2", { "Ref" : "StackID" }, { "Fn::FindInMap" : [ "dot", { "Ref" : "Environment" }, "DOT" ]},".bluekite.com"]]},  ">> /etc/facter/facts.d/custom_facts.txt\n",
             "echo ", "env=",         { "Ref" : "Environment" },    ">> /etc/facter/facts.d/custom_facts.txt\n",
+            "echo custom_hostname=ecn1003 >> /etc/facter/facts.d/custom_facts.txt\n",
 
             "# Clone role hostname repo\n",
             "git clone git@github.com:victormarroquin/Puppet-HostName.git /etc/puppet/modules/hosts > /tmp/git.log 2>&1 || error_exit 'Failed to clone hostname repo'\n",
@@ -444,12 +449,13 @@
             "cd /home/ubuntu/cassandra_server\n",
             "export LANG=en_US.UTF-8; sudo puppet apply --verbose --modulepath=puppet/modules puppet/manifests/site.pp > /tmp/puppet.log 2>&1 || error_exit 'failed to apply puppet manifests'\n",
 
-            "sleep 90; rm -rf /var/lib/cassandra/data/*\n",
-            "sudo service cassandra restart\n",
+            "sleep 60; sudo service cassandra stop\n",
+            "sleep 30; sudo rm -rf /var/lib/cassandra/data/*\n",
+            "sleep 30; sudo service cassandra start\n",
 
             "#load the initial data structure\n",
             "cd /home/ubuntu/cassandra_server/puppet/scripts\n",
-            "sleep 90; cqlsh -f cassandra_cql_setup.txt > /tmp/datastructureload.log 2>&1 || error_exit 'failed to load the data structure'\n",
+            "sleep 180; cqlsh -f cassandra_cql_setup.txt > /tmp/datastructureload.log 2>&1 || error_exit 'failed to load the data structure'\n",
             "# Signal setup is complete\n",
             "cfn-signal -e $? -r 'Completed configuration' '",
             {
@@ -489,7 +495,7 @@
     "CassandraInstanceC4"     : {
       "Type"          : "AWS::EC2::Instance",
         "Metadata"    : {
-          "Comment"   : "Cassandra - Cassandra cluster node c1"
+          "Comment"   : "Cassandra - Cassandra cluster node c4"
         },
         "Properties"          : {
           "ImageId"           : {   "Fn::FindInMap" : [ "RegionMap", { "Ref" : "AWS::Region" }, "AMI" ]},
@@ -557,6 +563,7 @@
             "echo ", "seeds=",       { "Fn::Join" : [ "", [{ "Ref" : "ApplicationTag" }, "-", { "Ref" : "NodeType" }, "1", { "Ref" : "StackID" }, { "Fn::FindInMap" : [ "dot", { "Ref" : "Environment" }, "DOT" ]},".bluekite.com,"]]},
                                      { "Fn::Join" : [ "", [{ "Ref" : "ApplicationTag" }, "-", { "Ref" : "NodeType" }, "2", { "Ref" : "StackID" }, { "Fn::FindInMap" : [ "dot", { "Ref" : "Environment" }, "DOT" ]},".bluekite.com"]]},  ">> /etc/facter/facts.d/custom_facts.txt\n",
             "echo ", "env=",         { "Ref" : "Environment" },    ">> /etc/facter/facts.d/custom_facts.txt\n",
+            "echo custom_hostname=ecn1004 >> /etc/facter/facts.d/custom_facts.txt\n",
 
             "# Clone role hostname repo\n",
             "git clone git@github.com:victormarroquin/Puppet-HostName.git /etc/puppet/modules/hosts > /tmp/git.log 2>&1 || error_exit 'Failed to clone hostname repo'\n",
@@ -569,12 +576,13 @@
             "cd /home/ubuntu/cassandra_server\n",
             "export LANG=en_US.UTF-8; sudo puppet apply --verbose --modulepath=puppet/modules puppet/manifests/site.pp > /tmp/puppet.log 2>&1 || error_exit 'failed to apply puppet manifests'\n",
 
-            "sleep 90; rm -rf /var/lib/cassandra/data/*\n",
-            "sudo service cassandra restart\n",
+            "sleep 60; sudo service cassandra stop\n",
+            "sleep 30; sudo rm -rf /var/lib/cassandra/data/*\n",
+            "sleep 30; sudo service cassandra start\n",
 
             "#load the initial data structure\n",
-            "cd /home/ubuntu/cassandra_server/puppet/scripts\n",
-            "sleep 90; cqlsh -f cassandra_cql_setup.txt > /tmp/datastructureload.log 2>&1 || error_exit 'failed to load the data structure'\n",
+            "#cd /home/ubuntu/cassandra_server/puppet/scripts\n",
+            "#sleep 180; cqlsh -f cassandra_cql_setup.txt > /tmp/datastructureload.log 2>&1 || error_exit 'failed to load the data structure'\n",
             "# Signal setup is complete\n",
             "cfn-signal -e $? -r 'Completed configuration' '",
             {
@@ -616,6 +624,7 @@
       "Type": "AWS::ElasticLoadBalancing::LoadBalancer",
       "Properties": {
         "Scheme": "internal",
+        "CrossZone": true,
         "Subnets": [
           { "Ref" : "SubnetIdAz1" },
           { "Ref" : "SubnetIdAz2" }
@@ -633,6 +642,12 @@
           },
           {
             "Ref": "CassandraInstanceC2"
+          },
+          {
+            "Ref": "CassandraInstanceC3"
+          },
+          {
+            "Ref": "CassandraInstanceC4"
           }
         ],
 

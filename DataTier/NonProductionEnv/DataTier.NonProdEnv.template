@@ -177,7 +177,8 @@
           "SecurityGroupId"             : { "Ref"  : "BeanstalkdSecurityGroupId" },
           "PrivateAPIsSecurityGroupId"  : { "Ref"  : "PrivateAPIsSecurityGroupId" },
           "StackID"                     : { "Ref"  : "StackID" },
-          "DeployBranch"                : { "Ref"  : "DeployBranch" },
+          "RoleDeployBranch"            : { "Ref"  : "RoleDeployBranch" },
+          "SitesDeployBranch"           : { "Ref"  : "SitesDeployBranch" },
           "Environment"                 : { "Ref"  : "Environment" }
         }
       }
