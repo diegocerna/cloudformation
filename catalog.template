@@ -184,7 +184,7 @@
           "update-alternatives --set gem /usr/bin/gem1.9.1\n",
 
           "# Install application's dependencies via librarian puppet\n",
-          "cd /etc/puppet/modules/catalog\n",
+          "cd /etc/puppet/modules/accounts\n",
           "rm Gemfile*\n",
           "sudo librarian-puppet install --clean --verbose --path=/etc/puppet/modules > /tmp/librarian-puppet.log 2>&1 || error_exit 'failed to install puppet submodules'\n",
 
