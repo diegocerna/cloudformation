@@ -122,7 +122,7 @@
     "API" : {
       "Type" : "AWS::CloudFormation::Stack",
       "Properties" : {
-        "TemplateURL" : "https://s3-us-west-2.amazonaws.com/pruebastack/api.template",
+        "TemplateURL" : "https://s3-us-west-2.amazonaws.com/cfpot/api.template",
         "Parameters" : {
           "KeyName": {"Ref":"KeyName"},
           "SubnetId" : { "Ref" : "PublicSubnetId"},
@@ -137,7 +137,7 @@
     "redis" : {
       "Type" : "AWS::CloudFormation::Stack",
       "Properties" : {
-        "TemplateURL" : "https://s3-us-west-2.amazonaws.com/pruebastack/redis.template",
+        "TemplateURL" : "https://s3-us-west-2.amazonaws.com/cfpot/redis.template",
         "Parameters" : {
           "KeyName": { "Ref" : "KeyName" },
           "SubnetId" : { "Ref" : "PrivateSubnetId" },
@@ -150,7 +150,7 @@
     "logstash" : {
       "Type" : "AWS::CloudFormation::Stack",
       "Properties" : {
-        "TemplateURL" : "https://s3-us-west-2.amazonaws.com/pruebastack/logstash.template",
+        "TemplateURL" : "https://s3-us-west-2.amazonaws.com/cfpot/logstash.template",
 "KeyName" : { "Ref" : "KeyName" },
           "Version" : { "Ref" : "Version" },
           "SubnetId" : { "Ref" : "PrivateSubnetId" },
@@ -164,7 +164,7 @@
     "HelloWorld" : {
       "Type" : "AWS::CloudFormation::Stack",
       "Properties" : {
-        "TemplateURL" : "https://s3-us-west-2.amazonaws.com/pruebastack/hello-world.template",
+        "TemplateURL" : "https://s3-us-west-2.amazonaws.com/cfpot/hello-world.template",
 "KeyName" : { "Ref" : "KeyName" },
           "Version" : { "Ref" : "Version" },
           "SubnetId" : { "Ref" : "PrivateSubnetId" },
@@ -178,7 +178,7 @@
     "elastickite" : {
       "Type" : "AWS::CloudFormation::Stack",
       "Properties" : {
-        "TemplateURL" : "https://s3-us-west-2.amazonaws.com/pruebastack/search.template",
+        "TemplateURL" : "https://s3-us-west-2.amazonaws.com/cfpot/search.template",
 "KeyName" : { "Ref" : "KeyName" },
           "Version" : { "Ref" : "Version" },
           "SubnetId" : { "Ref" : "PrivateSubnetId" },
@@ -192,7 +192,7 @@
     "catalog" : {
       "Type" : "AWS::CloudFormation::Stack",
       "Properties" : {
-        "TemplateURL" : "https://s3-us-west-2.amazonaws.com/pruebastack/catalog.template",
+        "TemplateURL" : "https://s3-us-west-2.amazonaws.com/cfpot/catalog.template",
 "KeyName" : { "Ref" : "KeyName" },
           "Version" : { "Ref" : "Version" },
           "SubnetId" : { "Ref" : "PrivateSubnetId" },
@@ -206,7 +206,7 @@
     "accountsIs" : {
       "Type" : "AWS::CloudFormation::Stack",
       "Properties" : {
-        "TemplateURL" : "https://s3-us-west-2.amazonaws.com/pruebastack/accounts.is.template",
+        "TemplateURL" : "https://s3-us-west-2.amazonaws.com/cfpot/accounts.is.template",
 "KeyName" : { "Ref" : "KeyName" },
           "Version" : { "Ref" : "Version" },
           "SubnetId" : { "Ref" : "PrivateSubnetId" },
@@ -220,7 +220,7 @@
     "accountsGt" : {
       "Type" : "AWS::CloudFormation::Stack",
       "Properties" : {
-        "TemplateURL" : "https://s3-us-west-2.amazonaws.com/pruebastack/accounts.gt.template",
+        "TemplateURL" : "https://s3-us-west-2.amazonaws.com/cfpot/accounts.gt.template",
 "KeyName" : { "Ref" : "KeyName" },
           "Version" : { "Ref" : "Version" },
           "SubnetId" : { "Ref" : "PrivateSubnetId" },
@@ -234,7 +234,7 @@
     "accountsDo" : {
       "Type" : "AWS::CloudFormation::Stack",
       "Properties" : {
-        "TemplateURL" : "https://s3-us-west-2.amazonaws.com/pruebastack/accounts.do.template",
+        "TemplateURL" : "https://s3-us-west-2.amazonaws.com/cfpot/accounts.do.template",
 "KeyName" : { "Ref" : "KeyName" },
           "Version" : { "Ref" : "Version" },
           "SubnetId" : { "Ref" : "PrivateSubnetId" },
@@ -248,7 +248,7 @@
     "monitors" : {
       "Type" : "AWS::CloudFormation::Stack",
       "Properties" : {
-        "TemplateURL" : "https://s3-us-west-2.amazonaws.com/pruebastack/monitors.template",
+        "TemplateURL" : "https://s3-us-west-2.amazonaws.com/cfpot/monitors.template",
 "KeyName" : { "Ref" : "KeyName" },
           "Version" : { "Ref" : "Version" },
           "SubnetId" : { "Ref" : "PrivateSubnetId" },
@@ -262,7 +262,7 @@
     "InternalGateway" : {
       "Type" : "AWS::CloudFormation::Stack",
       "Properties" : {
-        "TemplateURL" : "https://s3-us-west-2.amazonaws.com/pruebastack/internal_gateway.template",
+        "TemplateURL" : "https://s3-us-west-2.amazonaws.com/cfpot/internal_gateway.template",
 "KeyName" : { "Ref" : "KeyName" },
           "Version" : { "Ref" : "Version" },
           "SubnetId" : { "Ref" : "PrivateSubnetId" },
@@ -276,7 +276,7 @@
     "Events" : {
       "Type" : "AWS::CloudFormation::Stack",
       "Properties" : {
-        "TemplateURL" : "https://s3-us-west-2.amazonaws.com/pruebastack/events.template",
+        "TemplateURL" : "https://s3-us-west-2.amazonaws.com/cfpot/events.template",
 "KeyName" : { "Ref" : "KeyName" },
           "Version" : { "Ref" : "Version" },
           "SubnetId" : { "Ref" : "PrivateSubnetId" },
@@ -290,7 +290,7 @@
     "GTWorkerPronet" : {
       "Type" : "AWS::CloudFormation::Stack",
       "Properties" : {
-        "TemplateURL" : "https://s3-us-west-2.amazonaws.com/pruebastack/gt_worker_pronet.template",
+        "TemplateURL" : "https://s3-us-west-2.amazonaws.com/cfpot/gt_worker_pronet.template",
 "KeyName" : { "Ref" : "KeyName" },
           "Version" : { "Ref" : "Version" },
           "SubnetId" : { "Ref" : "PrivateSubnetId" },
@@ -304,7 +304,7 @@
     "Payments" : {
       "Type" : "AWS::CloudFormation::Stack",
       "Properties" : {
-        "TemplateURL" : "https://s3-us-west-2.amazonaws.com/pruebastack/payments.template",
+        "TemplateURL" : "https://s3-us-west-2.amazonaws.com/cfpot/payments.template",
 "KeyName" : { "Ref" : "KeyName" },
           "Version" : { "Ref" : "Version" },
           "SubnetId" : { "Ref" : "PrivateSubnetId" },

@@ -194,7 +194,7 @@
 
                     "cd /home/ubuntu/", {"Ref" : "WorkingDirectory"}, "\n",
                     "sudo puppet apply --verbose --debug --modulepath=puppet/modules puppet/manifests/aws.pp > /tmp/puppet.log 2>&1 || error_exit 'failed to apply puppet manifests'\n",
-                    
+
                     "# Signal setup is complete\n",
                     "cfn-signal -e $? -r 'Completed configuration' '",
                     {

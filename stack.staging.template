@@ -183,7 +183,7 @@
     "API" : {
       "Type" : "AWS::CloudFormation::Stack",
       "Properties" : {
-        "TemplateURL" : "https://s3-us-west-2.amazonaws.com/pruebastack/gateway.external.template",
+        "TemplateURL" : "https://s3-us-west-2.amazonaws.com/cfpot/gateway.external.template",
         "Parameters" : {
           "KeyName": {"Ref":"KeyName"},
           "Version" : { "Ref" : "Version" },
@@ -202,7 +202,7 @@
     "XPA" : {
       "Type" : "AWS::CloudFormation::Stack",
       "Properties" : {
-        "TemplateURL" : "https://s3-us-west-2.amazonaws.com/pruebastack/xpa.template",
+        "TemplateURL" : "https://s3-us-west-2.amazonaws.com/cfpot/xpa.template",
         "Parameters" : {
           "KeyName": {"Ref" : "KeyName"},
           "Version" : { "Ref" : "Version" },
@@ -221,7 +221,7 @@
     "HelloWorld" : {
       "Type" : "AWS::CloudFormation::Stack",
       "Properties" : {
-        "TemplateURL" : "https://s3-us-west-2.amazonaws.com/pruebastack/hello-world.template",
+        "TemplateURL" : "https://s3-us-west-2.amazonaws.com/cfpot/hello-world.template",
         "Parameters" : {
           "KeyName" : { "Ref" : "KeyName" },
           "Version" : { "Ref" : "Version" },
@@ -239,7 +239,7 @@
     "catalog" : {
       "Type" : "AWS::CloudFormation::Stack",
       "Properties" : {
-        "TemplateURL" : "https://s3-us-west-2.amazonaws.com/pruebastack/catalog.template",
+        "TemplateURL" : "https://s3-us-west-2.amazonaws.com/cfpot/catalog.template",
         "Parameters" : {
           "KeyName" : { "Ref" : "KeyName" },
           "Version" : { "Ref" : "Version" },
@@ -261,7 +261,7 @@
     "elastickite" : {
       "Type" : "AWS::CloudFormation::Stack",
       "Properties" : {
-        "TemplateURL" : "https://s3-us-west-2.amazonaws.com/pruebastack/elastickite.template",
+        "TemplateURL" : "https://s3-us-west-2.amazonaws.com/cfpot/elastickite.template",
         "Parameters" : {
           "KeyName" : { "Ref" : "KeyName" },
           "Version" : { "Ref" : "Version" },
@@ -281,7 +281,7 @@
     "accountsGt" : {
       "Type" : "AWS::CloudFormation::Stack",
       "Properties" : {
-        "TemplateURL" : "https://s3-us-west-2.amazonaws.com/pruebastack/accounts.gt.template",
+        "TemplateURL" : "https://s3-us-west-2.amazonaws.com/cfpot/accounts.gt.template",
         "Parameters" : {
           "KeyName" : { "Ref" : "KeyName" },
           "Version" : { "Ref" : "Version" },
@@ -303,7 +303,7 @@
     "accountsDo" : {
       "Type" : "AWS::CloudFormation::Stack",
       "Properties" : {
-        "TemplateURL" : "https://s3-us-west-2.amazonaws.com/pruebastack/accounts.do.template",
+        "TemplateURL" : "https://s3-us-west-2.amazonaws.com/cfpot/accounts.do.template",
         "Parameters" : {
           "KeyName" : { "Ref" : "KeyName" },
           "Version" : { "Ref" : "Version" },
@@ -325,7 +325,7 @@
     "accountsMx" : {
       "Type" : "AWS::CloudFormation::Stack",
       "Properties" : {
-        "TemplateURL" : "https://s3-us-west-2.amazonaws.com/pruebastack/accounts.mx.template",
+        "TemplateURL" : "https://s3-us-west-2.amazonaws.com/cfpot/accounts.mx.template",
         "Parameters" : {
           "KeyName" : { "Ref" : "KeyName" },
           "Version" : { "Ref" : "Version" },
@@ -347,7 +347,7 @@
     "accountsSv" : {
       "Type" : "AWS::CloudFormation::Stack",
       "Properties" : {
-        "TemplateURL" : "https://s3-us-west-2.amazonaws.com/pruebastack/accounts.sv.template",
+        "TemplateURL" : "https://s3-us-west-2.amazonaws.com/cfpot/accounts.sv.template",
         "Parameters" : {
           "KeyName" : { "Ref" : "KeyName" },
           "Version" : { "Ref" : "Version" },
@@ -369,7 +369,7 @@
     "accountsNi" : {
       "Type" : "AWS::CloudFormation::Stack",
       "Properties" : {
-        "TemplateURL" : "https://s3-us-west-2.amazonaws.com/pruebastack/accounts.ni.template",
+        "TemplateURL" : "https://s3-us-west-2.amazonaws.com/cfpot/accounts.ni.template",
         "Parameters" : {
           "KeyName" : { "Ref" : "KeyName" },
           "Version" : { "Ref" : "Version" },
@@ -391,7 +391,7 @@
     "monitors" : {
       "Type" : "AWS::CloudFormation::Stack",
       "Properties" : {
-        "TemplateURL" : "https://s3-us-west-2.amazonaws.com/pruebastack/monitors.template",
+        "TemplateURL" : "https://s3-us-west-2.amazonaws.com/cfpot/monitors.template",
         "Parameters" : {
           "KeyName" : { "Ref" : "KeyName" },
           "Version" : { "Ref" : "Version" },
@@ -411,7 +411,7 @@
     "InternalGateway" : {
       "Type" : "AWS::CloudFormation::Stack",
       "Properties" : {
-        "TemplateURL" : "https://s3-us-west-2.amazonaws.com/pruebastack/gateway.internal.template",
+        "TemplateURL" : "https://s3-us-west-2.amazonaws.com/cfpot/gateway.internal.template",
         "Parameters" : {
           "KeyName" : { "Ref" : "KeyName" },
           "Version" : { "Ref" : "Version" },
@@ -430,7 +430,7 @@
     "Events" : {
       "Type" : "AWS::CloudFormation::Stack",
       "Properties" : {
-        "TemplateURL" : "https://s3-us-west-2.amazonaws.com/pruebastack/events.template",
+        "TemplateURL" : "https://s3-us-west-2.amazonaws.com/cfpot/events.template",
         "Parameters" : {
           "KeyName" : { "Ref" : "KeyName" },
           "Version" : { "Ref" : "Version" },
@@ -450,7 +450,7 @@
     "Notifications" : {
       "Type" : "AWS::CloudFormation::Stack",
       "Properties" : {
-        "TemplateURL" : "https://s3-us-west-2.amazonaws.com/pruebastack/notifications.template",
+        "TemplateURL" : "https://s3-us-west-2.amazonaws.com/cfpot/notifications.template",
         "Parameters" : {
           "KeyName" : { "Ref" : "KeyName" },
           "Version" : { "Ref" : "Version" },
@@ -474,7 +474,7 @@
     "WorkerPronet" : {
       "Type" : "AWS::CloudFormation::Stack",
       "Properties" : {
-        "TemplateURL" : "https://s3-us-west-2.amazonaws.com/pruebastack/worker.pronet.template",
+        "TemplateURL" : "https://s3-us-west-2.amazonaws.com/cfpot/worker.pronet.template",
         "Parameters" : {
           "KeyName" : { "Ref" : "KeyName" },
           "Version" : { "Ref" : "Version" },
@@ -494,7 +494,7 @@
     "WorkerRedEfectiva" : {
       "Type" : "AWS::CloudFormation::Stack",
       "Properties" : {
-        "TemplateURL" : "https://s3-us-west-2.amazonaws.com/pruebastack/worker.redefectiva.template",
+        "TemplateURL" : "https://s3-us-west-2.amazonaws.com/cfpot/worker.redefectiva.template",
         "Parameters" : {
           "KeyName" : { "Ref" : "KeyName" },
           "Version" : { "Ref" : "Version" },
@@ -514,7 +514,7 @@
     "WorkerTpago" : {
       "Type" : "AWS::CloudFormation::Stack",
       "Properties" : {
-        "TemplateURL" : "https://s3-us-west-2.amazonaws.com/pruebastack/worker.tpago.template",
+        "TemplateURL" : "https://s3-us-west-2.amazonaws.com/cfpot/worker.tpago.template",
         "Parameters" : {
           "KeyName" : { "Ref" : "KeyName" },
           "Version" : { "Ref" : "Version" },
@@ -534,7 +534,7 @@
     "WorkerPuntoxpress" : {
       "Type" : "AWS::CloudFormation::Stack",
       "Properties" : {
-        "TemplateURL" : "https://s3-us-west-2.amazonaws.com/pruebastack/worker.puntoxpress.template",
+        "TemplateURL" : "https://s3-us-west-2.amazonaws.com/cfpot/worker.puntoxpress.template",
         "Parameters" : {
           "KeyName" : { "Ref" : "KeyName" },
           "Version" : { "Ref" : "Version" },
@@ -554,7 +554,7 @@
     "WorkerPuntofacil" : {
       "Type" : "AWS::CloudFormation::Stack",
       "Properties" : {
-        "TemplateURL" : "https://s3-us-west-2.amazonaws.com/pruebastack/worker.puntofacil.template",
+        "TemplateURL" : "https://s3-us-west-2.amazonaws.com/cfpot/worker.puntofacil.template",
         "Parameters" : {
           "KeyName" : { "Ref" : "KeyName" },
           "Version" : { "Ref" : "Version" },
@@ -574,7 +574,7 @@
     "WorkerTransferTo" : {
       "Type" : "AWS::CloudFormation::Stack",
       "Properties" : {
-        "TemplateURL" : "https://s3-us-west-2.amazonaws.com/pruebastack/worker.transferto.template",
+        "TemplateURL" : "https://s3-us-west-2.amazonaws.com/cfpot/worker.transferto.template",
         "Parameters" : {
           "KeyName" : { "Ref" : "KeyName" },
           "Version" : { "Ref" : "Version" },
@@ -594,7 +594,7 @@
     "Payments" : {
       "Type" : "AWS::CloudFormation::Stack",
       "Properties" : {
-        "TemplateURL" : "https://s3-us-west-2.amazonaws.com/pruebastack/payments.template",
+        "TemplateURL" : "https://s3-us-west-2.amazonaws.com/cfpot/payments.template",
         "Parameters" : {
           "KeyName" : { "Ref" : "KeyName" },
           "Version" : { "Ref" : "Version" },

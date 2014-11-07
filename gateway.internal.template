@@ -72,9 +72,9 @@
 
   "Mappings" : {
     "IntGWAMI" : {
-      "us-east-1"      : { "AMI" : "ami-0e07a566" },
+      "us-east-1"      : { "AMI" : "ami-286ee740" },
       "us-west-1"      : { "AMI" : "ami-49ede60c" },
-      "us-west-2"      : { "AMI" : "ami-8b6d2ebb" },
+      "us-west-2"      : { "AMI" : "ami-ad1d569d" },
       "sa-east-1"      : { "AMI" : "ami-d545e5c8" },
       "eu-west-1"      : { "AMI" : "ami-d03dcaa7"}
     },
@@ -111,23 +111,7 @@
     "IntGW" : {
       "Type" : "AWS::EC2::Instance",
       "Metadata" : {
-        "Comment" : "Internal gw NodeJs Application",
-        "AWS::CloudFormation::Init" : {
-          "configSets" : {
-            "default" : ["config_packages"]
-          },
-          "config_packages" : {
-            "packages" : {
-              "apt" : {
-                "git"                        : [],
-                "curl"                       : [],
-                "tmux"                       : [],
-                "build-essential"            : [],
-                "python-software-properties" : []
-              }
-            }
-          }
-        }
+        "Comment" : "Internal gw NodeJs Application"
       },
 
       "Properties" : {
@@ -181,14 +165,9 @@
           "apt-get -y install rubygems\n",
           "update-alternatives --set gem /usr/bin/gem1.9.1\n",
 
-          "# Install puppet via gems\n",
-          "sudo gem install puppet --no-rdoc --no-ri > /tmp/gem-puppet.log 2>&1 || error_exit 'Failed install puppet gem'\n",
-
-          "# Install Librarian Ruby\n",
-          "sudo gem install librarian-puppet --no-rdoc --no-ri > /tmp/gem-librarian-puppet.log 2>&1 || error_exit 'Failed install librarian puppet gem'\n",
-
           "# Install application's dependencies via librarian puppet\n",
           "cd /etc/puppet/modules/gw\n",
+          "rm Gemfile*\n",
           "sudo librarian-puppet install --clean --verbose --path=/etc/puppet/modules > /tmp/librarian-puppet.log 2>&1 || error_exit 'failed to install puppet submodules'\n",
 
           "#setting my custom facts\n",

@@ -110,7 +110,7 @@
     "EventsCluster" : {
       "Type" : "AWS::CloudFormation::Stack",
       "Properties" : {
-        "TemplateURL" : "https://s3-us-west-2.amazonaws.com/pruebastack/DataTier/ProductionEnv/events.Prod.template",
+        "TemplateURL" : "https://s3-us-west-2.amazonaws.com/cfpot/DataTier/ProductionEnv/events.Prod.template",
         "Parameters"        : {
           "KeyName"                     : { "Ref"  : "KeyName"},
           "InstanceType"                : { "Ref"  : "InstanceType"},
@@ -130,7 +130,7 @@
     "SearchCluster" : {
       "Type" : "AWS::CloudFormation::Stack",
       "Properties" : {
-        "TemplateURL" : "https://s3-us-west-2.amazonaws.com/pruebastack/DataTier/ProductionEnv/elastickitecluster.Prod.template",
+        "TemplateURL" : "https://s3-us-west-2.amazonaws.com/cfpot/DataTier/ProductionEnv/elastickitecluster.Prod.template",
         "Parameters"                    : {
           "KeyName"                     : { "Ref"  : "KeyName" },
           "InstanceType"                : { "Ref"  : "InstanceType" },
@@ -149,7 +149,7 @@
     "RDSDatabases" : {
       "Type" : "AWS::CloudFormation::Stack",
       "Properties" : {
-        "TemplateURL" : "https://s3-us-west-2.amazonaws.com/pruebastack/DataTier/ProductionEnv/rdsdb.Prod.template",
+        "TemplateURL" : "https://s3-us-west-2.amazonaws.com/cfpot/DataTier/ProductionEnv/rdsdb.Prod.template",
         "Parameters"        : {
           "SubnetIdAz1"     : { "Ref"  : "SubnetIdAz1"},
           "SubnetIdAz2"     : { "Ref"  : "SubnetIdAz2"},
@@ -167,7 +167,7 @@
     "BeanstalkdQueue" : {
       "Type" : "AWS::CloudFormation::Stack",
       "Properties" : {
-        "TemplateURL" : "https://s3-us-west-2.amazonaws.com/pruebastack/DataTier/ProductionEnv/beanstalkd.Prod.template",
+        "TemplateURL" : "https://s3-us-west-2.amazonaws.com/cfpot/DataTier/ProductionEnv/beanstalkd.Prod.template",
         "Parameters"        : {
           "KeyName"                     : { "Ref"  : "KeyName" },
           "InstanceType"                : { "Ref"  : "InstanceType" },
@@ -185,7 +185,7 @@
     "ElastiCacheService" : {
       "Type" : "AWS::CloudFormation::Stack",
       "Properties" : {
-        "TemplateURL" : "https://s3-us-west-2.amazonaws.com/pruebastack/DataTier/NonProductionEnv/elasticache.NonProd.template",
+        "TemplateURL" : "https://s3-us-west-2.amazonaws.com/cfpot/DataTier/NonProductionEnv/elasticache.NonProd.template",
         "Parameters"        : {
           "CacheNodeType"             : "cache.t2.medium",
           "CacheParameterGroupName"   : "bluekiteredis",

@@ -11,8 +11,8 @@
       "ap-southeast-1" : {"AMI" : "ami-605c0a32" },
       "ap-southeast-2" : {"AMI" : "ami-fb4bd5c1" },
       "eu-west-1"      : {"AMI" : "ami-d03dcaa7" },
-      "us-east-1"      : {"AMI" : "ami-0e07a566" },
-      "us-west-2"      : {"AMI" : "ami-8b6d2ebb" }
+      "us-east-1"      : {"AMI" : "ami-0c56df64" },
+      "us-west-2"      : {"AMI" : "ami-07fcb437" }
     },
 
     "version" : {
@@ -168,14 +168,9 @@
           "update-alternatives --set ruby /usr/bin/ruby1.9.1\n",
           "update-alternatives --set gem /usr/bin/gem1.9.1\n",
 
-          "# Install puppet via gems\n",
-          "sudo gem install puppet --no-rdoc --no-ri > /tmp/gem-puppet.log 2>&1 || error_exit 'Failed install puppet gem'\n",
-
-          "# Install Librarian Ruby\n",
-          "sudo gem install librarian-puppet --no-rdoc --no-ri > /tmp/gem-librarian-puppet.log 2>&1 || error_exit 'Failed install librarian puppet gem'\n",
-
           "# Install application's dependencies via librarian puppet\n",
           "cd /etc/puppet/modules/accounts\n",
+          "rm Gemfile*\n",
           "sudo librarian-puppet install --clean --verbose --path=/etc/puppet/modules > /tmp/librarian-puppet.log 2>&1 || error_exit 'failed to install puppet submodules'\n",
 
           "#setting my custom facts\n",
