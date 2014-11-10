@@ -91,7 +91,7 @@
       "Properties" : {
         "HostedZoneName" : "bluekite.com.",
         "Comment" : "DNS name for my instance.",
-        "Name" : { "Fn::Join" : [ "", ["accountsdb.do", { "Ref" : "StackID" } , { "Fn::FindInMap" : [ "dot", { "Ref" : "Environment" }, "DOT" ]},".bluekite.com"]]},
+        "Name" : { "Fn::Join" : [ "", ["accountsdb", { "Ref" : "StackID" } ,".do", { "Fn::FindInMap" : [ "dot", { "Ref" : "Environment" }, "DOT" ]},".bluekite.com"]]},
         "Type" : "CNAME",
         "TTL" : "900",
         "ResourceRecords" : [ { "Fn::GetAtt" : [ "accountsdbdo", "Endpoint.Address" ] } ]
@@ -125,7 +125,7 @@
       "Properties" : {
         "HostedZoneName" : "bluekite.com.",
         "Comment" : "DNS name for my instance.",
-        "Name" : { "Fn::Join" : [ "", ["accountsdb.gt", { "Ref" : "StackID" } , { "Fn::FindInMap" : [ "dot", { "Ref" : "Environment" }, "DOT" ]},".bluekite.com"]]},
+        "Name" : { "Fn::Join" : [ "", ["accountsdb", { "Ref" : "StackID" } ,".gt", { "Fn::FindInMap" : [ "dot", { "Ref" : "Environment" }, "DOT" ]},".bluekite.com"]]},
         "Type" : "CNAME",
         "TTL" : "900",
         "ResourceRecords" : [ { "Fn::GetAtt" : [ "accountsdbgt", "Endpoint.Address" ] } ]
@@ -160,7 +160,7 @@
       "Properties" : {
         "HostedZoneName" : "bluekite.com.",
         "Comment" : "DNS name for my instance.",
-        "Name" : { "Fn::Join" : [ "", ["accountsdb.is", { "Ref" : "StackID" } , { "Fn::FindInMap" : [ "dot", { "Ref" : "Environment" }, "DOT" ]},".bluekite.com"]]},
+        "Name" : { "Fn::Join" : [ "", ["accountsdb", { "Ref" : "StackID" },".is", { "Fn::FindInMap" : [ "dot", { "Ref" : "Environment" }, "DOT" ]},".bluekite.com"]]},
         "Type" : "CNAME",
         "TTL" : "900",
         "ResourceRecords" : [ { "Fn::GetAtt" : [ "accountsdbis", "Endpoint.Address" ] } ]
@@ -194,7 +194,7 @@
       "Properties" : {
         "HostedZoneName" : "bluekite.com.",
         "Comment" : "DNS name for my instance.",
-        "Name" : { "Fn::Join" : [ "", ["accountsdb.mx", { "Ref" : "StackID" } , { "Fn::FindInMap" : [ "dot", { "Ref" : "Environment" }, "DOT" ]},".bluekite.com"]]},
+        "Name" : { "Fn::Join" : [ "", ["accountsdb", { "Ref" : "StackID" },".mx", { "Fn::FindInMap" : [ "dot", { "Ref" : "Environment" }, "DOT" ]},".bluekite.com"]]},
         "Type" : "CNAME",
         "TTL" : "900",
         "ResourceRecords" : [ { "Fn::GetAtt" : [ "accountsdbmx", "Endpoint.Address" ] } ]
@@ -228,7 +228,7 @@
       "Properties" : {
         "HostedZoneName" : "bluekite.com.",
         "Comment" : "DNS name for my instance.",
-        "Name" : { "Fn::Join" : [ "", ["accountsdb.ni", { "Ref" : "StackID" } , { "Fn::FindInMap" : [ "dot", { "Ref" : "Environment" }, "DOT" ]},".bluekite.com"]]},
+        "Name" : { "Fn::Join" : [ "", ["accountsdb", { "Ref" : "StackID" } ,".ni", { "Fn::FindInMap" : [ "dot", { "Ref" : "Environment" }, "DOT" ]},".bluekite.com"]]},
         "Type" : "CNAME",
         "TTL" : "900",
         "ResourceRecords" : [ { "Fn::GetAtt" : [ "accountsdbni", "Endpoint.Address" ] } ]
@@ -262,7 +262,7 @@
       "Properties" : {
         "HostedZoneName" : "bluekite.com.",
         "Comment" : "DNS name for my instance.",
-        "Name" : { "Fn::Join" : [ "", ["accountsdb.sv", { "Ref" : "StackID" } , { "Fn::FindInMap" : [ "dot", { "Ref" : "Environment" }, "DOT" ]},".bluekite.com"]]},
+        "Name" : { "Fn::Join" : [ "", ["accountsdb", { "Ref" : "StackID" } ,".sv", { "Fn::FindInMap" : [ "dot", { "Ref" : "Environment" }, "DOT" ]},".bluekite.com"]]},
         "Type" : "CNAME",
         "TTL" : "900",
         "ResourceRecords" : [ { "Fn::GetAtt" : [ "accountsdbsv", "Endpoint.Address" ] } ]

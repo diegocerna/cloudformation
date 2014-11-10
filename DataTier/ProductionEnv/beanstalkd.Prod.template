@@ -52,7 +52,13 @@
       "Default" : "-"
     },
 
-    "DeployBranch" : {
+    "RoleDeployBranch" : {
+      "Type" : "String",
+      "Description" : "Git branch where to deploy the code from.",
+      "Default" : "master"
+    },
+
+    "SitesDeployBranch" : {
       "Type" : "String",
       "Description" : "Git branch where to deploy the code from.",
       "Default" : "master"
@@ -76,6 +82,7 @@
       "us-east-1"      : {"AMI" : "ami-c070d5a8" },
       "us-west-2"      : {"AMI" : "ami-5f5e186f" }
     },
+
     "dot" : {
       "test"           : { "DOT" : ".test" },
       "dev"            : { "DOT" : ".dev" },
@@ -146,10 +153,10 @@
           "cp /home/ubuntu/.ssh/* /root/.ssh/\n",
 
           "# Clone sites repo to ubuntu user home\n",
-          "git clone -b feature/nagios git@github.com:blue-kite/xbp_puppet_sites.git -b ", {"Ref" : "DeployBranch"}, "  /home/ubuntu/sites > /tmp/git.log 2>&1 || error_exit 'Failed to clone sites repo'\n",
+          "git clone git@github.com:blue-kite/xbp_puppet_sites.git -b ", {"Ref" : "SitesDeployBranch"}, "  /home/ubuntu/sites > /tmp/git.log 2>&1 || error_exit 'Failed to clone sites repo'\n",
 
           "# Clone role app repo\n",
-          "git clone git@github.com:blue-kite/xbp_puppet_role_beanstalkd_server.git -b ", {"Ref" : "DeployBranch"}, "  /etc/puppet/modules/stampbeanstalkd > /tmp/git.log 2>&1 || error_exit 'Failed to clone role app repo'\n",
+          "git clone git@github.com:blue-kite/xbp_puppet_role_beanstalkd_server.git -b ", {"Ref" : "RoleDeployBranch"}, "  /etc/puppet/modules/stampbeanstalkd > /tmp/git.log 2>&1 || error_exit 'Failed to clone role app repo'\n",
           "chown ubuntu:ubuntu -R /etc/puppet/modules/stampbeanstalkd\n",
 
           "# Add FQDN on etc/environment\n",
@@ -179,12 +186,14 @@
           "echo ", "stackid=", { "Ref" : "StackID" },           ">> /etc/facter/facts.d/custom_facts.txt\n",
           "echo ", { "Fn::Join" : [ "" , ["logserver_host=logs", { "Ref" : "StackID" }, { "Fn::FindInMap" : [ "dot", { "Ref" : "Environment" }, "DOT" ]}, ".bluekite.com" ]]},        ">> /etc/facter/facts.d/custom_facts.txt\n",
           "echo logserver_port=5001                             >> /etc/facter/facts.d/custom_facts.txt\n",
-          "echo ", "revision=", { "Ref" : "DeployBranch" }, ">> /etc/facter/facts.d/custom_facts.txt\n",
+          "echo ", "revision=", { "Ref" : "RoleDeployBranch" }, ">> /etc/facter/facts.d/custom_facts.txt\n",
           "echo app_name=queue.accounts >> /etc/facter/facts.d/custom_facts.txt\n",
           "echo has_failover=true           >> /etc/facter/facts.d/custom_facts.txt\n",
           "echo failover_host=",{ "Fn::Join" : [ "", ["queue2", { "Ref" : "StackID" },".accounts", { "Fn::FindInMap" : [ "dot", { "Ref" : "Environment" }, "DOT" ]},".bluekite.com"]]}," >> /etc/facter/facts.d/custom_facts.txt\n",
           "echo application_directory=/opt/xoom/beanstalkd >> /etc/facter/facts.d/custom_facts.txt\n",
           "echo ensure_service=running      >> /etc/facter/facts.d/custom_facts.txt\n",
+          "echo custom_hostname=qab1001 >> /etc/facter/facts.d/custom_facts.txt\n",
+
 
           "#create the beanstalkd directory\n",
           "sudo mkdir -p /opt/xoom/beanstalkd\n",
@@ -285,10 +294,10 @@
           "cp /home/ubuntu/.ssh/* /root/.ssh/\n",
 
           "# Clone sites repo to ubuntu user home\n",
-          "git clone -b feature/nagios git@github.com:blue-kite/xbp_puppet_sites.git -b ", {"Ref" : "DeployBranch"}, "  /home/ubuntu/sites > /tmp/git.log 2>&1 || error_exit 'Failed to clone sites repo'\n",
+          "git clone git@github.com:blue-kite/xbp_puppet_sites.git -b ", {"Ref" : "SitesDeployBranch"}, "  /home/ubuntu/sites > /tmp/git.log 2>&1 || error_exit 'Failed to clone sites repo'\n",
 
           "# Clone role app repo\n",
-          "git clone git@github.com:blue-kite/xbp_puppet_role_beanstalkd_server.git -b ", {"Ref" : "DeployBranch"}, "  /etc/puppet/modules/stampbeanstalkd > /tmp/git.log 2>&1 || error_exit 'Failed to clone role app repo'\n",
+          "git clone git@github.com:blue-kite/xbp_puppet_role_beanstalkd_server.git -b ", {"Ref" : "RoleDeployBranch"}, "  /etc/puppet/modules/stampbeanstalkd > /tmp/git.log 2>&1 || error_exit 'Failed to clone role app repo'\n",
           "chown ubuntu:ubuntu -R /etc/puppet/modules/stampbeanstalkd\n",
 
           "# Add FQDN on etc/environment\n",
@@ -318,12 +327,13 @@
           "echo ", "stackid=", { "Ref" : "StackID" },           ">> /etc/facter/facts.d/custom_facts.txt\n",
           "echo ", { "Fn::Join" : [ "" , ["logserver_host=logs", { "Ref" : "StackID" }, { "Fn::FindInMap" : [ "dot", { "Ref" : "Environment" }, "DOT" ]}, ".bluekite.com" ]]},        ">> /etc/facter/facts.d/custom_facts.txt\n",
           "echo logserver_port=5001                             >> /etc/facter/facts.d/custom_facts.txt\n",
-          "echo ", "revision=", { "Ref" : "DeployBranch" }, ">> /etc/facter/facts.d/custom_facts.txt\n",
+          "echo ", "revision=", { "Ref" : "RoleDeployBranch" }, ">> /etc/facter/facts.d/custom_facts.txt\n",
           "echo app_name=queue.accounts >> /etc/facter/facts.d/custom_facts.txt\n",
           "echo has_failover=false           >> /etc/facter/facts.d/custom_facts.txt\n",
           "echo failover_host=",{ "Fn::Join" : [ "", ["queue1", { "Ref" : "StackID" },".accounts", { "Fn::FindInMap" : [ "dot", { "Ref" : "Environment" }, "DOT" ]},".bluekite.com"]]}," >> /etc/facter/facts.d/custom_facts.txt\n",
           "echo application_directory=/opt/xoom/beanstalkd >> /etc/facter/facts.d/custom_facts.txt\n",
           "echo ensure_service=stopped      >> /etc/facter/facts.d/custom_facts.txt\n",
+          "echo custom_hostname=qab1002 >> /etc/facter/facts.d/custom_facts.txt\n",
 
           "#create the beanstalkd directory\n",
           "sudo mkdir -p /opt/xoom/beanstalkd\n",
@@ -389,6 +399,7 @@
       "Type": "AWS::ElasticLoadBalancing::LoadBalancer",
       "Properties": {
         "Scheme": "internal",
+        "CrossZone": true,
         "Subnets": [
           { "Ref" : "SubnetIdAz1" },
           { "Ref" : "SubnetIdAz2" }

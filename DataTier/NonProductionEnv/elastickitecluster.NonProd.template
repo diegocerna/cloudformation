@@ -470,6 +470,7 @@
       "Type": "AWS::ElasticLoadBalancing::LoadBalancer",
       "Properties": {
         "Scheme": "internal",
+        "CrossZone": true,
         "Subnets": [
           { "Ref" : "SubnetIdAz1" },
           { "Ref" : "SubnetIdAz2" }
