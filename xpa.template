@@ -83,10 +83,14 @@
         },
 
         "version" : {
-          "stamp1"          : { "HOSTNAME" : "xpa1001" },
-          "stamp2"          : { "HOSTNAME" : "xpa1002" },
-          "staging"         : { "HOSTNAME" : "xpa3001" },
-          "old"             : { "HOSTNAME" : "xpa" }
+          "stamp1"          : { "HOSTNAME" : "xpa1001" , "OSF" : "" },
+          "stamp2"          : { "HOSTNAME" : "xpa1002" , "OSF" : "" },
+          "staging1"        : { "HOSTNAME" : "xpa3001" , "OSF" : "-test" },
+          "staging2"        : { "HOSTNAME" : "xpa3002" , "OSF" : "-test" },
+          "sandbox1"        : { "HOSTNAME" : "xpa4001" , "OSF" : "-test" },
+          "sandbox2"        : { "HOSTNAME" : "xpa4002" , "OSF" : "-test" },
+          "qa1"             : { "HOSTNAME" : "xpa5001" , "OSF" : "-test" },
+          "qa2"             : { "HOSTNAME" : "xpa5002" , "OSF" : "-test" }
         },
 
         "env" : {
@@ -161,6 +165,7 @@
                     "echo ", { "Fn::Join" : [ "" , ["FQDN=xpa", { "Ref" : "StackID" }, { "Fn::FindInMap" : [ "env", { "Ref" : "Environment" }, "DOT" ]}, ".bluekite.com" ]]}, ">> /etc/environment\n",
                     "echo ", "FACTER_stackid=", { "Ref" : "StackID" }, ">> /etc/environment\n",
                     "echo ", "FACTER_rack_env=", { "Ref" : "Environment" }, ">> /etc/environment\n",
+                    "echo ", { "Fn::Join" : [ "" , ["oauth_host=oauth", { "Fn::FindInMap" : [ "version", { "Ref" : "Version" }, "OSF" ]}, { "Fn::FindInMap" : [ "env", { "Ref" : "Environment" }, "DOT" ]}, ".bluekite.com" ]]},        ">> /etc/environment\n",
 
                     "#Installing Ruby\n",
                     "apt-get -y install libyaml-0-2\n",

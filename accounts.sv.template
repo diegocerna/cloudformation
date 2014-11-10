@@ -18,8 +18,12 @@
     "version" : {
       "stamp1"          : { "HOSTNAME" : "asv1001" },
       "stamp2"          : { "HOSTNAME" : "asv1002" },
-      "staging"         : { "HOSTNAME" : "asv3001" },
-      "old"             : { "HOSTNAME" : "accountssv" }
+      "staging1"        : { "HOSTNAME" : "asv3001" },
+      "staging2"        : { "HOSTNAME" : "asv3002" },
+      "sandbox1"        : { "HOSTNAME" : "asv4001" },
+      "sandbox2"        : { "HOSTNAME" : "asv4002" },
+      "qa1"             : { "HOSTNAME" : "asv5001" },
+      "qa2"             : { "HOSTNAME" : "asv5002" }
     },
 
     "env" : {

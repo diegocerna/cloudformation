@@ -91,8 +91,12 @@
         "version" : {
           "stamp1"          : { "HOSTNAME" : "srh1001" },
           "stamp2"          : { "HOSTNAME" : "srh1002" },
-          "staging"         : { "HOSTNAME" : "srh3001" },
-          "old"             : { "HOSTNAME" : "search" }
+          "staging1"        : { "HOSTNAME" : "srh3001" },
+          "staging2"        : { "HOSTNAME" : "srh3002" },
+          "sandbox1"        : { "HOSTNAME" : "srh4001" },
+          "sandbox2"        : { "HOSTNAME" : "srh4002" },
+          "qa1"             : { "HOSTNAME" : "srh5001" },
+          "qa2"             : { "HOSTNAME" : "srh5002" }
         },
 
         "env" : {

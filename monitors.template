@@ -92,8 +92,12 @@
     "version" : {
       "stamp1"          : { "HOSTNAME" : "mon1001" },
       "stamp2"          : { "HOSTNAME" : "mon1002" },
-      "staging"         : { "HOSTNAME" : "mon3001" },
-      "old"             : { "HOSTNAME" : "monitors" }
+      "staging1"        : { "HOSTNAME" : "mon3001" },
+      "staging2"        : { "HOSTNAME" : "mon3002" },
+      "sandbox1"        : { "HOSTNAME" : "mon4001" },
+      "sandbox2"        : { "HOSTNAME" : "mon4002" },
+      "qa1"             : { "HOSTNAME" : "mon5001" },
+      "qa2"             : { "HOSTNAME" : "mon5002" }
     },
 
     "env" : {

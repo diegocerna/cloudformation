@@ -87,8 +87,12 @@
         "version" : {
           "stamp1"          : { "HOSTNAME" : "hel1001" },
           "stamp2"          : { "HOSTNAME" : "hel1002" },
-          "staging"         : { "HOSTNAME" : "hel3001" },
-          "old"             : { "HOSTNAME" : "helloworld" }
+          "staging1"        : { "HOSTNAME" : "hel3001" },
+          "staging2"        : { "HOSTNAME" : "hel3002" },
+          "sandbox1"        : { "HOSTNAME" : "hel4001" },
+          "sandbox2"        : { "HOSTNAME" : "hel4002" },
+          "qa1"             : { "HOSTNAME" : "hel5001" },
+          "qa2"             : { "HOSTNAME" : "hel5002" }
         },
 
         "env" : {

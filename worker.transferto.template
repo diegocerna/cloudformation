@@ -87,12 +87,16 @@
             "us-east-1"      : {"AMI" : "ami-0c56df64" },
             "us-west-2"      : {"AMI" : "ami-07fcb437" }
         },
-
+        
         "version" : {
           "stamp1"          : { "HOSTNAME" : "wtt1001" },
           "stamp2"          : { "HOSTNAME" : "wtt1002" },
-          "staging"         : { "HOSTNAME" : "wtt3001" },
-          "old"             : { "HOSTNAME" : "workertransferto" }
+          "staging1"        : { "HOSTNAME" : "wtt3001" },
+          "staging2"        : { "HOSTNAME" : "wtt3002" },
+          "sandbox1"        : { "HOSTNAME" : "wtt4001" },
+          "sandbox2"        : { "HOSTNAME" : "wtt4002" },
+          "qa1"             : { "HOSTNAME" : "wtt5001" },
+          "qa2"             : { "HOSTNAME" : "wtt5002" }
         },
 
         "env" : {

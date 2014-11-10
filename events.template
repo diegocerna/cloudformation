@@ -82,12 +82,16 @@
       "ap-southeast-2" : { "AMI" : "ami-fb4bd5c1" },
       "eu-west-1"      : { "AMI" : "ami-d03dcaa7" }
     },
-
+    
     "version" : {
       "stamp1"          : { "HOSTNAME" : "evt1001" },
       "stamp2"          : { "HOSTNAME" : "evt1002" },
-      "staging"         : { "HOSTNAME" : "evt3001" },
-      "old"             : { "HOSTNAME" : "events" }
+      "staging1"        : { "HOSTNAME" : "evt3001" },
+      "staging2"        : { "HOSTNAME" : "evt3002" },
+      "sandbox1"        : { "HOSTNAME" : "evt4001" },
+      "sandbox2"        : { "HOSTNAME" : "evt4002" },
+      "qa1"             : { "HOSTNAME" : "evt5001" },
+      "qa2"             : { "HOSTNAME" : "evt5002" }
     },
 
     "env" : {

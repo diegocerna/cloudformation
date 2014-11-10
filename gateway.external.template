@@ -83,8 +83,12 @@
     "version" : {
       "stamp1"          : { "HOSTNAME" : "spa1001" },
       "stamp2"          : { "HOSTNAME" : "spa1002" },
-      "staging"         : { "HOSTNAME" : "spa3001" },
-      "old"             : { "HOSTNAME" : "gateway" }
+      "staging1"        : { "HOSTNAME" : "spa3001" },
+      "staging2"        : { "HOSTNAME" : "spa3002" },
+      "sandbox1"        : { "HOSTNAME" : "spa4001" },
+      "sandbox2"        : { "HOSTNAME" : "spa4002" },
+      "qa1"             : { "HOSTNAME" : "spa5001" },
+      "qa2"             : { "HOSTNAME" : "spa5002" }
     },
 
     "env" : {

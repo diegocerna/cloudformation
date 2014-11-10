@@ -18,8 +18,12 @@
     "version" : {
       "stamp1"          : { "HOSTNAME" : "amx1001" },
       "stamp2"          : { "HOSTNAME" : "amx1002" },
-      "staging"         : { "HOSTNAME" : "amx3001" },
-      "old"             : { "HOSTNAME" : "accountsmx" }
+      "staging1"        : { "HOSTNAME" : "amx3001" },
+      "staging2"        : { "HOSTNAME" : "amx3002" },
+      "sandbox1"        : { "HOSTNAME" : "amx4001" },
+      "sandbox2"        : { "HOSTNAME" : "amx4002" },
+      "qa1"             : { "HOSTNAME" : "amx5001" },
+      "qa2"             : { "HOSTNAME" : "amx5002" }
     },
 
     "env" : {
@@ -96,7 +100,7 @@
 
     "Version" : {
       "Type" : "String",
-      "Description" : "stamp1 for current version, stamp2 for disaster recovery and staging for staging production"
+      "Description" : "stamp1 for current version, stamp2 for disaster recovery. The same with other environments staging, qa, sandbox"
     },
 
     "dbuser" : {

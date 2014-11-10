@@ -81,12 +81,16 @@
           "us-east-1"      : {"AMI" : "ami-e4fe768c" },
           "us-west-2"      : {"AMI" : "ami-61105b51" }
         },
-
+        
         "version" : {
           "stamp1"          : { "HOSTNAME" : "xpa1001" },
           "stamp2"          : { "HOSTNAME" : "xpa1002" },
-          "staging"         : { "HOSTNAME" : "xpa3001" },
-          "old"             : { "HOSTNAME" : "xpa" }
+          "staging1"        : { "HOSTNAME" : "xpa3001" },
+          "staging2"        : { "HOSTNAME" : "xpa3002" },
+          "sandbox1"        : { "HOSTNAME" : "xpa4001" },
+          "sandbox2"        : { "HOSTNAME" : "xpa4002" },
+          "qa1"             : { "HOSTNAME" : "xpa5001" },
+          "qa2"             : { "HOSTNAME" : "xpa5002" }
         },
 
         "env" : {

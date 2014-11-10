@@ -87,12 +87,16 @@
       "us-east-1"      : {"AMI" : "ami-0c56df64" },
       "us-west-2"      : {"AMI" : "ami-07fcb437" }
     },
-
+  
     "version" : {
       "stamp1"          : { "HOSTNAME" : "wep1001" },
       "stamp2"          : { "HOSTNAME" : "wep1002" },
-      "staging"         : { "HOSTNAME" : "wep3001" },
-      "old"             : { "HOSTNAME" : "workerepago" }
+      "staging1"        : { "HOSTNAME" : "wep3001" },
+      "staging2"        : { "HOSTNAME" : "wep3002" },
+      "sandbox1"        : { "HOSTNAME" : "wep4001" },
+      "sandbox2"        : { "HOSTNAME" : "wep4002" },
+      "qa1"             : { "HOSTNAME" : "wep5001" },
+      "qa2"             : { "HOSTNAME" : "wep5002" }
     },
 
     "env" : {

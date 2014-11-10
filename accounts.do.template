@@ -18,8 +18,12 @@
     "version" : {
       "stamp1"          : { "HOSTNAME" : "ado1001" },
       "stamp2"          : { "HOSTNAME" : "ado1002" },
-      "staging"         : { "HOSTNAME" : "ado3001" },
-      "old"             : { "HOSTNAME" : "accountsdo" }
+      "staging1"        : { "HOSTNAME" : "ado3001" },
+      "staging2"        : { "HOSTNAME" : "ado3002" },
+      "sandbox1"        : { "HOSTNAME" : "ado4001" },
+      "sandbox2"        : { "HOSTNAME" : "ado4002" },
+      "qa1"             : { "HOSTNAME" : "ado5001" },
+      "qa2"             : { "HOSTNAME" : "ado5002" }
     },
 
     "env" : {
