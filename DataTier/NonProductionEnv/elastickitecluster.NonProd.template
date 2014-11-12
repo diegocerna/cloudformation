@@ -52,10 +52,16 @@
       "Default"     : "-"
     },
 
-    "DeployBranch"  : {
-      "Type"        : "String",
+    "RoleDeployBranch" : {
+      "Type" : "String",
       "Description" : "Git branch where to deploy the code from.",
-      "Default"     : "master"
+      "Default" : "feature/nagios"
+    },
+
+    "SitesDeployBranch" : {
+      "Type" : "String",
+      "Description" : "Git branch where to deploy the code from.",
+      "Default" : "feature/datanagios"
     },
 
     "Environment"   : {
@@ -148,9 +154,12 @@
             "# Copy credentials to root user\n",
             "cp /home/ubuntu/.ssh/* /root/.ssh/\n",
 
-            "# Clone app repo to ubuntu user home\n",
-            "git clone git@github.com:blue-kite/elasticsearch_server.git -b ", {"Ref" : "DeployBranch"}, " /home/ubuntu/elasticsearch_server" , " > /tmp/git.log 2>&1 || error_exit 'Failed to clone repo'\n",
-            "chown ubuntu:ubuntu -R /home/ubuntu/elasticsearch_server\n",
+            "# Clone sites repo to ubuntu user home\n",
+            "git clone git@github.com:blue-kite/xbp_puppet_sites.git -b ", {"Ref" : "SitesDeployBranch"}, "  /home/ubuntu/sites > /tmp/git.log 2>&1 || error_exit 'Failed to clone sites repo'\n",
+
+            "# Clone role app repo\n",
+            "git clone git@github.com:blue-kite/xbp_puppet_role_searchdbcluster.git -b ", {"Ref" : "RoleDeployBranch"}, "  /etc/puppet/modules/searchdbcluster > /tmp/git.log 2>&1 || error_exit 'Failed to clone role app repo'\n",
+            "chown ubuntu:ubuntu -R /etc/puppet/modules/searchdbcluster\n",
 
             "# Add FQDN on etc/environment\n",
             "echo ", { "Fn::Join" : [ "" , ["FACTER_fqdn=", { "Ref" : "ApplicationTag" }, "-", "emaster", "1", { "Ref" : "StackID" }, { "Fn::FindInMap" : [ "dot", { "Ref" : "Environment" }, "DOT" ]}, ".bluekite.com" ]]}, ">> /etc/environment\n",
@@ -175,11 +184,18 @@
             "# setting my custom facts\n",
             "mkdir -p /etc/facter/facts.d > /tmp/facts.log 2>&1 || error_exit 'failed to create facter directory'\n",
             "touch /etc/facter/facts.d/custom_facts.txt\n",
-            "echo ", "app_name=",    { "Ref" : "ApplicationTag" }, "-", "emaster", "1", ">> /etc/facter/facts.d/custom_facts.txt\n",
+            "echo shards=16 >> /etc/facter/facts.d/custom_facts.txt\n",
+            "echo replicas=1 >> /etc/facter/facts.d/custom_facts.txt\n",
+            "echo conn_int=_eth0:ipv4_ >> /etc/facter/facts.d/custom_facts.txt\n",
+            "echo ", "node_name=", { "Ref" : "ApplicationTag" },"-master1",{ "Ref" : "StackID" },"-",{ "Ref" : "Environment" },">> /etc/facter/facts.d/custom_facts.txt\n",
+            "echo data_node=false >> /etc/facter/facts.d/custom_facts.txt\n",
+            "echo master_node=true >> /etc/facter/facts.d/custom_facts.txt\n",
+            "echo ", "cluster_name=", { "Ref" : "ApplicationTag" },{ "Ref" : "StackID" },"-cluster-",{ "Ref" : "Environment" },">> /etc/facter/facts.d/custom_facts.txt\n",
+            "echo app_name=searchdb >> /etc/facter/facts.d/custom_facts.txt\n",
             "echo ", "stackid=",     { "Ref" : "StackID" },        ">> /etc/facter/facts.d/custom_facts.txt\n",
             "echo ", "nodeid=",      "1",         ">> /etc/facter/facts.d/custom_facts.txt\n",
             "echo ", "apptag=",      { "Ref" : "ApplicationTag" }, ">> /etc/facter/facts.d/custom_facts.txt\n",
-            "echo ", "masterhost=",  { "Fn::Join" : [ "", [{ "Ref" : "ApplicationTag" }, "-emaster1", { "Ref" : "StackID" }, { "Fn::FindInMap" : [ "dot", { "Ref" : "Environment" }, "DOT" ]}, ".bluekite.com"]]}, ":",
+            "echo ", "master_node_host=",  { "Fn::Join" : [ "", [{ "Ref" : "ApplicationTag" }, "-emaster1", { "Ref" : "StackID" }, { "Fn::FindInMap" : [ "dot", { "Ref" : "Environment" }, "DOT" ]}, ".bluekite.com"]]}, ":",
                                      { "Fn::Join" : [ "", [{ "Ref" : "ApplicationTag" }, "-emaster2", { "Ref" : "StackID" }, { "Fn::FindInMap" : [ "dot", { "Ref" : "Environment" }, "DOT" ]}, ".bluekite.com"]]}, ">> /etc/facter/facts.d/custom_facts.txt\n",
             "echo ", "env=",         { "Ref" : "Environment" },    ">> /etc/facter/facts.d/custom_facts.txt\n",
 
@@ -191,7 +207,9 @@
             "sudo apt-get update\n",
             "sudo apt-get upgrade\n",
 
-            "cd /home/ubuntu/elasticsearch_server\n",
+            "cd /home/ubuntu/sites\n",
+            "sudo sh setup.sh\n",
+
             "export LANG=en_US.UTF-8; sudo puppet apply --verbose --debug --modulepath=puppet/modules puppet/manifests/site.pp > /tmp/puppet.log 2>&1 || error_exit 'failed to apply puppet manifests'\n",
 
             "# Signal setup is complete\n",
@@ -266,9 +284,12 @@
             "# Copy credentials to root user\n",
             "cp /home/ubuntu/.ssh/* /root/.ssh/\n",
 
-            "# Clone app repo to ubuntu user home\n",
-            "git clone git@github.com:blue-kite/elasticsearch_server.git -b ", {"Ref" : "DeployBranch"}, " /home/ubuntu/elasticsearch_server" , " > /tmp/git.log 2>&1 || error_exit 'Failed to clone repo'\n",
-            "chown ubuntu:ubuntu -R /home/ubuntu/elasticsearch_server\n",
+            "# Clone sites repo to ubuntu user home\n",
+            "git clone git@github.com:blue-kite/xbp_puppet_sites.git -b ", {"Ref" : "SitesDeployBranch"}, "  /home/ubuntu/sites > /tmp/git.log 2>&1 || error_exit 'Failed to clone sites repo'\n",
+
+            "# Clone role app repo\n",
+            "git clone git@github.com:blue-kite/xbp_puppet_role_searchdbcluster.git -b ", {"Ref" : "RoleDeployBranch"}, "  /etc/puppet/modules/searchdbcluster > /tmp/git.log 2>&1 || error_exit 'Failed to clone role app repo'\n",
+            "chown ubuntu:ubuntu -R /etc/puppet/modules/searchdbcluster\n",
 
             "# Add FQDN on etc/environment\n",
             "echo ", { "Fn::Join" : [ "" , ["FACTER_fqdn=", { "Ref" : "ApplicationTag" }, "-", "enode", "1", { "Ref" : "StackID" }, { "Fn::FindInMap" : [ "dot", { "Ref" : "Environment" }, "DOT" ]}, ".bluekite.com" ]]}, ">> /etc/environment\n",
@@ -293,7 +314,14 @@
             "# setting my custom facts\n",
             "mkdir -p /etc/facter/facts.d > /tmp/facts.log 2>&1 || error_exit 'failed to create facter directory'\n",
             "touch /etc/facter/facts.d/custom_facts.txt\n",
-            "echo ", "app_name=",    { "Ref" : "ApplicationTag" }, "-", "enode", "1", ">> /etc/facter/facts.d/custom_facts.txt\n",
+            "echo shards=16 >> /etc/facter/facts.d/custom_facts.txt\n",
+            "echo replicas=1 >> /etc/facter/facts.d/custom_facts.txt\n",
+            "echo conn_int=_eth0:ipv4_ >> /etc/facter/facts.d/custom_facts.txt\n",
+            "echo ", "node_name=", { "Ref" : "ApplicationTag" },"-enode",{ "Ref" : "StackID" },"-",{ "Ref" : "Environment" },">> /etc/facter/facts.d/custom_facts.txt\n",
+            "echo data_node=true >> /etc/facter/facts.d/custom_facts.txt\n",
+            "echo master_node=false >> /etc/facter/facts.d/custom_facts.txt\n",
+            "echo ", "cluster_name=", { "Ref" : "ApplicationTag" },{ "Ref" : "StackID" },"-cluster-",{ "Ref" : "Environment" },">> /etc/facter/facts.d/custom_facts.txt\n",
+            "echo app_name=searchdb >> /etc/facter/facts.d/custom_facts.txt\n",
             "echo ", "stackid=",     { "Ref" : "StackID" },        ">> /etc/facter/facts.d/custom_facts.txt\n",
             "echo ", "nodeid=",      "1",         ">> /etc/facter/facts.d/custom_facts.txt\n",
             "echo ", "apptag=",      { "Ref" : "ApplicationTag" }, ">> /etc/facter/facts.d/custom_facts.txt\n",
@@ -309,7 +337,9 @@
             "sudo apt-get update\n",
             "sudo apt-get upgrade\n",
 
-            "cd /home/ubuntu/elasticsearch_server\n",
+            "cd /home/ubuntu/sites\n",
+            "sudo sh setup.sh\n",
+
             "export LANG=en_US.UTF-8; sudo puppet apply --verbose --debug --modulepath=puppet/modules puppet/manifests/site.pp > /tmp/puppet.log 2>&1 || error_exit 'failed to apply puppet manifests'\n",
 
             "# Signal setup is complete\n",
@@ -384,9 +414,12 @@
             "# Copy credentials to root user\n",
             "cp /home/ubuntu/.ssh/* /root/.ssh/\n",
 
-            "# Clone app repo to ubuntu user home\n",
-            "git clone git@github.com:blue-kite/elasticsearch_server.git -b ", {"Ref" : "DeployBranch"}, " /home/ubuntu/elasticsearch_server" , " > /tmp/git.log 2>&1 || error_exit 'Failed to clone repo'\n",
-            "chown ubuntu:ubuntu -R /home/ubuntu/elasticsearch_server\n",
+            "# Clone sites repo to ubuntu user home\n",
+            "git clone git@github.com:blue-kite/xbp_puppet_sites.git -b ", {"Ref" : "SitesDeployBranch"}, "  /home/ubuntu/sites > /tmp/git.log 2>&1 || error_exit 'Failed to clone sites repo'\n",
+
+            "# Clone role app repo\n",
+            "git clone git@github.com:blue-kite/xbp_puppet_role_searchdbcluster.git -b ", {"Ref" : "RoleDeployBranch"}, "  /etc/puppet/modules/searchdbcluster > /tmp/git.log 2>&1 || error_exit 'Failed to clone role app repo'\n",
+            "chown ubuntu:ubuntu -R /etc/puppet/modules/searchdbcluster\n",
 
             "# Add FQDN on etc/environment\n",
             "echo ", { "Fn::Join" : [ "" , ["FACTER_fqdn=", { "Ref" : "ApplicationTag" }, "-", "enode", "2", { "Ref" : "StackID" }, { "Fn::FindInMap" : [ "dot", { "Ref" : "Environment" }, "DOT" ]}, ".bluekite.com" ]]}, ">> /etc/environment\n",
@@ -411,7 +444,14 @@
             "# setting my custom facts\n",
             "mkdir -p /etc/facter/facts.d > /tmp/facts.log 2>&1 || error_exit 'failed to create facter directory'\n",
             "touch /etc/facter/facts.d/custom_facts.txt\n",
-            "echo ", "app_name=",    { "Ref" : "ApplicationTag" }, "-", "enode", "2", ">> /etc/facter/facts.d/custom_facts.txt\n",
+            "echo shards=16 >> /etc/facter/facts.d/custom_facts.txt\n",
+            "echo replicas=1 >> /etc/facter/facts.d/custom_facts.txt\n",
+            "echo conn_int=_eth0:ipv4_ >> /etc/facter/facts.d/custom_facts.txt\n",
+            "echo ", "node_name=", { "Ref" : "ApplicationTag" },"-enode2",{ "Ref" : "StackID" },"-",{ "Ref" : "Environment" },">> /etc/facter/facts.d/custom_facts.txt\n",
+            "echo data_node=true >> /etc/facter/facts.d/custom_facts.txt\n",
+            "echo master_node=false >> /etc/facter/facts.d/custom_facts.txt\n",
+            "echo ", "cluster_name=", { "Ref" : "ApplicationTag" },{ "Ref" : "StackID" },"-cluster-",{ "Ref" : "Environment" },">> /etc/facter/facts.d/custom_facts.txt\n",
+            "echo app_name=searchdb >> /etc/facter/facts.d/custom_facts.txt\n",
             "echo ", "stackid=",     { "Ref" : "StackID" },        ">> /etc/facter/facts.d/custom_facts.txt\n",
             "echo ", "nodeid=",      "2",         ">> /etc/facter/facts.d/custom_facts.txt\n",
             "echo ", "apptag=",      { "Ref" : "ApplicationTag" }, ">> /etc/facter/facts.d/custom_facts.txt\n",
@@ -427,7 +467,9 @@
             "sudo apt-get update\n",
             "sudo apt-get upgrade\n",
 
-            "cd /home/ubuntu/elasticsearch_server\n",
+            "cd /home/ubuntu/sites\n",
+            "sudo sh setup.sh\n",
+
             "export LANG=en_US.UTF-8; sudo puppet apply --verbose --debug --modulepath=puppet/modules puppet/manifests/site.pp > /tmp/puppet.log 2>&1 || error_exit 'failed to apply puppet manifests'\n",
 
             "# Signal setup is complete\n",

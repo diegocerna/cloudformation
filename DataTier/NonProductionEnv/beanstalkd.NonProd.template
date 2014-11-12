@@ -17,7 +17,7 @@
     "InstanceType" : {
       "Description" : "Instance type for API",
       "Type" : "String",
-      "Default" : "t2.micro",
+      "Default" : "me3.medium",
       "AllowedValues" : [ "t2.micro","m1.small","m3.medium","m1.large","m1.xlarge","m2.xlarge","m2.2xlarge","m2.4xlarge","m3.xlarge","m3.2xlarge","c1.medium","c1.xlarge","cc1.4xlarge","cc2.8xlarge","cg1.4xlarge"],
       "ConstraintDescription" : "must be a valid EC2 instance type."
     },
@@ -55,13 +55,13 @@
     "RoleDeployBranch" : {
       "Type" : "String",
       "Description" : "Git branch where to deploy the code from.",
-      "Default" : "master"
+      "Default" : "feature/nagios"
     },
 
     "SitesDeployBranch" : {
       "Type" : "String",
       "Description" : "Git branch where to deploy the code from.",
-      "Default" : "master"
+      "Default" : "feature/datanagios"
     },
 
     "Environment": {
@@ -190,6 +190,7 @@
           "echo app_name=queue.accounts  >> /etc/facter/facts.d/custom_facts.txt\n",
           "echo has_failover=false       >> /etc/facter/facts.d/custom_facts.txt\n",
           "echo failover_host=  >> /etc/facter/facts.d/custom_facts.txt\n",
+          "echo root_directory=/opt/xoom/  >> /etc/facter/facts.d/custom_facts.txt\n",
           "echo application_directory=/opt/xoom/beanstalkd  >> /etc/facter/facts.d/custom_facts.txt\n",
           "echo ensure_service=running  >> /etc/facter/facts.d/custom_facts.txt\n",
           "echo custom_hostname=sqa1001 >> /etc/facter/facts.d/custom_facts.txt\n",
