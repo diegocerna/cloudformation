@@ -18,8 +18,12 @@
     "version" : {
       "stamp1"          : { "HOSTNAME" : "apa1001" },
       "stamp2"          : { "HOSTNAME" : "apa1002" },
-      "staging"         : { "HOSTNAME" : "apa3001" },
-      "old"             : { "HOSTNAME" : "accountspa" }
+      "staging1"        : { "HOSTNAME" : "apa3001" },
+      "staging2"        : { "HOSTNAME" : "apa3002" },
+      "sandbox1"        : { "HOSTNAME" : "apa4001" },
+      "sandbox2"        : { "HOSTNAME" : "apa4002" },
+      "qa1"             : { "HOSTNAME" : "apa5001" },
+      "qa2"             : { "HOSTNAME" : "apa5002" }
     },
 
     "env" : {

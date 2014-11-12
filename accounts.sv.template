@@ -18,8 +18,12 @@
     "version" : {
       "stamp1"          : { "HOSTNAME" : "asv1001" },
       "stamp2"          : { "HOSTNAME" : "asv1002" },
-      "staging"         : { "HOSTNAME" : "asv3001" },
-      "old"             : { "HOSTNAME" : "accountssv" }
+      "staging1"        : { "HOSTNAME" : "asv3001" },
+      "staging2"        : { "HOSTNAME" : "asv3002" },
+      "sandbox1"        : { "HOSTNAME" : "asv4001" },
+      "sandbox2"        : { "HOSTNAME" : "asv4002" },
+      "qa1"             : { "HOSTNAME" : "asv5001" },
+      "qa2"             : { "HOSTNAME" : "asv5002" }
     },
 
     "env" : {
@@ -114,6 +118,14 @@
 
   "Resources" : {
 
+   "RootInstanceProfile" : {
+     "Type" : "AWS::IAM::InstanceProfile",
+     "Properties" : {
+     "Path" : "/",
+     "Roles" : ["CloudWatch"]
+     }
+   },
+
    "AccountsSvInstance" : {
 
       "Type" : "AWS::EC2::Instance",
@@ -122,6 +134,7 @@
       },
 
       "Properties" : {
+        "IamInstanceProfile": { "Ref": "RootInstanceProfile" },
         "ImageId" : { "Fn::FindInMap" : [ "RegionMap", { "Ref" : "AWS::Region" }, "AMI" ]},
         "SecurityGroupIds" : [ {"Ref" : "SecurityGroupId"} ],
         "SubnetId" : { "Ref" : "SubnetId" },

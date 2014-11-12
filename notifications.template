@@ -113,10 +113,14 @@
     },
 
     "version" : {
-      "stamp1"         : { "HOSTNAME" : "not1001", "RMQHOST" : "xlb.sjc.xoom.com", "RMQPORT" : "5671" },
-      "stamp2"         : { "HOSTNAME" : "not1002", "RMQHOST" : "xlb.sjc.xoom.com", "RMQPORT" : "5671" },
-      "staging"        : { "HOSTNAME" : "not3001", "RMQHOST" : "st1xlb.atl.xoom.com", "RMQPORT" : "5671" },
-      "old"            : { "HOSTNAME" : "notifications", "RMQHOST" : "xlb-stag.sjc.xoom.com", "RMQPORT" : "5672" }
+      "stamp1"          : { "HOSTNAME" : "not1001", "RMQHOST" : "xlb.sjc.xoom.com", "RMQPORT" : "5671" },
+      "stamp2"          : { "HOSTNAME" : "not1002", "RMQHOST" : "xlb.sjc.xoom.com", "RMQPORT" : "5671" },
+      "staging1"        : { "HOSTNAME" : "not3001", "RMQHOST" : "st1xlb.atl.xoom.com", "RMQPORT" : "5671" },
+      "staging2"        : { "HOSTNAME" : "not3002", "RMQHOST" : "st1xlb.atl.xoom.com", "RMQPORT" : "5671" },
+      "sandbox1"        : { "HOSTNAME" : "not4001", "RMQHOST" : "xlb-stag.sjc.xoom.com", "RMQPORT" : "5672" },
+      "sandbox2"        : { "HOSTNAME" : "not4002", "RMQHOST" : "xlb-stag.sjc.xoom.com", "RMQPORT" : "5672" },
+      "qa1"             : { "HOSTNAME" : "not5001", "RMQHOST" : "xlb-stag.sjc.xoom.com", "RMQPORT" : "5672" },
+      "qa2"             : { "HOSTNAME" : "not5002", "RMQHOST" : "xlb-stag.sjc.xoom.com", "RMQPORT" : "5672" }
     },
 
     "env" : {

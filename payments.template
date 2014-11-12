@@ -14,12 +14,16 @@
       "us-east-1"      : {"AMI" : "ami-baf37bd2" },
       "us-west-2"      : {"AMI" : "ami-a7105b97" }
     },
-
+    
     "version" : {
       "stamp1"          : { "HOSTNAME" : "pay1001" },
       "stamp2"          : { "HOSTNAME" : "pay1002" },
-      "staging"         : { "HOSTNAME" : "pay3001" },
-      "old"             : { "HOSTNAME" : "payments" }
+      "staging1"        : { "HOSTNAME" : "pay3001" },
+      "staging2"        : { "HOSTNAME" : "pay3002" },
+      "sandbox1"        : { "HOSTNAME" : "pay4001" },
+      "sandbox2"        : { "HOSTNAME" : "pay4002" },
+      "qa1"             : { "HOSTNAME" : "pay5001" },
+      "qa2"             : { "HOSTNAME" : "pay5002" }
     },
 
     "env" : {

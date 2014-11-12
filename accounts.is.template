@@ -14,12 +14,16 @@
       "us-east-1"      : {"AMI" : "ami-0c56df64" },
       "us-west-2"      : {"AMI" : "ami-07fcb437" }
     },
-
+    
     "version" : {
       "stamp1"          : { "HOSTNAME" : "ais1001" },
       "stamp2"          : { "HOSTNAME" : "ais1002" },
-      "staging"         : { "HOSTNAME" : "ais3001" },
-      "old"             : { "HOSTNAME" : "accountsis" }
+      "staging1"        : { "HOSTNAME" : "ais3001" },
+      "staging2"        : { "HOSTNAME" : "ais3002" },
+      "sandbox1"        : { "HOSTNAME" : "ais4001" },
+      "sandbox2"        : { "HOSTNAME" : "ais4002" },
+      "qa1"             : { "HOSTNAME" : "ais5001" },
+      "qa2"             : { "HOSTNAME" : "ais5002" }
     },
 
     "env" : {

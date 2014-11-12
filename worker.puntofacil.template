@@ -87,12 +87,16 @@
             "us-east-1"      : {"AMI" : "ami-0c56df64" },
             "us-west-2"      : {"AMI" : "ami-07fcb437" }
         },
-
+        
         "version" : {
           "stamp1"          : { "HOSTNAME" : "wpf1001" },
           "stamp2"          : { "HOSTNAME" : "wpf1002" },
-          "staging"         : { "HOSTNAME" : "wpf3001" },
-          "old"             : { "HOSTNAME" : "workerpuntofacil" }
+          "staging1"        : { "HOSTNAME" : "wpf3001" },
+          "staging2"        : { "HOSTNAME" : "wpf3002" },
+          "sandbox1"        : { "HOSTNAME" : "wpf4001" },
+          "sandbox2"        : { "HOSTNAME" : "wpf4002" },
+          "qa1"             : { "HOSTNAME" : "wpf5001" },
+          "qa2"             : { "HOSTNAME" : "wpf5002" }
         },
 
         "env" : {

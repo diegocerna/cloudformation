@@ -104,8 +104,12 @@
     "version" : {
       "stamp1"          : { "HOSTNAME" : "cat1001" },
       "stamp2"          : { "HOSTNAME" : "cat1002" },
-      "staging"         : { "HOSTNAME" : "cat3001" },
-      "old"             : { "HOSTNAME" : "catalog" }
+      "staging1"        : { "HOSTNAME" : "cat3001" },
+      "staging2"        : { "HOSTNAME" : "cat3002" },
+      "sandbox1"        : { "HOSTNAME" : "cat4001" },
+      "sandbox2"        : { "HOSTNAME" : "cat4002" },
+      "qa1"             : { "HOSTNAME" : "cat5001" },
+      "qa2"             : { "HOSTNAME" : "cat5002" }
     },
 
     "env" : {
