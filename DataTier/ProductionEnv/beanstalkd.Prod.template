@@ -11,13 +11,13 @@
       "MaxLength": "255",
       "AllowedPattern" : "[\\x20-\\x7E]*",
       "ConstraintDescription" : "can contain only ASCII characters.",
-      "Default": "stamp-qa"
+      "Default": "stamp-staging"
     },
 
     "InstanceType" : {
       "Description" : "Instance type for API",
       "Type" : "String",
-      "Default" : "t2.micro",
+      "Default" : "m3.medium",
       "AllowedValues" : [ "t2.micro","m1.small","m3.medium","m1.large","m1.xlarge","m2.xlarge","m2.2xlarge","m2.4xlarge","m3.xlarge","m3.2xlarge","c1.medium","c1.xlarge","cc1.4xlarge","cc2.8xlarge","cg1.4xlarge"],
       "ConstraintDescription" : "must be a valid EC2 instance type."
     },
@@ -25,31 +25,31 @@
     "SubnetIdAz1" : {
       "Type" : "String",
       "Description" : "SubnetId of an existing subnet in your Virtual Private Cloud (VPC)",
-      "Default": "subnet-4fd72416"
+      "Default": "subnet-2a16f401"
     },
 
     "SubnetIdAz2" : {
       "Type" : "String",
       "Description" : "SubnetId of an existing subnet in your Virtual Private Cloud (VPC)",
-      "Default": "subnet-f334e584"
+      "Default": "subnet-d11cbca6"
     },
 
     "SecurityGroupId" : {
       "Type" : "String",
       "Description" : "SecurityGroupId of an existing subnet in your Virtual Private Cloud (VPC)",
-      "Default": "sg-927157f7"
+      "Default": "sg-05888560"
     },
 
     "PrivateAPIsSecurityGroupId" : {
       "Type" : "String",
       "Description" : "SecurityGroupId of an existing subnet in your Virtual Private Cloud (VPC)",
-      "Default": "sg-26632a43"
+      "Default": "sg-ec888589"
     },
 
     "StackID" : {
       "Type" : "String",
       "Description" : "Stack ID name",
-      "Default" : "-"
+      "Default" : "-t"
     },
 
     "RoleDeployBranch" : {
@@ -67,7 +67,7 @@
     "Environment": {
       "Description" : "Subdomain to access EC2 Intance",
       "Type": "String",
-      "Default": "dev"
+      "Default": "production"
     }
   },
 
@@ -190,15 +190,15 @@
           "echo app_name=queue.accounts >> /etc/facter/facts.d/custom_facts.txt\n",
           "echo has_failover=true           >> /etc/facter/facts.d/custom_facts.txt\n",
           "echo failover_host=",{ "Fn::Join" : [ "", ["queue2", { "Ref" : "StackID" },".accounts", { "Fn::FindInMap" : [ "dot", { "Ref" : "Environment" }, "DOT" ]},".bluekite.com"]]}," >> /etc/facter/facts.d/custom_facts.txt\n",
-          "echo root_directory=/opt/xoom/  >> /etc/facter/facts.d/custom_facts.txt\n",
-          "echo application_directory=/opt/xoom/beanstalkd >> /etc/facter/facts.d/custom_facts.txt\n",
+          "echo root_directory=/tmp/xoom/  >> /etc/facter/facts.d/custom_facts.txt\n",
+          "echo application_directory=/tmp/xoom/beanstalkd >> /etc/facter/facts.d/custom_facts.txt\n",
           "echo ensure_service=running      >> /etc/facter/facts.d/custom_facts.txt\n",
           "echo custom_hostname=qab1001 >> /etc/facter/facts.d/custom_facts.txt\n",
 
 
           "#create the beanstalkd directory\n",
-          "sudo mkdir -p /opt/xoom/beanstalkd\n",
-          "chown ubuntu:ubuntu -R /opt/xoom/beanstalkd\n",
+          "sudo mkdir -p /tmp/xoom/beanstalkd\n",
+          "chown ubuntu:ubuntu -R /tmp/xoom/beanstalkd\n",
 
           "# Clone role hostname repo\n",
           "git clone git@github.com:victormarroquin/Puppet-HostName.git /etc/puppet/modules/hosts > /tmp/git.log 2>&1 || error_exit 'Failed to clone hostname repo'\n",
@@ -332,8 +332,8 @@
           "echo app_name=queue.accounts >> /etc/facter/facts.d/custom_facts.txt\n",
           "echo has_failover=false           >> /etc/facter/facts.d/custom_facts.txt\n",
           "echo failover_host=",{ "Fn::Join" : [ "", ["queue1", { "Ref" : "StackID" },".accounts", { "Fn::FindInMap" : [ "dot", { "Ref" : "Environment" }, "DOT" ]},".bluekite.com"]]}," >> /etc/facter/facts.d/custom_facts.txt\n",
-          "echo root_directory=/opt/xoom/  >> /etc/facter/facts.d/custom_facts.txt\n",
-          "echo application_directory=/opt/xoom/beanstalkd >> /etc/facter/facts.d/custom_facts.txt\n",
+          "echo root_directory=/tmp/xoom/  >> /etc/facter/facts.d/custom_facts.txt\n",
+          "echo application_directory=/tmp/xoom/beanstalkd >> /etc/facter/facts.d/custom_facts.txt\n",
           "echo ensure_service=stopped      >> /etc/facter/facts.d/custom_facts.txt\n",
           "echo custom_hostname=qab1002 >> /etc/facter/facts.d/custom_facts.txt\n",
 

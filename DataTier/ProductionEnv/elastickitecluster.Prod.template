@@ -11,13 +11,13 @@
       "MaxLength"             : "255",
       "AllowedPattern"        : "[\\x20-\\x7E]*",
       "ConstraintDescription" : "can contain only ASCII characters.",
-      "Default"               : "stamp-dev"
+      "Default"               : "stamp-staging"
     },
 
     "InstanceType"            : {
       "Description"           : "WebServer EC2 instance type",
       "Type"                  : "String",
-      "Default"               : "t2.micro",
+      "Default"               : "m3.medium",
       "AllowedValues"         : [ "t2.micro","m1.small","m3.medium","m1.large","m1.xlarge","m2.xlarge","m2.2xlarge","m2.4xlarge","m3.xlarge","m3.2xlarge","c1.medium","c1.xlarge","cc1.4xlarge","cc2.8xlarge","cg1.4xlarge"],
       "ConstraintDescription" : "must be a valid EC2 instance type."
     },
@@ -25,31 +25,31 @@
     "SubnetIdAz1"        : {
       "Type"          : "String",
       "Description"   : "SubnetId of an existing subnet in your Virtual Private Cloud (VPC)",
-      "Default"       : "subnet-4fd72416"
+      "Default"       : "subnet-2a16f401"
     },
 
     "SubnetIdAz2"        : {
       "Type"          : "String",
       "Description"   : "SubnetId of an existing subnet in your Virtual Private Cloud (VPC)",
-      "Default"       : "subnet-f334e584"
+      "Default"       : "subnet-d11cbca6"
     },
 
     "SecurityGroupId" : {
       "Type"          : "String",
       "Description"   : "SecurityGroupId of an existing subnet in your Virtual Private Cloud (VPC)",
-      "Default"       : "sg-77715712"
+      "Default"       : "sg-0f88856a"
     },
 
     "PrivateAPIsSecurityGroupId" : {
       "Type"          : "String",
       "Description"   : "SecurityGroupId of an existing subnet in your Virtual Private Cloud (VPC)",
-      "Default"       : "sg-26632a43"
+      "Default"       : "sg-ec888589"
     },
 
     "StackID"       : {
       "Type"        : "String",
       "Description" : "Stack ID name",
-      "Default"     : "-"
+      "Default"     : "-t"
     },
 
     "RoleDeployBranch" : {
@@ -67,7 +67,7 @@
     "Environment"   : {
       "Type"        : "String",
       "Description" : "Application's environment.",
-      "Default"     : "dev"
+      "Default"     : "production"
     },
 
     "ApplicationTag"       : {
@@ -178,8 +178,8 @@
             "sudo gem install librarian-puppet --no-rdoc --no-ri > /tmp/gem-librarian-puppet.log 2>&1 || error_exit 'Failed install librarian puppet gem'\n",
 
             "# Install application's dependencies via puppet\n",
-            "cd /home/ubuntu/elasticsearch_server/puppet\n",
-            "export HOME=/home/ubuntu && librarian-puppet install --clean --verbose > /tmp/librarian-puppet.log 2>&1 || error_exit 'failed to install puppet submodules'\n",
+            "cd /etc/puppet/modules/searchdbcluster\n",
+            "sudo librarian-puppet install --clean --verbose --path=/etc/puppet/modules > /tmp/librarian-puppet.log 2>&1 || error_exit 'failed to install puppet submodules'\n",
 
             "# setting my custom facts\n",
             "mkdir -p /etc/facter/facts.d > /tmp/facts.log 2>&1 || error_exit 'failed to create facter directory'\n",
@@ -195,7 +195,7 @@
             "echo ", "stackid=",     { "Ref" : "StackID" },        ">> /etc/facter/facts.d/custom_facts.txt\n",
             "echo ", "nodeid=",      "1",         ">> /etc/facter/facts.d/custom_facts.txt\n",
             "echo ", "apptag=",      { "Ref" : "ApplicationTag" }, ">> /etc/facter/facts.d/custom_facts.txt\n",
-            "echo ", "masterhost=",  { "Fn::Join" : [ "", [{ "Ref" : "ApplicationTag" }, "-emaster1", { "Ref" : "StackID" }, { "Fn::FindInMap" : [ "dot", { "Ref" : "Environment" }, "DOT" ]}, ".bluekite.com"]]}, ":",
+            "echo ", "master_node_host=",  { "Fn::Join" : [ "", [{ "Ref" : "ApplicationTag" }, "-emaster1", { "Ref" : "StackID" }, { "Fn::FindInMap" : [ "dot", { "Ref" : "Environment" }, "DOT" ]}, ".bluekite.com"]]}, ":",
                                      { "Fn::Join" : [ "", [{ "Ref" : "ApplicationTag" }, "-emaster2", { "Ref" : "StackID" }, { "Fn::FindInMap" : [ "dot", { "Ref" : "Environment" }, "DOT" ]}, ".bluekite.com"]]}, ":",
                                      { "Fn::Join" : [ "", [{ "Ref" : "ApplicationTag" }, "-emaster3", { "Ref" : "StackID" }, { "Fn::FindInMap" : [ "dot", { "Ref" : "Environment" }, "DOT" ]}, ".bluekite.com"]]}, ">> /etc/facter/facts.d/custom_facts.txt\n",
             "echo ", "env=",         { "Ref" : "Environment" },    ">> /etc/facter/facts.d/custom_facts.txt\n",
@@ -213,7 +213,7 @@
             "cd /home/ubuntu/sites\n",
             "sudo sh setup.sh\n",
 
-            "export LANG=en_US.UTF-8; sudo puppet apply --verbose --debug --modulepath=puppet/modules puppet/manifests/site.pp > /tmp/puppet.log 2>&1 || error_exit 'failed to apply puppet manifests'\n",
+            "export LANG=en_US.UTF-8; sudo puppet apply --verbose --debug --modulepath=/etc/puppet/modules /home/ubuntu/sites/site.pp > /tmp/puppet.log 2>&1 || error_exit 'failed to apply puppet manifests'\n",
 
             "# Signal setup is complete\n",
             "cfn-signal -e $? -r 'Completed configuration' '",
@@ -311,8 +311,8 @@
             "sudo gem install librarian-puppet --no-rdoc --no-ri > /tmp/gem-librarian-puppet.log 2>&1 || error_exit 'Failed install librarian puppet gem'\n",
 
             "# Install application's dependencies via puppet\n",
-            "cd /home/ubuntu/elasticsearch_server/puppet\n",
-            "export HOME=/home/ubuntu && librarian-puppet install --clean --verbose > /tmp/librarian-puppet.log 2>&1 || error_exit 'failed to install puppet submodules'\n",
+            "cd /etc/puppet/modules/searchdbcluster\n",
+            "sudo librarian-puppet install --clean --verbose --path=/etc/puppet/modules > /tmp/librarian-puppet.log 2>&1 || error_exit 'failed to install puppet submodules'\n",
 
             "# setting my custom facts\n",
             "mkdir -p /etc/facter/facts.d > /tmp/facts.log 2>&1 || error_exit 'failed to create facter directory'\n",
@@ -329,7 +329,7 @@
             "echo ", "stackid=",     { "Ref" : "StackID" },        ">> /etc/facter/facts.d/custom_facts.txt\n",
             "echo ", "nodeid=",      "2",         ">> /etc/facter/facts.d/custom_facts.txt\n",
             "echo ", "apptag=",      { "Ref" : "ApplicationTag" }, ">> /etc/facter/facts.d/custom_facts.txt\n",
-            "echo ", "masterhost=",  { "Fn::Join" : [ "", [{ "Ref" : "ApplicationTag" }, "-emaster1", { "Ref" : "StackID" }, { "Fn::FindInMap" : [ "dot", { "Ref" : "Environment" }, "DOT" ]}, ".bluekite.com"]]}, ":",
+            "echo ", "master_node_host=",  { "Fn::Join" : [ "", [{ "Ref" : "ApplicationTag" }, "-emaster1", { "Ref" : "StackID" }, { "Fn::FindInMap" : [ "dot", { "Ref" : "Environment" }, "DOT" ]}, ".bluekite.com"]]}, ":",
                                      { "Fn::Join" : [ "", [{ "Ref" : "ApplicationTag" }, "-emaster2", { "Ref" : "StackID" }, { "Fn::FindInMap" : [ "dot", { "Ref" : "Environment" }, "DOT" ]}, ".bluekite.com"]]}, ":",
                                      { "Fn::Join" : [ "", [{ "Ref" : "ApplicationTag" }, "-emaster3", { "Ref" : "StackID" }, { "Fn::FindInMap" : [ "dot", { "Ref" : "Environment" }, "DOT" ]}, ".bluekite.com"]]}, ">> /etc/facter/facts.d/custom_facts.txt\n",
             "echo ", "env=",         { "Ref" : "Environment" },    ">> /etc/facter/facts.d/custom_facts.txt\n",
@@ -346,7 +346,7 @@
             "cd /home/ubuntu/sites\n",
             "sudo sh setup.sh\n",
 
-            "export LANG=en_US.UTF-8; sudo puppet apply --verbose --debug --modulepath=puppet/modules puppet/manifests/site.pp > /tmp/puppet.log 2>&1 || error_exit 'failed to apply puppet manifests'\n",
+            "export LANG=en_US.UTF-8; sudo puppet apply --verbose --debug --modulepath=/etc/puppet/modules /home/ubuntu/sites/site.pp > /tmp/puppet.log 2>&1 || error_exit 'failed to apply puppet manifests'\n",
 
             "# Signal setup is complete\n",
             "cfn-signal -e $? -r 'Completed configuration' '",
@@ -444,8 +444,8 @@
             "sudo gem install librarian-puppet --no-rdoc --no-ri > /tmp/gem-librarian-puppet.log 2>&1 || error_exit 'Failed install librarian puppet gem'\n",
 
             "# Install application's dependencies via puppet\n",
-            "cd /home/ubuntu/elasticsearch_server/puppet\n",
-            "export HOME=/home/ubuntu && librarian-puppet install --clean --verbose > /tmp/librarian-puppet.log 2>&1 || error_exit 'failed to install puppet submodules'\n",
+            "cd /etc/puppet/modules/searchdbcluster\n",
+            "sudo librarian-puppet install --clean --verbose --path=/etc/puppet/modules > /tmp/librarian-puppet.log 2>&1 || error_exit 'failed to install puppet submodules'\n",
 
             "# setting my custom facts\n",
             "mkdir -p /etc/facter/facts.d > /tmp/facts.log 2>&1 || error_exit 'failed to create facter directory'\n",
@@ -462,7 +462,7 @@
             "echo ", "stackid=",     { "Ref" : "StackID" },        ">> /etc/facter/facts.d/custom_facts.txt\n",
             "echo ", "nodeid=",      "3",         ">> /etc/facter/facts.d/custom_facts.txt\n",
             "echo ", "apptag=",      { "Ref" : "ApplicationTag" }, ">> /etc/facter/facts.d/custom_facts.txt\n",
-            "echo ", "masterhost=",  { "Fn::Join" : [ "", [{ "Ref" : "ApplicationTag" }, "-emaster1", { "Ref" : "StackID" }, { "Fn::FindInMap" : [ "dot", { "Ref" : "Environment" }, "DOT" ]}, ".bluekite.com"]]}, ":",
+            "echo ", "master_node_host=",  { "Fn::Join" : [ "", [{ "Ref" : "ApplicationTag" }, "-emaster1", { "Ref" : "StackID" }, { "Fn::FindInMap" : [ "dot", { "Ref" : "Environment" }, "DOT" ]}, ".bluekite.com"]]}, ":",
                                      { "Fn::Join" : [ "", [{ "Ref" : "ApplicationTag" }, "-emaster2", { "Ref" : "StackID" }, { "Fn::FindInMap" : [ "dot", { "Ref" : "Environment" }, "DOT" ]}, ".bluekite.com"]]}, ":",
                                      { "Fn::Join" : [ "", [{ "Ref" : "ApplicationTag" }, "-emaster3", { "Ref" : "StackID" }, { "Fn::FindInMap" : [ "dot", { "Ref" : "Environment" }, "DOT" ]}, ".bluekite.com"]]},  ">> /etc/facter/facts.d/custom_facts.txt\n",
             "echo ", "env=",         { "Ref" : "Environment" },    ">> /etc/facter/facts.d/custom_facts.txt\n",
@@ -479,7 +479,7 @@
             "cd /home/ubuntu/sites\n",
             "sudo sh setup.sh\n",
 
-            "export LANG=en_US.UTF-8; sudo puppet apply --verbose --debug --modulepath=puppet/modules puppet/manifests/site.pp > /tmp/puppet.log 2>&1 || error_exit 'failed to apply puppet manifests'\n",
+            "export LANG=en_US.UTF-8; sudo puppet apply --verbose --debug --modulepath=/etc/puppet/modules /home/ubuntu/sites/site.pp > /tmp/puppet.log 2>&1 || error_exit 'failed to apply puppet manifests'\n",
 
             "# Signal setup is complete\n",
             "cfn-signal -e $? -r 'Completed configuration' '",
@@ -579,8 +579,8 @@
             "sudo gem install librarian-puppet --no-rdoc --no-ri > /tmp/gem-librarian-puppet.log 2>&1 || error_exit 'Failed install librarian puppet gem'\n",
 
             "# Install application's dependencies via puppet\n",
-            "cd /home/ubuntu/elasticsearch_server/puppet\n",
-            "export HOME=/home/ubuntu && librarian-puppet install --clean --verbose > /tmp/librarian-puppet.log 2>&1 || error_exit 'failed to install puppet submodules'\n",
+            "cd /etc/puppet/modules/searchdbcluster\n",
+            "sudo librarian-puppet install --clean --verbose --path=/etc/puppet/modules > /tmp/librarian-puppet.log 2>&1 || error_exit 'failed to install puppet submodules'\n",
 
             "# setting my custom facts\n",
             "mkdir -p /etc/facter/facts.d > /tmp/facts.log 2>&1 || error_exit 'failed to create facter directory'\n",
@@ -597,7 +597,7 @@
             "echo ", "stackid=",     { "Ref" : "StackID" },        ">> /etc/facter/facts.d/custom_facts.txt\n",
             "echo ", "nodeid=",      "1",         ">> /etc/facter/facts.d/custom_facts.txt\n",
             "echo ", "apptag=",      { "Ref" : "ApplicationTag" }, ">> /etc/facter/facts.d/custom_facts.txt\n",
-            "echo ", "masterhost=",  { "Fn::Join" : [ "", [{ "Ref" : "ApplicationTag" }, "-emaster1", { "Ref" : "StackID" }, { "Fn::FindInMap" : [ "dot", { "Ref" : "Environment" }, "DOT" ]}, ".bluekite.com"]]}, ":",
+            "echo ", "master_node_host=",  { "Fn::Join" : [ "", [{ "Ref" : "ApplicationTag" }, "-emaster1", { "Ref" : "StackID" }, { "Fn::FindInMap" : [ "dot", { "Ref" : "Environment" }, "DOT" ]}, ".bluekite.com"]]}, ":",
                                      { "Fn::Join" : [ "", [{ "Ref" : "ApplicationTag" }, "-emaster2", { "Ref" : "StackID" }, { "Fn::FindInMap" : [ "dot", { "Ref" : "Environment" }, "DOT" ]}, ".bluekite.com"]]}, ":",
                                      { "Fn::Join" : [ "", [{ "Ref" : "ApplicationTag" }, "-emaster3", { "Ref" : "StackID" }, { "Fn::FindInMap" : [ "dot", { "Ref" : "Environment" }, "DOT" ]}, ".bluekite.com"]]},  ">> /etc/facter/facts.d/custom_facts.txt\n",
             "echo ", "env=",         { "Ref" : "Environment" },    ">> /etc/facter/facts.d/custom_facts.txt\n",
@@ -614,7 +614,7 @@
             "cd /home/ubuntu/sites\n",
             "sudo sh setup.sh\n",
 
-            "export LANG=en_US.UTF-8; sudo puppet apply --verbose --debug --modulepath=puppet/modules puppet/manifests/site.pp > /tmp/puppet.log 2>&1 || error_exit 'failed to apply puppet manifests'\n",
+            "export LANG=en_US.UTF-8; sudo puppet apply --verbose --debug --modulepath=/etc/puppet/modules /home/ubuntu/sites/site.pp > /tmp/puppet.log 2>&1 || error_exit 'failed to apply puppet manifests'\n",
 
             "# Signal setup is complete\n",
             "cfn-signal -e $? -r 'Completed configuration' '",
@@ -712,8 +712,8 @@
             "sudo gem install librarian-puppet --no-rdoc --no-ri > /tmp/gem-librarian-puppet.log 2>&1 || error_exit 'Failed install librarian puppet gem'\n",
 
             "# Install application's dependencies via puppet\n",
-            "cd /home/ubuntu/elasticsearch_server/puppet\n",
-            "export HOME=/home/ubuntu && librarian-puppet install --clean --verbose > /tmp/librarian-puppet.log 2>&1 || error_exit 'failed to install puppet submodules'\n",
+            "cd /etc/puppet/modules/searchdbcluster\n",
+            "sudo librarian-puppet install --clean --verbose --path=/etc/puppet/modules > /tmp/librarian-puppet.log 2>&1 || error_exit 'failed to install puppet submodules'\n",
 
             "# setting my custom facts\n",
             "mkdir -p /etc/facter/facts.d > /tmp/facts.log 2>&1 || error_exit 'failed to create facter directory'\n",
@@ -730,7 +730,7 @@
             "echo ", "stackid=",     { "Ref" : "StackID" },        ">> /etc/facter/facts.d/custom_facts.txt\n",
             "echo ", "nodeid=",      "2",         ">> /etc/facter/facts.d/custom_facts.txt\n",
             "echo ", "apptag=",      { "Ref" : "ApplicationTag" }, ">> /etc/facter/facts.d/custom_facts.txt\n",
-            "echo ", "masterhost=",  { "Fn::Join" : [ "", [{ "Ref" : "ApplicationTag" }, "-emaster1", { "Ref" : "StackID" }, { "Fn::FindInMap" : [ "dot", { "Ref" : "Environment" }, "DOT" ]}, ".bluekite.com"]]}, ":",
+            "echo ", "master_node_host=",  { "Fn::Join" : [ "", [{ "Ref" : "ApplicationTag" }, "-emaster1", { "Ref" : "StackID" }, { "Fn::FindInMap" : [ "dot", { "Ref" : "Environment" }, "DOT" ]}, ".bluekite.com"]]}, ":",
                                      { "Fn::Join" : [ "", [{ "Ref" : "ApplicationTag" }, "-emaster2", { "Ref" : "StackID" }, { "Fn::FindInMap" : [ "dot", { "Ref" : "Environment" }, "DOT" ]}, ".bluekite.com"]]}, ":",
                                      { "Fn::Join" : [ "", [{ "Ref" : "ApplicationTag" }, "-emaster3", { "Ref" : "StackID" }, { "Fn::FindInMap" : [ "dot", { "Ref" : "Environment" }, "DOT" ]}, ".bluekite.com"]]}, ">> /etc/facter/facts.d/custom_facts.txt\n",
             "echo ", "env=",         { "Ref" : "Environment" },    ">> /etc/facter/facts.d/custom_facts.txt\n",
@@ -747,7 +747,7 @@
             "cd /home/ubuntu/sites\n",
             "sudo sh setup.sh\n",
 
-            "export LANG=en_US.UTF-8; sudo puppet apply --verbose --debug --modulepath=puppet/modules puppet/manifests/site.pp > /tmp/puppet.log 2>&1 || error_exit 'failed to apply puppet manifests'\n",
+            "export LANG=en_US.UTF-8; sudo puppet apply --verbose --debug --modulepath=/etc/puppet/modules /home/ubuntu/sites/site.pp > /tmp/puppet.log 2>&1 || error_exit 'failed to apply puppet manifests'\n",
 
             "# Signal setup is complete\n",
             "cfn-signal -e $? -r 'Completed configuration' '",
@@ -845,8 +845,8 @@
             "sudo gem install librarian-puppet --no-rdoc --no-ri > /tmp/gem-librarian-puppet.log 2>&1 || error_exit 'Failed install librarian puppet gem'\n",
 
             "# Install application's dependencies via puppet\n",
-            "cd /home/ubuntu/elasticsearch_server/puppet\n",
-            "export HOME=/home/ubuntu && librarian-puppet install --clean --verbose > /tmp/librarian-puppet.log 2>&1 || error_exit 'failed to install puppet submodules'\n",
+            "cd /etc/puppet/modules/searchdbcluster\n",
+            "sudo librarian-puppet install --clean --verbose --path=/etc/puppet/modules > /tmp/librarian-puppet.log 2>&1 || error_exit 'failed to install puppet submodules'\n",
 
             "# setting my custom facts\n",
             "mkdir -p /etc/facter/facts.d > /tmp/facts.log 2>&1 || error_exit 'failed to create facter directory'\n",
@@ -863,7 +863,7 @@
             "echo ", "stackid=",     { "Ref" : "StackID" },        ">> /etc/facter/facts.d/custom_facts.txt\n",
             "echo ", "nodeid=",      "3",         ">> /etc/facter/facts.d/custom_facts.txt\n",
             "echo ", "apptag=",      { "Ref" : "ApplicationTag" }, ">> /etc/facter/facts.d/custom_facts.txt\n",
-            "echo ", "masterhost=",  { "Fn::Join" : [ "", [{ "Ref" : "ApplicationTag" }, "-emaster1", { "Ref" : "StackID" }, { "Fn::FindInMap" : [ "dot", { "Ref" : "Environment" }, "DOT" ]}, ".bluekite.com"]]}, ":",
+            "echo ", "master_node_host=",  { "Fn::Join" : [ "", [{ "Ref" : "ApplicationTag" }, "-emaster1", { "Ref" : "StackID" }, { "Fn::FindInMap" : [ "dot", { "Ref" : "Environment" }, "DOT" ]}, ".bluekite.com"]]}, ":",
                                      { "Fn::Join" : [ "", [{ "Ref" : "ApplicationTag" }, "-emaster2", { "Ref" : "StackID" }, { "Fn::FindInMap" : [ "dot", { "Ref" : "Environment" }, "DOT" ]}, ".bluekite.com"]]}, ":",
                                      { "Fn::Join" : [ "", [{ "Ref" : "ApplicationTag" }, "-emaster3", { "Ref" : "StackID" }, { "Fn::FindInMap" : [ "dot", { "Ref" : "Environment" }, "DOT" ]}, ".bluekite.com"]]},  ">> /etc/facter/facts.d/custom_facts.txt\n",
             "echo ", "env=",         { "Ref" : "Environment" },    ">> /etc/facter/facts.d/custom_facts.txt\n",
@@ -880,7 +880,7 @@
             "cd /home/ubuntu/sites\n",
             "sudo sh setup.sh\n",
 
-            "export LANG=en_US.UTF-8; sudo puppet apply --verbose --debug --modulepath=puppet/modules puppet/manifests/site.pp > /tmp/puppet.log 2>&1 || error_exit 'failed to apply puppet manifests'\n",
+            "export LANG=en_US.UTF-8; sudo puppet apply --verbose --debug --modulepath=/etc/puppet/modules /home/ubuntu/sites/site.pp > /tmp/puppet.log 2>&1 || error_exit 'failed to apply puppet manifests'\n",
 
             "# Signal setup is complete\n",
             "cfn-signal -e $? -r 'Completed configuration' '",
@@ -978,8 +978,8 @@
             "sudo gem install librarian-puppet --no-rdoc --no-ri > /tmp/gem-librarian-puppet.log 2>&1 || error_exit 'Failed install librarian puppet gem'\n",
 
             "# Install application's dependencies via puppet\n",
-            "cd /home/ubuntu/elasticsearch_server/puppet\n",
-            "export HOME=/home/ubuntu && librarian-puppet install --clean --verbose > /tmp/librarian-puppet.log 2>&1 || error_exit 'failed to install puppet submodules'\n",
+            "cd /etc/puppet/modules/searchdbcluster\n",
+            "sudo librarian-puppet install --clean --verbose --path=/etc/puppet/modules > /tmp/librarian-puppet.log 2>&1 || error_exit 'failed to install puppet submodules'\n",
 
             "# setting my custom facts\n",
             "mkdir -p /etc/facter/facts.d > /tmp/facts.log 2>&1 || error_exit 'failed to create facter directory'\n",
@@ -996,7 +996,7 @@
             "echo ", "stackid=",     { "Ref" : "StackID" },        ">> /etc/facter/facts.d/custom_facts.txt\n",
             "echo ", "nodeid=",      "4",         ">> /etc/facter/facts.d/custom_facts.txt\n",
             "echo ", "apptag=",      { "Ref" : "ApplicationTag" }, ">> /etc/facter/facts.d/custom_facts.txt\n",
-            "echo ", "masterhost=",  { "Fn::Join" : [ "", [{ "Ref" : "ApplicationTag" }, "-emaster1", { "Ref" : "StackID" }, { "Fn::FindInMap" : [ "dot", { "Ref" : "Environment" }, "DOT" ]}, ".bluekite.com"]]}, ":",
+            "echo ", "master_node_host=",  { "Fn::Join" : [ "", [{ "Ref" : "ApplicationTag" }, "-emaster1", { "Ref" : "StackID" }, { "Fn::FindInMap" : [ "dot", { "Ref" : "Environment" }, "DOT" ]}, ".bluekite.com"]]}, ":",
                                      { "Fn::Join" : [ "", [{ "Ref" : "ApplicationTag" }, "-emaster2", { "Ref" : "StackID" }, { "Fn::FindInMap" : [ "dot", { "Ref" : "Environment" }, "DOT" ]}, ".bluekite.com"]]}, ":",
                                      { "Fn::Join" : [ "", [{ "Ref" : "ApplicationTag" }, "-emaster3", { "Ref" : "StackID" }, { "Fn::FindInMap" : [ "dot", { "Ref" : "Environment" }, "DOT" ]}, ".bluekite.com"]]}, ">> /etc/facter/facts.d/custom_facts.txt\n",
             "echo ", "env=",         { "Ref" : "Environment" },    ">> /etc/facter/facts.d/custom_facts.txt\n",
@@ -1013,7 +1013,7 @@
             "cd /home/ubuntu/sites\n",
             "sudo sh setup.sh\n",
 
-            "export LANG=en_US.UTF-8; sudo puppet apply --verbose --debug --modulepath=puppet/modules puppet/manifests/site.pp > /tmp/puppet.log 2>&1 || error_exit 'failed to apply puppet manifests'\n",
+            "export LANG=en_US.UTF-8; sudo puppet apply --verbose --debug --modulepath=/etc/puppet/modules /home/ubuntu/sites/site.pp > /tmp/puppet.log 2>&1 || error_exit 'failed to apply puppet manifests'\n",
 
             "# Signal setup is complete\n",
             "cfn-signal -e $? -r 'Completed configuration' '",

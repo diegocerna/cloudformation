@@ -7,7 +7,7 @@
     "CacheNodeType" : {
       "Description" : "ElastiCache node type",
       "Type" : "String",
-      "Default" : "cache.t2.micro",
+      "Default" : "cache.m3.large",
       "AllowedValues" : [ "cache.t2.micro","cache.t2.small","cache.t2.medium","cache.m3.medium","cache.m3.large","cache.m3.xlarge"],
       "ConstraintDescription" : "must be a valid elasticache node type."
     },
@@ -15,7 +15,7 @@
     "CacheParameterGroupName" : {
       "Type" : "String",
       "Description" : "Cache parameters group name",
-      "Default" : "bluekiteredis"
+      "Default" : "redis-production"
     },
 
     "StackID" : {
@@ -33,19 +33,19 @@
     "ElastiCacheSecurityGroup" : {
       "Type"          : "String",
       "Description"   : "SecurityGroupId of an existing subnet in your Virtual Private Cloud (VPC)",
-      "Default"       : "sg-9f8ab4fa"
+      "Default"       : "sg-6abed20f"
     },
 
     "SubnetIdAz1"        : {
       "Type"          : "String",
       "Description"   : "SubnetId of an existing subnet in your Virtual Private Cloud (VPC)",
-      "Default"       : "subnet-4fd72416"
+      "Default"       : "subnet-960cefcf"
     },
 
     "SubnetIdAz2"        : {
       "Type"          : "String",
       "Description"   : "SubnetId of an existing subnet in your Virtual Private Cloud (VPC)",
-      "Default"       : "subnet-f334e584"
+      "Default"       : "subnet-93a509f6"
     }
   },
 
@@ -71,7 +71,7 @@
     "RedisElastiCacheNonProd": {
       "Type": "AWS::ElastiCache::CacheCluster",
       "Properties": {
-        "ClusterName" : { "Fn::Join" : [ "", ["redis", { "Ref" : "StackID" } , { "Fn::FindInMap" : [ "dot", { "Ref" : "Environment" }, "DOT" ]}]]},
+        "ClusterName" : { "Fn::Join" : [ "", ["or-prd-redis", { "Ref" : "StackID" } , { "Fn::FindInMap" : [ "dot", { "Ref" : "Environment" }, "DOT" ]}]]},
         "AutoMinorVersionUpgrade" : false,
         "CacheParameterGroupName" : { "Ref" : "CacheParameterGroupName" },
         "CacheSubnetGroupName" : { "Ref" : "CacheSubnetGroup" },

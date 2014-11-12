@@ -168,8 +168,8 @@
             "sudo gem install librarian-puppet --no-rdoc --no-ri > /tmp/gem-librarian-puppet.log 2>&1 || error_exit 'Failed install librarian puppet gem'\n",
 
             "# Install application's dependencies via puppet\n",
-            "cd /home/ubuntu/elasticsearch_server/puppet\n",
-            "export HOME=/home/ubuntu && librarian-puppet install --clean --verbose > /tmp/librarian-puppet.log 2>&1 || error_exit 'failed to install puppet submodules'\n",
+            "cd /etc/puppet/modules/searchdbcluster\n",
+            "sudo librarian-puppet install --clean --verbose --path=/etc/puppet/modules > /tmp/librarian-puppet.log 2>&1 || error_exit 'failed to install puppet submodules'\n",
 
             "# setting my custom facts\n",
             "mkdir -p /etc/facter/facts.d > /tmp/facts.log 2>&1 || error_exit 'failed to create facter directory'\n",
@@ -185,7 +185,7 @@
             "echo ", "stackid=",     { "Ref" : "StackID" },        ">> /etc/facter/facts.d/custom_facts.txt\n",
             "echo ", "nodeid=",      { "Ref" : "NodeID" },         ">> /etc/facter/facts.d/custom_facts.txt\n",
             "echo ", "apptag=",      { "Ref" : "ApplicationTag" }, ">> /etc/facter/facts.d/custom_facts.txt\n",
-            "echo ", "masterhost=",  { "Fn::Join" : [ "", [{ "Ref" : "ApplicationTag" }, "-emaster", { "Ref" : "StackID" }, { "Fn::FindInMap" : [ "dot", { "Ref" : "Environment" }, "DOT" ]}, ".bluekite.com"]]}, ">> /etc/facter/facts.d/custom_facts.txt\n",
+            "echo ", "master_node_host=",  { "Fn::Join" : [ "", [{ "Ref" : "ApplicationTag" }, "-emaster", { "Ref" : "StackID" }, { "Fn::FindInMap" : [ "dot", { "Ref" : "Environment" }, "DOT" ]}, ".bluekite.com"]]}, ">> /etc/facter/facts.d/custom_facts.txt\n",
             "echo ", "env=",         { "Ref" : "Environment" },    ">> /etc/facter/facts.d/custom_facts.txt\n",
             "echo custom_hostname=een1001 >> /etc/facter/facts.d/custom_facts.txt\n",
 
@@ -200,7 +200,7 @@
             "cd /home/ubuntu/sites\n",
             "sudo sh setup.sh\n",
 
-            "export LANG=en_US.UTF-8; sudo puppet apply --verbose --debug --modulepath=puppet/modules puppet/manifests/site.pp > /tmp/puppet.log 2>&1 || error_exit 'failed to apply puppet manifests'\n",
+            "export LANG=en_US.UTF-8; sudo puppet apply --verbose --debug --modulepath=/etc/puppet/modules /home/ubuntu/sites/site.pp > /tmp/puppet.log 2>&1 || error_exit 'failed to apply puppet manifests'\n",
 
             "# Signal setup is complete\n",
             "cfn-signal -e $? -r 'Completed configuration' '",

@@ -7,7 +7,7 @@
     "CacheNodeType" : {
       "Description" : "ElastiCache node type",
       "Type" : "String",
-      "Default" : "cache.t2.micro",
+      "Default" : "cache.m3.large",
       "AllowedValues" : [ "cache.t2.micro","cache.t2.small","cache.t2.medium","cache.m3.medium","cache.m3.large","cache.m3.xlarge"],
       "ConstraintDescription" : "must be a valid elasticache node type."
     },
