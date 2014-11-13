@@ -17,7 +17,8 @@
     "Environment" : {
       "Description" : "Environment for the Url",
       "Type" : "String",
-      "Default" : ""
+      "AllowedValues" : [ "production","staging","sandbox","qa"],
+      "ConstraintDescription" : "must be a valid environment"
     },
 
     "SubnetId" : {
@@ -46,12 +47,6 @@
       "ConstraintDescription" : "must be a valid EC2 instance type."
     },
 
-    "SSL" : {
-      "Description" : "Use SSl",
-      "Type" : "String",
-      "Default" : "true"
-    },
-
     "AppDeployBranch" : {
       "Type" : "String",
       "Description" : "Git branch where to deploy the code from.",
@@ -72,7 +67,9 @@
 
     "Version" : {
       "Type" : "String",
-      "Description" : "stamp1 for current version, stamp2 for disaster recovery and staging for staging production"
+      "Description" : "use qa, sandbox, staging or stamp with 1 or 2 suffix depends of the AZ that you be place the instance",
+      "AllowedValues" : [ "stamp1","stamp2","staging1","staging2","sandbox1","sandbox2","qa1","qa2"],
+      "ConstraintDescription" : "must be a valid version for STAMP"
     }
   },
 
@@ -131,7 +128,7 @@
       }
     },
 
-    "DNSRecord" : {
+    "ExtDNSRecord" : {
       "Type" : "AWS::Route53::RecordSet",
       "Condition" : "CreateExtResources",
         "Properties" : {
@@ -145,7 +142,7 @@
       "DependsOn" : "IPAddress"
     },
 
-    "DNSRecord" : {
+    "IntDNSRecord" : {
       "Type" : "AWS::Route53::RecordSet",
       "Condition" : "CreateIntResources",
         "Properties" : {
@@ -272,6 +269,16 @@
     "InstanceId" : {
       "Value" : { "Ref" : "XPAInstance" },
       "Description" : "Instance Id of newly created instance"
+    },
+
+    "ExtDomainName" : {
+      "Value" : { "Ref" : "ExtDNSRecord" },
+      "Condition" : "CreateExtResources"
+    },
+
+    "IntDomainName" : {
+      "Value" : { "Ref" : "IntDNSRecord" },
+      "Condition" : "CreateIntResources"
     }
   }
 }
