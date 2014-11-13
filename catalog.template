@@ -134,12 +134,21 @@
       "DependsOn" : "CatalogInstance"
     },
 
+    "RootInstanceProfile" : {
+      "Type" : "AWS::IAM::InstanceProfile",
+      "Properties" : {
+      "Path" : "/",
+      "Roles" : ["CloudWatch"]
+      }
+    },
+
     "CatalogInstance" : {
       "Type" : "AWS::EC2::Instance",
       "Metadata" : {
         "Comment" : "Catalog - Rails Aplication Instance"
       },
       "Properties" : {
+        "IamInstanceProfile": { "Ref": "RootInstanceProfile" },
         "ImageId" : { "Fn::FindInMap" : [ "RegionMap", { "Ref" : "AWS::Region" }, "AMI" ]},
         "SecurityGroupIds" : [ {"Ref" : "SecurityGroupId"} ],
         "SubnetId" : { "Ref" : "SubnetId" },

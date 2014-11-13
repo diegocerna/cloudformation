@@ -14,7 +14,7 @@
       "us-east-1"      : {"AMI" : "ami-baf37bd2" },
       "us-west-2"      : {"AMI" : "ami-a7105b97" }
     },
-    
+
     "version" : {
       "stamp1"          : { "HOSTNAME" : "pay1001" },
       "stamp2"          : { "HOSTNAME" : "pay1002" },
@@ -117,6 +117,14 @@
 
   "Resources" : {
 
+   "RootInstanceProfile" : {
+     "Type" : "AWS::IAM::InstanceProfile",
+     "Properties" : {
+     "Path" : "/",
+     "Roles" : ["CloudWatch"]
+     }
+   },
+
    "PaymentsInstance" : {
 
       "Type" : "AWS::EC2::Instance",
@@ -125,6 +133,7 @@
       },
 
       "Properties" : {
+        "IamInstanceProfile": { "Ref": "RootInstanceProfile" },
         "ImageId" : { "Fn::FindInMap" : [ "RegionMap", { "Ref" : "AWS::Region" }, "AMI" ]},
         "SecurityGroupIds" : [ {"Ref" : "SecurityGroupId"} ],
         "SubnetId" : { "Ref" : "SubnetId" },

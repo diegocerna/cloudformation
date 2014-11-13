@@ -119,6 +119,14 @@
 
   "Resources" : {
 
+   "RootInstanceProfile" : {
+     "Type" : "AWS::IAM::InstanceProfile",
+     "Properties" : {
+     "Path" : "/",
+     "Roles" : ["CloudWatch"]
+     }
+   },
+
    "AccountsPaInstance" : {
 
       "Type" : "AWS::EC2::Instance",
@@ -127,6 +135,7 @@
       },
 
       "Properties" : {
+        "IamInstanceProfile": { "Ref": "RootInstanceProfile" },
         "ImageId" : { "Fn::FindInMap" : [ "RegionMap", { "Ref" : "AWS::Region" }, "AMI" ]},
         "SecurityGroupIds" : [ {"Ref" : "SecurityGroupId"} ],
         "SubnetId" : { "Ref" : "SubnetId" },

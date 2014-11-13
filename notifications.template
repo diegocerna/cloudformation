@@ -135,6 +135,7 @@
     "DNSRecord" : {
       "Type" : "AWS::Route53::RecordSet",
       "Properties" : {
+        "IamInstanceProfile": { "Ref": "RootInstanceProfile" },
         "HostedZoneName" : "bluekite.com.",
         "Comment" : "DNS name for my instance.",
         "Name" : { "Fn::Join" : [ "", ["notifications", { "Ref" : "StackID" } , { "Fn::FindInMap" : [ "env", { "Ref" : "Environment" }, "DOT" ]},".bluekite.com"]]},
@@ -145,6 +146,14 @@
       "DependsOn" : "NotificationsInstance"
     },
 
+    "RootInstanceProfile" : {
+      "Type" : "AWS::IAM::InstanceProfile",
+      "Properties" : {
+      "Path" : "/",
+      "Roles" : ["CloudWatch"]
+      }
+    },
+    
     "NotificationsInstance" : {
       "Type" : "AWS::EC2::Instance",
       "Metadata" : {

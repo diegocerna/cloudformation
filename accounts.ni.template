@@ -14,7 +14,7 @@
       "us-east-1"      : {"AMI" : "ami-0c56df64" },
       "us-west-2"      : {"AMI" : "ami-07fcb437" }
     },
-    
+
     "version" : {
       "stamp1"          : { "HOSTNAME" : "ani1001" },
       "stamp2"          : { "HOSTNAME" : "ani1002" },
@@ -118,6 +118,14 @@
 
   "Resources" : {
 
+   "RootInstanceProfile" : {
+     "Type" : "AWS::IAM::InstanceProfile",
+     "Properties" : {
+     "Path" : "/",
+     "Roles" : ["CloudWatch"]
+     }
+   },
+
    "AccountsNiInstance" : {
 
       "Type" : "AWS::EC2::Instance",
@@ -126,6 +134,7 @@
       },
 
       "Properties" : {
+        "IamInstanceProfile": { "Ref": "RootInstanceProfile" },
         "ImageId" : { "Fn::FindInMap" : [ "RegionMap", { "Ref" : "AWS::Region" }, "AMI" ]},
         "SecurityGroupIds" : [ {"Ref" : "SecurityGroupId"} ],
         "SubnetId" : { "Ref" : "SubnetId" },
