@@ -46,6 +46,12 @@
             "ConstraintDescription" : "must be a valid EC2 instance type."
         },
 
+        "SSL" : {
+            "Description" : "Use SSl",
+            "Type" : "String",
+            "Default" : "true"
+        },
+
         "AppDeployBranch" : {
           "Type" : "String",
           "Description" : "Git branch where to deploy the code from.",
@@ -81,7 +87,7 @@
           "us-east-1"      : {"AMI" : "ami-e4fe768c" },
           "us-west-2"      : {"AMI" : "ami-61105b51" }
         },
-        
+
         "version" : {
           "stamp1"          : { "HOSTNAME" : "xpa1001" },
           "stamp2"          : { "HOSTNAME" : "xpa1002" },
@@ -175,6 +181,7 @@
                     "echo ", { "Fn::Join" : [ "" , ["FQDN=xpa", { "Ref" : "StackID" }, { "Fn::FindInMap" : [ "env", { "Ref" : "Environment" }, "DOT" ]}, ".bluekite.com" ]]}, ">> /etc/environment\n",
                     "echo ", "FACTER_stackid=", { "Ref" : "StackID" }, ">> /etc/environment\n",
                     "echo ", "FACTER_rack_env=", { "Ref" : "Environment" }, ">> /etc/environment\n",
+                    "echo ", "VERIFY_SSL=", { "Ref" : "SSL" }, ">> /etc/environment\n",
 
                     "#Installing Ruby\n",
                     "apt-get -y install libyaml-0-2\n",

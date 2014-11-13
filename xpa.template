@@ -20,6 +20,12 @@
             "Default" : "dev"
         },
 
+        "SSL" : {
+            "Description" : "Use SSl",
+            "Type" : "String",
+            "Default" : "true"
+        },
+
         "SubnetId" : {
             "Type" : "String",
             "Description" : "SubnetId of an existing subnet in your Virtual Private Cloud (VPC)",
@@ -165,6 +171,8 @@
                     "echo ", { "Fn::Join" : [ "" , ["FQDN=xpa", { "Ref" : "StackID" }, { "Fn::FindInMap" : [ "env", { "Ref" : "Environment" }, "DOT" ]}, ".bluekite.com" ]]}, ">> /etc/environment\n",
                     "echo ", "FACTER_stackid=", { "Ref" : "StackID" }, ">> /etc/environment\n",
                     "echo ", "FACTER_rack_env=", { "Ref" : "Environment" }, ">> /etc/environment\n",
+                    "echo ", "VERIFY_SSL=", { "Ref" : "SSL" }, ">> /etc/environment\n",
+
                     "echo ", { "Fn::Join" : [ "" , ["oauth_host=oauth", { "Fn::FindInMap" : [ "version", { "Ref" : "Version" }, "OSF" ]}, { "Fn::FindInMap" : [ "env", { "Ref" : "Environment" }, "DOT" ]}, ".bluekite.com" ]]},        ">> /etc/environment\n",
 
                     "#Installing Ruby\n",
