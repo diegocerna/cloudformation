@@ -222,25 +222,6 @@
       }
     },
 
-    "XPA" : {
-      "Type" : "AWS::CloudFormation::Stack",
-      "Properties" : {
-        "TemplateURL" : "https://s3-us-west-2.amazonaws.com/cfpot/xpa.public.template",
-        "Parameters" : {
-          "KeyName": {"Ref" : "KeyName"},
-          "Version" : { "Ref" : "Version" },
-          "SubnetId" : { "Ref" : "PublicSubnetId"},
-          "SecurityGroupId" : { "Ref" : "ApiSecurityGroup"},
-          "AppDeployBranch" : "master",
-          "RoleDeployBranch" : "master",
-          "SitesDeployBranch" : "master",
-          "StackID" : { "Ref" : "StackID" },
-          "InstanceType" : { "Ref" : "InstanceType"},
-          "Environment" : {"Ref" : "appEnvironment"}
-        }
-      }
-    },
-
     "HelloWorld" : {
       "Type" : "AWS::CloudFormation::Stack",
       "Properties" : {
@@ -268,8 +249,8 @@
           "Version" : { "Ref" : "Version" },
           "SubnetId" : { "Ref" : "PrivateSubnetId" },
           "SecurityGroupId" : { "Ref" : "PrivateSecurityGroup" },
-          "AppDeployBranch" : "hotfix/STAMP-251",
-          "RoleDeployBranch" : "0.1.6",
+          "AppDeployBranch" : "master",
+          "RoleDeployBranch" : "master",
           "SitesDeployBranch" : "master",
           "StackID" : { "Ref" : "StackID" },
           "StackIDDB" : { "Ref" : "StackIDDB" },
@@ -310,8 +291,8 @@
           "Version" : { "Ref" : "Version" },
           "SubnetId" : { "Ref" : "PrivateSubnetId" },
           "SecurityGroupId" : { "Ref" : "AccountsGTSecurityGroup" },
-          "AppDeployBranch" : "hotfix/STAMP-251",
-          "RoleDeployBranch" : "0.1.6",
+          "AppDeployBranch" : "master",
+          "RoleDeployBranch" : "master",
           "SitesDeployBranch" : "master",
           "StackID" : { "Ref" : "StackID" },
           "StackIDDB" : { "Ref" : "StackIDDB" },
@@ -332,8 +313,8 @@
           "Version" : { "Ref" : "Version" },
           "SubnetId" : { "Ref" : "PrivateSubnetId" },
           "SecurityGroupId" : { "Ref" : "AccountsDOSecurityGroup" },
-          "AppDeployBranch" : "hotfix/STAMP-251",
-          "RoleDeployBranch" : "0.1.6",
+          "AppDeployBranch" : "master",
+          "RoleDeployBranch" : "master",
           "SitesDeployBranch" : "master",
           "StackID" : { "Ref" : "StackID" },
           "StackIDDB" : { "Ref" : "StackIDDB" },
@@ -354,8 +335,8 @@
           "Version" : { "Ref" : "Version" },
           "SubnetId" : { "Ref" : "PrivateSubnetId" },
           "SecurityGroupId" : { "Ref" : "AccountsMXSecurityGroup" },
-          "AppDeployBranch" : "hotfix/STAMP-251",
-          "RoleDeployBranch" : "0.1.6",
+          "AppDeployBranch" : "master",
+          "RoleDeployBranch" : "master",
           "SitesDeployBranch" : "master",
           "StackID" : { "Ref" : "StackID" },
           "StackIDDB" : { "Ref" : "StackIDDB" },
@@ -376,8 +357,8 @@
           "Version" : { "Ref" : "Version" },
           "SubnetId" : { "Ref" : "PrivateSubnetId" },
           "SecurityGroupId" : { "Ref" : "AccountsSVSecurityGroup" },
-          "AppDeployBranch" : "hotfix/STAMP-251",
-          "RoleDeployBranch" : "0.1.6",
+          "AppDeployBranch" : "master",
+          "RoleDeployBranch" : "master",
           "SitesDeployBranch" : "master",
           "StackID" : { "Ref" : "StackID" },
           "StackIDDB" : { "Ref" : "StackIDDB" },
@@ -398,8 +379,8 @@
           "Version" : { "Ref" : "Version" },
           "SubnetId" : { "Ref" : "PrivateSubnetId" },
           "SecurityGroupId" : { "Ref" : "AccountsNISecurityGroup" },
-          "AppDeployBranch" : "hotfix/STAMP-251",
-          "RoleDeployBranch" : "0.1.6",
+          "AppDeployBranch" : "master",
+          "RoleDeployBranch" : "master",
           "SitesDeployBranch" : "master",
           "StackID" : { "Ref" : "StackID" },
           "StackIDDB" : { "Ref" : "StackIDDB" },

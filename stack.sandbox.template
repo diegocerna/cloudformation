@@ -207,7 +207,7 @@
     "XPA" : {
       "Type" : "AWS::CloudFormation::Stack",
       "Properties" : {
-        "TemplateURL" : "https://s3-us-west-2.amazonaws.com/cfpot/xpa.template",
+        "TemplateURL" : "https://s3-us-west-2.amazonaws.com/cfpot/tool.xpa.template",
         "Parameters" : {
           "KeyName": {"Ref" : "KeyName"},
           "Version" : { "Ref" : "Version" },
