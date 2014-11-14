@@ -213,7 +213,6 @@
           "SitesDeployBranch" : "feature/diamond",
           "StackID" : { "Ref" : "StackID" },
           "InstanceType" : { "Ref" : "InstanceType"},
-          "SSL" : { "Ref" : "false" },
           "Environment" : {"Ref" : "appEnvironment"}
         }
       }
