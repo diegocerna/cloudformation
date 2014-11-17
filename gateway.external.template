@@ -35,9 +35,11 @@
     },
 
     "Environment": {
-      "Description" : "Subdomain to access EC2 Intance",
+      "Description" : "Set environment for the application",
       "Type": "String",
-      "Default": "production"
+      "Default": "production",
+      "AllowedValues" : [ "production","staging","sandbox","qa"],
+      "ConstraintDescription" : "must be a valid environment"
     },
 
     "StackID" : {
@@ -66,7 +68,9 @@
 
     "Version" : {
       "Type" : "String",
-      "Description" : "stamp1 for current version, stamp2 for disaster recovery and staging for staging production"
+      "Description" : "use qa, sandbox, staging or stamp with 1 or 2 suffix depends of the AZ that you be place the instance",
+      "AllowedValues" : [ "stamp1","stamp2","staging1","staging2","sandbox1","sandbox2","qa1","qa2"],
+      "ConstraintDescription" : "must be a valid version for STAMP"
     }
   },
 
@@ -99,7 +103,58 @@
     }
   },
 
+  "Conditions" : {
+    "CreateExtResources" : {"Fn::Or" : [
+      {"Fn::Equals" : [{"Ref" : "Environment"}, "production"]},
+      {"Fn::Equals" : [{"Ref" : "Environment"}, "staging"]}
+      ]
+    },
+    "CreateIntResources" : {"Fn::Or" : [
+      {"Fn::Equals" : [{"Ref" : "Environment"}, "qa"]},
+      {"Fn::Equals" : [{"Ref" : "Environment"}, "sandbox"]}
+      ]
+    }
+  },
+
   "Resources" : {
+
+    "IPAddress" : {
+      "Type" : "AWS::EC2::EIP",
+      "Condition" : "CreateExtResources",
+      "Properties" : {
+        "Domain" : "vpc",
+        "InstanceId" : { "Ref" : "API" }
+      }
+    },
+
+    "ExtDNSRecord" : {
+      "Type" : "AWS::Route53::RecordSet",
+      "Condition" : "CreateExtResources",
+      "Properties" : {
+        "HostedZoneName" : "bluekite.com.",
+        "Comment" : "DNS name for my instance.",
+        "Name" : { "Fn::Join" : [ "", ["api", { "Ref" : "StackID" } , { "Fn::FindInMap" : [ "env", { "Ref" : "Environment" }, "DOT" ]},".bluekite.com"]]},
+        "Type" : "CNAME",
+        "TTL" : "300",
+        "ResourceRecords" : [ { "Fn::GetAtt" : [ "API", "PublicDnsName" ] } ]
+      },
+      "DependsOn" : "IPAddress"
+    },
+
+    "IntDNSRecord" : {
+      "Type" : "AWS::Route53::RecordSet",
+      "Condition" : "CreateIntResources",
+      "Properties" : {
+        "HostedZoneName" : "bluekite.com.",
+        "Comment" : "DNS name for my instance.",
+        "Name" : { "Fn::Join" : [ "", ["api", { "Ref" : "StackID" } , { "Fn::FindInMap" : [ "env", { "Ref" : "Environment" }, "DOT" ]},".bluekite.com"]]},
+        "Type" : "A",
+        "TTL" : "300",
+        "ResourceRecords" : [ { "Fn::GetAtt" : [ "API", "PrivateIp" ] } ]
+      },
+      "DependsOn" : "API"
+    },
+
     "API" : {
       "Type" : "AWS::EC2::Instance",
       "Metadata" : {
@@ -229,6 +284,15 @@
     "ApiInstanceId" : {
       "Value" : { "Ref" : "API" },
       "Description" : "Instance Id of newly created instance"
+    },
+    "ExtDomainName" : {
+      "Value" : { "Ref" : "ExtDNSRecord" },
+      "Condition" : "CreateExtResources"
+    },
+
+    "IntDomainName" : {
+      "Value" : { "Ref" : "IntDNSRecord" },
+      "Condition" : "CreateIntResources"
     }
   }
 }
