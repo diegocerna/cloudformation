@@ -66,7 +66,7 @@
         "Environment" : {
             "Type" : "String",
             "Description" : "Application's environment.",
-            "Default" : "dev"
+            "Default" : "staging"
         }
     },
 
@@ -90,7 +90,7 @@
         },
 
         "env" : {
-          "dev"            : { "ENV" : "development", "DOT" : ".dev" },
+          "staging"        : { "ENV" : "staging", "DOT" : ".staging" },
           "qa"             : { "ENV" : "qa", "DOT" : ".qa" },
           "sandbox"        : { "ENV" : "sandbox", "DOT" : ".sandbox"  },
           "production"     : { "ENV" : "production", "DOT" : "" }

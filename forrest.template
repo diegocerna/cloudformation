@@ -7,7 +7,7 @@
 
     "Environment" : {
       "Type" : "String",
-      "Default" : "dev"
+      "Default" : "staging"
     },
 
     "KeyName" : {
@@ -32,13 +32,13 @@
     "SG" : {
       "Type" : "String",
       "Default" : "sg-",
-      "Description" : "Security Group (default = 'dev')"
+      "Description" : "Security Group (default = 'staging')"
     },
 
     "SubnetId" : {
       "Type" : "String",
       "Default" : "subnet-",
-      "Description" : "default is for dev"
+      "Description" : "default is for staging"
     },
 
     "Version" : {
@@ -90,7 +90,7 @@
     },
 
     "env" : {
-      "dev"            : { "ENV" : "development", "DOT" : ".dev" },
+      "staging"        : { "ENV" : "staging", "DOT" : ".staging" },
       "qa"             : { "ENV" : "qa", "DOT" : ".qa" },
       "sandbox"        : { "ENV" : "sandbox", "DOT" : ".sandbox"  },
       "production"     : { "ENV" : "production", "DOT" : "" }

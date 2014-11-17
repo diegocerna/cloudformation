@@ -43,7 +43,7 @@
     "Environment": {
       "Description" : "Subdomain to access EC2 Intance",
       "Type": "String",
-      "Default": "dev"
+      "Default": "staging"
     },
 
     "AppDeployBranch" : {
@@ -91,7 +91,7 @@
     },
 
     "env" : {
-      "dev"            : { "ENV" : "development", "DOT" : ".dev" },
+      "staging"        : { "ENV" : "staging", "DOT" : ".staging" },
       "qa"             : { "ENV" : "qa", "DOT" : ".qa" },
       "sandbox"        : { "ENV" : "sandbox", "DOT" : ".sandbox"  },
       "production"     : { "ENV" : "production", "DOT" : "" }

@@ -97,7 +97,6 @@
     },
 
     "env" : {
-      "dev"            : { "ENV" : "staging", "DOT" : ".dev" },
       "staging"        : { "ENV" : "staging", "DOT" : ".staging" },
       "qa"             : { "ENV" : "qa", "DOT" : ".qa" },
       "sandbox"        : { "ENV" : "sandbox", "DOT" : ".sandbox"  },

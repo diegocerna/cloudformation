@@ -30,7 +30,7 @@
     "SecurityGroupId" : {
       "Type" : "String",
       "Default" : "sg-a1ad24c4",
-      "Description" : "Security Group (default = 'dev')"
+      "Description" : "Security Group (default = 'staging')"
     },
 
     "InstanceType" : {
@@ -44,7 +44,7 @@
     "SubnetId" : {
       "Type" : "String",
       "Default" : "subnet-0938284f",
-      "Description" : "default is for dev"
+      "Description" : "default is for staging"
     },
 
     "Version" : {
@@ -95,7 +95,7 @@
     },
 
     "env" : {
-      "dev"            : { "ENV" : "development", "DOT" : ".dev" },
+      "staging"        : { "ENV" : "staging", "DOT" : ".staging" },
       "qa"             : { "ENV" : "qa", "DOT" : ".qa" },
       "sandbox"        : { "ENV" : "sandbox", "DOT" : ".sandbox"  },
       "production"     : { "ENV" : "production", "DOT" : "" }

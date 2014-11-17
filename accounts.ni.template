@@ -27,7 +27,7 @@
     },
 
     "env" : {
-      "dev"            : { "ENV" : "development", "DOT" : ".dev" },
+      "staging"        : { "ENV" : "staging", "DOT" : ".staging" },
       "qa"             : { "ENV" : "qa", "DOT" : ".qa" },
       "sandbox"        : { "ENV" : "sandbox", "DOT" : ".sandbox"  },
       "production"     : { "ENV" : "production", "DOT" : "" }
@@ -37,7 +37,7 @@
   "Parameters" : {
     "Environment" : {
       "Type" : "String",
-      "Description" : "Environment for the accounts-ni, i.e. dev, production, etc.",
+      "Description" : "Environment for the accounts-ni, i.e. staging, production, etc.",
       "Default" : ""
     },
 

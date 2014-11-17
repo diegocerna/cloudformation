@@ -11,7 +11,7 @@
             "MaxLength": "255",
             "AllowedPattern" : "[\\x20-\\x7E]*",
             "ConstraintDescription" : "can contain only ASCII characters.",
-            "Default": "redtail_development"
+            "Default": "redtail_stagingelopment"
         },
 
         "InstanceType" : {
@@ -24,8 +24,8 @@
 
         "Environment" : {
             "Type" : "String",
-            "Description" : "Environment for the NAT, i.e. dev, production, etc.",
-            "Default" : "dev"
+            "Description" : "Environment for the NAT, i.e. staging, production, etc.",
+            "Default" : "staging"
         },
 
          "StackID" : {
@@ -100,7 +100,7 @@
         },
 
         "env" : {
-          "dev"            : { "ENV" : "development", "DOT" : ".dev" },
+          "staging"        : { "ENV" : "staging", "DOT" : ".staging" },
           "qa"             : { "ENV" : "qa", "DOT" : ".qa" },
           "sandbox"        : { "ENV" : "sandbox", "DOT" : ".sandbox"  },
           "production"     : { "ENV" : "production", "DOT" : "" }
