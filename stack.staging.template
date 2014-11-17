@@ -208,9 +208,9 @@
           "Version" : { "Ref" : "Version" },
           "SubnetId" : { "Ref" : "PrivateSubnetId"},
           "SecurityGroupId" : { "Ref" : "PrivateSecurityGroup"},
-          "AppDeployBranch" : "hotfix/0.13.1",
-          "RoleDeployBranch" : "feature/diamond",
-          "SitesDeployBranch" : "feature/diamond",
+          "AppDeployBranch" : "master",
+          "RoleDeployBranch" : "master",
+          "SitesDeployBranch" : "master",
           "StackID" : { "Ref" : "StackID" },
           "InstanceType" : { "Ref" : "InstanceType"},
           "Environment" : {"Ref" : "appEnvironment"}
