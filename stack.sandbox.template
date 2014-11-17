@@ -207,7 +207,7 @@
     "XPA" : {
       "Type" : "AWS::CloudFormation::Stack",
       "Properties" : {
-        "TemplateURL" : "https://s3-us-west-2.amazonaws.com/cfpot/xpa.template",
+        "TemplateURL" : "https://s3-us-west-2.amazonaws.com/cfpot/tool.xpa.template",
         "Parameters" : {
           "KeyName": {"Ref" : "KeyName"},
           "Version" : { "Ref" : "Version" },
@@ -277,28 +277,6 @@
           "SitesDeployBranch" : "master",
           "StackID" : { "Ref" : "StackID" },
           "StackIDDB" : { "Ref" : "StackIDDB" },
-          "InstanceType" : { "Ref" : "InstanceType"},
-          "Environment" : { "Ref" : "appEnvironment" }
-        }
-      }
-    },
-
-    "accountsPa" : {
-      "Type" : "AWS::CloudFormation::Stack",
-      "Properties" : {
-        "TemplateURL" : "https://s3-us-west-2.amazonaws.com/cfpot/accounts.pa.template",
-        "Parameters" : {
-          "KeyName" : { "Ref" : "KeyName" },
-          "Version" : { "Ref" : "Version" },
-          "SubnetId" : { "Ref" : "PrivateSubnetId" },
-          "SecurityGroupId" : { "Ref" : "AccountsPASecurityGroup" },
-          "AppDeployBranch" : "master",
-          "RoleDeployBranch" : "master",
-          "SitesDeployBranch" : "master",
-          "StackID" : { "Ref" : "StackID" },
-          "StackIDDB" : { "Ref" : "StackIDDB" },
-          "dbpass"  : {"Ref" : "dbpass"},
-          "dbuser"  : {"Ref" : "dbuser"},
           "InstanceType" : { "Ref" : "InstanceType"},
           "Environment" : { "Ref" : "appEnvironment" }
         }
@@ -527,26 +505,6 @@
           "Version" : { "Ref" : "Version" },
           "SubnetId" : { "Ref" : "mxSubnetID" },
           "SecurityGroupId" : { "Ref" : "AccountsMXSecurityGroup" },
-          "AppDeployBranch" : "master",
-          "RoleDeployBranch" : "master",
-          "SitesDeployBranch" : "master",
-          "StackID" : { "Ref" : "StackID" },
-          "StackIDDB" : { "Ref" : "StackIDDB" },
-          "InstanceType" : { "Ref" : "InstanceType"},
-          "Environment" : { "Ref" : "appEnvironment" }
-        }
-      }
-    },
-
-    "WorkerEpago" : {
-      "Type" : "AWS::CloudFormation::Stack",
-      "Properties" : {
-        "TemplateURL" : "https://s3-us-west-2.amazonaws.com/cfpot/worker.epago.template",
-        "Parameters" : {
-          "KeyName" : { "Ref" : "KeyName" },
-          "Version" : { "Ref" : "Version" },
-          "SubnetId" : { "Ref" : "paSubnetID" },
-          "SecurityGroupId" : { "Ref" : "AccountsPASecurityGroup" },
           "AppDeployBranch" : "master",
           "RoleDeployBranch" : "master",
           "SitesDeployBranch" : "master",

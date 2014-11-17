@@ -202,18 +202,17 @@
     "XPA" : {
       "Type" : "AWS::CloudFormation::Stack",
       "Properties" : {
-        "TemplateURL" : "https://s3-us-west-2.amazonaws.com/cfpot/xpa.template",
+        "TemplateURL" : "https://s3-us-west-2.amazonaws.com/cfpot/tool.xpa.template",
         "Parameters" : {
           "KeyName": {"Ref" : "KeyName"},
           "Version" : { "Ref" : "Version" },
           "SubnetId" : { "Ref" : "PrivateSubnetId"},
           "SecurityGroupId" : { "Ref" : "PrivateSecurityGroup"},
-          "AppDeployBranch" : "hotfix/0.13.1",
-          "RoleDeployBranch" : "feature/diamond",
-          "SitesDeployBranch" : "feature/diamond",
+          "AppDeployBranch" : "master",
+          "RoleDeployBranch" : "master",
+          "SitesDeployBranch" : "master",
           "StackID" : { "Ref" : "StackID" },
           "InstanceType" : { "Ref" : "InstanceType"},
-          "SSL" : { "Ref" : "false" },
           "Environment" : {"Ref" : "appEnvironment"}
         }
       }

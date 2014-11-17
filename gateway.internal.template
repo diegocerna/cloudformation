@@ -73,12 +73,12 @@
   "Mappings" : {
     "IntGWAMI" : {
       "us-east-1"      : { "AMI" : "ami-286ee740" },
-      "us-west-1"      : { "AMI" : "ami-49ede60c" },
+      "us-west-1"      : { "AMI" : "ami-15829450" },
       "us-west-2"      : { "AMI" : "ami-ad1d569d" },
       "sa-east-1"      : { "AMI" : "ami-d545e5c8" },
       "eu-west-1"      : { "AMI" : "ami-d03dcaa7"}
     },
-  
+
     "version" : {
       "stamp1"          : { "HOSTNAME" : "sia1001" },
       "stamp2"          : { "HOSTNAME" : "sia1002" },
