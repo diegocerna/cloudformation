@@ -104,12 +104,12 @@
   },
 
   "Conditions" : {
-    "CreateExtResources" : {"Fn::Or" : [
+    "CreateIntResources" : {"Fn::Or" : [
       {"Fn::Equals" : [{"Ref" : "Environment"}, "production"]},
       {"Fn::Equals" : [{"Ref" : "Environment"}, "staging"]}
       ]
     },
-    "CreateIntResources" : {"Fn::Or" : [
+    "CreateExtResources" : {"Fn::Or" : [
       {"Fn::Equals" : [{"Ref" : "Environment"}, "qa"]},
       {"Fn::Equals" : [{"Ref" : "Environment"}, "sandbox"]}
       ]
