@@ -48,6 +48,12 @@
       "Default" : ""
     },
 
+    "PuppetEnv" : {
+      "Type" : "String",
+      "Description" : "Environment for puppet apply",
+      "Default" : ""
+    },
+
     "AppDeployBranch" : {
       "Type" : "String",
       "Description" : "Git branch where to deploy the code from.",
@@ -104,12 +110,12 @@
   },
 
   "Conditions" : {
-    "CreateExtResources" : {"Fn::Or" : [
+    "CreateIntResources" : {"Fn::Or" : [
       {"Fn::Equals" : [{"Ref" : "Environment"}, "production"]},
       {"Fn::Equals" : [{"Ref" : "Environment"}, "staging"]}
       ]
     },
-    "CreateIntResources" : {"Fn::Or" : [
+    "CreateExtResources" : {"Fn::Or" : [
       {"Fn::Equals" : [{"Ref" : "Environment"}, "qa"]},
       {"Fn::Equals" : [{"Ref" : "Environment"}, "sandbox"]}
       ]
@@ -139,20 +145,6 @@
         "ResourceRecords" : [ { "Fn::GetAtt" : [ "API", "PublicDnsName" ] } ]
       },
       "DependsOn" : "IPAddress"
-    },
-
-    "IntDNSRecord" : {
-      "Type" : "AWS::Route53::RecordSet",
-      "Condition" : "CreateIntResources",
-      "Properties" : {
-        "HostedZoneName" : "bluekite.com.",
-        "Comment" : "DNS name for my instance.",
-        "Name" : { "Fn::Join" : [ "", ["api", { "Ref" : "StackID" } , { "Fn::FindInMap" : [ "env", { "Ref" : "Environment" }, "DOT" ]},".bluekite.com"]]},
-        "Type" : "A",
-        "TTL" : "300",
-        "ResourceRecords" : [ { "Fn::GetAtt" : [ "API", "PrivateIp" ] } ]
-      },
-      "DependsOn" : "API"
     },
 
     "API" : {
@@ -253,7 +245,7 @@
           "cd /home/ubuntu/sites\n",
           "sudo sh setup.sh\n",
 
-          "export LANG=en_US.UTF-8; sudo puppet apply --verbose --debug --environment=", { "Fn::FindInMap" : [ "env", { "Ref" : "Environment" }, "ENV" ]}, " /home/ubuntu/sites/site.pp > /tmp/puppet.log 2>&1 || error_exit 'failed to apply puppet manifests'\n",
+          "export LANG=en_US.UTF-8; sudo puppet apply --verbose --debug --environment=", { "Ref" : "PuppetEnv" }, " /home/ubuntu/sites/site.pp > /tmp/puppet.log 2>&1 || error_exit 'failed to apply puppet manifests'\n",
 
           "# Signal setup is complete\n",
           "cfn-signal -e $? -r 'Completed configuration' '",
@@ -288,11 +280,6 @@
     "ExtDomainName" : {
       "Value" : { "Ref" : "ExtDNSRecord" },
       "Condition" : "CreateExtResources"
-    },
-
-    "IntDomainName" : {
-      "Value" : { "Ref" : "IntDNSRecord" },
-      "Condition" : "CreateIntResources"
     }
   }
 }

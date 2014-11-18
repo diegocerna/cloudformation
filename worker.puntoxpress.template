@@ -4,6 +4,12 @@
   "Description" : "El Salvador Puntoxpress Hamster Worker Instance - filename:sv_worker_puntoxpress.template",
 
   "Parameters" : {
+    "PuppetEnv" : {
+      "Type" : "String",
+      "Description" : "Environment for puppet apply",
+      "Default" : ""
+    },
+
     "KeyName": {
       "Description" : "Name of an existing EC2 KeyPair to enable SSH access to the instance",
       "Type": "String",
@@ -209,7 +215,7 @@
                     "cd /home/ubuntu/sites\n",
                     "sudo sh setup.sh\n",
 
-                    "export LANG=en_US.UTF-8; sudo puppet apply --verbose --debug --environment=", { "Fn::FindInMap" : [ "env", { "Ref" : "Environment" }, "ENV" ]}, " /home/ubuntu/sites/site.pp > /tmp/puppet.log 2>&1 || error_exit 'failed to apply puppet manifests'\n",
+                    "export LANG=en_US.UTF-8; sudo puppet apply --verbose --debug --environment=", { "Ref" : "PuppetEnv" }, " /home/ubuntu/sites/site.pp > /tmp/puppet.log 2>&1 || error_exit 'failed to apply puppet manifests'\n",
 
                     "# SET TIMEZONE to SV\n",
                     "aptitude -y install ntp\n",

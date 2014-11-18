@@ -28,6 +28,12 @@
       "Default" : "-"
     },
 
+    "PuppetEnv" : {
+      "Type" : "String",
+      "Description" : "Environment for puppet apply",
+      "Default" : "qa"
+    },
+
     "dbuser" : {
       "Type": "String",
       "Description" : "Psql User"
@@ -206,17 +212,18 @@
     "API" : {
       "Type" : "AWS::CloudFormation::Stack",
       "Properties" : {
-        "TemplateURL" : "https://s3-us-west-2.amazonaws.com/cfpot/gateway.external.public.template",
+        "TemplateURL" : "https://s3-us-west-2.amazonaws.com/cfpot/gateway.external.template",
         "Parameters" : {
           "KeyName": {"Ref":"KeyName"},
           "Version" : { "Ref" : "Version" },
           "SubnetId" : { "Ref" : "PublicSubnetId"},
           "SecurityGroupId" : { "Ref" : "ApiSecurityGroup"},
-          "AppDeployBranch" : "master",
+          "AppDeployBranch" : "feature/STAMP-335",
           "RoleDeployBranch" : "master",
           "SitesDeployBranch" : "master",
           "StackID" : { "Ref" : "StackID" },
           "InstanceType" : { "Ref" : "InstanceType"},
+          "PuppetEnv" : { "Ref" : "PuppetEnv"},
           "Environment" : {"Ref" : "appEnvironment"}
         }
       }
@@ -236,6 +243,7 @@
           "SitesDeployBranch" : "master",
           "StackID" : { "Ref" : "StackID" },
           "InstanceType" : { "Ref" : "InstanceType"},
+          "PuppetEnv" : { "Ref" : "PuppetEnv"},
           "Environment" : {"Ref" : "appEnvironment"}
         }
       }
@@ -254,6 +262,7 @@
           "RoleDeployBranch" : "master",
           "SitesDeployBranch" : "master",
           "StackID" : { "Ref" : "StackID" },
+          "PuppetEnv" : { "Ref" : "PuppetEnv"},
           "Environment" : { "Ref" : "appEnvironment" }
         }
       }
@@ -268,7 +277,7 @@
           "Version" : { "Ref" : "Version" },
           "SubnetId" : { "Ref" : "PrivateSubnetId" },
           "SecurityGroupId" : { "Ref" : "PrivateSecurityGroup" },
-          "AppDeployBranch" : "hotfix/0.13.6",
+          "AppDeployBranch" : "hotfix/STAMP-282",
           "RoleDeployBranch" : "master",
           "SitesDeployBranch" : "master",
           "StackID" : { "Ref" : "StackID" },
@@ -276,6 +285,7 @@
           "dbpass"  : {"Ref" : "dbpass"},
           "dbuser"  : {"Ref" : "dbuser"},
           "InstanceType" : { "Ref" : "InstanceType"},
+          "PuppetEnv" : { "Ref" : "PuppetEnv"},
           "Environment" : { "Ref" : "appEnvironment" }
         }
       }
@@ -296,6 +306,7 @@
           "StackID" : { "Ref" : "StackID" },
           "StackIDDB" : { "Ref" : "StackIDDB" },
           "InstanceType" : { "Ref" : "InstanceType"},
+          "PuppetEnv" : { "Ref" : "PuppetEnv"},
           "Environment" : { "Ref" : "appEnvironment" }
         }
       }
@@ -310,7 +321,7 @@
           "Version" : { "Ref" : "Version" },
           "SubnetId" : { "Ref" : "PrivateSubnetId" },
           "SecurityGroupId" : { "Ref" : "AccountsGTSecurityGroup" },
-          "AppDeployBranch" : "hotfix/0.13.6",
+          "AppDeployBranch" : "hotfix/STAMP-282",
           "RoleDeployBranch" : "master",
           "SitesDeployBranch" : "master",
           "StackID" : { "Ref" : "StackID" },
@@ -318,6 +329,7 @@
           "dbpass"  : {"Ref" : "dbpass"},
           "dbuser"  : {"Ref" : "dbuser"},
           "InstanceType" : { "Ref" : "InstanceType"},
+          "PuppetEnv" : { "Ref" : "PuppetEnv"},
           "Environment" : { "Ref" : "appEnvironment" }
         }
       }
@@ -332,7 +344,7 @@
           "Version" : { "Ref" : "Version" },
           "SubnetId" : { "Ref" : "PrivateSubnetId" },
           "SecurityGroupId" : { "Ref" : "AccountsDOSecurityGroup" },
-          "AppDeployBranch" : "hotfix/0.13.6",
+          "AppDeployBranch" : "hotfix/STAMP-282",
           "RoleDeployBranch" : "master",
           "SitesDeployBranch" : "master",
           "StackID" : { "Ref" : "StackID" },
@@ -340,6 +352,7 @@
           "dbpass"  : {"Ref" : "dbpass"},
           "dbuser"  : {"Ref" : "dbuser"},
           "InstanceType" : { "Ref" : "InstanceType"},
+          "PuppetEnv" : { "Ref" : "PuppetEnv"},
           "Environment" : { "Ref" : "appEnvironment" }
         }
       }
@@ -354,7 +367,7 @@
           "Version" : { "Ref" : "Version" },
           "SubnetId" : { "Ref" : "PrivateSubnetId" },
           "SecurityGroupId" : { "Ref" : "AccountsMXSecurityGroup" },
-          "AppDeployBranch" : "hotfix/0.13.6",
+          "AppDeployBranch" : "hotfix/STAMP-282",
           "RoleDeployBranch" : "master",
           "SitesDeployBranch" : "master",
           "StackID" : { "Ref" : "StackID" },
@@ -362,6 +375,7 @@
           "dbpass"  : {"Ref" : "dbpass"},
           "dbuser"  : {"Ref" : "dbuser"},
           "InstanceType" : { "Ref" : "InstanceType"},
+          "PuppetEnv" : { "Ref" : "PuppetEnv"},
           "Environment" : { "Ref" : "appEnvironment" }
         }
       }
@@ -376,7 +390,7 @@
           "Version" : { "Ref" : "Version" },
           "SubnetId" : { "Ref" : "PrivateSubnetId" },
           "SecurityGroupId" : { "Ref" : "AccountsSVSecurityGroup" },
-          "AppDeployBranch" : "hotfix/0.13.6",
+          "AppDeployBranch" : "hotfix/STAMP-282",
           "RoleDeployBranch" : "master",
           "SitesDeployBranch" : "master",
           "StackID" : { "Ref" : "StackID" },
@@ -384,6 +398,7 @@
           "dbpass"  : {"Ref" : "dbpass"},
           "dbuser"  : {"Ref" : "dbuser"},
           "InstanceType" : { "Ref" : "InstanceType"},
+          "PuppetEnv" : { "Ref" : "PuppetEnv"},
           "Environment" : { "Ref" : "appEnvironment" }
         }
       }
@@ -398,7 +413,7 @@
           "Version" : { "Ref" : "Version" },
           "SubnetId" : { "Ref" : "PrivateSubnetId" },
           "SecurityGroupId" : { "Ref" : "AccountsNISecurityGroup" },
-          "AppDeployBranch" : "hotfix/0.13.6",
+          "AppDeployBranch" : "hotfix/STAMP-282",
           "RoleDeployBranch" : "master",
           "SitesDeployBranch" : "master",
           "StackID" : { "Ref" : "StackID" },
@@ -406,6 +421,7 @@
           "dbpass"  : {"Ref" : "dbpass"},
           "dbuser"  : {"Ref" : "dbuser"},
           "InstanceType" : { "Ref" : "InstanceType"},
+          "PuppetEnv" : { "Ref" : "PuppetEnv"},
           "Environment" : { "Ref" : "appEnvironment" }
         }
       }
@@ -426,6 +442,7 @@
           "StackID" : { "Ref" : "StackID" },
           "StackIDDB" : { "Ref" : "StackIDDB" },
           "InstanceType" : { "Ref" : "InstanceType"},
+          "PuppetEnv" : { "Ref" : "PuppetEnv"},
           "Environment" : { "Ref" : "appEnvironment" }
         }
       }
@@ -440,11 +457,12 @@
           "Version" : { "Ref" : "Version" },
           "SubnetId" : { "Ref" : "PrivateSubnetId" },
           "SecurityGroupId" : { "Ref" : "PrivateSecurityGroup" },
-          "AppDeployBranch" : "master",
+          "AppDeployBranch" : "feature/STAMP-335",
           "RoleDeployBranch" : "master",
           "SitesDeployBranch" : "master",
           "StackID" : { "Ref" : "StackID" },
           "InstanceType" : { "Ref" : "InstanceType"},
+          "PuppetEnv" : { "Ref" : "PuppetEnv"},
           "Environment" : { "Ref" : "appEnvironment" }
         }
       }
@@ -465,6 +483,7 @@
           "StackID" : { "Ref" : "StackID" },
           "StackIDDB" : { "Ref" : "StackIDDB" },
           "InstanceType" : { "Ref" : "InstanceType"},
+          "PuppetEnv" : { "Ref" : "PuppetEnv"},
           "Environment" : { "Ref" : "appEnvironment" }
         }
       }
@@ -489,6 +508,7 @@
           "rmqpass"  : {"Ref" : "rmqpass"},
           "rmquser"  : {"Ref" : "rmquser"},
           "InstanceType" : { "Ref" : "InstanceType"},
+          "PuppetEnv" : { "Ref" : "PuppetEnv"},
           "Environment" : { "Ref" : "appEnvironment" }
         }
       }
@@ -509,6 +529,7 @@
           "StackID" : { "Ref" : "StackID" },
           "StackIDDB" : { "Ref" : "StackIDDB" },
           "InstanceType" : { "Ref" : "InstanceType"},
+          "PuppetEnv" : { "Ref" : "PuppetEnv"},
           "Environment" : { "Ref" : "appEnvironment" }
         }
       }
@@ -529,6 +550,7 @@
           "StackID" : { "Ref" : "StackID" },
           "StackIDDB" : { "Ref" : "StackIDDB" },
           "InstanceType" : { "Ref" : "InstanceType"},
+          "PuppetEnv" : { "Ref" : "PuppetEnv"},
           "Environment" : { "Ref" : "appEnvironment" }
         }
       }
@@ -549,6 +571,7 @@
           "StackID" : { "Ref" : "StackID" },
           "StackIDDB" : { "Ref" : "StackIDDB" },
           "InstanceType" : { "Ref" : "InstanceType"},
+          "PuppetEnv" : { "Ref" : "PuppetEnv"},
           "Environment" : { "Ref" : "appEnvironment" }
         }
       }
@@ -569,6 +592,7 @@
           "StackID" : { "Ref" : "StackID" },
           "StackIDDB" : { "Ref" : "StackIDDB" },
           "InstanceType" : { "Ref" : "InstanceType"},
+          "PuppetEnv" : { "Ref" : "PuppetEnv"},
           "Environment" : { "Ref" : "appEnvironment" }
         }
       }
@@ -583,12 +607,13 @@
           "Version" : { "Ref" : "Version" },
           "SubnetId" : { "Ref" : "niSubnetID" },
           "SecurityGroupId" : { "Ref" : "AccountsNISecurityGroup" },
-          "AppDeployBranch" : "hotfix/0.13.3",
+          "AppDeployBranch" : "master",
           "RoleDeployBranch" : "master",
           "SitesDeployBranch" : "master",
           "StackID" : { "Ref" : "StackID" },
           "StackIDDB" : { "Ref" : "StackIDDB" },
           "InstanceType" : { "Ref" : "InstanceType"},
+          "PuppetEnv" : { "Ref" : "PuppetEnv"},
           "Environment" : { "Ref" : "appEnvironment" }
         }
       }
@@ -609,6 +634,7 @@
           "StackID" : { "Ref" : "StackID" },
           "StackIDDB" : { "Ref" : "StackIDDB" },
           "InstanceType" : { "Ref" : "InstanceType"},
+          "PuppetEnv" : { "Ref" : "PuppetEnv"},
           "Environment" : { "Ref" : "appEnvironment" }
         }
       }
@@ -623,7 +649,7 @@
           "Version" : { "Ref" : "Version" },
           "SubnetId" : { "Ref" : "PrivateSubnetId" },
           "SecurityGroupId" : { "Ref" : "PrivateSecurityGroup" },
-          "AppDeployBranch" : "master",
+          "AppDeployBranch" : "hotfix/STAMP-335",
           "RoleDeployBranch" : "master",
           "SitesDeployBranch" : "master",
           "StackID" : { "Ref" : "StackID" },
@@ -631,6 +657,7 @@
           "dbpass"  : {"Ref" : "dbpass"},
           "dbuser"  : {"Ref" : "dbuser"},
           "InstanceType" : { "Ref" : "InstanceType"},
+          "PuppetEnv" : { "Ref" : "PuppetEnv"},
           "Environment" : { "Ref" : "appEnvironment" }
         }
       }

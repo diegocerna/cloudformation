@@ -57,6 +57,12 @@
       "Description" : "RabbitMQ password"
     },
 
+    "PuppetEnv" : {
+      "Type" : "String",
+      "Description" : "Environment for puppet apply",
+      "Default" : "staging"
+    },
+
     "InstanceType" : {
       "Description" : "Instance type for API",
       "Type" : "String",
@@ -190,10 +196,11 @@
           "SubnetId" : { "Ref" : "PrivateSubnetId"},
           "SecurityGroupId" : { "Ref" : "PrivateSecurityGroup"},
           "AppDeployBranch" : "master",
-          "RoleDeployBranch" : "feature/diamond",
-          "SitesDeployBranch" : "feature/diamond",
+          "RoleDeployBranch" : "master",
+          "SitesDeployBranch" : "master",
           "StackID" : { "Ref" : "StackID" },
           "InstanceType" : { "Ref" : "InstanceType"},
+          "PuppetEnv" : { "Ref" : "PuppetEnv"},
           "Environment" : {"Ref" : "appEnvironment"}
         }
       }
@@ -213,6 +220,7 @@
           "SitesDeployBranch" : "master",
           "StackID" : { "Ref" : "StackID" },
           "InstanceType" : { "Ref" : "InstanceType"},
+          "PuppetEnv" : { "Ref" : "PuppetEnv"},
           "Environment" : {"Ref" : "appEnvironment"}
         }
       }
@@ -228,9 +236,10 @@
           "SubnetId" : { "Ref" : "PrivateSubnetId" },
           "SecurityGroupId" : { "Ref" : "PrivateSecurityGroup" },
           "AppDeployBranch" : "master",
-          "RoleDeployBranch" : "feature/diamond",
-          "SitesDeployBranch" : "feature/diamond",
+          "RoleDeployBranch" : "master",
+          "SitesDeployBranch" : "master",
           "StackID" : { "Ref" : "StackID" },
+          "PuppetEnv" : { "Ref" : "PuppetEnv"},
           "Environment" : { "Ref" : "appEnvironment" }
         }
       }
@@ -246,13 +255,14 @@
           "SubnetId" : { "Ref" : "PrivateSubnetId" },
           "SecurityGroupId" : { "Ref" : "PrivateSecurityGroup" },
           "AppDeployBranch" : "master",
-          "RoleDeployBranch" : "feature/diamond",
-          "SitesDeployBranch" : "feature/diamond",
+          "RoleDeployBranch" : "master",
+          "SitesDeployBranch" : "master",
           "StackID" : { "Ref" : "StackID" },
           "StackIDDB" : { "Ref" : "StackIDDB" },
           "dbpass"  : {"Ref" : "dbpass"},
           "dbuser"  : {"Ref" : "dbuser"},
           "InstanceType" : { "Ref" : "InstanceType"},
+          "PuppetEnv" : { "Ref" : "PuppetEnv"},
           "Environment" : { "Ref" : "appEnvironment" }
         }
       }
@@ -268,11 +278,12 @@
           "SubnetId" : { "Ref" : "PrivateSubnetId" },
           "SecurityGroupId" : { "Ref" : "PrivateSecurityGroup" },
           "AppDeployBranch" : "master",
-          "RoleDeployBranch" : "feature/diamond",
-          "SitesDeployBranch" : "feature/diamond",
+          "RoleDeployBranch" : "master",
+          "SitesDeployBranch" : "master",
           "StackID" : { "Ref" : "StackID" },
           "StackIDDB" : { "Ref" : "StackIDDB" },
           "InstanceType" : { "Ref" : "InstanceType"},
+          "PuppetEnv" : { "Ref" : "PuppetEnv"},
           "Environment" : { "Ref" : "appEnvironment" }
         }
       }
@@ -288,13 +299,14 @@
           "SubnetId" : { "Ref" : "PrivateSubnetId" },
           "SecurityGroupId" : { "Ref" : "AccountsGTSecurityGroup" },
           "AppDeployBranch" : "master",
-          "RoleDeployBranch" : "feature/diamond",
-          "SitesDeployBranch" : "feature/diamond",
+          "RoleDeployBranch" : "master",
+          "SitesDeployBranch" : "master",
           "StackID" : { "Ref" : "StackID" },
           "StackIDDB" : { "Ref" : "StackIDDB" },
           "dbpass"  : {"Ref" : "dbpass"},
           "dbuser"  : {"Ref" : "dbuser"},
           "InstanceType" : { "Ref" : "InstanceType"},
+          "PuppetEnv" : { "Ref" : "PuppetEnv"},
           "Environment" : { "Ref" : "appEnvironment" }
         }
       }
@@ -310,13 +322,14 @@
           "SubnetId" : { "Ref" : "PrivateSubnetId" },
           "SecurityGroupId" : { "Ref" : "AccountsDOSecurityGroup" },
           "AppDeployBranch" : "master",
-          "RoleDeployBranch" : "feature/diamond",
-          "SitesDeployBranch" : "feature/diamond",
+          "RoleDeployBranch" : "master",
+          "SitesDeployBranch" : "master",
           "StackID" : { "Ref" : "StackID" },
           "StackIDDB" : { "Ref" : "StackIDDB" },
           "dbpass"  : {"Ref" : "dbpass"},
           "dbuser"  : {"Ref" : "dbuser"},
           "InstanceType" : { "Ref" : "InstanceType"},
+          "PuppetEnv" : { "Ref" : "PuppetEnv"},
           "Environment" : { "Ref" : "appEnvironment" }
         }
       }
@@ -332,13 +345,14 @@
           "SubnetId" : { "Ref" : "PrivateSubnetId" },
           "SecurityGroupId" : { "Ref" : "AccountsMXSecurityGroup" },
           "AppDeployBranch" : "master",
-          "RoleDeployBranch" : "feature/diamond",
-          "SitesDeployBranch" : "feature/diamond",
+          "RoleDeployBranch" : "master",
+          "SitesDeployBranch" : "master",
           "StackID" : { "Ref" : "StackID" },
           "StackIDDB" : { "Ref" : "StackIDDB" },
           "dbpass"  : {"Ref" : "dbpass"},
           "dbuser"  : {"Ref" : "dbuser"},
           "InstanceType" : { "Ref" : "InstanceType"},
+          "PuppetEnv" : { "Ref" : "PuppetEnv"},
           "Environment" : { "Ref" : "appEnvironment" }
         }
       }
@@ -354,13 +368,14 @@
           "SubnetId" : { "Ref" : "PrivateSubnetId" },
           "SecurityGroupId" : { "Ref" : "AccountsSVSecurityGroup" },
           "AppDeployBranch" : "master",
-          "RoleDeployBranch" : "feature/diamond",
-          "SitesDeployBranch" : "feature/diamond",
+          "RoleDeployBranch" : "master",
+          "SitesDeployBranch" : "master",
           "StackID" : { "Ref" : "StackID" },
           "StackIDDB" : { "Ref" : "StackIDDB" },
           "dbpass"  : {"Ref" : "dbpass"},
           "dbuser"  : {"Ref" : "dbuser"},
           "InstanceType" : { "Ref" : "InstanceType"},
+          "PuppetEnv" : { "Ref" : "PuppetEnv"},
           "Environment" : { "Ref" : "appEnvironment" }
         }
       }
@@ -376,13 +391,14 @@
           "SubnetId" : { "Ref" : "PrivateSubnetId" },
           "SecurityGroupId" : { "Ref" : "AccountsNISecurityGroup" },
           "AppDeployBranch" : "master",
-          "RoleDeployBranch" : "feature/diamond",
-          "SitesDeployBranch" : "feature/diamond",
+          "RoleDeployBranch" : "master",
+          "SitesDeployBranch" : "master",
           "StackID" : { "Ref" : "StackID" },
           "StackIDDB" : { "Ref" : "StackIDDB" },
           "dbpass"  : {"Ref" : "dbpass"},
           "dbuser"  : {"Ref" : "dbuser"},
           "InstanceType" : { "Ref" : "InstanceType"},
+          "PuppetEnv" : { "Ref" : "PuppetEnv"},
           "Environment" : { "Ref" : "appEnvironment" }
         }
       }
@@ -398,11 +414,12 @@
           "SubnetId" : { "Ref" : "PrivateSubnetId" },
           "SecurityGroupId" : { "Ref" : "PrivateSecurityGroup" },
           "AppDeployBranch" : "master",
-          "RoleDeployBranch" : "feature/diamond",
-          "SitesDeployBranch" : "feature/diamond",
+          "RoleDeployBranch" : "master",
+          "SitesDeployBranch" : "master",
           "StackID" : { "Ref" : "StackID" },
           "StackIDDB" : { "Ref" : "StackIDDB" },
           "InstanceType" : { "Ref" : "InstanceType"},
+          "PuppetEnv" : { "Ref" : "PuppetEnv"},
           "Environment" : { "Ref" : "appEnvironment" }
         }
       }
@@ -418,10 +435,11 @@
           "SubnetId" : { "Ref" : "PrivateSubnetId" },
           "SecurityGroupId" : { "Ref" : "PrivateSecurityGroup" },
           "AppDeployBranch" : "master",
-          "RoleDeployBranch" : "feature/diamond",
-          "SitesDeployBranch" : "feature/diamond",
+          "RoleDeployBranch" : "master",
+          "SitesDeployBranch" : "master",
           "StackID" : { "Ref" : "StackID" },
           "InstanceType" : { "Ref" : "InstanceType"},
+          "PuppetEnv" : { "Ref" : "PuppetEnv"},
           "Environment" : { "Ref" : "appEnvironment" }
         }
       }
@@ -437,11 +455,12 @@
           "SubnetId" : { "Ref" : "PrivateSubnetId" },
           "SecurityGroupId" : { "Ref" : "PrivateSecurityGroup" },
           "AppDeployBranch" : "master",
-          "RoleDeployBranch" : "feature/diamond",
-          "SitesDeployBranch" : "feature/diamond",
+          "RoleDeployBranch" : "master",
+          "SitesDeployBranch" : "master",
           "StackID" : { "Ref" : "StackID" },
           "StackIDDB" : { "Ref" : "StackIDDB" },
           "InstanceType" : { "Ref" : "InstanceType"},
+          "PuppetEnv" : { "Ref" : "PuppetEnv"},
           "Environment" : { "Ref" : "appEnvironment" }
         }
       }
@@ -457,8 +476,8 @@
           "SubnetId" : { "Ref" : "PrivateSubnetId" },
           "SecurityGroupId" : { "Ref" : "PrivateSecurityGroup" },
           "AppDeployBranch" : "master",
-          "RoleDeployBranch" : "feature/diamond",
-          "SitesDeployBranch" : "feature/diamond",
+          "RoleDeployBranch" : "master",
+          "SitesDeployBranch" : "master",
           "StackID" : { "Ref" : "StackID" },
           "StackIDDB" : { "Ref" : "StackIDDB" },
           "dbpass"  : {"Ref" : "dbpass"},
@@ -466,6 +485,7 @@
           "rmqpass"  : {"Ref" : "rmqpass"},
           "rmquser"  : {"Ref" : "rmquser"},
           "InstanceType" : { "Ref" : "InstanceType"},
+          "PuppetEnv" : { "Ref" : "PuppetEnv"},
           "Environment" : { "Ref" : "appEnvironment" }
         }
       }
@@ -481,11 +501,12 @@
           "SubnetId" : { "Ref" : "gtSubnetID" },
           "SecurityGroupId" : { "Ref" : "AccountsGTSecurityGroup" },
           "AppDeployBranch" : "master",
-          "RoleDeployBranch" : "feature/diamond",
-          "SitesDeployBranch" : "feature/diamond",
+          "RoleDeployBranch" : "master",
+          "SitesDeployBranch" : "master",
           "StackID" : { "Ref" : "StackID" },
           "StackIDDB" : { "Ref" : "StackIDDB" },
           "InstanceType" : { "Ref" : "InstanceType"},
+          "PuppetEnv" : { "Ref" : "PuppetEnv"},
           "Environment" : { "Ref" : "appEnvironment" }
         }
       }
@@ -501,11 +522,12 @@
           "SubnetId" : { "Ref" : "mxSubnetID" },
           "SecurityGroupId" : { "Ref" : "AccountsMXSecurityGroup" },
           "AppDeployBranch" : "master",
-          "RoleDeployBranch" : "feature/diamond",
-          "SitesDeployBranch" : "feature/diamond",
+          "RoleDeployBranch" : "master",
+          "SitesDeployBranch" : "master",
           "StackID" : { "Ref" : "StackID" },
           "StackIDDB" : { "Ref" : "StackIDDB" },
           "InstanceType" : { "Ref" : "InstanceType"},
+          "PuppetEnv" : { "Ref" : "PuppetEnv"},
           "Environment" : { "Ref" : "appEnvironment" }
         }
       }
@@ -521,11 +543,12 @@
           "SubnetId" : { "Ref" : "doSubnetID" },
           "SecurityGroupId" : { "Ref" : "AccountsDOSecurityGroup" },
           "AppDeployBranch" : "master",
-          "RoleDeployBranch" : "feature/diamond",
-          "SitesDeployBranch" : "feature/diamond",
+          "RoleDeployBranch" : "master",
+          "SitesDeployBranch" : "master",
           "StackID" : { "Ref" : "StackID" },
           "StackIDDB" : { "Ref" : "StackIDDB" },
           "InstanceType" : { "Ref" : "InstanceType"},
+          "PuppetEnv" : { "Ref" : "PuppetEnv"},
           "Environment" : { "Ref" : "appEnvironment" }
         }
       }
@@ -541,11 +564,12 @@
           "SubnetId" : { "Ref" : "svSubnetID" },
           "SecurityGroupId" : { "Ref" : "AccountsSVSecurityGroup" },
           "AppDeployBranch" : "master",
-          "RoleDeployBranch" : "feature/diamond",
-          "SitesDeployBranch" : "feature/diamond",
+          "RoleDeployBranch" : "master",
+          "SitesDeployBranch" : "master",
           "StackID" : { "Ref" : "StackID" },
           "StackIDDB" : { "Ref" : "StackIDDB" },
           "InstanceType" : { "Ref" : "InstanceType"},
+          "PuppetEnv" : { "Ref" : "PuppetEnv"},
           "Environment" : { "Ref" : "appEnvironment" }
         }
       }
@@ -561,11 +585,12 @@
           "SubnetId" : { "Ref" : "niSubnetID" },
           "SecurityGroupId" : { "Ref" : "AccountsNISecurityGroup" },
           "AppDeployBranch" : "master",
-          "RoleDeployBranch" : "feature/diamond",
-          "SitesDeployBranch" : "feature/diamond",
+          "RoleDeployBranch" : "master",
+          "SitesDeployBranch" : "master",
           "StackID" : { "Ref" : "StackID" },
           "StackIDDB" : { "Ref" : "StackIDDB" },
           "InstanceType" : { "Ref" : "InstanceType"},
+          "PuppetEnv" : { "Ref" : "PuppetEnv"},
           "Environment" : { "Ref" : "appEnvironment" }
         }
       }
@@ -581,11 +606,12 @@
           "SubnetId" : { "Ref" : "ttSubnetID" },
           "SecurityGroupId" : { "Ref" : "AccountsMXSecurityGroup" },
           "AppDeployBranch" : "master",
-          "RoleDeployBranch" : "feature/diamond",
-          "SitesDeployBranch" : "feature/diamond",
+          "RoleDeployBranch" : "master",
+          "SitesDeployBranch" : "master",
           "StackID" : { "Ref" : "StackID" },
           "StackIDDB" : { "Ref" : "StackIDDB" },
           "InstanceType" : { "Ref" : "InstanceType"},
+          "PuppetEnv" : { "Ref" : "PuppetEnv"},
           "Environment" : { "Ref" : "appEnvironment" }
         }
       }
@@ -601,13 +627,14 @@
           "SubnetId" : { "Ref" : "PrivateSubnetId" },
           "SecurityGroupId" : { "Ref" : "PrivateSecurityGroup" },
           "AppDeployBranch" : "master",
-          "RoleDeployBranch" : "feature/diamond",
-          "SitesDeployBranch" : "feature/diamond",
+          "RoleDeployBranch" : "master",
+          "SitesDeployBranch" : "master",
           "StackID" : { "Ref" : "StackID" },
           "StackIDDB" : { "Ref" : "StackIDDB" },
           "dbpass"  : {"Ref" : "dbpass"},
           "dbuser"  : {"Ref" : "dbuser"},
           "InstanceType" : { "Ref" : "InstanceType"},
+          "PuppetEnv" : { "Ref" : "PuppetEnv"},
           "Environment" : { "Ref" : "appEnvironment" }
         }
       }
