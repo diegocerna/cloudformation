@@ -250,7 +250,6 @@
           "StackIDDB" : { "Ref" : "StackIDDB" },
           "dbpass"  : {"Ref" : "dbpass"},
           "dbuser"  : {"Ref" : "dbuser"},
-          "InstanceType" : { "Ref" : "InstanceType"},
           "PuppetEnv" : { "Ref" : "PuppetEnv"},
           "Environment" : { "Ref" : "appEnvironment" }
         }

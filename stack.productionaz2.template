@@ -33,6 +33,12 @@
       "Description" : "stamp1 for current version, stamp2 for disaster recovery and staging for staging production"
     },
 
+    "PuppetEnv" : {
+      "Type" : "String",
+      "Description" : "Environment for puppet apply",
+      "Default" : "production"
+    },
+
     "dbuser" : {
       "Type": "String",
       "Description" : "Psql User"
@@ -178,11 +184,12 @@
           "Version" : { "Ref" : "Version" },
           "SubnetId" : { "Ref" : "PrivateSubnetId"},
           "SecurityGroupId" : { "Ref" : "PrivateSecurityGroup"},
-          "AppDeployBranch" : "0.13.8",
+          "AppDeployBranch" : "master",
           "RoleDeployBranch" : "master",
           "SitesDeployBranch" : "master",
           "StackID" : { "Ref" : "StackID" },
           "InstanceType" : { "Ref" : "InstanceType"},
+          "PuppetEnv" : { "Ref" : "PuppetEnv"},
           "Environment" : {"Ref" : "appEnvironment"}
         }
       }
@@ -191,7 +198,7 @@
     "XPA" : {
       "Type" : "AWS::CloudFormation::Stack",
       "Properties" : {
-        "TemplateURL" : "https://s3-us-west-2.amazonaws.com/cfpot/xpa.template",
+        "TemplateURL" : "https://s3-us-west-2.amazonaws.com/cfpot/tool.xpa.template",
         "Parameters" : {
           "KeyName": {"Ref" : "KeyName"},
           "Version" : { "Ref" : "Version" },
@@ -202,6 +209,7 @@
           "SitesDeployBranch" : "master",
           "StackID" : { "Ref" : "StackID" },
           "InstanceType" : { "Ref" : "InstanceType"},
+          "PuppetEnv" : { "Ref" : "PuppetEnv"},
           "Environment" : {"Ref" : "appEnvironment"}
         }
       }
@@ -220,6 +228,7 @@
           "RoleDeployBranch" : "master",
           "SitesDeployBranch" : "master",
           "StackID" : { "Ref" : "StackID" },
+          "PuppetEnv" : { "Ref" : "PuppetEnv"},
           "Environment" : { "Ref" : "appEnvironment" }
         }
       }
@@ -241,7 +250,7 @@
           "StackIDDB" : { "Ref" : "StackIDDB" },
           "dbpass"  : {"Ref" : "dbpass"},
           "dbuser"  : {"Ref" : "dbuser"},
-          "InstanceType" : { "Ref" : "InstanceType"},
+          "PuppetEnv" : { "Ref" : "PuppetEnv"},
           "Environment" : { "Ref" : "appEnvironment" }
         }
       }
@@ -262,6 +271,7 @@
           "StackID" : { "Ref" : "StackID" },
           "StackIDDB" : { "Ref" : "StackIDDB" },
           "InstanceType" : { "Ref" : "InstanceType"},
+          "PuppetEnv" : { "Ref" : "PuppetEnv"},
           "Environment" : { "Ref" : "appEnvironment" }
         }
       }
@@ -284,6 +294,7 @@
           "dbpass"  : {"Ref" : "dbpass"},
           "dbuser"  : {"Ref" : "dbuser"},
           "InstanceType" : { "Ref" : "InstanceType"},
+          "PuppetEnv" : { "Ref" : "PuppetEnv"},
           "Environment" : { "Ref" : "appEnvironment" }
         }
       }
@@ -306,6 +317,7 @@
           "dbpass"  : {"Ref" : "dbpass"},
           "dbuser"  : {"Ref" : "dbuser"},
           "InstanceType" : { "Ref" : "InstanceType"},
+          "PuppetEnv" : { "Ref" : "PuppetEnv"},
           "Environment" : { "Ref" : "appEnvironment" }
         }
       }
@@ -328,6 +340,7 @@
           "dbpass"  : {"Ref" : "dbpass"},
           "dbuser"  : {"Ref" : "dbuser"},
           "InstanceType" : { "Ref" : "InstanceType"},
+          "PuppetEnv" : { "Ref" : "PuppetEnv"},
           "Environment" : { "Ref" : "appEnvironment" }
         }
       }
@@ -350,6 +363,7 @@
           "dbpass"  : {"Ref" : "dbpass"},
           "dbuser"  : {"Ref" : "dbuser"},
           "InstanceType" : { "Ref" : "InstanceType"},
+          "PuppetEnv" : { "Ref" : "PuppetEnv"},
           "Environment" : { "Ref" : "appEnvironment" }
         }
       }
@@ -372,6 +386,7 @@
           "dbpass"  : {"Ref" : "dbpass"},
           "dbuser"  : {"Ref" : "dbuser"},
           "InstanceType" : { "Ref" : "InstanceType"},
+          "PuppetEnv" : { "Ref" : "PuppetEnv"},
           "Environment" : { "Ref" : "appEnvironment" }
         }
       }
@@ -392,6 +407,7 @@
           "StackID" : { "Ref" : "StackID" },
           "StackIDDB" : { "Ref" : "StackIDDB" },
           "InstanceType" : { "Ref" : "InstanceType"},
+          "PuppetEnv" : { "Ref" : "PuppetEnv"},
           "Environment" : { "Ref" : "appEnvironment" }
         }
       }
@@ -406,11 +422,12 @@
           "Version" : { "Ref" : "Version" },
           "SubnetId" : { "Ref" : "PrivateSubnetId" },
           "SecurityGroupId" : { "Ref" : "PrivateSecurityGroup" },
-          "AppDeployBranch" : "0.13.8",
+          "AppDeployBranch" : "master",
           "RoleDeployBranch" : "master",
           "SitesDeployBranch" : "master",
           "StackID" : { "Ref" : "StackID" },
           "InstanceType" : { "Ref" : "InstanceType"},
+          "PuppetEnv" : { "Ref" : "PuppetEnv"},
           "Environment" : { "Ref" : "appEnvironment" }
         }
       }
@@ -431,6 +448,7 @@
           "StackID" : { "Ref" : "StackID" },
           "StackIDDB" : { "Ref" : "StackIDDB" },
           "InstanceType" : { "Ref" : "InstanceType"},
+          "PuppetEnv" : { "Ref" : "PuppetEnv"},
           "Environment" : { "Ref" : "appEnvironment" }
         }
       }
@@ -445,7 +463,7 @@
           "Version" : { "Ref" : "Version" },
           "SubnetId" : { "Ref" : "PrivateSubnetId" },
           "SecurityGroupId" : { "Ref" : "PrivateSecurityGroup" },
-          "AppDeployBranch" : "v0.13.2",
+          "AppDeployBranch" : "master",
           "RoleDeployBranch" : "master",
           "SitesDeployBranch" : "master",
           "StackID" : { "Ref" : "StackID" },
@@ -455,6 +473,7 @@
           "rmqpass"  : {"Ref" : "rmqpass"},
           "rmquser"  : {"Ref" : "rmquser"},
           "InstanceType" : { "Ref" : "InstanceType"},
+          "PuppetEnv" : { "Ref" : "PuppetEnv"},
           "Environment" : { "Ref" : "appEnvironment" }
         }
       }
@@ -475,6 +494,7 @@
           "StackID" : { "Ref" : "StackID" },
           "StackIDDB" : { "Ref" : "StackIDDB" },
           "InstanceType" : { "Ref" : "InstanceType"},
+          "PuppetEnv" : { "Ref" : "PuppetEnv"},
           "Environment" : { "Ref" : "appEnvironment" }
         }
       }
@@ -495,6 +515,7 @@
           "StackID" : { "Ref" : "StackID" },
           "StackIDDB" : { "Ref" : "StackIDDB" },
           "InstanceType" : { "Ref" : "InstanceType"},
+          "PuppetEnv" : { "Ref" : "PuppetEnv"},
           "Environment" : { "Ref" : "appEnvironment" }
         }
       }
@@ -515,6 +536,7 @@
           "StackID" : { "Ref" : "StackID" },
           "StackIDDB" : { "Ref" : "StackIDDB" },
           "InstanceType" : { "Ref" : "InstanceType"},
+          "PuppetEnv" : { "Ref" : "PuppetEnv"},
           "Environment" : { "Ref" : "appEnvironment" }
         }
       }
@@ -535,6 +557,7 @@
           "StackID" : { "Ref" : "StackID" },
           "StackIDDB" : { "Ref" : "StackIDDB" },
           "InstanceType" : { "Ref" : "InstanceType"},
+          "PuppetEnv" : { "Ref" : "PuppetEnv"},
           "Environment" : { "Ref" : "appEnvironment" }
         }
       }
@@ -555,6 +578,7 @@
           "StackID" : { "Ref" : "StackID" },
           "StackIDDB" : { "Ref" : "StackIDDB" },
           "InstanceType" : { "Ref" : "InstanceType"},
+          "PuppetEnv" : { "Ref" : "PuppetEnv"},
           "Environment" : { "Ref" : "appEnvironment" }
         }
       }
@@ -575,6 +599,7 @@
           "StackID" : { "Ref" : "StackID" },
           "StackIDDB" : { "Ref" : "StackIDDB" },
           "InstanceType" : { "Ref" : "InstanceType"},
+          "PuppetEnv" : { "Ref" : "PuppetEnv"},
           "Environment" : { "Ref" : "appEnvironment" }
         }
       }
@@ -597,6 +622,7 @@
           "dbpass"  : {"Ref" : "dbpass"},
           "dbuser"  : {"Ref" : "dbuser"},
           "InstanceType" : { "Ref" : "InstanceType"},
+          "PuppetEnv" : { "Ref" : "PuppetEnv"},
           "Environment" : { "Ref" : "appEnvironment" }
         }
       }

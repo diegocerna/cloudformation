@@ -147,6 +147,20 @@
       "DependsOn" : "IPAddress"
     },
 
+    "IntDNSRecord" : {
+      "Type" : "AWS::Route53::RecordSet",
+      "Condition" : "CreateIntResources",
+      "Properties" : {
+        "HostedZoneName" : "bluekite.com.",
+        "Comment" : "DNS name for my instance.",
+        "Name" : { "Fn::Join" : [ "", ["api", { "Ref" : "StackID" } , { "Fn::FindInMap" : [ "env", { "Ref" : "Environment" }, "DOT" ]},".bluekite.com"]]},
+        "Type" : "A",
+        "TTL" : "300",
+        "ResourceRecords" : [ { "Fn::GetAtt" : [ "API", "PrivateIp" ] } ]
+      },
+      "DependsOn" : "API"
+    },
+
     "API" : {
       "Type" : "AWS::EC2::Instance",
       "Metadata" : {
@@ -280,6 +294,10 @@
     "ExtDomainName" : {
       "Value" : { "Ref" : "ExtDNSRecord" },
       "Condition" : "CreateExtResources"
+    },
+    "IntDomainName" : {
+      "Value" : { "Ref" : "IntDNSRecord" },
+      "Condition" : "CreateIntResources"
     }
   }
 }
