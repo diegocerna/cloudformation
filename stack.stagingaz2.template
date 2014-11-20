@@ -1,0 +1,636 @@
+{
+  "AWSTemplateFormatVersion" : "2010-09-09",
+
+  "Description" : "master template for creation of SandBox Stack - filename: stack.sandbox.template",
+
+ "Parameters" : {
+    "appEnvironment" : {
+      "Type" : "String",
+      "Description" : "Environment for the NAT, i.e. dev, production, etc.",
+      "Default" : "production"
+    },
+
+    "KeyName" : {
+      "Type" : "String",
+      "Description" : "The the key to SSH machines",
+      "Default" : "stamp-staging"
+    },
+
+    "StackID" : {
+      "Type" : "String",
+      "Description" : "Stack ID name",
+      "Default" : "-staging"
+    },
+
+    "StackIDDB" : {
+      "Type" : "String",
+      "Description" : "Stack ID name for DataBase",
+      "Default" : "-staging"
+    },
+
+    "Version" : {
+      "Type" : "String",
+      "Description" : "stamp1 for current version, stamp2 for disaster recovery and staging for staging production"
+    },
+
+    "dbuser" : {
+      "Type": "String",
+      "Description" : "Psql User",
+      "Default" : "stampdb"
+    },
+
+    "dbpass" : {
+      "NoEcho": "true",
+      "Type": "String",
+      "Description" : "Psql password"
+    },
+
+    "rmquser" : {
+      "Type": "String",
+      "Description" : "RabbitMQ User",
+      "Default" : "stamp"
+    },
+
+    "rmqpass" : {
+      "NoEcho": "true",
+      "Type": "String",
+      "Description" : "RabbitMQ password"
+    },
+
+    "PuppetEnv" : {
+      "Type" : "String",
+      "Description" : "Environment for puppet apply",
+      "Default" : "staging"
+    },
+
+    "InstanceType" : {
+      "Description" : "Instance type for API",
+      "Type" : "String",
+      "Default" : "m3.medium",
+      "AllowedValues" : [ "t2.micro","m1.small","m3.medium","m1.large","m1.xlarge","m2.xlarge","m2.2xlarge","m2.4xlarge","m3.xlarge","m3.2xlarge","c1.medium","c1.xlarge","cc1.4xlarge","cc2.8xlarge","cg1.4xlarge"],
+      "ConstraintDescription" : "must be a valid EC2 instance type."
+    },
+
+    "PrivateSecurityGroup" : {
+      "Type" : "String",
+      "Description" : "Security Group ID for Private network",
+      "Default" : "sg-ec888589"
+    },
+
+    "MonitorsSecurityGroup" : {
+      "Type" : "String",
+      "Description" : "Security Group ID for Monitors",
+      "Default" : "sg-02888567"
+    },
+
+    "LogstashSecurityGroup" : {
+      "Type" : "String",
+      "Description" : "Security Group ID for Logstash",
+      "Default" : "sg-eb88858e"
+    },
+
+    "AccountsMXSecurityGroup" : {
+      "Type" : "String",
+      "Description" : "Security Group ID for Accounts Mexico",
+      "Default" : "sg-e988858c"
+    },
+
+    "AccountsSVSecurityGroup" : {
+      "Type" : "String",
+      "Description" : "Security Group ID for Accounts El Salvador",
+      "Default" : "sg-01888564"
+    },
+
+    "AccountsGTSecurityGroup" : {
+      "Type" : "String",
+      "Description" : "Security Group ID for Accounts Guatemala",
+      "Default" : "sg-ef88858a"
+    },
+
+    "AccountsDOSecurityGroup" : {
+      "Type" : "String",
+      "Description" : "Security Group ID for Accounts Dominican Republic",
+      "Default" : "sg-e888858d"
+    },
+
+    "AccountsNISecurityGroup" : {
+      "Type" : "String",
+      "Description" : "Security Group ID for Accounts Nicaragua",
+      "Default" : "sg-ee88858b"
+    },
+
+    "AccountsPASecurityGroup" : {
+      "Type" : "String",
+      "Description" : "Security Group ID for Accounts Panama",
+      "Default" : "sg-e3888586"
+    },
+
+    "PrivateSubnetId" : {
+      "Type" : "String",
+      "Description" : "Subnet id that the api belongs",
+      "Default" : "subnet-d41cbca3"
+    },
+
+    "gtSubnetID" : {
+      "Type" : "String",
+      "Default" : "subnet-e91cbc9e",
+      "Description" : "Subnet ID for GT worker"
+    },
+
+    "doSubnetID" : {
+      "Type" : "String",
+      "Default" : "subnet-d71cbca0",
+      "Description" : "Subnet ID for DO worker"
+    },
+
+    "mxSubnetID" : {
+      "Type" : "String",
+      "Default" : "subnet-e81cbc9f",
+      "Description" : "Subnet ID for MX worker"
+    },
+
+    "svSubnetID" : {
+      "Type" : "String",
+      "Default" : "subnet-d61cbca1",
+      "Description" : "Subnet ID for SV worker"
+    },
+
+    "niSubnetID" : {
+      "Type" : "String",
+      "Default" : "subnet-eb1cbc9c",
+      "Description" : "Subnet ID for NI worker"
+    },
+
+    "ttSubnetID" : {
+      "Type" : "String",
+      "Default" : "subnet-e81cbc9f",
+      "Description" : "Subnet ID for TT worker"
+    },
+
+    "paSubnetID" : {
+      "Type" : "String",
+      "Default" : "subnet-d611f3fd",
+      "Description" : "Subnet ID for PA worker"
+    }
+  },
+
+  "Mappings" : {
+    "dot" : {
+      "test"           : { "DOT" : ".test" },
+      "dev"            : { "DOT" : ".dev" },
+      "qa"             : { "DOT" : ".qa" },
+      "sandbox"        : { "DOT" : ".sandbox" },
+      "production"     : { "DOT" : "" }
+    }
+  },
+
+  "Resources" : {
+
+    "API" : {
+      "Type" : "AWS::CloudFormation::Stack",
+      "Properties" : {
+        "TemplateURL" : "https://s3-us-west-2.amazonaws.com/cfpot/gateway.external.template",
+        "Parameters" : {
+          "KeyName": {"Ref":"KeyName"},
+          "Version" : { "Ref" : "Version" },
+          "SubnetId" : { "Ref" : "PrivateSubnetId"},
+          "SecurityGroupId" : { "Ref" : "PrivateSecurityGroup"},
+          "AppDeployBranch" : "master",
+          "RoleDeployBranch" : "master",
+          "SitesDeployBranch" : "master",
+          "StackID" : { "Ref" : "StackID" },
+          "PuppetEnv" : { "Ref" : "PuppetEnv"},
+          "Environment" : {"Ref" : "appEnvironment"}
+        }
+      }
+    },
+
+    "XPA" : {
+      "Type" : "AWS::CloudFormation::Stack",
+      "Properties" : {
+        "TemplateURL" : "https://s3-us-west-2.amazonaws.com/cfpot/tool.xpa.template",
+        "Parameters" : {
+          "KeyName": {"Ref" : "KeyName"},
+          "Version" : { "Ref" : "Version" },
+          "SubnetId" : { "Ref" : "PrivateSubnetId"},
+          "SecurityGroupId" : { "Ref" : "PrivateSecurityGroup"},
+          "AppDeployBranch" : "master",
+          "RoleDeployBranch" : "master",
+          "SitesDeployBranch" : "master",
+          "StackID" : { "Ref" : "StackID" },
+          "InstanceType" : { "Ref" : "InstanceType"},
+          "PuppetEnv" : { "Ref" : "PuppetEnv"},
+          "Environment" : {"Ref" : "appEnvironment"}
+        }
+      }
+    },
+
+    "HelloWorld" : {
+      "Type" : "AWS::CloudFormation::Stack",
+      "Properties" : {
+        "TemplateURL" : "https://s3-us-west-2.amazonaws.com/cfpot/hello-world.template",
+        "Parameters" : {
+          "KeyName" : { "Ref" : "KeyName" },
+          "Version" : { "Ref" : "Version" },
+          "SubnetId" : { "Ref" : "PrivateSubnetId" },
+          "SecurityGroupId" : { "Ref" : "PrivateSecurityGroup" },
+          "AppDeployBranch" : "master",
+          "RoleDeployBranch" : "master",
+          "SitesDeployBranch" : "master",
+          "StackID" : { "Ref" : "StackID" },
+          "PuppetEnv" : { "Ref" : "PuppetEnv"},
+          "Environment" : { "Ref" : "appEnvironment" }
+        }
+      }
+    },
+
+    "catalog" : {
+      "Type" : "AWS::CloudFormation::Stack",
+      "Properties" : {
+        "TemplateURL" : "https://s3-us-west-2.amazonaws.com/cfpot/catalog.template",
+        "Parameters" : {
+          "KeyName" : { "Ref" : "KeyName" },
+          "Version" : { "Ref" : "Version" },
+          "SubnetId" : { "Ref" : "PrivateSubnetId" },
+          "SecurityGroupId" : { "Ref" : "PrivateSecurityGroup" },
+          "AppDeployBranch" : "master",
+          "RoleDeployBranch" : "master",
+          "SitesDeployBranch" : "master",
+          "StackID" : { "Ref" : "StackID" },
+          "StackIDDB" : { "Ref" : "StackIDDB" },
+          "dbpass"  : {"Ref" : "dbpass"},
+          "dbuser"  : {"Ref" : "dbuser"},
+          "PuppetEnv" : { "Ref" : "PuppetEnv"},
+          "Environment" : { "Ref" : "appEnvironment" }
+        }
+      }
+    },
+
+    "elastickite" : {
+      "Type" : "AWS::CloudFormation::Stack",
+      "Properties" : {
+        "TemplateURL" : "https://s3-us-west-2.amazonaws.com/cfpot/elastickite.template",
+        "Parameters" : {
+          "KeyName" : { "Ref" : "KeyName" },
+          "Version" : { "Ref" : "Version" },
+          "SubnetId" : { "Ref" : "PrivateSubnetId" },
+          "SecurityGroupId" : { "Ref" : "PrivateSecurityGroup" },
+          "AppDeployBranch" : "master",
+          "RoleDeployBranch" : "master",
+          "SitesDeployBranch" : "master",
+          "StackID" : { "Ref" : "StackID" },
+          "StackIDDB" : { "Ref" : "StackIDDB" },
+          "InstanceType" : { "Ref" : "InstanceType"},
+          "PuppetEnv" : { "Ref" : "PuppetEnv"},
+          "Environment" : { "Ref" : "appEnvironment" }
+        }
+      }
+    },
+
+    "accountsGt" : {
+      "Type" : "AWS::CloudFormation::Stack",
+      "Properties" : {
+        "TemplateURL" : "https://s3-us-west-2.amazonaws.com/cfpot/accounts.gt.template",
+        "Parameters" : {
+          "KeyName" : { "Ref" : "KeyName" },
+          "Version" : { "Ref" : "Version" },
+          "SubnetId" : { "Ref" : "PrivateSubnetId" },
+          "SecurityGroupId" : { "Ref" : "AccountsGTSecurityGroup" },
+          "AppDeployBranch" : "master",
+          "RoleDeployBranch" : "master",
+          "SitesDeployBranch" : "master",
+          "StackID" : { "Ref" : "StackID" },
+          "StackIDDB" : { "Ref" : "StackIDDB" },
+          "dbpass"  : {"Ref" : "dbpass"},
+          "dbuser"  : {"Ref" : "dbuser"},
+          "PuppetEnv" : { "Ref" : "PuppetEnv"},
+          "Environment" : { "Ref" : "appEnvironment" }
+        }
+      }
+    },
+
+    "accountsDo" : {
+      "Type" : "AWS::CloudFormation::Stack",
+      "Properties" : {
+        "TemplateURL" : "https://s3-us-west-2.amazonaws.com/cfpot/accounts.do.template",
+        "Parameters" : {
+          "KeyName" : { "Ref" : "KeyName" },
+          "Version" : { "Ref" : "Version" },
+          "SubnetId" : { "Ref" : "PrivateSubnetId" },
+          "SecurityGroupId" : { "Ref" : "AccountsDOSecurityGroup" },
+          "AppDeployBranch" : "master",
+          "RoleDeployBranch" : "master",
+          "SitesDeployBranch" : "master",
+          "StackID" : { "Ref" : "StackID" },
+          "StackIDDB" : { "Ref" : "StackIDDB" },
+          "dbpass"  : {"Ref" : "dbpass"},
+          "dbuser"  : {"Ref" : "dbuser"},
+          "PuppetEnv" : { "Ref" : "PuppetEnv"},
+          "Environment" : { "Ref" : "appEnvironment" }
+        }
+      }
+    },
+
+    "accountsMx" : {
+      "Type" : "AWS::CloudFormation::Stack",
+      "Properties" : {
+        "TemplateURL" : "https://s3-us-west-2.amazonaws.com/cfpot/accounts.mx.template",
+        "Parameters" : {
+          "KeyName" : { "Ref" : "KeyName" },
+          "Version" : { "Ref" : "Version" },
+          "SubnetId" : { "Ref" : "PrivateSubnetId" },
+          "SecurityGroupId" : { "Ref" : "AccountsMXSecurityGroup" },
+          "AppDeployBranch" : "master",
+          "RoleDeployBranch" : "master",
+          "SitesDeployBranch" : "master",
+          "StackID" : { "Ref" : "StackID" },
+          "StackIDDB" : { "Ref" : "StackIDDB" },
+          "dbpass"  : {"Ref" : "dbpass"},
+          "dbuser"  : {"Ref" : "dbuser"},
+          "PuppetEnv" : { "Ref" : "PuppetEnv"},
+          "Environment" : { "Ref" : "appEnvironment" }
+        }
+      }
+    },
+
+    "accountsSv" : {
+      "Type" : "AWS::CloudFormation::Stack",
+      "Properties" : {
+        "TemplateURL" : "https://s3-us-west-2.amazonaws.com/cfpot/accounts.sv.template",
+        "Parameters" : {
+          "KeyName" : { "Ref" : "KeyName" },
+          "Version" : { "Ref" : "Version" },
+          "SubnetId" : { "Ref" : "PrivateSubnetId" },
+          "SecurityGroupId" : { "Ref" : "AccountsSVSecurityGroup" },
+          "AppDeployBranch" : "master",
+          "RoleDeployBranch" : "master",
+          "SitesDeployBranch" : "master",
+          "StackID" : { "Ref" : "StackID" },
+          "StackIDDB" : { "Ref" : "StackIDDB" },
+          "dbpass"  : {"Ref" : "dbpass"},
+          "dbuser"  : {"Ref" : "dbuser"},
+          "PuppetEnv" : { "Ref" : "PuppetEnv"},
+          "Environment" : { "Ref" : "appEnvironment" }
+        }
+      }
+    },
+
+    "accountsNi" : {
+      "Type" : "AWS::CloudFormation::Stack",
+      "Properties" : {
+        "TemplateURL" : "https://s3-us-west-2.amazonaws.com/cfpot/accounts.ni.template",
+        "Parameters" : {
+          "KeyName" : { "Ref" : "KeyName" },
+          "Version" : { "Ref" : "Version" },
+          "SubnetId" : { "Ref" : "PrivateSubnetId" },
+          "SecurityGroupId" : { "Ref" : "AccountsNISecurityGroup" },
+          "AppDeployBranch" : "master",
+          "RoleDeployBranch" : "master",
+          "SitesDeployBranch" : "master",
+          "StackID" : { "Ref" : "StackID" },
+          "StackIDDB" : { "Ref" : "StackIDDB" },
+          "dbpass"  : {"Ref" : "dbpass"},
+          "dbuser"  : {"Ref" : "dbuser"},
+          "PuppetEnv" : { "Ref" : "PuppetEnv"},
+          "Environment" : { "Ref" : "appEnvironment" }
+        }
+      }
+    },
+
+    "monitors" : {
+      "Type" : "AWS::CloudFormation::Stack",
+      "Properties" : {
+        "TemplateURL" : "https://s3-us-west-2.amazonaws.com/cfpot/monitors.template",
+        "Parameters" : {
+          "KeyName" : { "Ref" : "KeyName" },
+          "Version" : { "Ref" : "Version" },
+          "SubnetId" : { "Ref" : "PrivateSubnetId" },
+          "SecurityGroupId" : { "Ref" : "PrivateSecurityGroup" },
+          "AppDeployBranch" : "master",
+          "RoleDeployBranch" : "master",
+          "SitesDeployBranch" : "master",
+          "StackID" : { "Ref" : "StackID" },
+          "StackIDDB" : { "Ref" : "StackIDDB" },
+          "InstanceType" : { "Ref" : "InstanceType"},
+          "PuppetEnv" : { "Ref" : "PuppetEnv"},
+          "Environment" : { "Ref" : "appEnvironment" }
+        }
+      }
+    },
+
+    "InternalGateway" : {
+      "Type" : "AWS::CloudFormation::Stack",
+      "Properties" : {
+        "TemplateURL" : "https://s3-us-west-2.amazonaws.com/cfpot/gateway.internal.template",
+        "Parameters" : {
+          "KeyName" : { "Ref" : "KeyName" },
+          "Version" : { "Ref" : "Version" },
+          "SubnetId" : { "Ref" : "PrivateSubnetId" },
+          "SecurityGroupId" : { "Ref" : "PrivateSecurityGroup" },
+          "AppDeployBranch" : "master",
+          "RoleDeployBranch" : "master",
+          "SitesDeployBranch" : "master",
+          "StackID" : { "Ref" : "StackID" },
+          "InstanceType" : { "Ref" : "InstanceType"},
+          "PuppetEnv" : { "Ref" : "PuppetEnv"},
+          "Environment" : { "Ref" : "appEnvironment" }
+        }
+      }
+    },
+
+    "Events" : {
+      "Type" : "AWS::CloudFormation::Stack",
+      "Properties" : {
+        "TemplateURL" : "https://s3-us-west-2.amazonaws.com/cfpot/events.template",
+        "Parameters" : {
+          "KeyName" : { "Ref" : "KeyName" },
+          "Version" : { "Ref" : "Version" },
+          "SubnetId" : { "Ref" : "PrivateSubnetId" },
+          "SecurityGroupId" : { "Ref" : "PrivateSecurityGroup" },
+          "AppDeployBranch" : "master",
+          "RoleDeployBranch" : "master",
+          "SitesDeployBranch" : "master",
+          "StackID" : { "Ref" : "StackID" },
+          "StackIDDB" : { "Ref" : "StackIDDB" },
+          "InstanceType" : { "Ref" : "InstanceType"},
+          "PuppetEnv" : { "Ref" : "PuppetEnv"},
+          "Environment" : { "Ref" : "appEnvironment" }
+        }
+      }
+    },
+
+    "Notifications" : {
+      "Type" : "AWS::CloudFormation::Stack",
+      "Properties" : {
+        "TemplateURL" : "https://s3-us-west-2.amazonaws.com/cfpot/notifications.template",
+        "Parameters" : {
+          "KeyName" : { "Ref" : "KeyName" },
+          "Version" : { "Ref" : "Version" },
+          "SubnetId" : { "Ref" : "PrivateSubnetId" },
+          "SecurityGroupId" : { "Ref" : "PrivateSecurityGroup" },
+          "AppDeployBranch" : "master",
+          "RoleDeployBranch" : "master",
+          "SitesDeployBranch" : "master",
+          "StackID" : { "Ref" : "StackID" },
+          "StackIDDB" : { "Ref" : "StackIDDB" },
+          "dbpass"  : {"Ref" : "dbpass"},
+          "dbuser"  : {"Ref" : "dbuser"},
+          "rmqpass"  : {"Ref" : "rmqpass"},
+          "rmquser"  : {"Ref" : "rmquser"},
+          "InstanceType" : { "Ref" : "InstanceType"},
+          "PuppetEnv" : { "Ref" : "PuppetEnv"},
+          "Environment" : { "Ref" : "appEnvironment" }
+        }
+      }
+    },
+
+    "WorkerPronet" : {
+      "Type" : "AWS::CloudFormation::Stack",
+      "Properties" : {
+        "TemplateURL" : "https://s3-us-west-2.amazonaws.com/cfpot/worker.pronet.template",
+        "Parameters" : {
+          "KeyName" : { "Ref" : "KeyName" },
+          "Version" : { "Ref" : "Version" },
+          "SubnetId" : { "Ref" : "gtSubnetID" },
+          "SecurityGroupId" : { "Ref" : "AccountsGTSecurityGroup" },
+          "AppDeployBranch" : "master",
+          "RoleDeployBranch" : "master",
+          "SitesDeployBranch" : "master",
+          "StackID" : { "Ref" : "StackID" },
+          "StackIDDB" : { "Ref" : "StackIDDB" },
+          "InstanceType" : { "Ref" : "InstanceType"},
+          "PuppetEnv" : { "Ref" : "PuppetEnv"},
+          "Environment" : { "Ref" : "appEnvironment" }
+        }
+      }
+    },
+
+    "WorkerRedEfectiva" : {
+      "Type" : "AWS::CloudFormation::Stack",
+      "Properties" : {
+        "TemplateURL" : "https://s3-us-west-2.amazonaws.com/cfpot/worker.redefectiva.template",
+        "Parameters" : {
+          "KeyName" : { "Ref" : "KeyName" },
+          "Version" : { "Ref" : "Version" },
+          "SubnetId" : { "Ref" : "mxSubnetID" },
+          "SecurityGroupId" : { "Ref" : "AccountsMXSecurityGroup" },
+          "AppDeployBranch" : "master",
+          "RoleDeployBranch" : "master",
+          "SitesDeployBranch" : "master",
+          "StackID" : { "Ref" : "StackID" },
+          "StackIDDB" : { "Ref" : "StackIDDB" },
+          "InstanceType" : { "Ref" : "InstanceType"},
+          "PuppetEnv" : { "Ref" : "PuppetEnv"},
+          "Environment" : { "Ref" : "appEnvironment" }
+        }
+      }
+    },
+
+    "WorkerTpago" : {
+      "Type" : "AWS::CloudFormation::Stack",
+      "Properties" : {
+        "TemplateURL" : "https://s3-us-west-2.amazonaws.com/cfpot/worker.tpago.template",
+        "Parameters" : {
+          "KeyName" : { "Ref" : "KeyName" },
+          "Version" : { "Ref" : "Version" },
+          "SubnetId" : { "Ref" : "doSubnetID" },
+          "SecurityGroupId" : { "Ref" : "AccountsDOSecurityGroup" },
+          "AppDeployBranch" : "master",
+          "RoleDeployBranch" : "master",
+          "SitesDeployBranch" : "master",
+          "StackID" : { "Ref" : "StackID" },
+          "StackIDDB" : { "Ref" : "StackIDDB" },
+          "InstanceType" : { "Ref" : "InstanceType"},
+          "PuppetEnv" : { "Ref" : "PuppetEnv"},
+          "Environment" : { "Ref" : "appEnvironment" }
+        }
+      }
+    },
+
+    "WorkerPuntoxpress" : {
+      "Type" : "AWS::CloudFormation::Stack",
+      "Properties" : {
+        "TemplateURL" : "https://s3-us-west-2.amazonaws.com/cfpot/worker.puntoxpress.template",
+        "Parameters" : {
+          "KeyName" : { "Ref" : "KeyName" },
+          "Version" : { "Ref" : "Version" },
+          "SubnetId" : { "Ref" : "svSubnetID" },
+          "SecurityGroupId" : { "Ref" : "AccountsSVSecurityGroup" },
+          "AppDeployBranch" : "master",
+          "RoleDeployBranch" : "master",
+          "SitesDeployBranch" : "master",
+          "StackID" : { "Ref" : "StackID" },
+          "StackIDDB" : { "Ref" : "StackIDDB" },
+          "InstanceType" : { "Ref" : "InstanceType"},
+          "PuppetEnv" : { "Ref" : "PuppetEnv"},
+          "Environment" : { "Ref" : "appEnvironment" }
+        }
+      }
+    },
+
+    "WorkerPuntofacil" : {
+      "Type" : "AWS::CloudFormation::Stack",
+      "Properties" : {
+        "TemplateURL" : "https://s3-us-west-2.amazonaws.com/cfpot/worker.puntofacil.template",
+        "Parameters" : {
+          "KeyName" : { "Ref" : "KeyName" },
+          "Version" : { "Ref" : "Version" },
+          "SubnetId" : { "Ref" : "niSubnetID" },
+          "SecurityGroupId" : { "Ref" : "AccountsNISecurityGroup" },
+          "AppDeployBranch" : "master",
+          "RoleDeployBranch" : "master",
+          "SitesDeployBranch" : "master",
+          "StackID" : { "Ref" : "StackID" },
+          "StackIDDB" : { "Ref" : "StackIDDB" },
+          "InstanceType" : { "Ref" : "InstanceType"},
+          "PuppetEnv" : { "Ref" : "PuppetEnv"},
+          "Environment" : { "Ref" : "appEnvironment" }
+        }
+      }
+    },
+
+    "WorkerTransferTo" : {
+      "Type" : "AWS::CloudFormation::Stack",
+      "Properties" : {
+        "TemplateURL" : "https://s3-us-west-2.amazonaws.com/cfpot/worker.transferto.template",
+        "Parameters" : {
+          "KeyName" : { "Ref" : "KeyName" },
+          "Version" : { "Ref" : "Version" },
+          "SubnetId" : { "Ref" : "ttSubnetID" },
+          "SecurityGroupId" : { "Ref" : "AccountsMXSecurityGroup" },
+          "AppDeployBranch" : "master",
+          "RoleDeployBranch" : "master",
+          "SitesDeployBranch" : "master",
+          "StackID" : { "Ref" : "StackID" },
+          "StackIDDB" : { "Ref" : "StackIDDB" },
+          "InstanceType" : { "Ref" : "InstanceType"},
+          "PuppetEnv" : { "Ref" : "PuppetEnv"},
+          "Environment" : { "Ref" : "appEnvironment" }
+        }
+      }
+    },
+
+    "Payments" : {
+      "Type" : "AWS::CloudFormation::Stack",
+      "Properties" : {
+        "TemplateURL" : "https://s3-us-west-2.amazonaws.com/cfpot/payments.template",
+        "Parameters" : {
+          "KeyName" : { "Ref" : "KeyName" },
+          "Version" : { "Ref" : "Version" },
+          "SubnetId" : { "Ref" : "PrivateSubnetId" },
+          "SecurityGroupId" : { "Ref" : "PrivateSecurityGroup" },
+          "AppDeployBranch" : "master",
+          "RoleDeployBranch" : "master",
+          "SitesDeployBranch" : "master",
+          "StackID" : { "Ref" : "StackID" },
+          "StackIDDB" : { "Ref" : "StackIDDB" },
+          "dbpass"  : {"Ref" : "dbpass"},
+          "dbuser"  : {"Ref" : "dbuser"},
+          "InstanceType" : { "Ref" : "InstanceType"},
+          "PuppetEnv" : { "Ref" : "PuppetEnv"},
+          "Environment" : { "Ref" : "appEnvironment" }
+        }
+      }
+    }
+  }
+}
