@@ -1,7 +1,7 @@
 {
   "AWSTemplateFormatVersion" : "2010-09-09",
 
-  "Description" : "Master template for creation of Production - filename: stack.productionaz2.template",
+  "Description" : "master template for creation of SandBox Stack - filename: stack.sandbox.template",
 
  "Parameters" : {
     "appEnvironment" : {
@@ -13,19 +13,19 @@
     "KeyName" : {
       "Type" : "String",
       "Description" : "The the key to SSH machines",
-      "Default" : "stamp-prod"
+      "Default" : "stamp-staging"
     },
 
     "StackID" : {
       "Type" : "String",
       "Description" : "Stack ID name",
-      "Default" : ""
+      "Default" : "-staging"
     },
 
     "StackIDDB" : {
       "Type" : "String",
       "Description" : "Stack ID name for DataBase",
-      "Default" : ""
+      "Default" : "-staging"
     },
 
     "Version" : {
@@ -33,15 +33,10 @@
       "Description" : "stamp1 for current version, stamp2 for disaster recovery and staging for staging production"
     },
 
-    "PuppetEnv" : {
-      "Type" : "String",
-      "Description" : "Environment for puppet apply",
-      "Default" : "production"
-    },
-
     "dbuser" : {
       "Type": "String",
-      "Description" : "Psql User"
+      "Description" : "Psql User",
+      "Default" : "stampdb"
     },
 
     "dbpass" : {
@@ -62,6 +57,12 @@
       "Description" : "RabbitMQ password"
     },
 
+    "PuppetEnv" : {
+      "Type" : "String",
+      "Description" : "Environment for puppet apply",
+      "Default" : "staging"
+    },
+
     "InstanceType" : {
       "Description" : "Instance type for API",
       "Type" : "String",
@@ -73,103 +74,113 @@
     "PrivateSecurityGroup" : {
       "Type" : "String",
       "Description" : "Security Group ID for Private network",
-      "Default" : "sg-42bed227"
+      "Default" : "sg-ec888589"
     },
 
     "MonitorsSecurityGroup" : {
       "Type" : "String",
       "Description" : "Security Group ID for Monitors",
-      "Default" : "sg-73bed216"
+      "Default" : "sg-02888567"
     },
 
     "LogstashSecurityGroup" : {
       "Type" : "String",
       "Description" : "Security Group ID for Logstash",
-      "Default" : "sg-7abed21f"
+      "Default" : "sg-eb88858e"
     },
 
     "AccountsMXSecurityGroup" : {
       "Type" : "String",
       "Description" : "Security Group ID for Accounts Mexico",
-      "Default" : "sg-7bbed21e"
+      "Default" : "sg-e988858c"
     },
 
     "AccountsSVSecurityGroup" : {
       "Type" : "String",
       "Description" : "Security Group ID for Accounts El Salvador",
-      "Default" : "sg-77bed212"
+      "Default" : "sg-01888564"
     },
 
     "AccountsGTSecurityGroup" : {
       "Type" : "String",
       "Description" : "Security Group ID for Accounts Guatemala",
-      "Default" : "sg-44bed221"
+      "Default" : "sg-ef88858a"
     },
 
     "AccountsDOSecurityGroup" : {
       "Type" : "String",
       "Description" : "Security Group ID for Accounts Dominican Republic",
-      "Default" : "sg-43bed226"
+      "Default" : "sg-e888858d"
     },
 
     "AccountsNISecurityGroup" : {
       "Type" : "String",
       "Description" : "Security Group ID for Accounts Nicaragua",
-      "Default" : "sg-45bed220"
+      "Default" : "sg-ee88858b"
     },
 
     "AccountsPASecurityGroup" : {
       "Type" : "String",
       "Description" : "Security Group ID for Accounts Panama",
-      "Default" : "sg-47bed222"
+      "Default" : "sg-e3888586"
     },
 
     "PrivateSubnetId" : {
       "Type" : "String",
       "Description" : "Subnet id that the api belongs",
-      "Default" : "subnet-90a509f5"
+      "Default" : "subnet-d41cbca3"
     },
 
     "gtSubnetID" : {
       "Type" : "String",
-      "Default" : "subnet-9ca509f9",
+      "Default" : "subnet-e91cbc9e",
       "Description" : "Subnet ID for GT worker"
     },
 
     "doSubnetID" : {
       "Type" : "String",
-      "Default" : "subnet-92a509f7",
+      "Default" : "subnet-d71cbca0",
       "Description" : "Subnet ID for DO worker"
     },
 
     "mxSubnetID" : {
       "Type" : "String",
-      "Default" : "subnet-9fa509fa",
+      "Default" : "subnet-e81cbc9f",
       "Description" : "Subnet ID for MX worker"
     },
 
     "svSubnetID" : {
       "Type" : "String",
-      "Default" : "subnet-99a509fc",
+      "Default" : "subnet-d61cbca1",
       "Description" : "Subnet ID for SV worker"
     },
 
     "niSubnetID" : {
       "Type" : "String",
-      "Default" : "subnet-96a509f3",
+      "Default" : "subnet-eb1cbc9c",
       "Description" : "Subnet ID for NI worker"
-    },
-
-    "paSubnetID" : {
-      "Type" : "String",
-      "Default" : "subnet-97a509f2",
-      "Description" : "Subnet ID for PA worker"
     },
 
     "ttSubnetID" : {
       "Type" : "String",
-      "Default" : "subnet-91a509f4",
+      "Default" : "subnet-e81cbc9f",
       "Description" : "Subnet ID for TT worker"
+    },
+
+    "paSubnetID" : {
+      "Type" : "String",
+      "Default" : "subnet-d611f3fd",
+      "Description" : "Subnet ID for PA worker"
+    }
+  },
+
+  "Mappings" : {
+    "dot" : {
+      "test"           : { "DOT" : ".test" },
+      "dev"            : { "DOT" : ".dev" },
+      "qa"             : { "DOT" : ".qa" },
+      "sandbox"        : { "DOT" : ".sandbox" },
+      "production"     : { "DOT" : "" }
     }
   },
 
@@ -188,7 +199,6 @@
           "RoleDeployBranch" : "master",
           "SitesDeployBranch" : "master",
           "StackID" : { "Ref" : "StackID" },
-          "InstanceType" : { "Ref" : "InstanceType"},
           "PuppetEnv" : { "Ref" : "PuppetEnv"},
           "Environment" : {"Ref" : "appEnvironment"}
         }
@@ -293,7 +303,6 @@
           "StackIDDB" : { "Ref" : "StackIDDB" },
           "dbpass"  : {"Ref" : "dbpass"},
           "dbuser"  : {"Ref" : "dbuser"},
-          "InstanceType" : { "Ref" : "InstanceType"},
           "PuppetEnv" : { "Ref" : "PuppetEnv"},
           "Environment" : { "Ref" : "appEnvironment" }
         }
@@ -316,7 +325,6 @@
           "StackIDDB" : { "Ref" : "StackIDDB" },
           "dbpass"  : {"Ref" : "dbpass"},
           "dbuser"  : {"Ref" : "dbuser"},
-          "InstanceType" : { "Ref" : "InstanceType"},
           "PuppetEnv" : { "Ref" : "PuppetEnv"},
           "Environment" : { "Ref" : "appEnvironment" }
         }
@@ -339,7 +347,6 @@
           "StackIDDB" : { "Ref" : "StackIDDB" },
           "dbpass"  : {"Ref" : "dbpass"},
           "dbuser"  : {"Ref" : "dbuser"},
-          "InstanceType" : { "Ref" : "InstanceType"},
           "PuppetEnv" : { "Ref" : "PuppetEnv"},
           "Environment" : { "Ref" : "appEnvironment" }
         }
@@ -362,7 +369,6 @@
           "StackIDDB" : { "Ref" : "StackIDDB" },
           "dbpass"  : {"Ref" : "dbpass"},
           "dbuser"  : {"Ref" : "dbuser"},
-          "InstanceType" : { "Ref" : "InstanceType"},
           "PuppetEnv" : { "Ref" : "PuppetEnv"},
           "Environment" : { "Ref" : "appEnvironment" }
         }
@@ -385,7 +391,6 @@
           "StackIDDB" : { "Ref" : "StackIDDB" },
           "dbpass"  : {"Ref" : "dbpass"},
           "dbuser"  : {"Ref" : "dbuser"},
-          "InstanceType" : { "Ref" : "InstanceType"},
           "PuppetEnv" : { "Ref" : "PuppetEnv"},
           "Environment" : { "Ref" : "appEnvironment" }
         }
