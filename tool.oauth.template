@@ -1,6 +1,6 @@
 {
   "AWSTemplateFormatVersion" : "2010-09-09",
-    "Description" : "Configure Oauth Node.js Application - filename:oauth-no_dns.template",
+    "Description" : "Configure Oauth Node.js Application - filename:tool.oauth.template",
 
   "Parameters" : {
     "Environment" : {
@@ -28,6 +28,30 @@
       "Type" : "String",
       "Description" : "Stack ID name",
       "Default" : "-"
+    },
+
+    "StackIDDB" : {
+      "Type" : "String",
+      "Description" : "Stack ID name for DataBase",
+      "Default" : ""
+    },
+
+    "dbuser" : {
+      "Type": "String",
+      "Description" : "Psql User",
+      "Default" : "bree"
+    },
+
+    "dbname" : {
+      "Type": "String",
+      "Description" : "Psql User",
+      "Default" : "bree_prod"
+    },
+
+    "dbpass" : {
+      "NoEcho": "true",
+      "Type": "String",
+      "Description" : "Psql password"
     },
 
     "AppDeployBranch" : {
@@ -66,6 +90,13 @@
       "aztest2"        : { "ZONE" : "10.5.0.137", "HOSTNAME" : "oau5002", "SUBNET" : "subnet-ca70bdbd", "SG" : "sg-2aa8e74f", "KEY" : "stamp-qa" },
       "az1"            : { "ZONE" : "10.10.5.6",  "HOSTNAME" : "oau1001", "SUBNET" : "subnet-8a0cefd3", "SG" : "sg-42bed227", "KEY" : "stamp-prod" },
       "az2"            : { "ZONE" : "10.10.6.6",  "HOSTNAME" : "oau1002", "SUBNET" : "subnet-9da509f8", "SG" : "sg-42bed227", "KEY" : "stamp-prod" }
+    },
+    
+    "env" : {
+      "staging"        : { "ENV" : "staging", "DOT" : ".staging" },
+      "qa"             : { "ENV" : "qa", "DOT" : ".qa" },
+      "sandbox"        : { "ENV" : "sandbox", "DOT" : ".sandbox"  },
+      "production"     : { "ENV" : "production", "DOT" : "" }
     }
   },
 
@@ -173,6 +204,11 @@
           "echo ", "revision=", { "Ref" : "AppDeployBranch" }, ">> /etc/facter/facts.d/custom_facts.txt\n",
           "echo custom_hostname=", { "Fn::FindInMap" : [ "Zone", { "Ref" : "Zone" }, "HOSTNAME" ]}, ">> /etc/facter/facts.d/custom_facts.txt\n",
           "echo ", "stackid=", { "Ref" : "StackID" }, ">> /etc/facter/facts.d/custom_facts.txt\n",
+          "echo ", { "Fn::Join" : [ "" , ["oauth_db_host=oauthdb", { "Ref" : "StackIDDB" }, { "Fn::FindInMap" : [ "env", { "Ref" : "Environment" }, "DOT" ]}, ".bluekite.com" ]]}, ">> /etc/facter/facts.d/custom_facts.txt\n",
+          "echo ", "oauth_db_name=", { "Ref" : "dbname" },  ">> /etc/facter/facts.d/custom_facts.txt\n",
+          "echo ", "oauth_db_user=", { "Ref" : "dbuser" },  ">> /etc/facter/facts.d/custom_facts.txt\n",
+          "echo ", "oauth_db_pass=", { "Ref" : "dbpass" },  ">> /etc/facter/facts.d/custom_facts.txt\n",
+          "echo oauth_db_port=5432  >> /etc/facter/facts.d/custom_facts.txt\n",
           "echo app_name=oauth >> /etc/facter/facts.d/custom_facts.txt\n",
 
           "# Clone role hostname repo\n",
