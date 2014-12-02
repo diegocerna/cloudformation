@@ -934,6 +934,12 @@
             "IpProtocol": "icmp",
             "FromPort": "-1",
             "ToPort": "-1",
+            "CidrIp": { "Fn::FindInMap" : [ "subnets", { "Ref" : "Version" }, "VPCSN" ]}
+          },
+          {
+            "IpProtocol": "icmp",
+            "FromPort": "-1",
+            "ToPort": "-1",
             "CidrIp": "10.1.0.0/16"
           },
           {
