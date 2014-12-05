@@ -1,0 +1,231 @@
+{
+  "AWSTemplateFormatVersion" : "2010-09-09",
+
+  "Description" : "Create EIP pool to QA",
+
+  "Resources" : {
+
+    "EIPQA01" : {
+      "Type" : "AWS::EC2::EIP",
+      "Properties" : {
+      "Domain" : "vpc"
+      }
+    },
+
+    "EIPQA02" : {
+      "Type" : "AWS::EC2::EIP",
+      "Properties" : {
+      "Domain" : "vpc"
+      }
+    },
+
+    "EIPQA03" : {
+      "Type" : "AWS::EC2::EIP",
+      "Properties" : {
+      "Domain" : "vpc"
+      }
+    },
+
+    "EIPQA04" : {
+      "Type" : "AWS::EC2::EIP",
+      "Properties" : {
+      "Domain" : "vpc"
+      }
+    },
+
+    "EIPQA05" : {
+      "Type" : "AWS::EC2::EIP",
+      "Properties" : {
+      "Domain" : "vpc"
+      }
+    },
+
+    "EIPQA06" : {
+      "Type" : "AWS::EC2::EIP",
+      "Properties" : {
+      "Domain" : "vpc"
+      }
+    },
+
+    "EIPQA07" : {
+      "Type" : "AWS::EC2::EIP",
+      "Properties" : {
+      "Domain" : "vpc"
+      }
+    },
+
+    "EIPQA08" : {
+      "Type" : "AWS::EC2::EIP",
+      "Properties" : {
+      "Domain" : "vpc"
+      }
+    },
+
+    "EIPQA09" : {
+      "Type" : "AWS::EC2::EIP",
+      "Properties" : {
+      "Domain" : "vpc"
+      }
+    },
+
+    "EIPQA10" : {
+      "Type" : "AWS::EC2::EIP",
+      "Properties" : {
+      "Domain" : "vpc"
+      }
+    },
+
+    "EIPQA11" : {
+      "Type" : "AWS::EC2::EIP",
+      "Properties" : {
+      "Domain" : "vpc"
+      }
+    },
+
+    "EIPQA12" : {
+      "Type" : "AWS::EC2::EIP",
+      "Properties" : {
+      "Domain" : "vpc"
+      }
+    },
+
+    "EIPQA13" : {
+      "Type" : "AWS::EC2::EIP",
+      "Properties" : {
+      "Domain" : "vpc"
+      }
+    },
+
+    "EIPQA14" : {
+      "Type" : "AWS::EC2::EIP",
+      "Properties" : {
+      "Domain" : "vpc"
+      }
+    },
+
+    "EIPQA15" : {
+      "Type" : "AWS::EC2::EIP",
+      "Properties" : {
+      "Domain" : "vpc"
+      }
+    },
+
+    "EIPQA16" : {
+      "Type" : "AWS::EC2::EIP",
+      "Properties" : {
+      "Domain" : "vpc"
+      }
+    },
+
+    "EIPQA17" : {
+      "Type" : "AWS::EC2::EIP",
+      "Properties" : {
+      "Domain" : "vpc"
+      }
+    },
+
+    "EIPQA18" : {
+      "Type" : "AWS::EC2::EIP",
+      "Properties" : {
+      "Domain" : "vpc"
+      }
+    },
+
+    "EIPQA19" : {
+      "Type" : "AWS::EC2::EIP",
+      "Properties" : {
+      "Domain" : "vpc"
+      }
+    },
+
+    "EIPQA20" : {
+      "Type" : "AWS::EC2::EIP",
+      "Properties" : {
+      "Domain" : "vpc"
+      }
+    }
+  },
+
+  "Outputs" : {
+
+    "EIPQA01" : {
+      "Value" : { "Ref" : "EIPQA01" }
+    },
+
+    "EIPQA02" : {
+      "Value" : { "Ref" : "EIPQA02" }
+    },
+
+    "EIPQA03" : {
+      "Value" : { "Ref" : "EIPQA03" }
+    },
+
+    "EIPQA04" : {
+      "Value" : { "Ref" : "EIPQA04" }
+    },
+
+    "EIPQA05" : {
+      "Value" : { "Ref" : "EIPQA05" }
+    },
+
+    "EIPQA06" : {
+      "Value" : { "Ref" : "EIPQA06" }
+    },
+
+    "EIPQA07" : {
+      "Value" : { "Ref" : "EIPQA07" }
+    },
+
+    "EIPQA08" : {
+      "Value" : { "Ref" : "EIPQA08" }
+    },
+
+    "EIPQA09" : {
+      "Value" : { "Ref" : "EIPQA09" }
+    },
+
+    "EIPQA10" : {
+      "Value" : { "Ref" : "EIPQA10" }
+    },
+
+    "EIPQA11" : {
+      "Value" : { "Ref" : "EIPQA11" }
+    },
+
+    "EIPQA12" : {
+      "Value" : { "Ref" : "EIPQA12" }
+    },
+
+    "EIPQA13" : {
+      "Value" : { "Ref" : "EIPQA13" }
+    },
+
+    "EIPQA14" : {
+      "Value" : { "Ref" : "EIPQA14" }
+    },
+
+    "EIPQA15" : {
+      "Value" : { "Ref" : "EIPQA15" }
+    },
+
+    "EIPQA16" : {
+      "Value" : { "Ref" : "EIPQA16" }
+    },
+
+    "EIPQA17" : {
+      "Value" : { "Ref" : "EIPQA17" }
+    },
+
+    "EIPQA18" : {
+      "Value" : { "Ref" : "EIPQA18" }
+    },
+
+    "EIPQA19" : {
+      "Value" : { "Ref" : "EIPQA19" }
+    },
+
+    "EIPQA20" : {
+      "Value" : { "Ref" : "EIPQA20" }
+    }
+  }
+}
