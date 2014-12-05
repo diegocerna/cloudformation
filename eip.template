@@ -148,84 +148,164 @@
 
   "Outputs" : {
 
-    "EIPQA01" : {
+    "01EIP" : {
       "Value" : { "Ref" : "EIPQA01" }
     },
 
-    "EIPQA02" : {
+    "01LN" : {
+      "Value" : { "Fn::GetAtt" : [ "EIPQA01", "AllocationId" ] }
+    },
+
+    "02EIP" : {
       "Value" : { "Ref" : "EIPQA02" }
     },
 
-    "EIPQA03" : {
+    "02LN" : {
+      "Value" : { "Fn::GetAtt" : [ "EIPQA01", "AllocationId" ] }
+    },
+
+    "03EIP" : {
       "Value" : { "Ref" : "EIPQA03" }
     },
 
-    "EIPQA04" : {
+    "03LN" : {
+      "Value" : { "Fn::GetAtt" : [ "EIPQA03", "AllocationId" ] }
+    },
+
+    "04EIP" : {
       "Value" : { "Ref" : "EIPQA04" }
     },
 
-    "EIPQA05" : {
+    "04LN" : {
+      "Value" : { "Fn::GetAtt" : [ "EIPQA05", "AllocationId" ] }
+    },
+
+    "05EIP" : {
       "Value" : { "Ref" : "EIPQA05" }
     },
 
-    "EIPQA06" : {
+    "05LN" : {
+      "Value" : { "Fn::GetAtt" : [ "EIPQA05", "AllocationId" ] }
+    },
+
+    "06EIP" : {
       "Value" : { "Ref" : "EIPQA06" }
     },
 
-    "EIPQA07" : {
+    "06LN" : {
+      "Value" : { "Fn::GetAtt" : [ "EIPQA06", "AllocationId" ] }
+    },
+
+    "07EIP" : {
       "Value" : { "Ref" : "EIPQA07" }
     },
 
-    "EIPQA08" : {
+    "07LN" : {
+      "Value" : { "Fn::GetAtt" : [ "EIPQA07", "AllocationId" ] }
+    },
+
+    "08EIP" : {
       "Value" : { "Ref" : "EIPQA08" }
     },
 
-    "EIPQA09" : {
+    "08LN" : {
+      "Value" : { "Fn::GetAtt" : [ "EIPQA08", "AllocationId" ] }
+    },
+
+    "09EIP" : {
       "Value" : { "Ref" : "EIPQA09" }
     },
 
-    "EIPQA10" : {
+    "09LN" : {
+      "Value" : { "Fn::GetAtt" : [ "EIPQA09", "AllocationId" ] }
+    },
+
+    "10EIP" : {
       "Value" : { "Ref" : "EIPQA10" }
     },
 
-    "EIPQA11" : {
+    "10LN" : {
+      "Value" : { "Fn::GetAtt" : [ "EIPQA10", "AllocationId" ] }
+    },
+
+    "11EIP" : {
       "Value" : { "Ref" : "EIPQA11" }
     },
 
-    "EIPQA12" : {
+    "11LN" : {
+      "Value" : { "Fn::GetAtt" : [ "EIPQA11", "AllocationId" ] }
+    },
+
+    "12EIP" : {
       "Value" : { "Ref" : "EIPQA12" }
     },
 
-    "EIPQA13" : {
+    "12LN" : {
+      "Value" : { "Fn::GetAtt" : [ "EIPQA12", "AllocationId" ] }
+    },
+
+    "13EIP" : {
       "Value" : { "Ref" : "EIPQA13" }
     },
 
-    "EIPQA14" : {
+    "13LN" : {
+      "Value" : { "Fn::GetAtt" : [ "EIPQA13", "AllocationId" ] }
+    },
+
+    "14EIP" : {
       "Value" : { "Ref" : "EIPQA14" }
     },
 
-    "EIPQA15" : {
+    "14LN" : {
+      "Value" : { "Fn::GetAtt" : [ "EIPQA14", "AllocationId" ] }
+    },
+
+    "15EIP" : {
       "Value" : { "Ref" : "EIPQA15" }
     },
 
-    "EIPQA16" : {
+    "15LN" : {
+      "Value" : { "Fn::GetAtt" : [ "EIPQA15", "AllocationId" ] }
+    },
+
+    "16EIP" : {
       "Value" : { "Ref" : "EIPQA16" }
     },
 
-    "EIPQA17" : {
+    "16LN" : {
+      "Value" : { "Fn::GetAtt" : [ "EIPQA16", "AllocationId" ] }
+    },
+
+    "17EIP" : {
       "Value" : { "Ref" : "EIPQA17" }
     },
 
-    "EIPQA18" : {
+    "17LN" : {
+      "Value" : { "Fn::GetAtt" : [ "EIPQA17", "AllocationId" ] }
+    },
+
+    "18EIP" : {
       "Value" : { "Ref" : "EIPQA18" }
     },
 
-    "EIPQA19" : {
+    "18LN" : {
+      "Value" : { "Fn::GetAtt" : [ "EIPQA18", "AllocationId" ] }
+    },
+
+    "19EIP" : {
       "Value" : { "Ref" : "EIPQA19" }
     },
 
-    "EIPQA20" : {
+    "19LN" : {
+      "Value" : { "Fn::GetAtt" : [ "EIPQA19", "AllocationId" ] }
+    },
+
+    "20EIP" : {
       "Value" : { "Ref" : "EIPQA20" }
+    },
+
+    "20LN" : {
+      "Value" : { "Fn::GetAtt" : [ "EIPQA20", "AllocationId" ] }
     }
   }
 }
