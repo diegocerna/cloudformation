@@ -99,19 +99,57 @@
         }
     },
 
+  "Conditions" : {
+    "CreateIntResources" : {"Fn::Or" : [
+      {"Fn::Equals" : [{"Ref" : "Environment"}, "production"]},
+      {"Fn::Equals" : [{"Ref" : "Environment"}, "staging"]}
+      ]
+    },
+    "CreateExtResources" : {"Fn::Or" : [
+      {"Fn::Equals" : [{"Ref" : "Environment"}, "qa"]},
+      {"Fn::Equals" : [{"Ref" : "Environment"}, "sandbox"]}
+      ]
+    }
+  },
+
     "Resources" : {
-        "DNSRecord" : {
-            "Type" : "AWS::Route53::RecordSet",
-            "Properties" : {
-                "HostedZoneName" : "bluekite.com.",
-                "Comment" : "DNS name for my instance.",
-                "Type" : "A",
-                "Name" : { "Fn::Join" : [ "", ["logs", { "Ref" : "StackID" }, { "Fn::FindInMap" : [ "env", { "Ref" : "Environment" }, "DOT" ]},".bluekite.com."]]},
-                "TTL" : "900",
-                "ResourceRecords" : [ { "Fn::GetAtt" : [ "logstashInstance", "PrivateIp" ] } ]
-            },
-            "DependsOn" : "logstashInstance"
-        },
+
+    "IPAddress" : {
+      "Type" : "AWS::EC2::EIP",
+      "Condition" : "CreateExtResources",
+      "Properties" : {
+        "Domain" : "vpc",
+        "InstanceId" : { "Ref" : "logstashInstance" }
+      }
+    },
+
+    "ExtDNSRecord" : {
+      "Type" : "AWS::Route53::RecordSet",
+      "Condition" : "CreateExtResources",
+      "Properties" : {
+        "HostedZoneName" : "bluekite.com.",
+        "Comment" : "DNS name for my instance.",
+        "Name" : { "Fn::Join" : [ "", ["logs", { "Ref" : "StackID" } , { "Fn::FindInMap" : [ "env", { "Ref" : "Environment" }, "DOT" ]},".bluekite.com"]]},
+        "Type" : "CNAME",
+        "TTL" : "300",
+        "ResourceRecords" : [ { "Fn::GetAtt" : [ "logstashInstance", "PublicDnsName" ] } ]
+      },
+      "DependsOn" : "IPAddress"
+    },
+
+    "IntDNSRecord" : {
+      "Type" : "AWS::Route53::RecordSet",
+      "Condition" : "CreateIntResources",
+      "Properties" : {
+        "HostedZoneName" : "bluekite.com.",
+        "Comment" : "DNS name for my instance.",
+        "Name" : { "Fn::Join" : [ "", ["logs", { "Ref" : "StackID" } , { "Fn::FindInMap" : [ "env", { "Ref" : "Environment" }, "DOT" ]},".bluekite.com"]]},
+        "Type" : "A",
+        "TTL" : "300",
+        "ResourceRecords" : [ { "Fn::GetAtt" : [ "logstashInstance", "PrivateIp" ] } ]
+      },
+      "DependsOn" : "logstashInstance"
+    },
 
         "logstashInstance" : {
             "Type" : "AWS::EC2::Instance",
@@ -229,19 +267,19 @@
         }
     },
 
-    "Outputs" : {
-        "InstanceId" : {
-            "Value" : { "Ref" : "logstashInstance" },
-            "Description" : "Instance Id of newly created instance"
-        },
+  "Outputs" : {
+    "InstanceId" : {
+      "Value" : { "Ref" : "logstashInstance" },
+      "Description" : "Instance Id of newly created instance"
+    },
 
-        "IPAddress" : {
-            "Value" : { "Fn::GetAtt" : [ "logstashInstance", "PrivateIp" ] },
-            "Description" : "Private IP address of instance"
-        },
-
-        "DomainName" : {
-            "Value" : { "Ref" : "DNSRecord" }
-        }
+    "ExtDomainName" : {
+      "Value" : { "Ref" : "ExtDNSRecord" },
+      "Condition" : "CreateExtResources"
+    },
+    "IntDomainName" : {
+      "Value" : { "Ref" : "IntDNSRecord" },
+      "Condition" : "CreateIntResources"
     }
+  }
 }
