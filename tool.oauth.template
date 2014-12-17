@@ -3,17 +3,11 @@
     "Description" : "Configure Oauth Node.js Application - filename:tool.oauth.template",
 
   "Parameters" : {
-    "Environment" : {
-      "Description" : "Environment for the Url",
-      "Type" : "String",
-      "Default" : ""
-    },
-
-    "Zone" : {
+    "Version" : {
       "Description" : "Value to add the instance to az1 or az2",
       "Type" : "String",
-      "AllowedValues" : [ "az1","az2", "aztest1", "aztest2"],
-      "Default" : "az1"
+      "AllowedValues" : [ "stamp1","stamp2","staging1","staging2","sandbox1","sandbox2","qa1","qa2"],
+      "Default" : "qa1"
     },
 
     "InstanceType" : {
@@ -85,30 +79,27 @@
       "us-west-2"      : {"AMI" : "ami-ad1d569d" }
     },
 
-    "Zone" : {
-      "aztest1"        : { "ZONE" : "10.5.0.7",   "HOSTNAME" : "oau5001", "SUBNET" : "subnet-db6668f3", "SG" : "sg-2aa8e74f", "KEY" : "stamp-qa" },
-      "aztest2"        : { "ZONE" : "10.5.0.137", "HOSTNAME" : "oau5002", "SUBNET" : "subnet-ca70bdbd", "SG" : "sg-2aa8e74f", "KEY" : "stamp-qa" },
-      "az1"            : { "ZONE" : "10.10.5.6",  "HOSTNAME" : "oau1001", "SUBNET" : "subnet-8a0cefd3", "SG" : "sg-42bed227", "KEY" : "stamp-prod" },
-      "az2"            : { "ZONE" : "10.10.6.6",  "HOSTNAME" : "oau1002", "SUBNET" : "subnet-9da509f8", "SG" : "sg-42bed227", "KEY" : "stamp-prod" }
-    },
-    
-    "env" : {
-      "staging"        : { "ENV" : "staging", "DOT" : ".staging" },
-      "qa"             : { "ENV" : "qa", "DOT" : ".qa" },
-      "sandbox"        : { "ENV" : "sandbox", "DOT" : ".sandbox"  },
-      "production"     : { "ENV" : "production", "DOT" : "" }
+    "version" : {
+      "stamp1"          : { "HOSTNAME" : "oau1001", "AppEnv" : "production", "REGION" : "us-west-2", "IP" : "10.10.5.6",  "DOT" : "",         "SUBNET" : "subnet-970cefce", "SG" : "sg-42bed227", "keypair" : "stamp-prod" },
+      "stamp2"          : { "HOSTNAME" : "oau1002", "AppEnv" : "production", "REGION" : "us-west-2", "IP" : "10.10.6.6",  "DOT" : "",         "SUBNET" : "subnet-90a509f5", "SG" : "sg-42bed227", "keypair" : "stamp-prod" },
+      "staging1"        : { "HOSTNAME" : "oau3001", "AppEnv" : "staging",    "REGION" : "us-east-1", "IP" : "10.30.5.6",  "DOT" : ".staging", "SUBNET" : "subnet-69b57542", "SG" : "sg-6f8b790b", "keypair" : "iad_id_rsa" },
+      "staging2"        : { "HOSTNAME" : "oau3002", "AppEnv" : "staging",    "REGION" : "us-east-1", "IP" : "10.30.6.6",  "DOT" : ".staging", "SUBNET" : "subnet-a4d95dd3", "SG" : "sg-6f8b790b", "keypair" : "iad_id_rsa" },
+      "sandbox1"        : { "HOSTNAME" : "oau4001", "AppEnv" : "sandbox",    "REGION" : "us-west-1", "IP" : "10.10.22.6", "DOT" : ".sandbox", "SUBNET" : "subnet-2500fa40", "SG" : "sg-37fa3c52", "keypair" : "stamp-sandbox" },
+      "sandbox2"        : { "HOSTNAME" : "oau4002", "AppEnv" : "sandbox",    "REGION" : "us-west-1", "IP" : "10.10.52.6", "DOT" : ".sandbox", "SUBNET" : "subnet-08112b4e", "SG" : "sg-37fa3c52", "keypair" : "stamp-sandbox" },
+      "qa1"             : { "HOSTNAME" : "oau5001", "AppEnv" : "qa",         "REGION" : "us-east-1", "IP" : "10.3.0.6",   "DOT" : ".qa",      "SUBNET" : "subnet-db6668f3", "SG" : "sg-59632a3c", "keypair" : "stamp-qa"},
+      "qa2"             : { "HOSTNAME" : "oau5002", "AppEnv" : "qa",         "REGION" : "us-east-1", "IP" : "10.3.0.7",   "DOT" : ".qa",      "SUBNET" : "subnet-ca70bdbd", "SG" : "sg-59632a3c", "keypair" : "stamp-qa"}
     }
   },
 
   "Conditions" : {
     "CreateIntResources" : {"Fn::Or" : [
-      {"Fn::Equals" : [{"Ref" : "Environment"}, "qa"]},
-      {"Fn::Equals" : [{"Ref" : "Environment"}, "staging"]}
+      {"Fn::Equals" : [{ "Fn::FindInMap" : [ "version", { "Ref" : "Version" }, "AppEnv" ]}, "production"]},
+      {"Fn::Equals" : [{ "Fn::FindInMap" : [ "version", { "Ref" : "Version" }, "AppEnv" ]}, "staging"]}
       ]
     },
     "CreateExtResources" : {"Fn::Or" : [
-      {"Fn::Equals" : [{"Ref" : "Environment"}, "production"]},
-      {"Fn::Equals" : [{"Ref" : "Environment"}, "sandbox"]}
+      {"Fn::Equals" : [{ "Fn::FindInMap" : [ "version", { "Ref" : "Version" }, "AppEnv" ]}, "qa"]},
+      {"Fn::Equals" : [{ "Fn::FindInMap" : [ "version", { "Ref" : "Version" }, "AppEnv" ]}, "sandbox"]}
       ]
     }
   },
@@ -137,6 +128,20 @@
       "DependsOn" : "IPAddress"
     },
 
+    "IntDNSRecord" : {
+      "Type" : "AWS::Route53::RecordSet",
+      "Condition" : "CreateIntResources",
+      "Properties" : {
+        "HostedZoneName" : "bluekite.com.",
+        "Comment" : "DNS name for my instance.",
+        "Name" : { "Fn::Join" : [ "", ["oauth", { "Ref" : "StackID" } , { "Fn::FindInMap" : [ "version", { "Ref" : "Version" }, "DOT" ]},".bluekite.com"]]},
+        "Type" : "A",
+        "TTL" : "300",
+        "ResourceRecords" : [ { "Fn::GetAtt" : [ "WebServerInstance", "PrivateIp" ] } ]
+      },
+      "DependsOn" : "WebServerInstance"
+    },
+
     "InstanceProfile" : {
       "Type" : "AWS::IAM::InstanceProfile",
       "Properties" : {
@@ -151,14 +156,14 @@
       "Comment" : "Oauth NodeJS Application"},
       "Properties" : {
         "ImageId" : { "Fn::FindInMap" : [ "RegionMap", { "Ref" : "AWS::Region" }, "AMI" ]},
-        "SecurityGroupIds" : [{ "Fn::FindInMap" : [ "Zone", { "Ref" : "Zone" }, "SG" ]}],
+        "SecurityGroupIds" : [{ "Fn::FindInMap" : [ "version", { "Ref" : "Version" }, "SG" ]}],
         "InstanceType" : { "Ref" : "InstanceType" },
-        "SubnetId" : { "Fn::FindInMap" : [ "Zone", { "Ref" : "Zone" }, "SUBNET" ]},
-        "PrivateIpAddress" : { "Fn::FindInMap" : [ "Zone", { "Ref" : "Zone" }, "ZONE" ]},
-        "KeyName" : { "Fn::FindInMap" : [ "Zone", { "Ref" : "Zone" }, "KEY" ]},
+        "SubnetId" : { "Fn::FindInMap" : [ "version", { "Ref" : "Version" }, "SUBNET" ]},
+        "PrivateIpAddress" : { "Fn::FindInMap" : [ "version", { "Ref" : "Version" }, "IP" ]},
+        "KeyName" : { "Fn::FindInMap"  : [ "version",   { "Ref" : "Version" },     "keypair" ]},
         "IamInstanceProfile" : {"Ref" : "InstanceProfile"},
         "Tags" : [ {"Key" : "Application", "Value" : { "Ref" : "AWS::StackId"} },
-        {"Key" : "Name", "Value" : { "Fn::Join" : ["-", ["oauth",{"Ref":"Environment"} ]]}}],
+        {"Key" : "Name", "Value" : { "Fn::Join" : ["-", ["oauth", { "Fn::FindInMap" : [ "version", { "Ref" : "Version" }, "AppEnv" ]} ]]}}],
         "UserData"       : { "Fn::Base64" : { "Fn::Join" : ["", [
           "#!/bin/bash\n",
           "# Helper function to notify of failed operation\n",
@@ -179,6 +184,9 @@
           "ssh-keygen -f ~/.ssh/known_hosts -H -F github.com | grep -q found || ssh-keyscan -H github.com >> ~/.ssh/known_hosts\n",
           "# Copy credentials to root user\n",
           "cp /home/ubuntu/.ssh/* /root/.ssh/\n",
+
+          "# Add AWS_REGION on etc/environment\n",
+          "echo AWS_REGION=", { "Fn::FindInMap" : [ "version", { "Ref" : "Version" }, "REGION" ]}, ">> /etc/environment\n",
 
           "# Clone sites repo to ubuntu user home\n",
           "git clone -b ", { "Ref" : "SitesDeployBranch" }, " git@github.com:blue-kite/xbp_puppet_sites.git /home/ubuntu/sites > /tmp/git.log 2>&1 || error_exit 'Failed to clone sites repo'\n",
@@ -202,9 +210,9 @@
           "mkdir -p /etc/facter/facts.d\n",
           "touch /etc/facter/facts.d/custom_facts.txt\n",
           "echo ", "revision=", { "Ref" : "AppDeployBranch" }, ">> /etc/facter/facts.d/custom_facts.txt\n",
-          "echo custom_hostname=", { "Fn::FindInMap" : [ "Zone", { "Ref" : "Zone" }, "HOSTNAME" ]}, ">> /etc/facter/facts.d/custom_facts.txt\n",
+          "echo custom_hostname=", { "Fn::FindInMap" : [ "version", { "Ref" : "Version" }, "HOSTNAME" ]}, ">> /etc/facter/facts.d/custom_facts.txt\n",
           "echo ", "stackid=", { "Ref" : "StackID" }, ">> /etc/facter/facts.d/custom_facts.txt\n",
-          "echo ", { "Fn::Join" : [ "" , ["oauth_db_host=oauthdb", { "Ref" : "StackIDDB" }, { "Fn::FindInMap" : [ "env", { "Ref" : "Environment" }, "DOT" ]}, ".bluekite.com" ]]}, ">> /etc/facter/facts.d/custom_facts.txt\n",
+          "echo ", { "Fn::Join" : [ "" , ["oauth_db_host=oauthdb", { "Ref" : "StackIDDB" }, { "Fn::FindInMap" : [ "version", { "Ref" : "Version" }, "DOT" ]}, ".bluekite.com" ]]}, ">> /etc/facter/facts.d/custom_facts.txt\n",
           "echo ", "oauth_db_name=", { "Ref" : "dbname" },  ">> /etc/facter/facts.d/custom_facts.txt\n",
           "echo ", "oauth_db_user=", { "Ref" : "dbuser" },  ">> /etc/facter/facts.d/custom_facts.txt\n",
           "echo ", "oauth_db_pass=", { "Ref" : "dbpass" },  ">> /etc/facter/facts.d/custom_facts.txt\n",
@@ -222,7 +230,7 @@
           "cd /home/ubuntu/sites\n",
           "sudo sh setup.sh\n",
 
-          "export LANG=en_US.UTF-8; sudo puppet apply --verbose --debug --environment=", { "Ref" : "Environment" }, " /home/ubuntu/sites/site.pp > /tmp/puppet.log 2>&1 || error_exit 'failed to apply puppet manifests'\n",
+          "export LANG=en_US.UTF-8; sudo puppet apply --verbose --debug --environment=", { "Fn::FindInMap" : [ "version", { "Ref" : "Version" }, "AppEnv" ]}, " /home/ubuntu/sites/site.pp > /tmp/puppet.log 2>&1 || error_exit 'failed to apply puppet manifests'\n",
 
           "# Signal setup is complete\n",
           "cfn-signal -e $? -r 'Completed configuration' '",
