@@ -205,8 +205,7 @@
                     "cd /home/ubuntu/sites\n",
                     "sudo sh setup.sh\n",
 
-                    "export LANG=en_US.UTF-8; trap \n'rm -f /tmp/puppet.log'\n 0 1 2 3 15 puppet apply --verbose --debug --environment=", { "Ref" : "PuppetEnv" }, " /home/ubuntu/sites/site.pp 2> /tmp/puppet.log || error_exit $(</tmp/puppet.log)\n",
-
+                    "export LANG=en_US.UTF-8; sudo puppet apply --verbose --debug --environment=", { "Ref" : "PuppetEnv" }, " /home/ubuntu/sites/site.pp > /tmp/puppet.log 2>&1 || error_exit 'failed to apply puppet manifests'\n",
                     "# Signal setup is complete\n",
                     "cfn-signal -e $? -r 'Completed configuration' '",
                     {
