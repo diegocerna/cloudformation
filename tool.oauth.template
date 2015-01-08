@@ -10,14 +10,6 @@
       "Default" : "qa1"
     },
 
-    "InstanceType" : {
-      "Description" : "WebServer EC2 instance type",
-      "Type" : "String",
-      "Default" : "m3.medium",
-      "AllowedValues" : [ "t1.micro","m1.small","m3.medium","m1.large","m1.xlarge","m2.xlarge","m2.2xlarge","m2.4xlarge","m3.xlarge","m3.2xlarge","c1.medium","c1.xlarge","cc1.4xlarge","cc2.8xlarge","cg1.4xlarge"],
-      "ConstraintDescription" : "must be a valid EC2 instance type."
-    },
-
     "StackID" : {
       "Type" : "String",
       "Description" : "Stack ID name",
@@ -28,18 +20,6 @@
       "Type" : "String",
       "Description" : "Stack ID name for DataBase",
       "Default" : ""
-    },
-
-    "dbuser" : {
-      "Type": "String",
-      "Description" : "Psql User",
-      "Default" : "bree"
-    },
-
-    "dbname" : {
-      "Type": "String",
-      "Description" : "Psql User",
-      "Default" : "bree_prod"
     },
 
     "dbpass" : {
@@ -80,14 +60,14 @@
     },
 
     "version" : {
-      "stamp1"          : { "HOSTNAME" : "oau1001", "AppEnv" : "production", "REGION" : "us-west-2", "IP" : "10.10.5.6",  "DOT" : "",         "SUBNET" : "subnet-970cefce", "SG" : "sg-42bed227", "keypair" : "stamp-prod" },
-      "stamp2"          : { "HOSTNAME" : "oau1002", "AppEnv" : "production", "REGION" : "us-west-2", "IP" : "10.10.6.6",  "DOT" : "",         "SUBNET" : "subnet-90a509f5", "SG" : "sg-42bed227", "keypair" : "stamp-prod" },
-      "staging1"        : { "HOSTNAME" : "oau3001", "AppEnv" : "staging",    "REGION" : "us-east-1", "IP" : "10.30.5.6",  "DOT" : ".staging", "SUBNET" : "subnet-69b57542", "SG" : "sg-6f8b790b", "keypair" : "iad_id_rsa" },
-      "staging2"        : { "HOSTNAME" : "oau3002", "AppEnv" : "staging",    "REGION" : "us-east-1", "IP" : "10.30.6.6",  "DOT" : ".staging", "SUBNET" : "subnet-a4d95dd3", "SG" : "sg-6f8b790b", "keypair" : "iad_id_rsa" },
-      "sandbox1"        : { "HOSTNAME" : "oau4001", "AppEnv" : "sandbox",    "REGION" : "us-west-1", "IP" : "10.10.22.6", "DOT" : ".sandbox", "SUBNET" : "subnet-2500fa40", "SG" : "sg-37fa3c52", "keypair" : "stamp-sandbox" },
-      "sandbox2"        : { "HOSTNAME" : "oau4002", "AppEnv" : "sandbox",    "REGION" : "us-west-1", "IP" : "10.10.52.6", "DOT" : ".sandbox", "SUBNET" : "subnet-08112b4e", "SG" : "sg-37fa3c52", "keypair" : "stamp-sandbox" },
-      "qa1"             : { "HOSTNAME" : "oau5001", "AppEnv" : "qa",         "REGION" : "us-east-1", "IP" : "10.3.0.6",   "DOT" : ".qa",      "SUBNET" : "subnet-db6668f3", "SG" : "sg-59632a3c", "keypair" : "stamp-qa"},
-      "qa2"             : { "HOSTNAME" : "oau5002", "AppEnv" : "qa",         "REGION" : "us-east-1", "IP" : "10.3.0.7",   "DOT" : ".qa",      "SUBNET" : "subnet-ca70bdbd", "SG" : "sg-59632a3c", "keypair" : "stamp-qa"}
+      "stamp1"          : { "HOSTNAME" : "oau1001", "AppEnv" : "production", "REGION" : "us-west-2", "IP" : "10.10.5.6",  "dbuser" : "bree",     "dbname" : "bree_prod", "InstanceType" : "m3.medium", "DOT" : "",         "SUBNET" : "subnet-970cefce", "SG" : "sg-42bed227", "keypair" : "stamp-prod" },
+      "stamp2"          : { "HOSTNAME" : "oau1002", "AppEnv" : "production", "REGION" : "us-west-2", "IP" : "10.10.6.6",  "dbuser" : "bree",     "dbname" : "bree_prod", "InstanceType" : "m3.medium", "DOT" : "",         "SUBNET" : "subnet-90a509f5", "SG" : "sg-42bed227", "keypair" : "stamp-prod" },
+      "staging1"        : { "HOSTNAME" : "oau3001", "AppEnv" : "staging",    "REGION" : "us-east-1", "IP" : "10.30.5.6",  "dbuser" : "bree_app", "dbname" : "bree_prod", "InstanceType" : "m3.medium", "DOT" : ".staging", "SUBNET" : "subnet-69b57542", "SG" : "sg-6f8b790b", "keypair" : "iad_id_rsa" },
+      "staging2"        : { "HOSTNAME" : "oau3002", "AppEnv" : "staging",    "REGION" : "us-east-1", "IP" : "10.30.6.6",  "dbuser" : "bree_app", "dbname" : "bree_prod", "InstanceType" : "m3.medium", "DOT" : ".staging", "SUBNET" : "subnet-a4d95dd3", "SG" : "sg-6f8b790b", "keypair" : "iad_id_rsa" },
+      "sandbox1"        : { "HOSTNAME" : "oau4001", "AppEnv" : "sandbox",    "REGION" : "us-west-1", "IP" : "10.10.22.6", "dbuser" : "null",     "dbname" : "null",      "InstanceType" : "t2.medium", "DOT" : ".sandbox", "SUBNET" : "subnet-2500fa40", "SG" : "sg-37fa3c52", "keypair" : "stamp-sandbox" },
+      "sandbox2"        : { "HOSTNAME" : "oau4002", "AppEnv" : "sandbox",    "REGION" : "us-west-1", "IP" : "10.10.52.6", "dbuser" : "null",     "dbname" : "null",      "InstanceType" : "t2.medium", "DOT" : ".sandbox", "SUBNET" : "subnet-08112b4e", "SG" : "sg-37fa3c52", "keypair" : "stamp-sandbox" },
+      "qa1"             : { "HOSTNAME" : "oau5001", "AppEnv" : "qa",         "REGION" : "us-east-1", "IP" : "10.3.0.6",   "dbuser" : "null",     "dbname" : "null",      "InstanceType" : "t2.medium", "DOT" : ".qa",      "SUBNET" : "subnet-db6668f3", "SG" : "sg-59632a3c", "keypair" : "stamp-qa"},
+      "qa2"             : { "HOSTNAME" : "oau5002", "AppEnv" : "qa",         "REGION" : "us-east-1", "IP" : "10.3.0.7",   "dbuser" : "null",     "dbname" : "null",      "InstanceType" : "t2.medium", "DOT" : ".qa",      "SUBNET" : "subnet-ca70bdbd", "SG" : "sg-59632a3c", "keypair" : "stamp-qa"}
     }
   },
 
@@ -157,12 +137,12 @@
       "Properties" : {
         "ImageId" : { "Fn::FindInMap" : [ "RegionMap", { "Ref" : "AWS::Region" }, "AMI" ]},
         "SecurityGroupIds" : [{ "Fn::FindInMap" : [ "version", { "Ref" : "Version" }, "SG" ]}],
-        "InstanceType" : { "Ref" : "InstanceType" },
+        "InstanceType" : { "Fn::FindInMap" : [ "version", { "Ref" : "Version" }, "InstanceType" ]},
         "SubnetId" : { "Fn::FindInMap" : [ "version", { "Ref" : "Version" }, "SUBNET" ]},
         "PrivateIpAddress" : { "Fn::FindInMap" : [ "version", { "Ref" : "Version" }, "IP" ]},
         "KeyName" : { "Fn::FindInMap"  : [ "version",   { "Ref" : "Version" },     "keypair" ]},
         "IamInstanceProfile" : {"Ref" : "InstanceProfile"},
-        "Tags" : [ {"Key" : "Application", "Value" : { "Ref" : "AWS::StackId"} },
+        "Tags" : [ {"Key" : "Application", "Value" : { "Ref" : "AWS::StackId"} }, {"Key" : "Environment", "Value" : { "Fn::FindInMap" : [ "version", { "Ref" : "Version" }, "AppEnv" ]}},
         {"Key" : "Name", "Value" : { "Fn::Join" : ["-", ["oauth", { "Fn::FindInMap" : [ "version", { "Ref" : "Version" }, "AppEnv" ]} ]]}}],
         "UserData"       : { "Fn::Base64" : { "Fn::Join" : ["", [
           "#!/bin/bash\n",
@@ -210,12 +190,14 @@
           "echo custom_hostname=", { "Fn::FindInMap" : [ "version", { "Ref" : "Version" }, "HOSTNAME" ]}, ">> /etc/facter/facts.d/custom_facts.txt\n",
           "echo ", "stackid=", { "Ref" : "StackID" }, ">> /etc/facter/facts.d/custom_facts.txt\n",
           "echo ", { "Fn::Join" : [ "" , ["oauth_db_host=oauthdb", { "Ref" : "StackIDDB" }, { "Fn::FindInMap" : [ "version", { "Ref" : "Version" }, "DOT" ]}, ".bluekite.com" ]]}, ">> /etc/facter/facts.d/custom_facts.txt\n",
-          "echo ", "oauth_db_name=", { "Ref" : "dbname" },  ">> /etc/facter/facts.d/custom_facts.txt\n",
-          "echo ", "oauth_db_user=", { "Ref" : "dbuser" },  ">> /etc/facter/facts.d/custom_facts.txt\n",
+          "echo ", "oauth_db_name=", { "Fn::FindInMap" : [ "version", { "Ref" : "Version" }, "dbname" ]},  ">> /etc/facter/facts.d/custom_facts.txt\n",
+          "echo ", "oauth_db_user=", { "Fn::FindInMap" : [ "version", { "Ref" : "Version" }, "dbuser" ]},  ">> /etc/facter/facts.d/custom_facts.txt\n",
           "echo ", "oauth_db_pass=", { "Ref" : "dbpass" },  ">> /etc/facter/facts.d/custom_facts.txt\n",
           "echo aws_region=", { "Fn::FindInMap" : [ "version", { "Ref" : "Version" }, "REGION" ]}, ">> /etc/facter/facts.d/custom_facts.txt\n",
           "echo oauth_db_port=5432  >> /etc/facter/facts.d/custom_facts.txt\n",
           "echo app_name=oauth >> /etc/facter/facts.d/custom_facts.txt\n",
+          "echo ", { "Fn::Join" : [ "" , ["oauth_redis_host=oredis", { "Ref" : "StackIDDB" }, { "Fn::FindInMap" : [ "version", { "Ref" : "Version" }, "DOT" ]}, ".bluekite.com" ]]}, ">> /etc/facter/facts.d/custom_facts.txt\n",
+          "echo oauth_redis_port=6359  >> /etc/facter/facts.d/custom_facts.txt\n",
 
           "# Clone role hostname repo\n",
           "git clone git@github.com:victormarroquin/Puppet-HostName.git /etc/puppet/modules/hosts > /tmp/git.log 2>&1 || error_exit 'Failed to clone hostname repo'\n",
