@@ -120,7 +120,7 @@
         "SubnetId"         : { "Fn::FindInMap"  : [ "version", { "Ref" : "Version" }, "PrivateSn" ]},
         "SecurityGroupIds" : [{ "Fn::FindInMap" : [ "version", { "Ref" : "Version" }, "PrivateSg" ]}],
         "InstanceType"     : { "Fn::FindInMap"  : [ "version", { "Ref" : "Version" }, "InstanceType" ]},
-        "Tags" : [ {"Key" : "Application", "Value" : { "Ref" : "AWS::StackId"} },
+        "Tags" : [ {"Key" : "Application", "Value" : { "Ref" : "AWS::StackId"} }, {"Key" : "Environment", "Value" : { "Fn::FindInMap" : [ "version", { "Ref" : "Version" }, "AppEnv" ]}},
                            {"Key" : "Name", "Value" : { "Fn::Join" : [ "", ["worker", { "Ref" : "Partner" }, { "Ref" : "StackID" }, {"Ref" : "Environment"} ] ] } } ],
         "UserData"       : { "Fn::Base64" : { "Fn::Join" : ["", [
           "#!/bin/bash\n",
