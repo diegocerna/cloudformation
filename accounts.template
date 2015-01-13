@@ -34,7 +34,9 @@
       "sv"             : { "COUNTRY" : "sv" },
       "ni"             : { "COUNTRY" : "ni" },
       "pa"             : { "COUNTRY" : "pa" },
-      "ph"             : { "COUNTRY" : "ph" }
+      "ph"             : { "COUNTRY" : "ph" },
+      "ph"             : { "COUNTRY" : "br" },
+      "ph"             : { "COUNTRY" : "pe" }
     }
   },
 
