@@ -8,6 +8,6 @@
   { "ParameterKey": "RoleDeployBranch", "ParameterValue": "feature/autoreg" },
   { "ParameterKey": "SitesDeployBranch", "ParameterValue": "feature/autoreg" },
   { "ParameterKey": "Version", "ParameterValue": "staging2" },
-  { "ParameterKey": "StackID", "ParameterValue": "-autoreg" },
+  { "ParameterKey": "StackID", "ParameterValue": "autoreg" },
   { "ParameterKey": "Environment", "ParameterValue": "staging" }
 ]
