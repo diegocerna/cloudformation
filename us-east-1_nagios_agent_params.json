@@ -1,0 +1,13 @@
+[
+  { "ParameterValue": "staging", "ParameterKey": "Environment" },
+  { "ParameterValue": "sg-ec888589", "ParameterKey": "SecurityGroupId" },
+  { "ParameterValue": "-autoreg", "ParameterKey": "StackID" },
+  { "ParameterValue": "0.1.9", "ParameterKey": "RoleDeployBranch" },
+  { "ParameterValue": "1.1.1", "ParameterKey": "AppDeployBranch" },
+  { "ParameterValue": "subnet-d41cbca3", "ParameterKey": "SubnetId" },
+  { "ParameterValue": "staging", "ParameterKey": "PuppetEnv" },
+  { "ParameterValue": "staging2", "ParameterKey": "Version" },
+  { "ParameterValue": "feature/autoreg", "ParameterKey": "SitesDeployBranch" },
+  { "ParameterValue": "iad_id_rsa", "ParameterKey": "KeyName" },
+  { "ParameterValue": "t2.micro", "ParameterKey": "InstanceType" }
+]
