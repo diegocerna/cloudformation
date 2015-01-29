@@ -41,12 +41,6 @@
             "Default": "sg-26632a43"
         },
 
-        "AppDeployBranch" : {
-          "Type" : "String",
-          "Description" : "Git branch where to deploy the code from.",
-          "Default" : "feature/autoreg"
-        },
-
         "RoleDeployBranch" : {
           "Type" : "String",
           "Description" : "Git branch where to deploy the code from.",
@@ -171,7 +165,7 @@
                     "echo ", { "Fn::Join" : [ "" , ["fqdn=", { "Fn::FindInMap" : [ "version", { "Ref" : "Version" }, "HOSTNAME" ]}, { "Fn::FindInMap" : [ "env", { "Ref" : "Environment" }, "DOT" ]}, ".xoom.com" ]]},        ">> /etc/facter/facts.d/custom_facts.txt\n",
                     "echo ", "stackid=", { "Ref" : "StackID" },       ">> /etc/facter/facts.d/custom_facts.txt\n",
                     "echo ", { "Fn::Join" : [ "" , ["logserver_host=logs", { "Ref" : "StackID" }, { "Fn::FindInMap" : [ "env", { "Ref" : "Environment" }, "DOT" ]}, ".xoom.com" ]]},        ">> /etc/facter/facts.d/custom_facts.txt\n",
-                    "echo ", "revision=", { "Ref" : "AppDeployBranch" }, ">> /etc/facter/facts.d/custom_facts.txt\n",
+                    "echo ", "revision=", { "Ref" : "RoleDeployBranch" }, ">> /etc/facter/facts.d/custom_facts.txt\n",
                     "echo logserver_port=5001  >> /etc/facter/facts.d/custom_facts.txt\n",
                     "echo app_name=nagios_server >> /etc/facter/facts.d/custom_facts.txt\n",
                     "echo custom_hostname=", { "Fn::FindInMap" : [ "version", { "Ref" : "Version" }, "HOSTNAME" ]}, ">> /etc/facter/facts.d/custom_facts.txt\n",
