@@ -16,14 +16,14 @@
     },
 
     "version" : {
-      "stamp1"         : { "HOSTNAME" : "1001", "DOT" : "",         "keypair" : "stamp-prod",    "AppEnv" : "production", "PuppetEnv" : "production", "dbuser" : "stampdb", "InstanceType" : "c3.xlarge", "PrivateSg" : "sg-42bed227", "PrivateSn" : "subnet-970cefce" },
-      "stamp2"         : { "HOSTNAME" : "1002", "DOT" : "",         "keypair" : "stamp-prod",    "AppEnv" : "production", "PuppetEnv" : "production", "dbuser" : "stampdb", "InstanceType" : "c3.xlarge", "PrivateSg" : "sg-42bed227", "PrivateSn" : "subnet-90a509f5" },
-      "staging1"       : { "HOSTNAME" : "3001", "DOT" : ".staging", "keypair" : "stamp-staging", "AppEnv" : "staging",    "PuppetEnv" : "staging",    "dbuser" : "stampdb", "InstanceType" : "c3.xlarge", "PrivateSg" : "sg-ec888589", "PrivateSn" : "subnet-d511f3fe" },
-      "staging2"       : { "HOSTNAME" : "3002", "DOT" : ".staging", "keypair" : "stamp-staging", "AppEnv" : "staging",    "PuppetEnv" : "staging",    "dbuser" : "stampdb", "InstanceType" : "c3.xlarge", "PrivateSg" : "sg-ec888589", "PrivateSn" : "subnet-d41cbca3" },
-      "sandbox1"       : { "HOSTNAME" : "4001", "DOT" : ".sandbox", "keypair" : "stamp-sandbox", "AppEnv" : "sandbox",    "PuppetEnv" : "sandbox",    "dbuser" : "stampdb", "InstanceType" : "m3.medium", "PrivateSg" : "sg-36fa3c53", "PrivateSn" : "subnet-5200fa37" },
-      "sandbox2"       : { "HOSTNAME" : "4002", "DOT" : ".sandbox", "keypair" : "stamp-sandbox", "AppEnv" : "sandbox",    "PuppetEnv" : "sandbox",    "dbuser" : "stampdb", "InstanceType" : "m3.medium", "PrivateSg" : "sg-36fa3c53", "PrivateSn" : "subnet-0f112b49" },
-      "qa1"            : { "HOSTNAME" : "5001", "DOT" : ".qa",      "keypair" : "stamp-qa",      "AppEnv" : "qa",         "PuppetEnv" : "qa",         "dbuser" : "stampdb", "InstanceType" : "t2.micro",  "PrivateSg" : "sg-26632a43", "PrivateSn" : "subnet-1a6c6532" },
-      "qa2"            : { "HOSTNAME" : "5002", "DOT" : ".qa",      "keypair" : "stamp-qa",      "AppEnv" : "qa",         "PuppetEnv" : "qa",         "dbuser" : "stampdb", "InstanceType" : "t2.micro",  "PrivateSg" : "sg-26632a43", "PrivateSn" : "subnet-1a6c6532" }
+      "stamp1"         : { "HOSTNAME" : "1001", "DOT" : "",         "keypair" : "pdx_id_rsa",    "AppEnv" : "production", "PuppetEnv" : "production", "dbuser" : "bpapi_coruscant", "InstanceType" : "c3.xlarge", "PrivateSg" : "sg-42bed227", "PrivateSn" : "subnet-970cefce" },
+      "stamp2"         : { "HOSTNAME" : "1002", "DOT" : "",         "keypair" : "pdx_id_rsa",    "AppEnv" : "production", "PuppetEnv" : "production", "dbuser" : "bpapi_coruscant", "InstanceType" : "c3.xlarge", "PrivateSg" : "sg-42bed227", "PrivateSn" : "subnet-90a509f5" },
+      "staging1"       : { "HOSTNAME" : "3001", "DOT" : ".staging", "keypair" : "iad_id_rsa",    "AppEnv" : "staging",    "PuppetEnv" : "staging",    "dbuser" : "bpapi_naboo",     "InstanceType" : "c3.xlarge", "PrivateSg" : "sg-ec888589", "PrivateSn" : "subnet-d511f3fe" },
+      "staging2"       : { "HOSTNAME" : "3002", "DOT" : ".staging", "keypair" : "iad_id_rsa",    "AppEnv" : "staging",    "PuppetEnv" : "staging",    "dbuser" : "bpapi_naboo",     "InstanceType" : "c3.xlarge", "PrivateSg" : "sg-ec888589", "PrivateSn" : "subnet-d41cbca3" },
+      "sandbox1"       : { "HOSTNAME" : "4001", "DOT" : ".sandbox", "keypair" : "stamp-sandbox", "AppEnv" : "sandbox",    "PuppetEnv" : "sandbox",    "dbuser" : "bpapi_tatooine",  "InstanceType" : "m3.medium", "PrivateSg" : "sg-36fa3c53", "PrivateSn" : "subnet-5200fa37" },
+      "sandbox2"       : { "HOSTNAME" : "4002", "DOT" : ".sandbox", "keypair" : "stamp-sandbox", "AppEnv" : "sandbox",    "PuppetEnv" : "sandbox",    "dbuser" : "bpapi_tatooine",  "InstanceType" : "m3.medium", "PrivateSg" : "sg-36fa3c53", "PrivateSn" : "subnet-0f112b49" },
+      "qa1"            : { "HOSTNAME" : "5001", "DOT" : ".qa",      "keypair" : "stamp-qa",      "AppEnv" : "qa",         "PuppetEnv" : "qa",         "dbuser" : "bpapi_user",      "InstanceType" : "t2.medium", "PrivateSg" : "sg-26632a43", "PrivateSn" : "subnet-1a6c6532" },
+      "qa2"            : { "HOSTNAME" : "5002", "DOT" : ".qa",      "keypair" : "stamp-qa",      "AppEnv" : "qa",         "PuppetEnv" : "qa",         "dbuser" : "bpapi_user",      "InstanceType" : "t2.medium", "PrivateSg" : "sg-26632a43", "PrivateSn" : "subnet-1a6c6532" }
     },
 
     "accountsCountry" : {
@@ -34,7 +34,9 @@
       "sv"             : { "COUNTRY" : "sv" },
       "ni"             : { "COUNTRY" : "ni" },
       "pa"             : { "COUNTRY" : "pa" },
-      "ph"             : { "COUNTRY" : "ph" }
+      "ph"             : { "COUNTRY" : "ph" },
+      "br"             : { "COUNTRY" : "br" },
+      "pe"             : { "COUNTRY" : "pe" }
     }
   },
 
@@ -110,7 +112,7 @@
         "SubnetId"         : { "Fn::FindInMap"  : [ "version",   { "Ref" : "Version" },     "PrivateSn" ]},
         "SecurityGroupIds" : [{ "Fn::FindInMap" : [ "version",   { "Ref" : "Version" },     "PrivateSg" ]}],
         "InstanceType"     : { "Fn::FindInMap"  : [ "version",   { "Ref" : "Version" },     "InstanceType" ]},
-        "Tags" : [ {"Key"  : "Application", "Value" : { "Ref" : "AWS::StackId"} },
+        "Tags" : [ {"Key"  : "Application", "Value" : { "Ref" : "AWS::StackId"} }, {"Key" : "Environment", "Value" : { "Fn::FindInMap" : [ "version", { "Ref" : "Version" }, "AppEnv" ]}},
           {"Key" : "Name", "Value" : { "Fn::Join" : [ "", ["accounts", { "Ref" : "StackID"}, ".", { "Fn::FindInMap" : [ "accountsCountry", { "Ref" : "AccountsCountry" }, "COUNTRY" ]}, ".", { "Fn::FindInMap" : [ "version", { "Ref" : "Version" }, "AppEnv" ]} ] ] } } ],
         "UserData"       : { "Fn::Base64" : { "Fn::Join" : ["", [
           "#!/bin/bash\n",
@@ -159,7 +161,7 @@
           "#setting my custom facts\n",
           "mkdir -p /etc/facter/facts.d\n",
           "touch /etc/facter/facts.d/custom_facts.txt\n",
-          "echo ", { "Fn::Join" : [ "" , ["fqdn=accounts", { "Ref" : "StackID" }, { "Fn::FindInMap" : [ "accountsCountry", { "Ref" : "AccountsCountry" }, "COUNTRY" ]}, { "Fn::FindInMap" : [ "version", { "Ref" : "Version" }, "DOT" ]}, ".bluekite.com" ]]},      ">> /etc/facter/facts.d/custom_facts.txt\n",
+          "echo ", { "Fn::Join" : [ "" , ["fqdn=accounts", { "Ref" : "StackID" }, ".", { "Fn::FindInMap" : [ "accountsCountry", { "Ref" : "AccountsCountry" }, "COUNTRY" ]}, { "Fn::FindInMap" : [ "version", { "Ref" : "Version" }, "DOT" ]}, ".bluekite.com" ]]},      ">> /etc/facter/facts.d/custom_facts.txt\n",
           "echo ", "stackid=", { "Ref" : "StackID" },           ">> /etc/facter/facts.d/custom_facts.txt\n",
           "echo ", { "Fn::Join" : [ "" , ["queue_host=queue", { "Ref" : "StackIDDB" }, ".accounts", { "Fn::FindInMap" : [ "version", { "Ref" : "Version" }, "DOT" ]}, ".bluekite.com" ]]},        ">> /etc/facter/facts.d/custom_facts.txt\n",
           "echo ", { "Fn::Join" : [ "" , ["logserver_host=logs", { "Ref" : "StackID" }, { "Fn::FindInMap" : [ "version", { "Ref" : "Version" }, "DOT" ]}, ".bluekite.com" ]]},        ">> /etc/facter/facts.d/custom_facts.txt\n",

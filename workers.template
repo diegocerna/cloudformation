@@ -1,0 +1,230 @@
+{
+  "AWSTemplateFormatVersion" : "2010-09-09",
+
+  "Description" : "Hamster Worker Instance - filename:workers.template",
+
+  "Parameters" : {
+
+    "StackID" : {
+      "Type" : "String",
+      "Description" : "Stack ID name",
+      "Default" : "-"
+    },
+
+    "StackIDDB" : {
+      "Type" : "String",
+      "Description" : "Stack ID name for DataBase",
+      "Default" : ""
+    },
+
+    "AppDeployBranch" : {
+      "Type" : "String",
+      "Description" : "Git branch where to deploy the code from.",
+      "Default" : ""
+    },
+
+    "RoleDeployBranch" : {
+      "Type" : "String",
+      "Description" : "Git branch where to deploy the code from.",
+      "Default" : ""
+    },
+
+    "SitesDeployBranch" : {
+      "Type" : "String",
+      "Description" : "Git branch where to deploy the code from.",
+      "Default" : ""
+    },
+
+    "Version" : {
+      "Type" : "String",
+      "Description" : "use qa, sandbox, staging or stamp with 1 or 2 suffix depends of the AZ that you be place the instances",
+      "AllowedValues" : [ "stamp1","stamp2","staging1","staging2","sandbox1","sandbox2","qa1","qa2"],
+      "ConstraintDescription" : "must be a valid version for STAMP"
+    },
+
+    "Partner" : {
+      "Type" : "String",
+      "Description" : "define partner name",
+      "Default" : ""
+    }
+  },
+
+  "Mappings" : {
+
+    "RegionMap" : {
+      "sa-east-1"      : { "AMI" : "ami-d545e5c8" },
+      "us-west-1"      : { "AMI" : "ami-17829452" },
+      "ap-northeast-1" : { "AMI" : "ami-35bbd334" },
+      "ap-southeast-1" : { "AMI" : "ami-605c0a32" },
+      "ap-southeast-2" : { "AMI" : "ami-fb4bd5c1" },
+      "eu-west-1"      : { "AMI" : "ami-d03dcaa7" },
+      "us-east-1"      : { "AMI" : "ami-0c56df64" },
+      "us-west-2"      : { "AMI" : "ami-07fcb437" }
+    },
+
+    "version" : {
+      "stamp1"         : { "HOSTNAME" : "1001", "DOT" : "",         "keypair" : "pdx_id_rsa",    "AppEnv" : "production", "PuppetEnv" : "production", "InstanceType" : "m3.medium", "pnsg" : "sg-44bed221", "epsg" : "sg-47bed222", "pxsg" : "sg-77bed212", "pfsg" : "sg-45bed220", "tpsg" : "sg-43bed226", "resg" : "sg-7bbed21e", "pnsn" : "subnet-8e0cefd7", "epsn" : "subnet-890cefd0", "pxsn" : "subnet-810cefd8", "pfsn" : "subnet-8d0cefd4", "tpsn" : "subnet-8c0cefd5", "resn" : "subnet-8b0cefd2", "ttsn" : "subnet-8f0cefd6" },
+      "stamp2"         : { "HOSTNAME" : "1002", "DOT" : "",         "keypair" : "pdx_id_rsa",    "AppEnv" : "production", "PuppetEnv" : "production", "InstanceType" : "m3.medium", "pnsg" : "sg-44bed221", "epsg" : "sg-47bed222", "pxsg" : "sg-77bed212", "pfsg" : "sg-45bed220", "tpsg" : "sg-43bed226", "resg" : "sg-7bbed21e", "pnsn" : "subnet-9ca509f9", "epsn" : "subnet-97a509f2", "pxsn" : "subnet-99a509fc", "pfsn" : "subnet-96a509f3", "tpsn" : "subnet-92a509f7", "resn" : "subnet-9fa509fa", "ttsn" : "subnet-91a509f4" },
+      "staging1"       : { "HOSTNAME" : "3001", "DOT" : ".staging", "keypair" : "iad_id_rsa",    "AppEnv" : "staging",    "PuppetEnv" : "staging",    "InstanceType" : "m3.medium", "pnsg" : "sg-ef88858a", "epsg" : "sg-e3888586", "pxsg" : "sg-01888564", "pfsg" : "sg-ee88858b", "tpsg" : "sg-e888858d", "resg" : "sg-e988858c", "pnsn" : "subnet-2e16f405", "epsn" : "subnet-d611f3fd", "pxsn" : "subnet-2816f403", "pfsn" : "subnet-2b16f400", "tpsn" : "subnet-2f16f404", "resn" : "subnet-2916f402", "ttsn" : "subnet-d711f3fc" },
+      "staging2"       : { "HOSTNAME" : "3002", "DOT" : ".staging", "keypair" : "iad_id_rsa",    "AppEnv" : "staging",    "PuppetEnv" : "staging",    "InstanceType" : "m3.medium", "pnsg" : "sg-ef88858a", "epsg" : "sg-e3888586", "pxsg" : "sg-01888564", "pfsg" : "sg-ee88858b", "tpsg" : "sg-e888858d", "resg" : "sg-e988858c", "pnsn" : "subnet-e91cbc9e", "epsn" : "subnet-d21cbca5", "pxsn" : "subnet-d61cbca1", "pfsn" : "subnet-eb1cbc9c", "tpsn" : "subnet-d71cbca0", "resn" : "subnet-e81cbc9f", "ttsn" : "subnet-e81cbc9f" },
+      "sandbox1"       : { "HOSTNAME" : "4001", "DOT" : ".sandbox", "keypair" : "stamp-sandbox", "AppEnv" : "sandbox",    "PuppetEnv" : "sandbox",    "InstanceType" : "t2.medium", "pnsg" : "sg-2afa3c4f", "epsg" : "sg-34fa3c51", "pxsg" : "sg-21fa3c44", "pfsg" : "sg-35fa3c50", "tpsg" : "sg-29fa3c4c", "resg" : "sg-28fa3c4d", "pnsn" : "subnet-5900fa3c", "epsn" : "subnet-5c00fa39", "pxsn" : "subnet-2400fa41", "pfsn" : "subnet-5b00fa3e", "tpsn" : "subnet-5d00fa38", "resn" : "subnet-5f00fa3a", "ttsn" : "subnet-5f00fa3a" },
+      "sandbox2"       : { "HOSTNAME" : "4002", "DOT" : ".sandbox", "keypair" : "stamp-sandbox", "AppEnv" : "sandbox",    "PuppetEnv" : "sandbox",    "InstanceType" : "t2.medium", "pnsg" : "sg-2afa3c4f", "epsg" : "sg-34fa3c51", "pxsg" : "sg-21fa3c44", "pfsg" : "sg-35fa3c50", "tpsg" : "sg-29fa3c4c", "resg" : "sg-28fa3c4d", "pnsn" : "subnet-09112b4f", "epsn" : "subnet-17112b51", "pxsn" : "subnet-14112b52", "pfsn" : "subnet-0c112b4a", "tpsn" : "subnet-0b112b4d", "resn" : "subnet-0a112b4c", "ttsn" : "subnet-0a112b4c" },
+      "qa1"            : { "HOSTNAME" : "5001", "DOT" : ".qa",      "keypair" : "stamp-qa",      "AppEnv" : "qa",         "PuppetEnv" : "qa",         "InstanceType" : "t2.medium", "pnsg" : "sg-58632a3d", "epsg" : "sg-25632a40", "pxsg" : "sg-68632a0d", "pfsg" : "sg-24632a41", "tpsg" : "sg-20632a45", "resg" : "sg-5a632a3f", "pnsn" : "subnet-1f6c6537", "epsn" : "subnet-696c6541", "pxsn" : "subnet-1e6c6536", "pfsn" : "subnet-1c6c6534", "tpsn" : "subnet-6a6c6542", "resn" : "subnet-1b6c6533", "ttsn" : "subnet-dc07f5f7" },
+      "qa2"            : { "HOSTNAME" : "5002", "DOT" : ".qa",      "keypair" : "stamp-qa",      "AppEnv" : "qa",         "PuppetEnv" : "qa",         "InstanceType" : "t2.medium", "pnsg" : "sg-58632a3d", "epsg" : "sg-25632a40", "pxsg" : "sg-68632a0d", "pfsg" : "sg-24632a41", "tpsg" : "sg-20632a45", "resg" : "sg-5a632a3f", "pnsn" : "subnet-1f6c6537", "epsn" : "subnet-696c6541", "pxsn" : "subnet-1e6c6536", "pfsn" : "subnet-1c6c6534", "tpsn" : "subnet-6a6c6542", "resn" : "subnet-1b6c6533", "ttsn" : "subnet-dc07f5f7" }
+    },
+
+    "partner" : {
+      "pronet"         : { "PARTNER" : "pn", "PARTNERSN" : "pnsn", "PARTNERSG" : "pnsg" },
+      "redefectiva"    : { "PARTNER" : "re", "PARTNERSN" : "resn", "PARTNERSG" : "resg" },
+      "tpago"          : { "PARTNER" : "tp", "PARTNERSN" : "tpsn", "PARTNERSG" : "tpsg" },
+      "puntoxpress"    : { "PARTNER" : "px", "PARTNERSN" : "pxsn", "PARTNERSG" : "pxsg" },
+      "puntofacil"     : { "PARTNER" : "pf", "PARTNERSN" : "pfsn", "PARTNERSG" : "pfsg" },
+      "epago"          : { "PARTNER" : "ep", "PARTNERSN" : "epsn", "PARTNERSG" : "epsg" },
+      "transferto"     : { "PARTNER" : "tt", "PARTNERSN" : "ttsn", "PARTNERSG" : "resg" }
+    }
+  },
+
+  "Resources" : {
+    "DNSRecord" : {
+      "Type" : "AWS::Route53::RecordSet",
+      "Properties" : {
+        "HostedZoneName" : "bluekite.com.",
+        "Comment" : "DNS name for my instance.",
+        "Name" : {"Fn::Join" : ["", ["worker", { "Ref" : "Partner" }, { "Ref" : "StackID" }, ".", { "Fn::FindInMap" : [ "version", { "Ref" : "Version" }, "AppEnv" ]}, ".bluekite.com."]]},
+        "Type" : "A",
+        "TTL" : "300",
+        "ResourceRecords" : [ { "Fn::GetAtt" : [ "WorkerInstance", "PrivateIp" ] } ]
+      },
+      "DependsOn" : "WorkerInstance"
+    },
+
+    "WorkerInstance" : {
+      "Type" : "AWS::EC2::Instance",
+      "Metadata" : {
+        "Comment" : "Worker Aplication Instance"
+      },
+
+      "Properties" : {
+        "ImageId" : { "Fn::FindInMap" : [ "RegionMap", { "Ref" : "AWS::Region" }, "AMI" ]},
+        "KeyName"          : { "Fn::FindInMap"  : [ "version", { "Ref" : "Version" }, "keypair" ]},
+        "SubnetId"         : { "Fn::FindInMap"  : [ "version", { "Ref" : "Version" }, { "Fn::FindInMap" : [ "partner", { "Ref" : "Partner" }, "PARTNERSN" ]}]},
+        "SecurityGroupIds" : [{ "Fn::FindInMap" : [ "version", { "Ref" : "Version" }, { "Fn::FindInMap" : [ "partner", { "Ref" : "Partner" }, "PARTNERSG" ]}]}],
+        "InstanceType"     : { "Fn::FindInMap"  : [ "version", { "Ref" : "Version" }, "InstanceType" ]},
+        "Tags" : [ {"Key" : "Application", "Value" : { "Ref" : "AWS::StackId"} }, {"Key" : "Environment", "Value" : { "Fn::FindInMap" : [ "version", { "Ref" : "Version" }, "AppEnv" ]}},
+                           {"Key" : "Name", "Value" : { "Fn::Join" : [ "", ["worker", { "Ref" : "Partner" }, { "Ref" : "StackID" }, ".", { "Fn::FindInMap" : [ "version", { "Ref" : "Version" }, "AppEnv" ]} ] ] } } ],
+        "UserData"       : { "Fn::Base64" : { "Fn::Join" : ["", [
+          "#!/bin/bash\n",
+            "# Helper function to notify of failed operation\n",
+            "function error_exit\n",
+            "{\n",
+            "  cfn-signal -e 1 -r \"$1\" '", { "Ref" : "WorkerWaitHandle" }, "'\n",
+            "  exit 1\n",
+            "}\n",
+
+            "# Run Instance default configuration via CloudFormation::Init\n",
+            "cfn-init -v --region ", { "Ref" : "AWS::Region" },
+            "    -s ", { "Ref" : "AWS::StackId" },
+            " -r WorkerInstance",
+            " -c default",
+            " || error_exit 'Failed to run cfn-init'\n",
+
+            "# Register Github fingerprints\n",
+            "ssh-keygen -f ~/.ssh/known_hosts -H -F github.com | grep -q found || ssh-keyscan -H github.com >> ~/.ssh/known_hosts\n",
+
+            "# Copy credentials to root user\n",
+            "cp /home/ubuntu/.ssh/* /root/.ssh/\n",
+
+            "# Add FQDN on etc/environment\n",
+            "echo ", { "Fn::Join" : [ "" , ["FQDN=worker",{ "Ref" : "Partner" }, { "Ref" : "StackID" }, { "Fn::FindInMap" : [ "version", { "Ref" : "Version" }, "DOT" ]}, ".bluekite.com" ]]}, ">> /etc/environment\n",
+            "echo ", "STACKID=", { "Ref" : "StackID" }, ">> /etc/environment\n",
+
+            "# Clone sites repo to ubuntu user home\n",
+            "git clone -b ", { "Ref" : "SitesDeployBranch" }, " git@github.com:blue-kite/xbp_puppet_sites.git /home/ubuntu/sites > /tmp/git.log 2>&1 || error_exit 'Failed to clone sites repo'\n",
+
+            "# Clone role app repo\n",
+            "git clone -b ", { "Ref" : "RoleDeployBranch" }, " git@github.com:blue-kite/xbp_puppet_role_worker_", { "Ref" : "Partner" }, ".git /etc/puppet/modules/worker_", { "Ref" : "Partner" }, " > /tmp/git.log 2>&1 || error_exit 'Failed to clone role app repo'\n",
+            "chown ubuntu:ubuntu -R /etc/puppet/modules/worker_", { "Ref" : "Partner" }, "\n",
+
+            "#Installing Ruby\n",
+            "apt-get -y install libyaml-0-2\n",
+            "apt-get -y install ruby1.9.3\n",
+            "update-alternatives --set ruby /usr/bin/ruby1.9.1\n",
+            "apt-get -y install rubygems\n",
+            "update-alternatives --set gem /usr/bin/gem1.9.1\n",
+
+            "# Install application's dependencies via librarian puppet\n",
+            "cd /etc/puppet/modules/worker_", { "Ref" : "Partner" }, "\n",
+            "rm Gemfile*\n",
+            "sudo librarian-puppet install --clean --verbose --path=/etc/puppet/modules > /tmp/librarian-puppet.log 2>&1 || error_exit 'failed to install puppet submodules'\n",
+
+            "#setting my custom facts\n",
+            "mkdir -p /etc/facter/facts.d\n",
+            "touch /etc/facter/facts.d/custom_facts.txt\n",
+            "echo ", { "Fn::Join" : [ "" , ["fqdn=worker", { "Ref" : "Partner" }, { "Ref" : "StackID" }, { "Fn::FindInMap" : [ "version", { "Ref" : "Version" }, "DOT" ]}, ".bluekite.com" ]]},        ">> /etc/facter/facts.d/custom_facts.txt\n",
+            "echo ", { "Fn::Join" : [ "" , ["queue_host=queue", { "Ref" : "StackIDDB" }, ".accounts", { "Fn::FindInMap" : [ "version", { "Ref" : "Version" }, "DOT" ]}, ".bluekite.com" ]]},        ">> /etc/facter/facts.d/custom_facts.txt\n",
+            "echo ", "stackid=", { "Ref" : "StackID" },       ">> /etc/facter/facts.d/custom_facts.txt\n",
+            "echo ", "revision=", { "Ref" : "AppDeployBranch" }, ">> /etc/facter/facts.d/custom_facts.txt\n",
+            "echo ", { "Fn::Join" : [ "" , ["logserver_host=logs", { "Ref" : "StackID" }, { "Fn::FindInMap" : [ "version", { "Ref" : "Version" }, "DOT" ]}, ".bluekite.com" ]]},        ">> /etc/facter/facts.d/custom_facts.txt\n",
+            "echo logserver_port=5001  >> /etc/facter/facts.d/custom_facts.txt\n",
+            "echo app_name=worker", { "Ref" : "Partner" }, ">> /etc/facter/facts.d/custom_facts.txt\n",
+            "echo custom_hostname=", { "Fn::FindInMap" : [ "version", { "Ref" : "Version" }, "HOSTNAME" ]}, ">> /etc/facter/facts.d/custom_facts.txt\n",
+            "echo custom_hostname=", { "Fn::Join" : [ "" , [ "w", { "Fn::FindInMap" : [ "partner", { "Ref" : "Partner" }, "PARTNER" ]}, { "Fn::FindInMap" : [ "version", { "Ref" : "Version" }, "HOSTNAME" ]}]]}, ">> /etc/facter/facts.d/custom_facts.txt\n",
+            "echo ", { "Fn::Join" : [ "" , ["nagios_beanstalk_host=queue", { "Ref" : "StackIDDB" }, ".accounts", { "Fn::FindInMap" : [ "version", { "Ref" : "Version" }, "DOT" ]}, ".bluekite.com" ]]},      ">> /etc/facter/facts.d/custom_facts.txt\n",
+
+
+            "# Clone role hostname repo\n",
+            "git clone git@github.com:victormarroquin/Puppet-HostName.git /etc/puppet/modules/hosts > /tmp/git.log 2>&1 || error_exit 'Failed to clone hostname repo'\n",
+
+            "export LANG=en_US.UTF-8; sudo puppet apply --verbose --debug /etc/puppet/modules/hosts/tests/init.pp > /tmp/pupet_hostname.log 2>&1 || error_exit 'failed to apply hosts puppet manifests'\n",
+
+            "sudo apt-get update\n",
+            "sudo apt-get upgrade\n",
+
+            "cd /home/ubuntu/sites\n",
+            "sudo sh setup.sh\n",
+
+            "export LANG=en_US.UTF-8; sudo puppet apply --verbose --debug --environment=", { "Fn::FindInMap" : [ "version", { "Ref" : "Version" }, "PuppetEnv" ]}, " /home/ubuntu/sites/site.pp > /tmp/puppet.log 2>&1 || error_exit 'failed to apply puppet manifests'\n",
+
+            "cd /opt/xoom/apps/worker/current && bundle exec rake airbrake:deploy\n",
+
+            "# Signal setup is complete\n",
+            "cfn-signal -e $? -r 'Completed configuration' '",
+
+            {
+                "Ref" : "WorkerWaitHandle"
+            },
+                    "'\n"
+          ]]}}
+        }
+    },
+
+    "WorkerWaitHandle" : {
+      "Type" : "AWS::CloudFormation::WaitConditionHandle"
+    },
+
+    "WorkerWaitCondition" : {
+      "Type" : "AWS::CloudFormation::WaitCondition",
+      "DependsOn" : "WorkerInstance",
+      "Properties" : {
+        "Handle" : {"Ref" : "WorkerWaitHandle"},
+        "Timeout" : "2000"
+      }
+    }
+  },
+
+  "Outputs" : {
+    "InstanceId" : {
+      "Value" : { "Ref" : "WorkerInstance" },
+      "Description" : "Instance Id of newly created instance"
+    },
+
+    "IPAddress" : {
+      "Value" : { "Fn::GetAtt" : [ "WorkerInstance", "PrivateIp" ] },
+      "Description" : "Private IP address of instance"
+    },
+
+    "DomainName" : {
+      "Value" : { "Ref" : "DNSRecord" }
+    }
+  }
+}

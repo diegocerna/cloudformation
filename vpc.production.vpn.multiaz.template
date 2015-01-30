@@ -22,22 +22,15 @@
   "Mappings" : {
 
     "subnets" : {
-      "stamp1"             : { "VPCSN" : "10.10.0.0/16", "PRIVATESN" : "10.10.22.0/23", "MANAGESN" : "10.10.82.0/24", "MANAGESN2" : "10.10.83.0/24", "WORKERSN1" : "10.10.24.0/27", "WORKERSN2" : "10.10.24.32/27", "WORKERSN3" : "10.10.24.64/27", "WORKERSN4" : "10.10.24.96/27", "WORKERSN5" : "10.10.24.128/27", "WORKERSN6" : "10.10.24.160/27", "WORKERSN7" : "10.10.24.192/27", "DBSN" : "10.10.3.0/24", "DBSN2" : "10.10.4.0/24", "PRIVATESN2" : "10.10.52.0/23", "WORKERSN101" : "10.10.54.0/27", "WORKERSN102" : "10.10.54.32/27", "WORKERSN103" : "10.10.54.64/27", "WORKERSN104" : "10.10.54.96/27", "WORKERSN105" : "10.10.54.128/27", "WORKERSN106" : "10.10.54.160/27", "WORKERSN107" : "10.10.54.192/27", "OAUTHSN" : "10.10.5.0/24", "OAUTHSN2" : "10.10.6.0/24" },
-      "stamp2"             : { "VPCSN" : "10.11.0.0/16", "PRIVATESN" : "10.11.22.0/23", "MANAGESN" : "10.11.82.0/24", "MANAGESN2" : "10.11.83.0/24", "WORKERSN1" : "10.11.24.0/27", "WORKERSN2" : "10.11.24.32/27", "WORKERSN3" : "10.11.24.64/27", "WORKERSN4" : "10.11.24.96/27", "WORKERSN5" : "10.11.24.128/27", "WORKERSN6" : "10.11.24.160/27", "WORKERSN7" : "10.11.24.192/27", "DBSN" : "10.11.3.0/24", "DBSN2" : "10.11.4.0/24", "PRIVATESN2" : "10.11.52.0/23", "WORKERSN101" : "10.11.54.0/27", "WORKERSN102" : "10.11.54.32/27", "WORKERSN103" : "10.11.54.64/27", "WORKERSN104" : "10.11.54.96/27", "WORKERSN105" : "10.11.54.128/27", "WORKERSN106" : "10.11.54.160/27", "WORKERSN107" : "10.11.54.192/27", "OAUTHSN" : "10.11.5.0/24", "OAUTHSN2" : "10.11.6.0/24" },
-      "sandbox"            : { "VPCSN" : "10.40.0.0/16", "PRIVATESN" : "10.40.22.0/23", "MANAGESN" : "10.40.82.0/24", "MANAGESN2" : "10.40.83.0/24", "WORKERSN1" : "10.40.24.0/27", "WORKERSN2" : "10.40.24.32/27", "WORKERSN3" : "10.40.24.64/27", "WORKERSN4" : "10.40.24.96/27", "WORKERSN5" : "10.40.24.128/27", "WORKERSN6" : "10.40.24.160/27", "WORKERSN7" : "10.40.24.192/27", "DBSN" : "10.40.3.0/24", "DBSN2" : "10.40.4.0/24", "PRIVATESN2" : "10.40.52.0/23", "WORKERSN101" : "10.40.54.0/27", "WORKERSN102" : "10.40.54.32/27", "WORKERSN103" : "10.40.54.64/27", "WORKERSN104" : "10.40.54.96/27", "WORKERSN105" : "10.40.54.128/27", "WORKERSN106" : "10.40.54.160/27", "WORKERSN107" : "10.40.54.192/27" },
-      "staging"            : { "VPCSN" : "10.30.0.0/16", "PRIVATESN" : "10.30.22.0/23", "MANAGESN" : "10.30.82.0/24", "MANAGESN2" : "10.30.83.0/24", "WORKERSN1" : "10.30.24.0/27", "WORKERSN2" : "10.30.24.32/27", "WORKERSN3" : "10.30.24.64/27", "WORKERSN4" : "10.30.24.96/27", "WORKERSN5" : "10.30.24.128/27", "WORKERSN6" : "10.30.24.160/27", "WORKERSN7" : "10.30.24.192/27", "DBSN" : "10.30.3.0/24", "DBSN2" : "10.30.4.0/24", "PRIVATESN2" : "10.30.52.0/23", "WORKERSN101" : "10.30.54.0/27", "WORKERSN102" : "10.30.54.32/27", "WORKERSN103" : "10.30.54.64/27", "WORKERSN104" : "10.30.54.96/27", "WORKERSN105" : "10.30.54.128/27", "WORKERSN106" : "10.30.54.160/27", "WORKERSN107" : "10.30.54.192/27" }
+      "stamp1"             : { "VPCSN" : "10.10.0.0/16", "PRIVATESN" : "10.10.22.0/23", "MANAGESN" : "10.10.82.0/24", "MANAGESN2" : "10.10.83.0/24", "WORKERSN1" : "10.10.24.0/27", "WORKERSN2" : "10.10.24.32/27", "WORKERSN3" : "10.10.24.64/27", "WORKERSN4" : "10.10.24.96/27", "WORKERSN5" : "10.10.24.128/27", "WORKERSN6" : "10.10.24.160/27", "WORKERSN7" : "10.10.24.192/27", "WORKERSN8" : "10.10.24.224/27", "DBSN" : "10.10.3.0/24", "DBSN2" : "10.10.4.0/24", "PRIVATESN2" : "10.10.52.0/23", "WORKERSN101" : "10.10.54.0/27", "WORKERSN102" : "10.10.54.32/27", "WORKERSN103" : "10.10.54.64/27", "WORKERSN104" : "10.10.54.96/27", "WORKERSN105" : "10.10.54.128/27", "WORKERSN106" : "10.10.54.160/27", "WORKERSN107" : "10.10.54.192/27", "WORKERSN108" : "10.10.54.224/27", "OAUTHSN" : "10.10.5.0/24", "OAUTHSN2" : "10.10.6.0/24" },
+      "stamp2"             : { "VPCSN" : "10.11.0.0/16", "PRIVATESN" : "10.11.22.0/23", "MANAGESN" : "10.11.82.0/24", "MANAGESN2" : "10.11.83.0/24", "WORKERSN1" : "10.11.24.0/27", "WORKERSN2" : "10.11.24.32/27", "WORKERSN3" : "10.11.24.64/27", "WORKERSN4" : "10.11.24.96/27", "WORKERSN5" : "10.11.24.128/27", "WORKERSN6" : "10.11.24.160/27", "WORKERSN7" : "10.11.24.192/27", "WORKERSN8" : "10.11.24.224/27", "DBSN" : "10.11.3.0/24", "DBSN2" : "10.11.4.0/24", "PRIVATESN2" : "10.11.52.0/23", "WORKERSN101" : "10.11.54.0/27", "WORKERSN102" : "10.11.54.32/27", "WORKERSN103" : "10.11.54.64/27", "WORKERSN104" : "10.11.54.96/27", "WORKERSN105" : "10.11.54.128/27", "WORKERSN106" : "10.11.54.160/27", "WORKERSN107" : "10.11.54.192/27", "WORKERSN108" : "10.11.54.224/27", "OAUTHSN" : "10.11.5.0/24", "OAUTHSN2" : "10.11.6.0/24" },
+      "staging"            : { "VPCSN" : "10.30.0.0/16", "PRIVATESN" : "10.30.22.0/23", "MANAGESN" : "10.30.82.0/24", "MANAGESN2" : "10.30.83.0/24", "WORKERSN1" : "10.30.24.0/27", "WORKERSN2" : "10.30.24.32/27", "WORKERSN3" : "10.30.24.64/27", "WORKERSN4" : "10.30.24.96/27", "WORKERSN5" : "10.30.24.128/27", "WORKERSN6" : "10.30.24.160/27", "WORKERSN7" : "10.30.24.192/27", "WORKERSN8" : "10.30.24.224/27", "DBSN" : "10.30.3.0/24", "DBSN2" : "10.30.4.0/24", "PRIVATESN2" : "10.30.52.0/23", "WORKERSN101" : "10.30.54.0/27", "WORKERSN102" : "10.30.54.32/27", "WORKERSN103" : "10.30.54.64/27", "WORKERSN104" : "10.30.54.96/27", "WORKERSN105" : "10.30.54.128/27", "WORKERSN106" : "10.30.54.160/27", "WORKERSN107" : "10.30.54.192/27", "WORKERSN108" : "10.30.54.224/27", "OAUTHSN" : "10.30.5.0/24", "OAUTHSN2" : "10.30.6.0/24"},
+      "sandbox"            : { "VPCSN" : "10.40.0.0/16", "PRIVATESN" : "10.40.22.0/23", "MANAGESN" : "10.40.82.0/24", "MANAGESN2" : "10.40.83.0/24", "WORKERSN1" : "10.40.24.0/27", "WORKERSN2" : "10.40.24.32/27", "WORKERSN3" : "10.40.24.64/27", "WORKERSN4" : "10.40.24.96/27", "WORKERSN5" : "10.40.24.128/27", "WORKERSN6" : "10.40.24.160/27", "WORKERSN7" : "10.40.24.192/27", "WORKERSN8" : "10.40.24.224/27", "DBSN" : "10.40.3.0/24", "DBSN2" : "10.40.4.0/24", "PRIVATESN2" : "10.40.52.0/23", "WORKERSN101" : "10.40.54.0/27", "WORKERSN102" : "10.40.54.32/27", "WORKERSN103" : "10.40.54.64/27", "WORKERSN104" : "10.40.54.96/27", "WORKERSN105" : "10.40.54.128/27", "WORKERSN106" : "10.40.54.160/27", "WORKERSN107" : "10.40.54.192/27", "WORKERSN108" : "10.40.54.224/27" }
     },
 
     "DATACENTER" : {
       "sjc"                : { "EPVPN" : "205.189.102.230", "PUBSUBNET" : "205.189.102.0/24", "SBVPN" : "205.189.102.230/32", "DCSUBNET" : "10.7.0.0/16", "MGTSUBNET" : "10.7.82.0/24", "SUBNET24" : "10.7.24.0/24", "TAG" : "production", "XSFDOMAIN" : "pdx.xoom.com", "DNS1" : "10.10.82.10", "DNS2" : "10.10.83.10" },
       "atl"                : { "EPVPN" : "205.189.103.230", "PUBSUBNET" : "205.189.103.0/24", "SBVPN" : "205.189.103.230/32", "DCSUBNET" : "10.5.0.0/16", "MGTSUBNET" : "10.5.82.0/24", "SUBNET24" : "10.5.24.0/24", "TAG" : "staging", "XSFDOMAIN" : "iad.xoom.com", "DNS1" : "10.30.82.10", "DNS2" : "10.30.83.10" }
-    },
-
-    "dot" : {
-      "dev"                : { "DOT" : ".dev" },
-      "qa"                 : { "DOT" : ".qa" },
-      "sandbox"            : { "DOT" : ".sandbox" },
-      "production"         : { "DOT" : "" }
     },
 
     "KernelId" : {
@@ -82,7 +75,11 @@
   },
 
   "Conditions" : {
-    "CreateProdResources" : {"Fn::Equals" : [{"Ref" : "Provider"}, "sjc"]}
+    "CreateProdResources" : {"Fn::Or" : [
+      {"Fn::Equals" : [{"Ref" : "Environment"}, "Production"]},
+      {"Fn::Equals" : [{"Ref" : "Environment"}, "Staging"]}
+      ]
+    }
   },
 
   "Resources": {
@@ -886,7 +883,7 @@
             "IpProtocol": "icmp",
             "FromPort": "-1",
             "ToPort": "-1",
-            "CidrIp": "10.9.32.0/21"
+            "CidrIp": "10.3.0.0/16"
           },
           {
             "IpProtocol": "icmp",
@@ -922,7 +919,7 @@
             "IpProtocol": "tcp",
             "FromPort": "443",
             "ToPort": "443",
-            "CidrIp": "10.9.32.0/24"
+            "CidrIp": "10.3.0.0/16"
           },
           {
             "IpProtocol": "tcp",
@@ -965,7 +962,7 @@
             "IpProtocol": "icmp",
             "FromPort": "-1",
             "ToPort": "-1",
-            "CidrIp": "10.9.32.0/21"
+            "CidrIp": "10.3.0.0/16"
           },
           {
             "IpProtocol": "icmp",
@@ -1001,7 +998,7 @@
             "IpProtocol": "tcp",
             "FromPort": "80",
             "ToPort": "80",
-            "CidrIp": "10.9.32.0/24"
+            "CidrIp": "10.3.0.0/16"
           },
           {
             "IpProtocol": "tcp",
@@ -1516,7 +1513,7 @@
             "IpProtocol": "icmp",
             "FromPort": "-1",
             "ToPort": "-1",
-            "CidrIp": "10.9.32.0/21"
+            "CidrIp": "10.3.0.0/16"
           },
           {
             "IpProtocol": "tcp",
@@ -1540,7 +1537,7 @@
             "IpProtocol": "tcp",
             "FromPort": "443",
             "ToPort": "443",
-            "CidrIp": "10.9.32.0/21"
+            "CidrIp": "10.3.0.0/16"
           },
           {
             "IpProtocol": "tcp",
@@ -1552,7 +1549,7 @@
             "IpProtocol": "tcp",
             "FromPort": "80",
             "ToPort": "80",
-            "CidrIp": "10.9.32.0/21"
+            "CidrIp": "10.3.0.0/16"
           },
           {
             "IpProtocol": "tcp",
@@ -1622,37 +1619,37 @@
             "IpProtocol": "tcp",
             "FromPort": "443",
             "ToPort": "443",
-            "CidrIp": "0.0.0.0/0"
+            "CidrIp": "10.3.0.0/16"
           },
           {
             "IpProtocol": "tcp",
-            "FromPort": "80",
-            "ToPort": "80",
-            "CidrIp": { "Fn::FindInMap" : [ "subnets", { "Ref" : "Version" }, "VPCSN" ]}
-          },
-                    {
-            "IpProtocol": "tcp",
-            "FromPort": "5671",
-            "ToPort": "5671",
-            "CidrIp": { "Fn::FindInMap" : [ "DATACENTER", { "Ref" : "Provider" }, "PUBSUBNET" ]}
+            "FromPort": "443",
+            "ToPort": "443",
+            "CidrIp": "10.1.0.0/16"
           },
           {
             "IpProtocol": "tcp",
-            "FromPort": "6379",
-            "ToPort": "6379",
+            "FromPort": "443",
+            "ToPort": "443",
             "CidrIp": { "Fn::FindInMap" : [ "subnets", { "Ref" : "Version" }, "VPCSN" ]}
           },
           {
             "IpProtocol": "tcp",
-            "FromPort": "6379",
-            "ToPort": "6379",
-            "CidrIp": { "Fn::FindInMap" : [ "subnets", { "Ref" : "Version" }, "VPCSN" ]}
+            "FromPort": "443",
+            "ToPort": "443",
+            "CidrIp": { "Fn::FindInMap" : [ "DATACENTER", { "Ref" : "Provider" }, "DCSUBNET" ]}
           },
           {
             "IpProtocol": "tcp",
-            "FromPort": "11300",
-            "ToPort": "11300",
-            "CidrIp": { "Fn::FindInMap" : [ "subnets", { "Ref" : "Version" }, "VPCSN" ]}
+            "FromPort": "22",
+            "ToPort": "22",
+            "CidrIp": { "Fn::FindInMap" : [ "subnets", { "Ref" : "Version" }, "MANAGESN" ]}
+          },
+          {
+            "IpProtocol": "tcp",
+            "FromPort": "22",
+            "ToPort": "22",
+            "CidrIp": { "Fn::FindInMap" : [ "subnets", { "Ref" : "Version" }, "MANAGESN2" ]}
           },
           {
             "IpProtocol": "udp",
@@ -1715,6 +1712,42 @@
             "FromPort": "5001",
             "ToPort": "5001",
             "CidrIp": { "Fn::FindInMap" : [ "subnets", { "Ref" : "Version" }, "VPCSN" ]}
+          },
+          {
+            "IpProtocol": "tcp",
+            "FromPort": "80",
+            "ToPort": "80",
+            "CidrIp": "10.1.0.0/16"
+          },
+          {
+            "IpProtocol": "tcp",
+            "FromPort": "80",
+            "ToPort": "80",
+            "CidrIp": "10.3.0.0/16"
+          },
+          {
+            "IpProtocol": "tcp",
+            "FromPort": "5001",
+            "ToPort": "5001",
+            "CidrIp": "10.1.0.0/16"
+          },
+          {
+            "IpProtocol": "udp",
+            "FromPort": "5001",
+            "ToPort": "5001",
+            "CidrIp": "10.1.0.0/16"
+          },
+          {
+            "IpProtocol": "tcp",
+            "FromPort": "5001",
+            "ToPort": "5001",
+            "CidrIp": "10.3.0.0/16"
+          },
+          {
+            "IpProtocol": "udp",
+            "FromPort": "5001",
+            "ToPort": "5001",
+            "CidrIp": "10.3.0.0/16"
           },
           {
             "IpProtocol": "udp",
@@ -3497,6 +3530,21 @@
         "ToPort": "5432",
         "SourceSecurityGroupId": {
           "Ref": "sgOauthTest"
+        },
+        "SourceSecurityGroupOwnerId": "243238936187"
+      }
+    },
+    "ingress73": {
+      "Type": "AWS::EC2::SecurityGroupIngress",
+      "Properties": {
+        "GroupId": {
+          "Ref": "sgElasticSearch"
+        },
+        "IpProtocol": "tcp",
+        "FromPort": "9200",
+        "ToPort": "9200",
+        "SourceSecurityGroupId": {
+          "Ref": "sgLogstash"
         },
         "SourceSecurityGroupOwnerId": "243238936187"
       }
