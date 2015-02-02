@@ -1,191 +1,220 @@
 {
-  "AWSTemplateFormatVersion" : "2010-09-09",
+    "AWSTemplateFormatVersion" : "2010-09-09",
 
-  "Description" : "NAGIOS Monitoring Instance - filename:nagios.template",
+    "Description" : "nagios/check_mk/ubermon_registrar instance",
 
-  "Parameters" : {
-    "KeyName": {
-      "Description" : "Name of an existing EC2 KeyPair to enable SSH access to the instance",
-      "Type": "String",
-      "MinLength": "1",
-      "MaxLength": "255",
-      "AllowedPattern" : "[\\x20-\\x7E]*",
-      "ConstraintDescription" : "can contain only ASCII characters.",
-      "Default": "stamp-"
+    "Parameters" : {
+        "PuppetEnv" : {
+          "Type" : "String",
+          "Description" : "Environment for puppet apply",
+          "Default" : "staging"
+        },
+
+        "KeyName": {
+            "Description" : "Name of an existing EC2 KeyPair to enable SSH access to the instance",
+            "Type": "String",
+            "MinLength": "1",
+            "MaxLength": "255",
+            "AllowedPattern" : "[\\x20-\\x7E]*",
+            "ConstraintDescription" : "can contain only ASCII characters.",
+            "Default": "iad_id_rsa"
+        },
+
+        "InstanceType" : {
+            "Description" : "WebServer EC2 instance type",
+            "Type" : "String",
+            "Default" : "t2.micro",
+            "AllowedValues" : [ "t2.micro", "t2.small", "t2.medium","m1.small","m3.medium","m1.large","m1.xlarge","m2.xlarge","m2.2xlarge","m2.4xlarge","m3.xlarge","m3.2xlarge","c1.medium","c1.xlarge","cc1.4xlarge","cc2.8xlarge","cg1.4xlarge"],
+            "ConstraintDescription" : "must be a valid EC2 instance type."
+        },
+
+
+        "SubnetId" : {
+            "Type" : "String",
+            "Description" : "Management SubnetId in your Virtual Private Cloud (VPC)",
+            "Default": "subnet-1a6c6532"
+        },
+
+        "SecurityGroupIds" : {
+            "Type" : "CommaDelimitedList",
+            "Description" : "List of Management SecurityGroupId your Virtual Private Cloud (VPC)",
+            "Default": "sg-26632a43"
+        },
+
+        "RoleDeployBranch" : {
+          "Type" : "String",
+          "Description" : "Git branch where to deploy the code from.",
+          "Default" : "feature/autoreg"
+        },
+
+        "SitesDeployBranch" : {
+          "Type" : "String",
+          "Description" : "Git branch where to deploy the code from.",
+          "Default" : "feature/autoreg"
+        },
+
+        "Version" : {
+          "Type" : "String",
+          "Description" : "stamp1 for current version, stamp2 for disaster recovery and staging for staging production"
+        },
+
+        "StackID" : {
+            "Type" : "String",
+            "Description" : "Value to create some stacks into same enviroment",
+            "Default" : "autoreg-test"
+        },
+
+        "Environment" : {
+            "Type" : "String",
+            "Description" : "Application's environment.",
+            "Default" : "staging"
+        }
+
     },
 
-    "InstanceType" : {
-      "Description" : "WebServer EC2 instance type",
-      "Type" : "String",
-      "Default" : "m3.medium",
-      "AllowedValues" : [ "t2.micro", "t2.small", "t2.medium","m1.small","m3.medium","m1.large","m1.xlarge","m2.xlarge","m2.2xlarge","m2.4xlarge","m3.xlarge","m3.2xlarge","c1.medium","c1.xlarge","cc1.4xlarge","cc2.8xlarge","cg1.4xlarge"],
-      "ConstraintDescription" : "must be a valid EC2 instance type."
+    "Mappings" : {
+        "RegionMap" : {
+            "sa-east-1"      : {"AMI" : "ami-d545e5c8" },
+            "us-west-1"      : {"AMI" :	"ami-17829452" },
+            "ap-northeast-1" : {"AMI" : "ami-35bbd334" },
+            "ap-southeast-1" : {"AMI" : "ami-605c0a32" },
+            "ap-southeast-2" : {"AMI" : "ami-fb4bd5c1" },
+            "eu-west-1"      : {"AMI" : "ami-d03dcaa7" },
+            "us-east-1"      : {"AMI" : "ami-0c56df64" },
+            "us-west-2"      : {"AMI" :	"ami-07fcb437" }
+        },
+
+        "version" : {
+          "stamp1"          : { "HOSTNAME" : "mgt3003", "IP": "10.10.82.13" },
+          "stamp2"          : { "HOSTNAME" : "mgt3004", "IP": "10.10.83.13" },
+          "staging1"        : { "HOSTNAME" : "mgt3003", "IP": "10.30.82.13" },
+          "staging2"        : { "HOSTNAME" : "mgt3004", "IP": "10.30.83.13" }
+        },
+
+        "env" : {
+          "staging"        : { "ENV" : "staging", "DOT" : ".iad" },
+          "production"     : { "ENV" : "production", "DOT" : ".pdx" }
+        }
     },
 
-    "SubnetId" : {
-      "Type" : "String",
-      "Description" : "SubnetId of an existing subnet in your Virtual Private Cloud (VPC)",
-      "Default": "subnet-"
+    "Resources" : {
+
+        "NagiosServerInstance" : {
+            "Type" : "AWS::EC2::Instance",
+            "Metadata" : {
+                "Comment" : "nagios/check_mk/ubermon_registrar instance"
+            },
+            "Properties" : {
+                "ImageId" : { "Fn::FindInMap" : [ "RegionMap", { "Ref" : "AWS::Region" }, "AMI" ]},
+                "PrivateIpAddress" : { "Fn::FindInMap" : [ "version", { "Ref" : "Version" }, "IP" ]},
+                "SecurityGroupIds" : {"Ref" : "SecurityGroupIds"},
+                "SubnetId" : { "Ref" : "SubnetId" },
+                "InstanceType" : { "Ref" : "InstanceType" },
+                "KeyName" : { "Ref" : "KeyName" },
+                "Tags" : [ {"Key" : "Application", "Value" : { "Ref" : "AWS::StackId"} },
+                           {"Key" : "Name", "Value" : { "Fn::Join" : [ "-", ["nagios", { "Ref" : "StackID" }, { "Ref" : "Environment"} ] ] } } ],
+                "UserData"       : { "Fn::Base64" : { "Fn::Join" : ["", [
+                    "#!/bin/bash\n",
+
+                    "# Helper function to notify of failed operation\n",
+                    "function error_exit\n",
+                    "{\n",
+                    "  cfn-signal -e 1 -r \"$1\" '", { "Ref" : "WebServerWaitHandle" }, "'\n",
+                    "  exit 1\n",
+                    "}\n",
+
+                    "# Run Instance default configuration via CloudFormation::Init\n",
+                    "cfn-init -v --region ", { "Ref" : "AWS::Region" },
+                    "    -s ", { "Ref" : "AWS::StackId" },
+                    " -r NagiosServerInstance",
+                    " -c default",
+                    " || error_exit 'Failed to run cfn-init'\n",
+
+                    "# Register Github fingerprints\n",
+                    "ssh-keygen -f ~/.ssh/known_hosts -H -F github.com | grep -q found || ssh-keyscan -H github.com >> ~/.ssh/known_hosts\n",
+
+                    "# Copy credentials to root user\n",
+                    "cp /home/ubuntu/.ssh/* /root/.ssh/\n",
+
+                    "# Add FQDN on etc/environment\n",
+                    "echo ", { "Fn::Join" : [ "" , ["FQDN=", { "Fn::FindInMap" : [ "version", { "Ref" : "Version" }, "HOSTNAME" ]}, { "Fn::FindInMap" : [ "env", { "Ref" : "Environment" }, "DOT" ]}, ".xoom.com" ]]}, ">> /etc/environment\n",
+                    "echo ", "STACKID=", { "Ref" : "StackID" }, ">> /etc/environment\n",
+
+                    "# Clone sites repo to ubuntu user home\n",
+                    "git clone -b ", { "Ref" : "SitesDeployBranch" }, " git@github.com:blue-kite/xbp_puppet_sites.git /home/ubuntu/sites > /tmp/git.log 2>&1 || error_exit 'Failed to clone sites repo'\n",
+
+                    "# Clone role app repo\n",
+                    "git clone -b ", { "Ref" : "RoleDeployBranch" }, " git@github.com:blue-kite/xbp_puppet_profile_nagios_server.git /etc/puppet/modules/nagios_server > /tmp/git.log 2>&1 || error_exit 'Failed to clone role app repo'\n",
+                    "chown ubuntu:ubuntu -R /etc/puppet/modules/nagios_server\n",
+
+                    "#Installing Ruby\n",
+                    "apt-get -y install libyaml-0-2\n",
+                    "apt-get -y install ruby1.9.3\n",
+                    "update-alternatives --set ruby /usr/bin/ruby1.9.1\n",
+                    "apt-get -y install rubygems\n",
+                    "update-alternatives --set gem /usr/bin/gem1.9.1\n",
+
+                    "# Install application's dependencies via librarian puppet\n",
+                    "cd /etc/puppet/modules/nagios_server\n",
+                    "rm Gemfile*\n",
+                    "sudo librarian-puppet install --clean --verbose --path=/etc/puppet/modules > /tmp/librarian-puppet.log 2>&1 || error_exit 'failed to install puppet submodules'\n",
+
+                    "#setting my custom facts\n",
+                    "mkdir -p /etc/facter/facts.d\n",
+                    "touch /etc/facter/facts.d/custom_facts.txt\n",
+                    "echo ", { "Fn::Join" : [ "" , ["fqdn=", { "Fn::FindInMap" : [ "version", { "Ref" : "Version" }, "HOSTNAME" ]}, { "Fn::FindInMap" : [ "env", { "Ref" : "Environment" }, "DOT" ]}, ".xoom.com" ]]},        ">> /etc/facter/facts.d/custom_facts.txt\n",
+                    "echo ", "stackid=", { "Ref" : "StackID" },       ">> /etc/facter/facts.d/custom_facts.txt\n",
+                    "echo ", { "Fn::Join" : [ "" , ["logserver_host=logs", { "Ref" : "StackID" }, { "Fn::FindInMap" : [ "env", { "Ref" : "Environment" }, "DOT" ]}, ".xoom.com" ]]},        ">> /etc/facter/facts.d/custom_facts.txt\n",
+                    "echo ", "revision=", { "Ref" : "RoleDeployBranch" }, ">> /etc/facter/facts.d/custom_facts.txt\n",
+                    "echo logserver_port=5001  >> /etc/facter/facts.d/custom_facts.txt\n",
+                    "echo app_name=nagios_server >> /etc/facter/facts.d/custom_facts.txt\n",
+                    "echo custom_hostname=", { "Fn::FindInMap" : [ "version", { "Ref" : "Version" }, "HOSTNAME" ]}, ">> /etc/facter/facts.d/custom_facts.txt\n",
+
+                    "# Clone role hostname repo\n",
+                    "git clone git@github.com:victormarroquin/Puppet-HostName.git /etc/puppet/modules/hosts > /tmp/git.log 2>&1 || error_exit 'Failed to clone hostname repo'\n",
+
+                    "export LANG=en_US.UTF-8; sudo puppet apply --verbose --debug /etc/puppet/modules/hosts/tests/init.pp > /tmp/pupet_hostname.log 2>&1 || error_exit 'failed to apply hosts puppet manifests'\n",
+
+                    "sudo apt-get update\n",
+                    "sudo apt-get upgrade\n",
+
+                    "cd /home/ubuntu/sites\n",
+                    "sudo sh setup.sh\n",
+
+                    "export LANG=en_US.UTF-8; sudo puppet apply --verbose --debug --environment=", { "Ref" : "PuppetEnv" }, " /home/ubuntu/sites/site.pp > /tmp/puppet.log 2>&1 || error_exit 'failed to apply puppet manifests'\n",
+                    "# Signal setup is complete\n",
+                    "cfn-signal -e $? -r 'Completed configuration' '",
+                    {
+                        "Ref" : "WebServerWaitHandle"
+                    },
+                    "'\n"
+                ]]}}
+            }
+        },
+
+        "WebServerWaitHandle" : {
+            "Type" : "AWS::CloudFormation::WaitConditionHandle"
+        },
+
+        "WebServerWaitCondition" : {
+            "Type" : "AWS::CloudFormation::WaitCondition",
+            "DependsOn" : "NagiosServerInstance",
+            "Properties" : {
+                "Handle" : {"Ref" : "WebServerWaitHandle"},
+                "Timeout" : "3000"
+            }
+        }
     },
 
-    "SecurityGroupId" : {
-      "Type" : "String",
-      "Description" : "SecurityGroupId of an existing subnet in your Virtual Private Cloud (VPC)",
-      "Default": "sg-"
-    },
+    "Outputs" : {
+        "InstanceId" : {
+            "Value" : { "Ref" : "NagiosServerInstance" },
+            "Description" : "Instance Id of newly created instance"
+        },
 
-    "StackID" : {
-      "Type" : "String",
-      "Description" : "Stack ID name",
-      "Default" : "-"
-    },
-
-    "DeployBranch" : {
-      "Type" : "String",
-      "Description" : "Git branch where to deploy the code from.",
-      "Default" : ""
-    },
-
-    "Environment" : {
-      "Type" : "String",
-      "Description" : "Application's environment.",
-      "Default" : ""
-    },
-
-    "Repository" : {
-      "Type" : "String",
-      "Description" : "Application's GitHub Repository.",
-      "Default" : "git@github.com:blue-kite/nagios.git"
+        "IPAddress" : {
+            "Value" : { "Fn::GetAtt" : [ "NagiosServerInstance", "PrivateIp" ] },
+            "Description" : "Private IP address of instance"
+        }
     }
-
-  },
-
-  "Mappings" : {
-    "RegionMap" : {
-      "sa-east-1"      : {"AMI" : "ami-d545e5c8" },
-      "us-west-1"      : {"AMI" : "ami-49ede60c" },
-      "ap-northeast-1" : {"AMI" : "ami-35bbd334" },
-      "ap-southeast-1" : {"AMI" : "ami-605c0a32" },
-      "ap-southeast-2" : {"AMI" : "ami-fb4bd5c1" },
-      "eu-west-1"      : {"AMI" : "ami-d03dcaa7" },
-      "us-east-1"      : {"AMI" : "ami-cdc2fda4" },
-      "us-west-2"      : {"AMI" : "ami-9bfe85ab" }
-    },
-
-    "env" : {
-      "dev"            : { "ENV" : "development", "DOT" : ".dev" },
-      "qa"             : { "ENV" : "qa", "DOT" : ".qa" },
-      "sandbox"        : { "ENV" : "sandbox", "DOT" : ".sandbox"  },
-      "production"     : { "ENV" : "production", "DOT" : "" }
-    }
-  },
-
-  "Resources" : {
-    "DNSRecord" : {
-      "Type" : "AWS::Route53::RecordSet",
-      "Properties" : {
-        "HostedZoneName" : "bluekite.com.",
-        "Comment" : "DNS name for my instance.",
-        "Name" : { "Fn::Join" : [ "", ["nagios", { "Ref" : "StackID" } , { "Fn::FindInMap" : [ "env", { "Ref" : "Environment" }, "DOT" ]},".bluekite.com"]]},
-        "Type" : "A",
-        "TTL" : "900",
-        "ResourceRecords" : [ { "Fn::GetAtt" : [ "NagiosInstance", "PrivateIp" ] } ]
-      },
-      "DependsOn" : "NagiosInstance"
-    },
-
-    "NagiosInstance" : {
-      "Type" : "AWS::EC2::Instance",
-      "Metadata" : {
-        "Comment" : "Nagios - Rails Aplication Instance"
-      },
-      "Properties" : {
-        "ImageId" : { "Fn::FindInMap" : [ "RegionMap", { "Ref" : "AWS::Region" }, "AMI" ]},
-        "SecurityGroupIds" : [ {"Ref" : "SecurityGroupId"} ],
-        "SubnetId" : { "Ref" : "SubnetId" },
-        "InstanceType" : { "Ref" : "InstanceType" },
-        "KeyName" : { "Ref" : "KeyName" },
-        "Tags" : [ {"Key" : "Application", "Value" : { "Ref" : "AWS::StackId"} },
-                {"Key" : "Name", "Value" : { "Fn::Join" : [ ".", ["nagios", {"Ref" : "Environment"} ] ] } } ],
-        "UserData"       : { "Fn::Base64" : { "Fn::Join" : ["", [
-          "#!/bin/bash\n",
-
-          "# Helper function to notify of failed operation\n",
-          "function error_exit\n",
-          "{\n",
-          "  cfn-signal -e 1 -r \"$1\" '", { "Ref" : "NagiosWaitHandle" }, "'\n",
-          "  exit 1\n",
-          "}\n",
-
-          "# Run Instance default configuration via CloudFormation::Init\n",
-          "cfn-init -v --region ", { "Ref" : "AWS::Region" },
-          "    -s ", { "Ref" : "AWS::StackId" },
-          " -r NagiosInstance",
-          " -c default",
-          " || error_exit 'Failed to run cfn-init'\n",
-
-          "# Register Github fingerprints\n",
-          "ssh-keygen -f ~/.ssh/known_hosts -H -F github.com | grep -q found || ssh-keyscan -H github.com >> ~/.ssh/known_hosts\n",
-
-          "# Copy credentials to root user\n",
-          "cp /home/ubuntu/.ssh/* /root/.ssh/\n",
-
-          "# Add FQDN on etc/environment\n",
-          "echo ", { "Fn::Join" : [ "" , ["FACTER_fqdn=nagios", { "Ref" : "StackID" }, { "Fn::FindInMap" : [ "env", { "Ref" : "Environment" }, "DOT" ]}, ".bluekite.com" ]]}, ">> /etc/environment\n",
-          "echo ", "STACKID=", { "Ref" : "StackID" }, ">> /etc/environment\n",
-
-          "echo ", { "Fn::Join" : [ "" , ["nagios", { "Ref" : "StackID" } ]]}, "> /etc/hostname\n",
-          "echo ", { "Fn::Join" : [ "" , [{ "Fn::GetAtt" : [ "NagiosInstance", "PrivateIp" ] }, "nagios", { "Ref" : "StackID" }, "nagios", { "Ref" : "StackID" }, { "Fn::FindInMap" : [ "env", { "Ref" : "Environment" }, "DOT" ]}, ".bluekite.com" ]]}, ">> /etc/hosts\n",
-
-          "# Clone app repo to ubuntu user home\n",
-          "git clone ", {"Ref": "Repository"}, " -b ", {"Ref" : "DeployBranch"}, " /home/ubuntu/nagios > /tmp/git.log 2>&1 || error_exit 'Failed to clone repo'\n",
-          "chown ubuntu:ubuntu -R /home/ubuntu/nagios\n",
-
-          "# Install git & puppet via apt-get\n",
-          "sudo apt-get install -y git puppet > /tmp/apt-get-git-puppet.log 2>&1 || error_exit 'Failed install packages'\n",
-
-          "cd /home/ubuntu/nagios\n",
-          "sudo apt-get update\n",
-          "sudo apt-get upgrade\n",
-          "sudo puppet apply --verbose --debug --modulepath=./puppet/modules ./puppet/manifests/nodes.pp  > /tmp/puppet.log 2>&1 || error_exit 'failed to apply puppet manifests'\n",
-
-          "# Signal setup is complete\n",
-          "cfn-signal -e $? -r 'Completed configuration' '",
-          {
-            "Ref" : "NagiosWaitHandle"
-          },
-          "'\n"
-        ]]}}
-      }
-    },
-
-    "NagiosWaitHandle" : {
-      "Type" : "AWS::CloudFormation::WaitConditionHandle"
-    },
-
-    "NagiosWaitCondition" : {
-      "Type" : "AWS::CloudFormation::WaitCondition",
-      "DependsOn" : "NagiosInstance",
-      "Properties" : {
-        "Handle" : {"Ref" : "NagiosWaitHandle"},
-        "Timeout" : "2000"
-      }
-    }
-  },
-
-  "Outputs" : {
-    "InstanceId" : {
-      "Value" : { "Ref" : "NagiosInstance" },
-      "Description" : "Instance Id of newly created instance"
-    },
-
-    "IPAddress" : {
-      "Value" : { "Fn::GetAtt" : [ "NagiosInstance", "PrivateIp" ] },
-      "Description" : "Private IP address of instance"
-    },
-
-    "DomainName" : {
-      "Value" : { "Ref" : "DNSRecord" }
-    }
-  }
 }

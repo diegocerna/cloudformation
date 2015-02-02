@@ -1,0 +1,12 @@
+[
+  { "ParameterKey": "PuppetEnv", "ParameterValue": "staging" },
+  { "ParameterKey": "KeyName", "ParameterValue": "iad_id_rsa" },
+  { "ParameterKey": "InstanceType", "ParameterValue": "m3.medium" },
+  { "ParameterKey": "SubnetId", "ParameterValue": "subnet-d51cbca2" },
+  { "ParameterKey": "SecurityGroupIds", "ParameterValue": "sg-0d888568, sg-03888566, sg-b38f66d7" },
+  { "ParameterKey": "RoleDeployBranch", "ParameterValue": "0.1.1" },
+  { "ParameterKey": "SitesDeployBranch", "ParameterValue": "1.2.1" },
+  { "ParameterKey": "Version", "ParameterValue": "staging2" },
+  { "ParameterKey": "StackID", "ParameterValue": "-az2" },
+  { "ParameterKey": "Environment", "ParameterValue": "staging" }
+]
