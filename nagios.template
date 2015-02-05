@@ -85,8 +85,8 @@
         },
 
         "version" : {
-          "stamp1"          : { "HOSTNAME" : "mgt3003", "IP": "10.10.82.13" },
-          "stamp2"          : { "HOSTNAME" : "mgt3004", "IP": "10.10.83.13" },
+          "stamp1"          : { "HOSTNAME" : "mgt1003", "IP": "10.10.82.13" },
+          "stamp2"          : { "HOSTNAME" : "mgt1004", "IP": "10.10.83.13" },
           "staging1"        : { "HOSTNAME" : "mgt3003", "IP": "10.30.82.13" },
           "staging2"        : { "HOSTNAME" : "mgt3004", "IP": "10.30.83.13" }
         },
