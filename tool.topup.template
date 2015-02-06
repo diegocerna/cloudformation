@@ -14,14 +14,14 @@
     },
 
     "version" : {
-      "stamp1"          : { "HOSTNAME" : "topupapi1001" },
-      "stamp2"          : { "HOSTNAME" : "topupapi1002" },
-      "staging1"        : { "HOSTNAME" : "topupapi3001" },
-      "staging2"        : { "HOSTNAME" : "topupapi3002" },
-      "sandbox1"        : { "HOSTNAME" : "topupapi4001" },
-      "sandbox2"        : { "HOSTNAME" : "topupapi4002" },
-      "qa1"             : { "HOSTNAME" : "topupapi5001" },
-      "qa2"             : { "HOSTNAME" : "topupapi5002" }
+      "stamp1"          : { "HOSTNAME" : "topupapi1001", "PuppetEnv" : "production", "Environment" : "production", "keypair" : "pdx_id_rsa",    "InstanceType" : "t2.medium" },
+      "stamp2"          : { "HOSTNAME" : "topupapi1002", "PuppetEnv" : "production", "Environment" : "production", "keypair" : "pdx_id_rsa",    "InstanceType" : "t2.medium" },
+      "staging1"        : { "HOSTNAME" : "topupapi3001", "PuppetEnv" : "staging",    "Environment" : "staging",    "keypair" : "iad_id_rsa",    "InstanceType" : "t2.medium" },
+      "staging2"        : { "HOSTNAME" : "topupapi3002", "PuppetEnv" : "staging",    "Environment" : "staging",    "keypair" : "iad_id_rsa",    "InstanceType" : "t2.medium" },
+      "sandbox1"        : { "HOSTNAME" : "topupapi4001", "PuppetEnv" : "sandbox",    "Environment" : "sandbox",    "keypair" : "stamp-sandbox", "InstanceType" : "t2.medium" },
+      "sandbox2"        : { "HOSTNAME" : "topupapi4002", "PuppetEnv" : "sandbox",    "Environment" : "sandbox",    "keypair" : "stamp-sandbox", "InstanceType" : "t2.medium" },
+      "qa1"             : { "HOSTNAME" : "topupapi5001", "PuppetEnv" : "qa",         "Environment" : "qa",         "keypair" : "stamp-qa",      "InstanceType" : "t2.medium" },
+      "qa2"             : { "HOSTNAME" : "topupapi5002", "PuppetEnv" : "qa",         "Environment" : "qa",         "keypair" : "stamp-qa",      "InstanceType" : "t2.medium" }
     },
 
     "env" : {
@@ -33,18 +33,6 @@
   },
 
   "Parameters" : {
-    "PuppetEnv" : {
-      "Type" : "String",
-      "Description" : "Environment for puppet apply",
-      "Default" : ""
-    },
-
-    "Environment" : {
-      "Type" : "String",
-      "Description" : "Environment for the topupapi-do, i.e. staging, production, etc.",
-      "Default" : ""
-    },
-
     "AppDeployBranch" : {
       "Type" : "String",
       "Description" : "Git branch where to deploy the code from.",
@@ -67,21 +55,6 @@
       "Type" : "String",
       "Description" : "Dominican Republic Accounts SubnetId in your Virtual Private Cloud (VPC)",
       "Default": "subnet-"
-
-    },
-
-    "KeyName" : {
-      "Type" : "String",
-      "Description" : "The SSH access key",
-      "Default" : "stamp-"
-    },
-
-    "InstanceType" : {
-      "Description" : "WebServer EC2 instance type",
-      "Type" : "String",
-      "Default" : "c3.xlarge",
-      "AllowedValues" : [ "t2.micro","m1.small","m3.medium","m1.large","m1.xlarge","m2.xlarge","m2.2xlarge","m2.4xlarge","m3.xlarge","m3.2xlarge","c1.medium","c1.xlarge","c3.xlarge","cc1.4xlarge","cc2.8xlarge","cg1.4xlarge"],
-      "ConstraintDescription" : "must be a valid EC2 instance type."
     },
 
     "StackID" : {
